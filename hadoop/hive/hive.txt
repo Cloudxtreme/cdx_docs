@@ -1,0 +1,71 @@
+
+????
+hive> set hive.exec.reducers.bytes.per.reducer=1048576;
+hive> set hive.exec.reducers.max=4;
+hive> set mapred.reduce.tasks=12;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+wget http://apache.multihomed.net//hive/hive-0.6.0/hive-0.6.0.tar.gz
+
+cd /usr/local/
+tar zxvf /home/hadoop/hive-0.6.0.tar.gz 
+ln -s hive-0.6.0/ hive
+
+su - hadoop
+
+export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.22/
+export HIVE_HOME=/usr/local/hive
+export PATH=$HIVE_HOME/bin:$PATH
+
+hive
+show tables;
+
+--
+-- 1st table
+--
+hadoop fs -put gutenberg gutenberg
+hadoop jar /usr/local/hadoop/hadoop-0.20.2-examples.jar grep gutenberg test_feq '\w+'
+hadoop fs -cat test_feq/part-00000 | head -n 20
+hadoop fs -rmr test_feq/_logs
+
+CREATE TABLE test1 (freq INT, word STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+describe test1;
+
+load data inpath "test_feq" into table test1;
+select * from test1 limit 10;
+select * from test1 where freq > 100 sort by freq asc limit 10;
+
+-- most frequent used words
+select freq, count(1) as f2 from test1 group by freq sort by f2 desc limit 10;
+
+explain select freq, count(1) as f2 from test1 group by freq sort by f2 desc limit 10;
+
+--
+-- 2nd table
+--
+hadoop fs -put gutenberg-1 gutenberg-1
+hadoop jar /usr/local/hadoop/hadoop-0.20.2-examples.jar grep gutenberg-1 test2_feq '\w+'
+hadoop fs -rmr test2_feq/_logs
+
+CREATE TABLE test2 (freq INT, word STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+load data inpath "test2_feq" into table test2;
+
+--
+-- merged table
+--
+create table merged (word string, test1_f int, test2_f int);
+
+insert overwrite table merged
+select s.word, s.freq, k.freq
+from test1 s join test2 k on (s.word = k.word)
+where s.freq >=1 and k.freq >=1;
+
+select * from merged limit 20;
+select word, test1_f, test2_f, (test1_f+test2_f) as ss
+from merged 
+sort by ss
+desc
+limit 20;
+
+exit;
+

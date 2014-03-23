@@ -1,0 +1,55 @@
+wajig install wondershaper 
+
+
+wondershaper eth0
+
+--
+-- limit bandwidth to 2.5kbs on eth0
+-- if you have 2 connections, the bandwidth will be 2.5 kbs/2
+-- if you have 3 connections, the bandwidth will be 2.5 kbs/3
+--
+wondershaper eth0 2560 2560
+
+wondershaper clear eth0 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# wondershaper eth0 2560 2560
+# wondershaper eth0
+qdisc cbq 1: root rate 10000Kbit (bounded,isolated) prio no-transmit
+ Sent 4756 bytes 17 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+  borrowed 0 overactions 0 avgidle 781 undertime 0
+qdisc sfq 10: parent 1:10 limit 127p quantum 1514b perturb 10sec 
+ Sent 4672 bytes 16 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+qdisc sfq 20: parent 1:20 limit 127p quantum 1514b perturb 10sec 
+ Sent 84 bytes 1 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+qdisc sfq 30: parent 1:30 limit 127p quantum 1514b perturb 10sec 
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+qdisc ingress ffff: parent ffff:fff1 ---------------- 
+ Sent 4573 bytes 61 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+class cbq 1: root rate 10000Kbit (bounded,isolated) prio no-transmit
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+  borrowed 0 overactions 0 avgidle 781 undertime 0
+class cbq 1:10 parent 1:1 leaf 10: rate 2560Kbit prio 1
+ Sent 5286 bytes 19 pkt (dropped 0, overlimits 1 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+  borrowed 0 overactions 1 avgidle -232 undertime -8
+class cbq 1:1 parent 1: rate 2560Kbit (bounded,isolated) prio 5
+ Sent 5370 bytes 20 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+  borrowed 0 overactions 0 avgidle -232 undertime 217
+class cbq 1:20 parent 1:1 leaf 20: rate 2304Kbit prio 2
+ Sent 84 bytes 1 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+  borrowed 0 overactions 0 avgidle 781 undertime 0
+class cbq 1:30 parent 1:1 leaf 30: rate 2048Kbit prio 2
+ Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) 
+ rate 0bit 0pps backlog 0b 0p requeues 0 
+  borrowed 0 overactions 0 avgidle 781 undertime 0
+

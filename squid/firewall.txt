@@ -1,0 +1,144 @@
+
+basic natting:
+
+
+			e1000
+tg3 					r8169 r8169 tg3
+			e1000
+
+			eth1
+eth2				eth4 eth5 eth3
+			eth0
+
+      ???
+???       comcast xo dmz
+      int
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# cd /etc/udev/rules.d
+# more 70-persistent-net.rules
+# PCI device 0x10ec:0x8169 (r8169)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:22:3f:ef:c2:f2", ATTR{type}=="1", KERNEL=="eth*", NAME="eth5"
+
+# PCI device 0x8086:0x105e (e1000)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:15:17:be:ee:77", ATTR{type}=="1", KERNEL=="eth*", NAME="eth1"
+
+# PCI device 0x8086:0x105e (e1000)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:15:17:be:ee:76", ATTR{type}=="1", KERNEL=="eth*", NAME="eth0"
+
+# PCI device 0x10ec:0x8169 (r8169)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:22:3f:ef:c9:97", ATTR{type}=="1", KERNEL=="eth*", NAME="eth4"
+
+# PCI device 0x14e4:0x1659 (tg3)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:10:18:53:6b:f6", ATTR{type}=="1", KERNEL=="eth*", NAME="eth3"
+
+# PCI device 0x14e4:0x1677 (tg3)
+SUBSYSTEM=="net", ACTION=="add", DRIVERS=="?*", ATTR{address}=="00:13:72:87:03:89", ATTR{type}=="1", KERNEL=="eth*", NAME="eth2"
+
+
+# more interfaces 
+auto eth0
+iface eth0 inet static
+  address 10.10.37.2
+  netmask 255.255.248.0
+  #gateway 10.10.37.1
+
+auto eth5
+iface eth5 inet static
+  address 67.95.201.198
+  netmask 255.255.255.224
+  gateway 67.95.201.193
+
+
+  230  vi sshd_config 
+PermitRootLogin no
+  231  /etc/init.d/ssh restart
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# test natting
+#
+  177  modprobe iptable_nat
+  178  echo 1 > /proc/sys/net/ipv4/ip_forward
+
+  185  iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth5 -d 0/0 -j MASQUERADE
+  186  iptables -A FORWARD -o eth5 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+  187  iptables -A FORWARD -i eth5 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+-- on chialindesktop
+  499  route delete default
+  500  route add default gw 10.10.37.2
+  501  route -n
+  502  ping www.google.com
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# cd /etc
+# vi sysctl.conf 
+net.ipv4.ip_forward=1
+
+
+vi firewall
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Firewall services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo "Starting Firewall... "
+
+        # for natting
+        modprobe iptable_nat
+        echo 1 > /proc/sys/net/ipv4/ip_forward
+
+	      iptables -P INPUT DROP
+	      iptables -P FORWARD DROP
+	      iptables -P OUTPUT ACCEPT
+
+	      iptables -F INPUT 
+	      iptables -F FORWARD 
+	      iptables -F OUTPUT 
+	      iptables -F -t nat
+	
+	      iptables -A INPUT -i eth0 -s 0/0 -d 0/0 -j ACCEPT
+	      iptables -A INPUT -i lo -s 0/0 -d 0/0 -j ACCEPT
+
+        iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth5 -d 0/0 -j MASQUERADE
+        iptables -A FORWARD -o eth5 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+        iptables -A FORWARD -i eth5 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+        iptables -A INPUT -i eth5 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        iptables -A INPUT -i eth5 -m state --state NEW -j DROP
+        ;;
+    stop)
+        echo "Shutdown down Firewall... "
+        iptables -t nat -F
+        iptables -F
+        iptables -P INPUT ACCEPT
+        iptables -P FORWARD ACCEPT
+        iptables -P OUTPUT ACCEPT
+
+        ;;
+    reload|restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+chmod 755 firewall
+update-rc.d firewall start 20 2 3 4 5 . stop 99 0 1 6 .
+
+

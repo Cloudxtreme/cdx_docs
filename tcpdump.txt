@@ -1,0 +1,9 @@
+tcpdump -i eth0 | grep -v cchoudesktop
+tcpdump -nq -i eth0 icmp
+
+tcpdump -nq -i eth0 tcp port 80
+
+tcpdump -s 1550 dst 10.168.28.22 and tcp port 22
+
+tcpdump tcp portrange 20-24
+

@@ -1,0 +1,10 @@
+<zimletConfig name="com_zimbra_asterisk" version="1.0">
+  <global>
+    <property name="sipHost">asterisk</property>
+    <property name="myAddress">webmail</property>
+    <property name="myBaseDN">dc=cdxtest,dc=com</property>
+    <property name="ldapServer">webmail</property>
+    <property name="prefix">475</property>
+    <property name="debug">false</property>
+  </global>
+</zimletConfig>

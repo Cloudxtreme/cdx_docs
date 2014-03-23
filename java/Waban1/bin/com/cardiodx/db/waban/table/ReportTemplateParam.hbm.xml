@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ReportTemplateParam" table="REPORT_TEMPLATE_PARAM" schema="DNALIMS">
+        <id name="templateParamId" type="big_decimal">
+            <column name="TEMPLATE_PARAM_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="reportTemplate" class="com.cardiodx.db.waban.table.ReportTemplate" fetch="select">
+            <column name="TEMPLATE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="templateItem" type="string">
+            <column name="TEMPLATE_ITEM" length="30" />
+        </property>
+        <property name="templateColName" type="string">
+            <column name="TEMPLATE_COL_NAME" length="30" />
+        </property>
+        <property name="templateQuery" type="string">
+            <column name="TEMPLATE_QUERY" length="4000" />
+        </property>
+        <property name="format" type="string">
+            <column name="FORMAT" length="1" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+        <property name="fromR" type="string">
+            <column name="FROM_R" length="10" />
+        </property>
+        <property name="toR" type="string">
+            <column name="TO_R" length="10" />
+        </property>
+        <property name="rangeName" type="string">
+            <column name="RANGE_NAME" length="30" />
+        </property>
+        <property name="subParamId" type="big_decimal">
+            <column name="SUB_PARAM_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

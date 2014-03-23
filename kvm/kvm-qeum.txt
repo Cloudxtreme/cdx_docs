@@ -1,0 +1,77 @@
+kvm qeum
+
+convert from Virtualbox to kvm
+
+http://yonkeltron.com/2008/02/21/virtualbox-to-qemu/
+http://libvirt.org/formatstorage.html
+http://www.nabble.com/Howto:-change-CD-during-an-HVM-install-td14577153.html
+http://forums.fedoraforum.org/showthread.php?t=159263
+
+On gutsy (virtualbox desktop):
+wajig install virtualbox-ose
+
+(?????)
+cd /etc/ld.so.conf.d 
+vi virtualbox.conf
+/usr/lib/virtualbox
+ldconfig
+
+export LD_LIBRARY_PATH=/usr/lib/virtualbox
+/usr/lib/virtualbox/vditool COPYDD winxp.vdi raw.img
+
+
+on hardy (kvm server):
+
+qemu-img convert -f raw raw.img -O qcow2 winxp.img
+
+cd /etc/libvirt/qemu 
+cp randal804.xml winxp.xml
+copy uuid over from gutsy
+
+virsh # define /etc/libvirt/qemu/winxp.xml 
+
+
+list --all
+
+sudo virt-viewer -c qemu:///system winxp
+
+
+define /etc/libvirt/qemu/randal804.xml
+
+attach-disk Id-number /path/to/your/new/ISO hdc --driver file --type cdrom --mode readonly 
+attach-disk winxp32 ./winxp32.iso hdc --driver file --type cdrom --mode readonly
+
+for installing windows xp:
+cd /etc/libvirt/qemu 
+sudo more winxp32.xml
+    <disk type='file' device='cdrom'>
+      <source file='/home/cardiodx/winxp32.iso'/>
+      <target dev='hdc' bus='ide'/>
+      <readonly/>
+    </disk>
+
+
+
+clonedvi???
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+https://help.ubuntu.com/community/WindowsXPUnderQemuHowTo
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    <disk type='file' device='disk'>
+      <source file='/home/cardiodx/images/randal804.img'/>
+      <target dev='hda' bus='ide'/>
+    </disk>
+    <disk type='file' device='disk'>
+      <source file='/home/cardiodx/images/randal804_01.img'/>
+      <target dev='hdb' bus='ide'/>
+    </disk>
+
+define randal804
+
+

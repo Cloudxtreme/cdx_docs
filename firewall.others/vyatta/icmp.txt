@@ -1,0 +1,12 @@
+--
+-- icmp
+--
+set firewall name RATE-LIMIT rule 20 action accept
+set firewall name RATE-LIMIT rule 20 protocol icmp
+set firewall name RATE-LIMIT rule 20 icmp type-name echo-request
+--set firewall name RATE-LIMIT rule 20 icmp type 8
+--set firewall name RATE-LIMIT rule 20 icmp code 0
+set firewall name RATE-LIMIT rule 20 limit rate 2/second
+set firewall name RATE-LIMIT rule 20 limit burst 5
+
+

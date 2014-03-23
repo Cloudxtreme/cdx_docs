@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.DnaSpec" table="DNA_SPEC" schema="DNALIMS">
+        <comment>Spectrophotometer and fluorimetry information for DNA purification readings.</comment>
+        <id name="dnaSpecId" type="big_decimal">
+            <column name="DNA_SPEC_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="measurement" class="com.cardiodx.db.waban.table.Measurement" fetch="select">
+            <column name="MEASUREMENT_ID" precision="22" scale="0">
+                <comment>Measurement identifier and foreign key to the MEASUREMENT table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+        <property name="a325" type="big_decimal">
+            <column name="A325" precision="22" scale="0">
+                <comment>Absorpsion at 325 cm-1.</comment>
+            </column>
+        </property>
+        <property name="a260" type="big_decimal">
+            <column name="A260" precision="22" scale="0">
+                <comment>Absorpsion at 260 cm-1.</comment>
+            </column>
+        </property>
+        <property name="a230" type="big_decimal">
+            <column name="A230" precision="22" scale="0">
+                <comment>Absorpsion at 230 cm-1.</comment>
+            </column>
+        </property>
+        <property name="a280" type="big_decimal">
+            <column name="A280" precision="22" scale="0">
+                <comment>Absorpsion at 280 cm-1.</comment>
+            </column>
+        </property>
+        <property name="dnaConcentration" type="big_decimal">
+            <column name="DNA_CONCENTRATION" precision="22" scale="0">
+                <comment>Derived DNA concentration.</comment>
+            </column>
+        </property>
+        <property name="containerRow" type="big_decimal">
+            <column name="CONTAINER_ROW" precision="22" scale="0">
+                <comment>Row in the container that contains this sample.</comment>
+            </column>
+        </property>
+        <property name="containerColumn" type="big_decimal">
+            <column name="CONTAINER_COLUMN" precision="22" scale="0">
+                <comment>Column in the container that contains this sample.</comment>
+            </column>
+        </property>
+        <property name="latestCalculation" type="java.lang.Boolean">
+            <column name="LATEST_CALCULATION" precision="1" scale="0">
+                <comment>Flag indicating that this is the most current measurement (1 = yes).</comment>
+            </column>
+        </property>
+        <property name="a260A280" type="big_decimal">
+            <column name="A260_A280" precision="22" scale="0">
+                <comment>The 260/280 absorbtion ratio.</comment>
+            </column>
+        </property>
+        <property name="constantValue" type="big_decimal">
+            <column name="CONSTANT_VALUE" precision="22" scale="0" />
+        </property>
+        <property name="percentageCv" type="big_decimal">
+            <column name="PERCENTAGE_CV" precision="22" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="a260A230" type="big_decimal">
+            <column name="A260_A230" precision="22" scale="0">
+                <comment>The 260/230 absorbtion ratio.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+
+openssl x509 -text -in gd_intermediate_bundle.crt 
+
+openssl x509 -text -in wildcard.cardiodx.com.crt 
+
+
+--
+-- conversion
+--
+To convert a certificate from PEM to DER:
+  openssl x509 in input.crt inform PEM out output.crt outform DER
+To convert a certificate from DER to PEM:
+  openssl x509 in input.crt inform DER out output.crt outform PEM
+
+To covert a key from PEM to DER:
+  openssl rsa in input.key inform PEM out output.key outform DER
+To convert a key from DER to PEM:
+  openssl rsa in input.key inform DER out output.key outform PEM

@@ -1,0 +1,22 @@
+select distinct a1.accession_id, avv.variable_label, avv.value as current_value, a1.value as oldvalue, a2.value as newvalue, cr.reason, a1.changed_by, a1.date_changed, a1.rank, a2.rank
+from
+(select aavf.*, rank() over (partition by accession_variable_fld_id order by date_changed) as rank from aud_accession_variable_fld aavf) a1, 
+(select subq1.*, rank() over (partition by accession_variable_fld_id order by date_changed) as rank
+	from (
+			select accession_variable_fld_id, accession_id, value, changed_by, date_changed from aud_accession_variable_fld
+			union
+			select accession_variable_fld_id, accession_id, value, 'FOO' as changed_by, SYSDATE as date_changed from accession_variable_fld
+			) 
+	subq1) a2, accession_variable_view avv, change_reason cr
+where a1.accession_variable_fld_id = a2.accession_variable_fld_id
+and a2.rank - a1.rank = 1
+and a1.value != a2.value
+and avv.accession_variable_fld_id = a1.accession_variable_fld_id
+and a1.change_reason_id = cr.change_reason_id
+--and cr.reason = 'DOUBLE ENTRY MOD'
+and avv.variable_label != 'TRF Ready'
+and avv.variable_label != 'Report As No Test'
+and a1.accession_id = 912
+
+
+

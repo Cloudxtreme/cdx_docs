@@ -1,0 +1,32 @@
+
+select id_from
+from transfer
+where id_from 
+ in (select sample_id from sample where source_type = 'Blood')
+and rownum < 30
+order by id_from desc
+;
+
+select checklist_id, id_from, id_to, to_char(date_created, 'MM/DD/YYYY HH24:MI:SS') date_created
+from transfer
+start with id_from = 1938706
+connect by prior id_to = id_from
+order by date_created;
+
+1938706
+
+select id_from, count(distinct id_to)
+from transfer
+start with id_from = 2192543
+connect by prior id_to = id_from
+group by id_from
+order by id_from;
+
+
+select id_to
+from transfer
+where id_from = 2193366
+;
+
+
+

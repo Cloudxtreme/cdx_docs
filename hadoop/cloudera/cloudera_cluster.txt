@@ -1,0 +1,155 @@
+
+cloudera hadoop
+
+https://docs.cloudera.com/display/DOC/Hadoop+Deployment+%28CDH3%29+in+Standalone+Mode
+
+--
+--    standalone: http://cloudera-tutorial.blogspot.com/2010/11/running-cloudera-in-standalone-mode.html
+--    pseudo dist: http://cloudera-tutorial.blogspot.com/2010/11/running-cloudera-in-pseudo-distributed.html
+--    cluster: http://cloudera-tutorial.blogspot.com/2010/11/running-cloudera-in-distributed-mode.html
+--
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+  301  vi sources.list
+deb http://archive.canonical.com/ lucid partner
+
+  302  apt-get update -o Acquire::http::No-Cache=True
+  303  wajig update
+  304  wajig install sun-java6-jdk -y
+  305  java -version
+java version "1.6.0_22"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install curl -y
+curl -s http://archive.cloudera.com/debian/archive.key | sudo apt-key add -
+
+vi /etc/apt/sources.list
+deb http://archive.cloudera.com/debian lucid-cdh3 contrib
+
+su - root
+
+wajig purge hadoop-0.20 hadoop-0.20-conf-pseudo hadoop-0.20-datanode hadoop-0.20-jobtracker \
+	hadoop-0.20-namenode hadoop-0.20-native hadoop-0.20-secondarynamenode hadoop-0.20-tasktracker
+
+rm -rf /etc/hadoop-0.20/conf.pseudo /etc/hadoop-0.20/conf.cluster /var/lib/hadoop-0.20/cache/hadoop \
+	/var/lib/hadoop-0.20/cache /var/lib/hadoop-0.20 /etc/hadoop-0.20
+
+wajig install hadoop-0.20 hadoop-0.20-conf-pseudo -y
+
+for service in /etc/init.d/hadoop-*; do $service stop; done
+
+cp -r /etc/hadoop-0.20/conf.empty /etc/hadoop-0.20/conf.cluster
+update-alternatives --install /etc/hadoop-0.20/conf hadoop-0.20-conf /etc/hadoop-0.20/conf.cluster 50
+update-alternatives --display hadoop-0.20-conf
+--update-alternatives --remove hadoop-0.20-conf /etc/hadoop-0.20/conf.cluster
+--update-alternatives --set hadoop-0.20-conf /etc/hadoop-0.20/conf.cluster
+
+vi /etc/hosts
+10.10.35.48	master
+10.10.35.77	slave
+
+ssh-keygen -t rsa -P ""
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub slave
+ssh master
+ssh slave
+
+cd conf.cluster/
+
+-- core-site.xml 
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://master:54310</value>
+</property>
+
+-- mapred-site.xml 
+<property>
+  <name>mapred.job.tracker</name>
+  <value>master:54311</value>
+ </property>
+
+-- hdfs-site.xml 
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+</property>
+
+
+  221  tar czvf conf.cluster.tar.gz conf.cluster/
+  223  scp conf.cluster.tar.gz slave:/etc/hadoop
+
+slave:
+  183  tar zxvf conf.cluster.tar.gz 
+  185  rm conf.cluster.tar.gz 
+
+  187  update-alternatives --install /etc/hadoop-0.20/conf hadoop-0.20-conf /etc/hadoop-0.20/conf.cluster 50
+  188  update-alternatives --display hadoop-0.20-conf
+
+
+su -s /bin/bash - hdfs -c 'hadoop namenode -format'
+
+master:
+  /etc/init.d/hadoop-0.20-namenode start
+  /etc/init.d/hadoop-0.20-secondarynamenode start
+  /etc/init.d/hadoop-0.20-jobtracker start
+
+slave:
+  /etc/init.d/hadoop-0.20-datanode start
+  /etc/init.d/hadoop-0.20-tasktracker start
+
+
+su - hdfs
+    1  hadoop fs -mkdir foo
+    2  hadoop fs -ls
+    3  hadoop fs -put /etc/hosts foo
+    4  hadoop fs -ls foo
+
+
+  301  hadoop fs -ls /
+  302  hadoop fs -mkdir /foo
+  303  hadoop fs -ls /
+  304  hadoop jar /usr/lib/hadoop/hadoop-*-examples.jar pi 2 100000
+
+
+  306  hadoop-0.20 fs -ls 
+  307  hadoop-0.20 fs -rmr input
+  308  hadoop-0.20 fs -mkdir input
+
+  309  ll /etc/hadoop-0.20/conf/*.xml
+  310  hadoop-0.20 fs -put /etc/hadoop-0.20/conf/*.xml input
+  311  hadoop-0.20 fs -ls input
+
+  312  hadoop-0.20 jar /usr/lib/hadoop-0.20/hadoop-*-examples.jar grep input output 'dfs[a-z.]+'
+  313  hadoop-0.20 fs -ls
+  314  hadoop-0.20 fs -ls output
+  315  hadoop-0.20 fs -cat output/part-00000 | head
+
+
+  319  hadoop fs -mkdir hello
+  327  hadoop-0.20 fs -ls
+  328  hadoop-0.20 fs -ls hello
+  329  hadoop-0.20 fs -put ~/gutenberg/* hello
+  330  hadoop-0.20 fs -ls hello
+
+hadoop dfsadmin -report
+
+hadoop jar /usr/lib/hadoop-0.20/hadoop-0.20.2-examples.jar wordcount gutenberg gutenberg-output
+hadoop jar  /usr/lib/hadoop-0.20/hadoop-examples-0.20.2+737.jar pi 10 100000
+
+
+
+~~~~~~~~~~~~~~~~~~~~
+update-rc.d hadoop-0.20-namenode defaults
+update-rc.d hadoop-0.20-jobtracker defaults
+update-rc.d hadoop-0.20-secondarynamenode defaults
+
+update-rc.d hadoop-0.20-tasktracker defaults
+update-rc.d hadoop-0.20-datanode defaults
+
+
+
+
+
+
+

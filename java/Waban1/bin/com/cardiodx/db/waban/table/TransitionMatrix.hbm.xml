@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.TransitionMatrix" table="TRANSITION_MATRIX" schema="DNALIMS">
+        <comment>Transition matrix of alleles used in Pgx Data Report</comment>
+        <id name="transitionMatrixId" type="big_decimal">
+            <column name="TRANSITION_MATRIX_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="allele" class="com.cardiodx.db.waban.table.Allele" fetch="select">
+            <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                <comment>ALLELE_ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="reference" type="string">
+            <column name="REFERENCE" length="20">
+                <comment>REFERENCE</comment>
+            </column>
+        </property>
+        <property name="variant" type="string">
+            <column name="VARIANT" length="20">
+                <comment>VARIANT</comment>
+            </column>
+        </property>
+        <property name="remarks" type="string">
+            <column name="REMARKS" length="500">
+                <comment>REMARKS</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>CREATED_BY</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>DATE_CREATED</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>MODIFIED_BY</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>DATE_MODIFIED</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

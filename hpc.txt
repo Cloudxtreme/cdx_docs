@@ -1,0 +1,5 @@
+linux high performance 
+
+http://domino.research.ibm.com/comm/research_projects.nsf/pages/osjitter.Identifying.html
+
+

@@ -1,0 +1,74 @@
+
+wajig install xterm xauth -y
+wajig install openjdk-6-jdk openjdk-6-jre -y
+wajig isntall postgresql
+
+vi /etc/postgresql/8.4/main/postgresql.conf
+#listen_addresses = 'localhost'
+listen_addresses = '*'
+
+vi /etc/postgresql/8.4/main/pg_hba.conf
+local all all trust
+host all all 127.0.0.1/32 trust
+
+service postgresql-8.4 restart
+
+passwd postgresql
+(secret07)
+
+su - postgres
+
+createuser adempiere --pwprompt
+Enter password for new role: (secret07)
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) y
+Shall the new role be allowed to create more new roles? (y/n) n
+
+createdb adempiere
+
+psql -h 127.0.0.1 -U adempiere adempiere
+
+
+  329  groupadd -g 124 adempiere
+  330  useradd -g 124 -u 124 -d /home/adempiere -s /bin/bash adempiere
+  331  mkdir /home/adempiere
+  332  chown adempiere:adempiere /home/adempiere/
+  333  passwd adempiere
+
+copy .bashrc and .profile over
+
+su - adempiere
+
+http://sourceforge.net/projects/adempiere/files/
+  ADempiere Official Release		
+  Adempiere 3.6.0-LTS Laura Edition		
+  Adempiere_360LTS.tar.gz		
+
+tar zxvf Adempiere_360LTS.tar.gz
+
+cp AdempiereEnvTemplate.properties AdempiereEnv.properties
+vi AdempiereEnv.properties
+< ADEMPIERE_HOME=/home/adempiere/Adempiere
+< JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
+< ADEMPIERE_DB_PASSWORD=secret07
+< ADEMPIERE_APPS_SERVER=adempiere.cardiodx.com
+< ADEMPIERE_KEYSTORE=/home/adempiere/Adempiere/keystore/myKeystore
+< ADEMPIERE_KEYSTOREPASS=secret07
+< ADEMPIERE_CERT_CN=adempiere.cardiodx.com
+< ADEMPIERE_CERT_ORG=CardioDX, Inc.
+< ADEMPIERE_CERT_ORG_UNIT=IT
+< ADEMPIERE_CERT_LOCATION=Palo Alto
+< ADEMPIERE_MAIL_SERVER=mail.cardiodx.com
+< ADEMPIERE_ADMIN_EMAIL=admin@cardiodx.com
+
+chmod 755 *.sh
+
+adempiere@adempiere:~/Adempiere
+./RUN_setup.sh
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+
+root@kvmsrv4:~# apt-key list
+/etc/apt/trusted.gpg
+--------------------
+pub   1024D/437D05B5 2004-09-12
+uid                  Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
+sub   2048g/79164387 2004-09-12
+
+pub   1024D/FBB75451 2004-12-30
+uid                  Ubuntu CD Image Automatic Signing Key <cdimage@ubuntu.com>
+
+pub   1024D/6DFBCBAE 2008-07-14
+uid                  Sun Microsystems, Inc. (xVM VirtualBox archive signing key) <info@virtualbox.org>
+sub   2048g/78A86EAF 2008-07-14
+
+
+root@kvmsrv4:~# apt-key remove 78A86EAF
+OK
+
+
+root@kvmsrv4:~# apt-key list
+/etc/apt/trusted.gpg
+--------------------
+pub   1024D/437D05B5 2004-09-12
+uid                  Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
+sub   2048g/79164387 2004-09-12
+
+pub   1024D/FBB75451 2004-12-30
+uid                  Ubuntu CD Image Automatic Signing Key <cdimage@ubuntu.com>
+
+
+~~~~~~~~~~~~~~~~~~~~
+
+wajig update
+GPG error: http://download.virtualbox.org hardy Release: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY DCF9F87B6DFBCBAE
+
+  577  gpg --recv-keys DCF9F87B6DFBCBAE
+  578  gpg --armor --export DCF9F87B6DFBCBAE | apt-key add -
+  579  wajig update
+

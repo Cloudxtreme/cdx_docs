@@ -1,0 +1,54 @@
+#! /bin/sh -e
+#### BEGIN INIT INFO
+# Provides:          fetchmail-cdx
+# Required-Start:    $syslog $time $local_fs $remote_fs
+# Required-Stop:     $syslog $time $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: Deferred execution scheduler
+# Description:       fetchmail for trac
+### END INIT INFO
+#
+# Author:	Chialin Chou <cchou@cardiodx.com>
+#
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/atd
+
+
+test -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+	log_daemon_msg "Starting fetchmail for Trac IT Project" 
+	fetchmail -f /root/fetchmailrc.it --pidfile /var/run/fetchmail_it.pid --ssl  --syslog & 
+
+	log_daemon_msg "Starting fetchmail for Trac CLIA LIMS Project"
+	fetchmail -f /root/fetchmailrc.clia --pidfile /var/run/fetchmail_clia.pid --ssl  --syslog & 
+
+        log_daemon_msg "Starting fetchmail for Trac CLIA LIMS Project"
+        fetchmail -f /root/fetchmailrc.clia --pidfile /var/run/fetchmail_clia.pid --ssl  --syslog &
+
+        log_daemon_msg "Starting fetchmail for Trac Commercial Project"
+        fetchmail -f /root/fetchmailrc.cbs --pidfile /var/run/fetchmail_cbs.pid --ssl  --syslog &
+    ;;
+  stop)
+	kill `cat /var/run/fetchmail_it.pid`
+	kill `cat /var/run/fetchmail_clia.pid`
+	kill `cat /var/run/fetchmail_cbs.pid`
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/atd {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
+

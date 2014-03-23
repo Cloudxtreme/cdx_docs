@@ -1,0 +1,106 @@
+ubuntu karmit image
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+# more apt.conf
+Acquire::http::Proxy "http://10.10.37.2/";
+
+cp sources.list sources.list.orig
+
+cat > sources.list << EOF
+# deb-src http://us.archive.ubuntu.com/ubuntu/ karmic main restricted universe multiverse
+#deb http://mirror.anl.gov/ubuntu/ karmic main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ karmic main restricted universe multiverse
+
+# deb-src http://us.archive.ubuntu.com/ubuntu/ karmic-updates main restricted universe multiverse
+#deb http://mirror.anl.gov/ubuntu/ karmic-updates main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ karmic-updates main restricted universe multiverse
+
+# deb-src http://security.ubuntu.com/ubuntu karmic-security main restricted universe multiverse
+#deb http://mirror.anl.gov/ubuntu karmic-security main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu karmic-security main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ karmic-backports main restricted universe multiverse
+#deb-src http://us.archive.ubuntu.com/ubuntu/ karmic-backports main restricted universe multiverse
+
+deb http://archive.canonical.com/ubuntu karmic partner
+#deb-src http://archive.canonical.com/ubuntu karmic partner
+
+EOF
+
+
+wajig update
+wajig upgrade
+
+wajig dist-upgrade
+wajig install build-essential fakeroot deborphan subversion sysv-rc-conf
+wajig install vim-gnome sun-java6-jdk lvm2 xfsprogs ntp vim-nox
+
+wajig install nvidia-glx-185
+nvidia-xconfig 
+
+
+wajig install compizconfig-settings-manager -y
+wajig install gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse \
+        gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse -y gstreamer0.10-ffmpeg -y
+wajig install flashplugin-nonfree
+
+NOTE: to prevent "sudo: setreuid(ROOT_UID, user_uid): Operation not permitted" 
+  wajig install nscd
+
+System --> Preferences --> CompizConfig Settings Manager
+
+
+-- 
+-- Virtualbox:
+--
+  vi /etc/apt/sources.list.d/virtualbox.list
+    deb http://download.virtualbox.org/virtualbox/debian karmic non-free
+
+   23  wget -q http://download.virtualbox.org/virtualbox/debian/sun_vbox.asc -O- | apt-key add -
+			 wajig update
+   21  wajig install virtualbox-ose
+
+    /etc/init.d/vboxdrv setup
+    # VirtualBox (NOT virtualbox)
+
+
+
+--
+-- google chrome
+--
+vi /etc/apt/sources.list.d/chromium.list
+deb http://ppa.launchpad.net/chromium-daily/ppa/ubuntu karmic main
+deb-src http://ppa.launchpad.net/chromium-daily/ppa/ubuntu karmic main 
+
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xfbef0d696de1c72ba5a835fe5a9bf3bb4e5e17b5
+
+wajig install chromium-browser
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# wajig auto-remove 
+# wajig purge linux-image-2.6.31-14-generic
+
+# wajig install nvidia-glx-185
+Setting up dkms (2.1.0.1-0ubuntu1) ...
+ * Running DKMS auto installation service for kernel 2.6.31-16-generic   [ OK ] 
+
+Building for architecture x86_64
+Building initial module for 2.6.31-16-generic
+Done.
+
+nvidia.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/2.6.31-16-generic/updates/dkms/
+
+depmod....
+
+DKMS: install Completed.
+

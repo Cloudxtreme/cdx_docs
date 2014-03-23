@@ -1,0 +1,44 @@
+
+***Document: /usr/share/doc/bind-9.3.0
+
+
+disk1/3: /mnt/cdrom/media/main
+	dhcp-server-3.0.1-5mdk.i586.rpm
+
+disk2: /mnt/cdrom/media/main2
+	bind-utils-9.3.0-3mdk.i586.rpm
+	bind-9.3.0-3mdk.i586.rpm
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		chroot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mkdir /chroot
+chmod 700 /chroot
+
+
+cd /usr/share/doc/bind*/chroot
+cp -rp chroot/name /chroot
+
+
+vi named.conf
+put full path in the "include"
+	/etc/named/bogon...
+	/etc/named/logging....
+
+mknod /chroot/named/dev/random c 1 8
+
+chown -R named:named /chroot/named
+chmod 700 /chroot/named
+
+vi /etc/sysconfig/named
+ROOTDIR=/chroot/named
+
+
+
+for testing:
+*** change ip in dhcp.conf
+*** exclude bogon 
+
+-----------------------------------------------------
+

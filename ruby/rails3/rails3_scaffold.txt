@@ -1,0 +1,53 @@
+
+http://api.rubyonrails.org/classes/ActiveRecord/Migration.html
+http://guides.rubyonrails.org/migrations.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- see rails3_pgsql.txt
+--
+
+Data types:
+    :binary
+    :boolean
+    :date
+    :datetime
+    :decimal
+    :float
+    :integer
+    :primary_key
+    :string
+    :text
+    :time
+    :timestamp
+
+
+rails generate scaffold User name:string email:string
+rake db:migrate
+
+rails generate scaffold Product name:string 
+rake db:migrate
+
+
+rails generate scaffold Admin::Collection name:string
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rails generate migration AddPasswordToUser encrypted_password:string
+rake db:migrate
+
+psql pg_development
+\d users
+
+rails generate migration RemoveRoleFromUser encrypted_password:string
+rake db:migrate
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+rails generate model Product name:string
+
+rake routes
+
+rake db:migrate
+
+
+

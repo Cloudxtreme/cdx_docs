@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.WorkflowDataLookup" table="WORKFLOW_DATA_LOOKUP" schema="DNALIMS">
+        <id name="dataType" type="string">
+            <column name="DATA_TYPE" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="dataObj" type="serializable">
+            <column name="DATA_OBJ" />
+        </property>
+    </class>
+</hibernate-mapping>

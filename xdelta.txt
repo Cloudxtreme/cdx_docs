@@ -1,0 +1,49 @@
+xdelta3
+
+backup/restore for testlims
+
+su postgres pg_dump prodlims | cat > /root/prodlims_new.sql
+/root/xdelta3 -s prodlims.sql prodlims_new.sql > /root/delta
+xdelta3 -d -s prodlims.sql delta 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
+xdelta delta [ option...  ] fromfile tofile patchout
+
+# xdelta delta prodlims.sql prodlims_new.sql prodlims.xdelta
+
+
+xdelta patch [ option...  ] patchin [ fromfile [ tofile ]]
+
+# xdelta patch prodlims.xdelta prodlims.sql prodlims_new.sql
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
+ls -li */bio*/root/prod* | grep '2007-10'
+
+
+
+-rw-r--r--  1 root root    7598080 2007-10-28 04:53 daily.29/bioinformatics/root/prodlims.xdelta
+-rw-r--r-- 30 root root  786827732 2007-03-20 04:36 daily.0/bioinformatics/root/prodlims.sql
+
+
+xdelta patch daily.18/bioinformatics/root/prodlims.xdelta daily.0/bioinformatics/root/prodlims.sql prodlims_new.sql
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ls -lt */bio*/root/prod* 
+
+
+
+
+./xdelta3 -s phenodb-base.sql new.sql > out
+./xdelta3 -d -s phenodb-base.sql out
+
+
+./xdelta3 -s prodlims.sql prodlims_new.sql > delta
+./xdelta3 -d -s prodlims.sql delta 
+   (xdelta3: using default output filename: prodlims_new.sql)
+
+# md5sum prodlims_new.sql
+fd9dbe5379ad80b14f8f80206db8314d  prodlims_new.sql
+
+
+

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbPolymorphism" table="MDB_POLYMORPHISM" schema="DNALIMS">
+        <id name="polymorphismId" type="big_decimal">
+            <column name="POLYMORPHISM_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0">
+                <comment>Gene identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="position" type="big_decimal">
+            <column name="POSITION" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbVariants" table="MDB_VARIANT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="POLYMORPHISM_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariant" />
+        </set>
+        <set name="mdbExternalReferences" table="MDB_POLY_EXTERN_REF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="POLYMORPHISM_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <many-to-many entity-name="com.cardiodx.db.waban.table.MdbExternalReference">
+                <column name="EXTERNAL_REFERENCE_ID" precision="22" scale="0" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

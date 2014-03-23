@@ -1,0 +1,35 @@
+Pg6::Application.routes.draw do
+
+  namespace :admin do
+    resources :namespaces
+    resources :collections
+    get "fields/json"
+    resources :fields
+    resources :types
+    resources :users
+    resources :profiles
+    resources :securities
+  end
+
+	<% @namespaces.each do |namespace| %>
+		namespace :<%=namespace.name.downcase %> do
+			<% namespace.collections.each do |collection| %> 
+				resources :<%=collection.name.downcase.pluralize %> 
+			<% end %> 
+		end
+	<% end %>
+
+  resources :posts
+
+  get "users/datatable"
+  resources :users
+
+  get "books/json"
+  resources :books
+
+  get "admins/getr"
+  get "admins/setr"
+  resources :admins
+
+
+end

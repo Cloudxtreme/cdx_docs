@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PcrRoiCountView" table="PCR_ROI_COUNT_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PcrRoiCountViewId">
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseId" type="string">
+                <column name="CASE_ID" length="50" />
+            </key-property>
+            <key-property name="roiId" type="big_decimal">
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseRoiId" type="big_decimal">
+                <column name="CASE_ROI_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="testSetupId" type="big_decimal">
+                <column name="TEST_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="roiSelectionId" type="big_decimal">
+                <column name="ROI_SELECTION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="controlSamp" type="big_decimal">
+                <column name="CONTROL_SAMP" precision="22" scale="0" />
+            </key-property>
+            <key-property name="testAccessionId" type="big_decimal">
+                <column name="TEST_ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="ctrlAccessionId" type="big_decimal">
+                <column name="CTRL_ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

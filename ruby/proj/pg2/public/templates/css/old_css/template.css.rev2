@@ -1,0 +1,759 @@
+/* ************************************************************************************************** */
+/*                       CSS by Norm Douglas                                                          */
+/*                         Netreach                                                                   */
+/*																									  */
+/*																									  */
+/* ************************************************************************************************** */
+/* CONTENT CSS 																						  */
+/* ************************************************************************************************** */
+div {
+	border:0 solid red;
+}
+
+body {
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	margin:0;
+	padding:0;
+}
+
+img {
+	border:medium none;
+}
+
+.clear {
+	clear:both;
+	line-height:0;
+	margin:0;
+	padding:0;
+}
+
+
+#container {
+	margin:0 auto;
+	width:965px;
+}
+
+#theater {
+	margin:0 auto;
+	position:relative;
+	top:-7px;
+}
+
+#search {
+}
+
+#ticker {
+	float: left;
+	height: 20px;
+	padding-top: 2px;
+	width: 100%;
+}
+
+a.Gloss {
+	border-bottom:1px double;
+	line-height:1.7em;
+}
+
+h1 {
+	color:#423132;
+	font-weight:bold;
+	margin-left:107px;
+	text-transform:uppercase;
+}
+
+h2 {
+	color:#C42032;
+	font-size:12px;
+	margin-top:0;
+	padding-bottom:15px;
+	padding-top:0;
+}
+
+h3 {
+	color:#C42032;
+	font-size:12px;
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
+h4 {
+	color:#423132;
+	font-size:12px;
+	margin-bottom:0;
+	padding-bottom:0;
+}
+
+#hmain p {
+	color:#423132;
+	line-height:18px;
+	margin-top:0;
+	padding-bottom:8px;
+	padding-top:3px;
+}
+
+#hmain a {
+	color:#9C5F0E;
+	text-decoration:underline;
+}
+
+#footer p, #footer a {
+	color:#423132;
+	font-size:10px;
+}
+
+.nounderline {
+	text-decoration:underline;
+}
+
+blockquote {
+	color:#423132;
+}
+
+#main #headbanner {
+	float:left;
+	padding:0 0 0 23px;
+	width:757px;
+}
+
+#main .company {
+	background:url(../images/banner_sub_company.jpg) no-repeat scroll right top transparent;
+	float:left;
+	height:64px;
+	padding:0 0 0 23px;
+	width:757px;
+}
+
+#main .company h1 {
+	font-size:17px;
+	margin-top:22px;
+}
+
+#main .diagnostic-programs {
+	background:url(../images/banner_sub_diagnostic.jpg) no-repeat scroll right top transparent;
+	float:left;
+	height:64px;
+	padding:0 0 0 23px;
+	width:757px;
+}
+
+#main .diagnostic-programs h1 {
+	font-size:17px;
+	margin-top:22px;
+}
+
+#main .for-patients h1 {
+	font-size:17px;
+	margin-top:22px;
+}
+
+#main .clinical-studies {
+	background:url(../images/banner_sub_clinical.jpg) no-repeat scroll right top transparent;
+	float:left;
+	height:64px;
+	padding:0 0 0 23px;
+	width:757px;
+}
+
+#main .clinical-studies h1 {
+	font-size:17px;
+	margin-top:22px;
+}
+
+#main .news-and-resources {
+	background:url(../images/banner_sub_news.jpg) no-repeat scroll right top transparent;
+	float:left;
+	height:64px;
+	padding:0 0 0 23px;
+	width:757px;
+}
+
+#main  .news-and-resources h1 {
+	font-size:17px;
+        margin-top:22px;
+}
+
+#main .corus-cad {
+	background:url(../images/banner_sub_corus.jpg) no-repeat scroll right top transparent;
+	float:left;
+        height:64px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .corus-cad h1 {
+	font-size:17px;
+        margin-top:22px;
+}
+
+#main .else {
+	background:url(../images/else.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:64px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .else h1 {
+	font-size:17px;
+        margin-top:22px;
+}
+
+#main .else-main {
+	background:url(../images/banner_company.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:105px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .else-main h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .company-main {
+	background:url(../images/banner_company.jpg) no-repeat scroll right top transparent;
+	float:left;
+	height:105px;
+	padding:0 0 0 23px;
+	width:757px;
+}
+
+#main .company-main h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .diagnostic-programs-main {
+        background:url(../images/banner_diagnostic.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:105px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .diagnostic-programs-main h1 {
+        font-size:2em;
+        margin-top:40px;
+}
+
+#main .for-patients-main {
+        background:url(../images/banner_patients.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:105px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .for-patients-main h1 {
+        font-size:2em;
+        margin-top:40px;
+}
+
+#main .clinical-studies-main {
+        background:url(../images/banner_clinical.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:105px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .clinical-studies-main h1 {
+        font-size:2em;
+        margin-top:40px;
+}
+
+#main .news-and-resources-main {
+        background:url(../images/banner_news.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:105px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .news-and-resources-main h1 {
+        font-size:2em;
+        margin-top:40px;
+}
+
+#main .corus-cad-main {
+        background:url(../images/banner_corus.jpg) no-repeat scroll right top transparent;
+        float:left;
+        height:105px;
+        padding:0 0 0 23px;
+        width:757px;
+}
+
+#main .corus-cad-main h1 {
+        font-size:2em;
+        margin-top:40px;
+}
+
+#header {
+	height:109px;
+	overflow:hidden;
+}
+
+#logo {
+	float:left;
+	height:87px;
+	padding-left:27px;
+	width:130px;
+}
+
+#logo a {
+	outline:medium none;
+}
+
+#banner {
+	position:relative;
+}
+
+#navigation {
+	background:url(../images/nav_bg.jpg) no-repeat scroll right top transparent;
+	float:right;
+	height:45px;
+	margin-right:3px;
+	width:800px;
+}
+
+#header-right {
+	float:right;
+}
+
+#buckets {
+	margin:0 auto;
+	min-height:120px;
+	width:inherit;
+}
+
+#bkt1, #bkt2, #bkt3 {
+	float:left;
+	min-height:120px;
+	padding-bottom:10px;
+	padding-left:2px;
+	width:33%;
+}
+
+#bkt1 img, #bkt2 img, #bkt3 img {
+	border:medium none;
+	margin-left:0;
+	padding-bottom:18px;
+}
+
+#bkt1 p, #bkt2 p, #bkt3 p {
+	color:#423132;
+	line-height:16px;
+	margin:0;
+	padding-bottom:13px;
+	padding-left:3px;
+	padding-top:0;
+}
+
+#bkt1 a, #bkt2 a, #bkt3 a {
+	border:medium none;
+	outline:medium none;
+}
+
+#bkt3 img {
+	padding-bottom:21px;
+}
+
+#hmain {
+	float:left;
+	padding-bottom:20px;
+	padding-left:22px;
+	width:758px;
+}
+
+#hmain #content p {
+	color:#423132;
+	line-height:18px;
+	margin-left:0;
+	padding-left:0;
+}
+
+#hmain #minheight {
+	float:right;
+	height:100px;
+	width:1px;
+}
+
+#hmain #content {
+	color:#423132;
+	float:left;
+	margin-top:5px;
+	padding-left:2px;
+	padding-right:28px;
+	width:565px;
+}
+
+#hmain #content_right {
+	float:right;
+	margin-top:5px;
+	padding-top:27px;
+	width:158px;
+}
+
+h2 {
+	padding-bottom:5px;
+	padding-left:2px;
+}
+
+#footer {
+	background:url(../images/footer_line.gif) no-repeat scroll left top transparent;
+	color:#C42032;
+	margin:0 auto;
+	padding-top:17px;
+	width:959px;
+}
+
+#footer p {
+	color:#C42032;
+}
+
+#footer #copyright {
+	float:left;
+	margin-top:0;
+	padding-top:0;
+}
+
+#footer #copyright p {
+	color:#423132;
+	margin-top:0;
+	padding-top:0;
+}
+
+#footer #footer_nav {
+	float:right;
+	margin-top:0;
+	padding-top:0;
+}
+
+#footer #footer_nav p {
+	margin-top:0;
+	padding-top:0;
+}
+
+#footer #footer_nav a {
+	margin-top:0;
+	padding-left:3px;
+	padding-right:3px;
+	padding-top:0;
+	text-decoration:none;
+}
+
+#footer #footer_nav a:hover {
+	color:#C42032;
+}
+
+#noNav {
+	float:left;
+	margin-bottom:50px;
+	margin-left:0;
+	padding-left:0;
+	width:182px;
+}
+
+#noNav #subnav_main {
+	background:url(../images/subnav_top.jpg) no-repeat scroll left top#D9E0D8;
+	height:180px;
+	padding-top:24px;
+	width:inherit;
+}
+
+#noNav #subnav_bot {
+	background:url(../images/subnav_bot.jpg) no-repeat scroll left bottom #D9E0D8;
+	height:30px;
+	width:inherit;
+}
+
+#form_cc {
+	float:left;
+	margin-bottom:50px;
+	margin-left:0;
+	padding-left:0;
+	width:182px;
+}
+
+#form_cc #subnav_main {
+	background:url(../images/subnav_top_red.jpg) no-repeat scroll left top #C11334;
+	height:180px;
+	padding-top:12px;
+	width:inherit;
+}
+
+
+p {
+}
+a:link,
+a:active,
+a:visited {
+}
+a:hover {
+
+}
+a img {
+
+}
+
+/* ************************************************************************************************** */
+/* TEMPLATE LAYOUT CSS - DEFINE YOUR OWN TEMPLATE STYLES HERE										  */
+/* ************************************************************************************************** */
+
+/* ************************************************************************************************** */
+/* JOOMLA SPECIFIC CSS 																				  */
+/* ************************************************************************************************** */
+
+.adminform {
+}
+.article_seperator {
+}
+.back_button {
+}
+.blog {
+}
+.blog_more {
+}
+.blogsection {
+}
+.button {
+}
+.buttonheading {
+}
+.category {
+}
+.clip {
+}
+.componentheading {
+}
+.contact_email {
+}
+.content_rating {
+}
+.content_vote {
+}
+.contentdescription {
+}
+.contentheading {
+}
+.contentpagetitle {
+}
+.contentpane {
+}
+.contentpaneopen {
+}
+.contenttoc {
+}
+.createdate {
+}
+.dtree {
+}
+.dTreeNode {
+}
+.editlinktip {
+}
+.expander {
+}
+.form{
+}
+.highlight {
+}
+.inputbox {
+}
+.item {
+}
+.latestnews {
+}
+.message {
+}
+.message {
+}
+.modifydate {
+}
+.module {
+}
+.module h3 {
+}
+.module div {
+}
+.module div div {
+}
+.module div div div {
+}
+.module div div div div {
+}
+.moduletable {
+}
+.moduletable h3 {
+}
+.mosimage {
+}
+.mosimage_caption {
+}
+.mostread {
+}
+.newsfeed {
+}
+.node {
+}
+.pagenav {
+}
+.pagenav_next {
+}
+.pagenav_prev {
+}
+.pagenavbar {
+}
+.pagenavcounter {
+}
+.paramlist {
+}
+.pathway {
+}
+.poll {
+}
+.pollstableborder {
+}
+.profiler {
+}
+.readon {
+}
+.row1 {
+}
+.row2 {
+}
+.search {
+}
+.searchintro {
+}
+.sectiontableentry1 {
+}
+.sectiontableentry2 {
+}
+.sectiontablefooter {
+}
+.sectiontableheader {
+}
+.small {
+}
+.smalldark {
+}
+.syndicate {
+}
+.syndicate_text {
+}
+.tab {
+}
+.tabclass1 {
+}
+.tabclass2 {
+}
+.tab-page {
+}
+.text_area {
+}
+.toclink {
+}
+.toolbar {
+}
+.tooltip {
+}
+.wrapper {
+}
+iframe.wrapper {
+}
+
+/* ************************************************************************************************** */
+/* JOOMLA MENU CSS 																					  */
+/* ************************************************************************************************** */
+
+ul#mainlevel {
+}
+ul#mainlevel li {
+}
+
+a.mainlevel:link,
+a.mainlevel:active,
+a.mainlevel:visited {
+}
+a.mainlevel:hover {
+}
+a.mainlevel#active_menu {
+}
+
+a.sublevel:link,
+a.sublevel:active,
+a.sublevel:visited {
+}
+a.sublevel:hover {
+}
+a.sublevel#active_menu {
+}
+
+/* ************************************************************************************************** */
+/* OTHER MODULES AND COMPONENTS																		  */
+/* ************************************************************************************************** */
+/* Components and modules that should be part of every setup you do!								  */
+/* Add your own custom css for modules and components you install here!								  */
+/*																									  */
+/* ************************************************************************************************** */
+/* JOOMLA EXT MENU MODULE 																			  */
+/* ************************************************************************************************** */
+
+
+
+/* ************************************************************************************************** */
+/* JOOMLA DISPLAY NEWS BY BK MODULE																	  */
+/* ************************************************************************************************** */
+
+.dn-whole {
+}
+.dn-each {
+}
+span.dn-section {
+}
+a.dn-section {
+}
+span.dn-category {
+}
+a.dn-category {
+}
+span.dn-title {
+}
+a.dn-title{
+}
+span.dn-author {
+}
+span.dn-date {
+}
+span.dn-introtext {
+}
+
+/* ************************************************************************************************** */
+/* JOOMLA MINI FRONTPAGE MODULE	- NOTE THIS MODULE ALSO CONTAINS IT's OWN CSS FILE					  */
+/* ************************************************************************************************** */
+
+table.minifp {
+}
+td.minifp {
+}
+span.minifp-anotherlinks {
+}
+span.minifp-introtitle a {
+}
+span.minifp-date {
+}
+.minifp-full-link {
+}
+ul.minifp {
+}
+li.minifp {
+}
+li.minifp a{
+}
+.mceContentBody {
+	background:white;
+	height:100%
+}

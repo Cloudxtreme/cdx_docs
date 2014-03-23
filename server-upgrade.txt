@@ -1,0 +1,8 @@
+unubut server upgrade to hardy 804
+
+lvcreate -L5G -n hardy vg0
+
+   47  mkfs.xfs /dev/vg0/hardy 
+   52  mkdir newroot
+   53  mount /dev/vg0/hardy newroot/
+

@@ -1,0 +1,35 @@
+tora build oracle
+
+http://a5exclamation.org/2008/04/14/oracle-and-tora-on-ubuntu-hardy/
+
+
+  # wajig install libaio1
+  # vi /etc/apt/sources.list.d/oracle.list
+    deb http://oss.oracle.com/debian unstable main non-free
+
+  385  wajig install oracle-xe
+  386  wajig install oracle-xe-client
+       (/etc/init.d/oracle-xe configure)
+
+  391  export ORACLE_HOME=/usr/lib/oracle/xe/app/oracle/product/10.2.0/server
+  392  export PATH=$PATH:$ORACLE_HOME/bin
+
+  399  mkdir Tora
+  400  cd Tora
+  402  wajig source tora
+  408  wajig build-depend tora
+
+  410  vi /etc/ld.so.conf.d/oracle_xe.conf
+        /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/lib
+  412  ldconfig
+
+  416  cd tora-1.3.22/
+  418  vi debian/rules
+
+        ./configure --prefix=/usr --with-oracle=/usr/lib/oracle/xe/app/oracle/product/10.2.0/server --without-rpath --disable-new-check --without-kde --enable-libsuffix=
+
+        #dh_shlibdeps
+
+  419  fakeroot dpkg-buildpackage
+  430  cd ..
+

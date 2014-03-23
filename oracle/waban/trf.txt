@@ -1,0 +1,69 @@
+set line 1000
+set pagesize 1000
+
+--
+-- what happens to a TRF/accession?
+--
+col PROCEDURE_NAME for a30
+col DESCRIPTION for a60
+col NUMBER_IN_SEQUENCE for 999
+
+select c.date_completed, c.checklist_id, cs.sample_id, p.PROCEDURE_NAME, s.NUMBER_IN_SEQUENCE, s.DESCRIPTION
+from checklist_sample cs, checklist c, procedure_template p, step_template s
+where cs.checklist_id = c.checklist_id 
+   and c.procedure_template_id = p.procedure_template_id
+   and p.procedure_template_id = s.procedure_template_id
+and sample_id in 
+ (select sample_id
+  from sample
+  where accession_id in
+    (select accession_id from accession where accession_number = 'TRF44797')
+ )
+order by c.checklist_id, p.PROCEDURE_NAME, s.NUMBER_IN_SEQUENCE;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- for a given sample, checklist
+--
+col entered_value for a40
+
+-- what's the RNA Quant values?
+18068	  RNA Quantitation
+1941073 sample_id for RNA Quant
+
+select sample_id, CHECKLIST_ROW, CHECKLIST_COL, ENTERED_VALUE 
+from checklist_content 
+where CHECKLIST_ID = 18068
+and sample_id = 1941073
+order by sample_id ;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- other tests
+select c.date_completed, c.checklist_id, s.sample_id, p.PROCEDURE_NAME, s.NUMBER_IN_SEQUENCE, s.DESCRIPTION
+from checklist_sample s, checklist c, procedure_template p, step_template s
+where s.checklist_id = c.checklist_id
+   and c.procedure_template_id = p.procedure_template_id
+   and p.procedure_template_id = s.procedure_template_id
+and sample_id in
+ (select sample_id
+  from sample
+  where accession_id in
+    (select accession_id from accession where accession_number = 'TRF47571')
+ )
+order by c.checklist_id, p.PROCEDURE_NAME, s.NUMBER_IN_SEQUENCE;
+
+--
+-- for a given sample, checklist
+--
+col entered_value for a40
+
+-- what's the RNA Quant values?
+18068   RNA Quantitation
+1941073 sample_id for RNA Quant
+
+select sample_id, CHECKLIST_ROW, CHECKLIST_COL, ENTERED_VALUE
+from checklist_content
+where CHECKLIST_ID in (17878, 17938)
+and sample_id in (1914528, 1923414)
+order by sample_id ;
+

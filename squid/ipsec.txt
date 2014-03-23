@@ -1,0 +1,121 @@
+linux ubuntu ipsec openswan
+
+http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch35_:_Configuring_Linux_VPNs
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(Please read firewall.txt)
+
+wajig install linux-patch-openswan openswan
+  Don't use optimistic feature and x509
+
+/etc/init.d/ipsec restart
+ 
+ipsec verify
+for f in /proc/sys/net/ipv4/conf/*/accept_redirects; do echo 0 > $f; done
+for f in /proc/sys/net/ipv4/conf/*/send_redirects; do echo 0 > $f; done
+ipsec verify
+
+ping www.google.com
+
+# cd /etc
+# more ipsec.secrets
+67.95.201.198 67.95.201.201 : PSK "cdxTest123"
+
+# cp ipsec.conf ipsec.conf.orig
+
+# vi ipsec.conf 
+(add the following lines w/ tab, I believe)
+conn net-to-net
+  authby=secret
+  auto=start
+  left=67.95.201.198
+  leftsubnet=10.10.32.0/21
+  leftnexthop=67.95.201.193
+  right=67.95.201.201
+  rightsubnet=192.168.10.0/24
+  rightnexthop=67.95.201.193
+
+Makes sure you only have one default route.
+
+/etc/init.d/ipsec restart
+  You'll see the following, but it's fine
+			ipsec_setup: whack: Pluto is not running (no "/var/run/pluto/pluto.ctl")
+
+can still ping google.com
+
+ipsec --help
+man ipsec_auto (or use 'man ipsec_command' to see the man page)
+ipsec auto --up net-to-net
+ipsec auto status
+
+#Also implement firewall as in firewall_2.txt
+
+000 "net-to-net": 10.10.32.0/21===67.95.201.198---67.95.201.193...67.95.201.193---67.95.201.201===192.168.10.0/24; erouted; eroute owner: #8
+000 "net-to-net":     srcip=unset; dstip=unset; srcup=ipsec _updown; dstup=ipsec _updown;
+000 "net-to-net":   ike_life: 3600s; ipsec_life: 28800s; rekey_margin: 540s; rekey_fuzz: 100%; keyingtries: 0
+000 "net-to-net":   policy: PSK+ENCRYPT+TUNNEL+PFS; prio: 21,24; interface: eth5; encap: esp;
+000 "net-to-net":   newest ISAKMP SA: #7; newest IPsec SA: #8; 
+000 "net-to-net":   IKE algorithm newest: 3DES_CBC_192-SHA1-MODP1024
+000  
+000 #8: "net-to-net":500 STATE_QUICK_I2 (sent QI2, IPsec SA established); EVENT_SA_REPLACE in 27868s; newest IPSEC; eroute owner
+000 #8: "net-to-net" esp.4dfcda53@67.95.201.201 esp.5ee78b5b@67.95.201.198 tun.0@67.95.201.201 tun.0@67.95.201.198
+000 #7: "net-to-net":500 STATE_MAIN_I4 (ISAKMP SA established); EVENT_SA_REPLACE in 2625s; newest ISAKMP; lastdpd=-1s(seq in:0 out:0)
+
+ipsec auto --down net-to-net
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--iptables -t nat -A POSTROUTING -s 10.10.32.0/21 -o eth5 -d 0/0 -j MASQUERADE
+
+-- create a new table
+iptables -t nat -N ipsec-cdx
+
+iptables -t nat -I POSTROUTING 1 -d 192.168.10.0/24 -j ipsec-cdx
+
+iptables -t nat -A ipsec-cdx -s 10.10.32.0/21 -d 192.168.10.0/24 -j ACCEPT
+iptables -t nat -A ipsec-cdx -s 192.168.10.0/24 -d 10.10.32.0/21 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -t nat -A ipsec-cdx -j DROP
+
+
+Add the followings to /etc/init.d/firewall: 
+
+for start:
+        # IPSec VPN
+        iptables -t nat -N ipsec-cdx
+
+        iptables -t nat -I POSTROUTING 1 -d 192.168.10.0/24 -j ipsec-cdx
+
+        iptables -t nat -A ipsec-cdx -s 10.10.32.0/21 -d 192.168.10.0/24 -j ACCEPT
+        iptables -t nat -A ipsec-cdx -s 192.168.10.0/24 -d 10.10.32.0/21 -m state --state ESTABLISHED,RELATED -j ACCEPT
+        iptables -t nat -A ipsec-cdx -j DROP
+
+for stop:
+        # for IPSec
+        iptables -t nat -X ipsec-cdx
+
+
+(Please refer to firewall_2.txt.)
+
+~~~~~~~~~~~~~~~~~~~~~~
+# more ipsec.conf
+version 2.0
+
+config setup
+  nat_traversal=yes
+  nhelpers=0
+  interfaces="ipsec0=eth5"
+
+conn net-to-net
+  authby=secret
+  auto=start
+  left=67.95.201.198
+  leftsubnet=10.10.32.0/21
+  leftnexthop=67.95.201.193
+  right=67.95.201.201
+  rightsubnet=192.168.10.0/24
+  rightnexthop=67.95.201.193
+
+#include /etc/ipsec.d/examples/no_oe.conf
+
+

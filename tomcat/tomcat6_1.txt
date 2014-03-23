@@ -1,0 +1,34 @@
+
+wajig install tomcat6 tomcat6-admin tomcat6-common tomcat6-user tomcat6-docs tomcat6-examples
+
+http://serverip:8080 
+http://serverip:8080/examples/servlets/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/tomcat6/tomcat-users.xml
+
+<role rolename="manager"/>
+<role rolename="admin"/>
+<user name="admin" password="cdxSecret07" roles="manager,admin"/>
+
+/etc/init.d/tomcat6 restart
+
+http://serverip:8080/manager/html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /var/lib/tomcat6/webapps
+wget http://simple.souther.us/SimpleServlet.war
+
+http://serverip:8080/SimpleServlet/
+http://serverip:8080/SimpleServlet/simple-servlet
+
+
+vi /etc/tomcat6/server.xml 
+  change port 8080 ----> 80
+
+See also ../apache2/apache2_ssl_1.txt
+
+
+ http://openclinica.cardiodx.com/SimpleServlet/simple-servlet
+https://openclinica.cardiodx.com/SimpleServlet/simple-servlet
+

@@ -1,0 +1,87 @@
+
+ **** how to create a iscsi based image from the default xen image
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- install, configure iscsi
+--
+wajig install open-iscsi
+cd /etc/iscsi/
+vi iscsid.conf 
+/etc/init.d/open-iscsi restart
+iscsiadm -m discovery -t st -p storage1
+iscsiadm -m node -T storage1.xen2 -l
+fdisk /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.xen2-lun-0 
+mkfs.xfs -f /dev/sdc1 
+
+
+-- 
+-- copy xen1 files to xen2
+--
+mount -o loop /home/xen/domains/xen1/disk.img xen1/
+mount /dev/sdc1 xen2/
+cd xen2/
+rsync -av ../xen1/* .
+
+cd 
+mount -o bind /dev xen2/dev/
+mount -t proc /proc xen2/proc/
+chroot xen2 bash
+
+vi /etc/fstab
+#/dev/xvda1 none swap sw 0 0
+#/dev/xvda1 / xfs noatime,nodiratime,errors=remount-ro 0 1
+/dev/xvda1 / xfs    relatime        0       1
+
+vi /etc/hostname
+xen2
+
+
+^D
+umount xen2/proc/
+umount xen2/dev
+
+umount /root/xen2
+umount /root/xen1
+
+
+--
+-- on kvmsrv4 (xen host)
+--
+# more xen2.cfg 
+kernel      = '/boot/vmlinuz-2.6.24-24-xen'
+ramdisk     = '/boot/initrd.img-2.6.24-24-xen'
+memory      = '128'
+root        = '/dev/xvda1 ro'
+disk        = [
+                  'phy:/dev/disk/by-path/ip-10.10.37.37:3260-iscsi-storage1.xen2-lun-0-part1,xvda1,w',
+              ]
+vcpus       = '2'
+name        = 'xen2'
+dhcp        = 'dhcp'
+vif         = [ 'mac=08:00:27:59:BD:97' ]
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+extra = '2 console=xvc0'
+
+
+xm list
+xm create xen2.cfg 
+xm console xen2
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+dd if=/dev/zero bs=64k count=16384 | pv > testfile
+1073741824 bytes (1.1 GB) copied, 13.8523 s, 77.5 MB/s
+
+dd if=testfile bs=64k | pv > /dev/null
+1073741824 bytes (1.1 GB) copied, 9.51401 s, 113 MB/s
+
+sync; echo 3 > /proc/sys/vm/drop_caches
+dd if=testfile bs=64k | pv > /dev/null
+1073741824 bytes (1.1 GB) copied, 9.37262 s, 115 MB/s
+
+
+

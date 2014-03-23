@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbLiterature" table="MDB_LITERATURE" schema="DNALIMS">
+        <comment>Literature reference</comment>
+        <id name="literatureId" type="big_decimal">
+            <column name="LITERATURE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="authors" type="string">
+            <column name="AUTHORS" length="2000" not-null="true" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" length="500" not-null="true" />
+        </property>
+        <property name="synopsis" type="string">
+            <column name="SYNOPSIS" length="2000" />
+        </property>
+        <property name="year" type="date">
+            <column name="YEAR" length="7" not-null="true" />
+        </property>
+        <property name="citation" type="string">
+            <column name="CITATION" length="100" />
+        </property>
+        <property name="pubmedId" type="string">
+            <column name="PUBMED_ID" length="20" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbVariantLiteratures" table="MDB_VARIANT_LITERATURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="LITERATURE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariantLiterature" />
+        </set>
+    </class>
+</hibernate-mapping>

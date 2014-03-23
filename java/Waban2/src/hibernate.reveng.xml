@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-schema="CTXSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="DMSYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="EXFSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="GTMETA" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="MDSYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="OLAPSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="ORDSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="SCESCHEMA" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="SYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="SYSTEM" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="WMSYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="XDB" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-name=".*" match-schema="DNALIMS"></table-filter>
+
+
+</hibernate-reverse-engineering>

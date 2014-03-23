@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-schema="CTXSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="DMSYS" match-name=".*" exclude="true">
+	</table-filter>
+	<table-filter match-schema="EXFSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="GTMETA" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="MDSYS" match-name=".*" exclude="true">
+	</table-filter>
+	<table-filter match-schema="OLAPSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="ORDSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="SCESCHEMA" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="SYS" match-name=".*" exclude="true">
+	</table-filter>
+	<table-filter match-schema="SYSTEM" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="WMSYS" match-name=".*" exclude="true">
+	</table-filter>
+	<table-filter match-schema="XDB" match-name=".*" exclude="true">
+	</table-filter>
+	<table-filter match-schema="DNALIMS" match-name=".*_VIEW"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="CDX_CURRENT_REPORT_VIEW_2"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="CONTAINER_SHIPPED" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="DATA_IMPORT_COL_DICT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="DNA_DES_REQUEST" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="EP3BACKDATA_IMPORT_COL_DICT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="MDB_COVERED_ROIS" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="MDB_GENE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="PENDING_SAMPLE_ATTRIBUTE_VW"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="PENDING_SUBJECT_ATTRIBUTE_NAME"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="PROTOCOL_ALLELE_RESULT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="PROTOCOL_GENE_RESULT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="SAMPLE_RECP_REP" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="SAMPLE_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="SHIPPED_SAMPLE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_CASE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_CASE_SAMPLE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_CLASSIFICATION"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_GENE_REGION" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_GENOTYPE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_LITERATURE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_MINOR_ALLELE_FREQ"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_POLY_EXTERN_REF"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_TEST" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_TEST_VARIANT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_VARIANT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+	<table-filter match-name="TRGE_VAR_LIT_REL" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+
+
+
+
+
+
+
+
+
+	<table-filter match-name="AUDIT_TABLE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUDIT_TABLE_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ACCESSION" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ACCESSION_PROCEDURE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ACCESSION_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ALLELE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ALLELE_RESULT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ALLELE_VALUE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_APPROVAL" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ASSAY" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ASSAY_ALLELE_RESULT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ASSAY_RESULT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ASSIGN_INSTRUMENT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ASSIGN_INSTRU_VALUE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ASSIGN_INSTRU_VALUE_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_AUTOACCESSION_LOAD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_HISTORY" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_HISTORY_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_ORDERS" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_ORDERS_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_ROI" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_ROI_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_VARIABLE_FLD_TABLE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CASE_VARIABLE_FLD_TAB_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CDX_CHLIST_FILE_VALUE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CDX_CP_RUN_BATCH"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CDX_CP_RUN_QC" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CDX_FAX_ATTEMPT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CHECKLIST" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CHECKLIST_COMMENT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CHECKLIST_CONTENT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONFIG_ATTRIBUTE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONFIG_ATTRIBUTE_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONFIG_REAGENT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONFIG_REAGENT_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONTACT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONTAINER" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONTAINER_FILENAME"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CONTAINER_MAP" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CP_FINAL_SCORE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CP_NORMALIZED_VALUE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CP_RUN" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CP_RUN_REPORT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_CP_VALUE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_DEADLINE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_DISCRETE_ATTRIBUTE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_DNA_DESTRUCTION_REQUEST"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_DNA_DESTRUCTION_SAMPLE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_DNA_DESTRUCTION_SUBJECT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_DNA_DESTRUCTION_VENDOR"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_EMAIL_TEMPLATE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_FREEZER" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GEL_MARKER" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENE_INTERPRETATION"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENE_INTERPR_DEFINITION"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENE_RESULT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENE_VALUE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENOTYPING_VENDOR_PROJECT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GENOTYPING_VEND_PROJ_DTLS"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GEN_VENDOR_ASSAY_MAP"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GT_VARIANT_ENTRY"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_GT_VARIANT_ENTRY_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_IDENTIFIED_SAMPLE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_IDENTIFIED_SAMPLE_ATTR"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_IDENTIFIED_SAMPLE_ATT_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_IDENTIFIED_SAMPLE_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_INSTRUMENT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_INSTRUMENT_PARAM"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_INSTRUMENT_PROGRAM"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_INSTRUMENT_SETUP"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_INVESTIGATOR_PROTOCOL"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_MAINTENANCE_SCHEDULE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_MASTER_MIX" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_MASTER_MIX_DILUTION"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<table-filter match-name="AUD_MASTER_MIX_ITEM"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_MASTER_MIX_REAGENT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OLIGO_ASSAY_DESIGN"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OLIGO_DESIGN" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OLIGO_MIXTURE_DESIGN"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OLIGO_PLATE_TEMP_DESIGN"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OLIGO_PURPOSE_DESIGN"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OLIGO_REAGENT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ORGANIZATION" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ORGANIZATION_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ORGANIZATION_VARIABLE_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OUTBOUND_ASSAY" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_OUTBOUND_REQUEST"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PATIENT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PATIENT_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_CLEANUP" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_CLEANUP_CONTAINER"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_CLEANUP_CONTAINER_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_CLEANUP_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_SETUP" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_SETUP_CONTAINER"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PCR_SETUP_OLIGO"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PENDING_SAMPLE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PENDING_SAMPLE_ATTRIBUTE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PGX_DATA_REPORT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PGX_GENE_NARRATIVE_TEMPL"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PGX_MODIFIED_GENE_TEMPL"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PGX_MODIFY_DATA_RPT_COM"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PGX_MODIFY_TEMPLATE_COM"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PGX_SETUP_TEMPLATE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PK_ASSAY_RESULT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PK_RESULT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PK_SUBSTANCE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PK_SUBSTANCE_DATA"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PLATE_SUMMARY" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROCEDURE_TEMPLATE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROCEDURE_TEMPLATE_ALLELE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROCEDURE_TEMPLATE_GENE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_ALLELE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_ALLELE_VALUE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_DEFINED_VARIABLE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_GENE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_GENE_VALUE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_PROCEDURE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_PROTOCOL_TEST" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_QC_REVIEW" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_QC_REVIEW_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_REAGENT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_REVIEW" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ROI" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ROI_ATTRIBUTE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_ROI_SELECTION" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SAMPLE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SAMPLE_INSTRUMENT_ASSOC"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SAMPLE_RECEPTION"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SAMPLE_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SAMPLE_VARIABLE_FLD_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SEQ_SETUP" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SEQ_SETUP_CONTAINER"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SEQ_SETUP_CONTAINER_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SEQ_SETUP_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SHIPMENT_AIRBILL"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SHIPMENT_AIRBILL_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SHIPMENT_PACKAGE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SHIPMENT_PACKAGE_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SHIPMENT_RECEIPT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SHIPMENT_RECEIPT_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_REQUEST"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_REQUEST_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_SHIPMENT"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_SHIPMENT_AIRBILL"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_SHIPMENT_AIR_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_SHIPMENT_PACK"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_SHIPMENT_PAC_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SPECIMEN_SHIPMENT_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_STAAR_ANON_REQUEST"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_STEP_TEMPLATE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_STEP_TEMPLATE_PARAMETER"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_STUDY_PROTOCOL" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_STUDY_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_SUBSIDIARY" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TESTING_FACILITY"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TEST_ACCESSION" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TEST_ACCESSION_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TEST_ATTRIBUTE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TEST_SETUP" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TEST_VARIABLE_FLD"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRACE_QC" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRACE_QC_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRACE_TRANSFER" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRACE_TRANSFER_ATTRIBUTE"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRACE_TRANSFER_ATTRIB_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRANSITION_MATRIX"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_TRANSITION_MATRIX_R"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_USERS" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_USER_SUBSIDIARY"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_VARIABLE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_VARIABLE_VALUE" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_VENDOR_PROJECT_ASSAY"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_VENDOR_RESULT_MAP"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_WORDREPORT" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_WORDREPORT_PARAM"
+		match-schema="DNALIMS" exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_WORKFLOW" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-name="AUD_WORKFLOW_R" match-schema="DNALIMS"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="DNALIMS" match-name=".*"></table-filter>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</hibernate-reverse-engineering>

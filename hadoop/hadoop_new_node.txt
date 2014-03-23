@@ -1,0 +1,74 @@
+slave: 
+  vi sources.list
+  deb http://archive.canonical.com/ lucid partner
+
+  apt-get update -o Acquire::http::No-Cache=True
+  wajig update
+  wajig install sun-java6-jdk -y
+  java -version
+    java version "1.6.0_22"
+
+  addgroup hadoop
+  adduser --ingroup hadoop hadoop
+
+master:
+  su - hadoop
+  ssh-copy-id -i $HOME/.ssh/id_rsa.pub phildesktop
+  ssh phildesktop
+
+  scp ~/hadoop-0.20.2.tar.gz hadoop@phildesktop:
+
+slave:
+  cd /usr/local
+  tar zxvf /home/hadoop/hadoop-0.20.2.tar.gz
+  ln -s hadoop-0.20.2/ hadoop
+  chown -R hadoop:hadoop hadoop*
+
+  mkdir -p /usr/local/hadoop-datastore/hadoop-hadoop
+  chown -R hadoop:hadoop /usr/local/hadoop-datastore
+  chmod -R 750 /usr/local/hadoop-datastore
+
+  su - hadoop
+  cd /usr/local/hadoop/conf/
+  vi hadoop-env.sh
+  export JAVA_HOME=/usr/lib/jvm/java-6-sun
+  export HADOOP_OPTS=-Djava.net.preferIPv4Stack=true
+  export HADOOP_NICENESS=10
+
+  mv core-site.xml core-site.xml.orig
+  mv mapred-site.xml mapred-site.xml.orig
+  mv hdfs-site.xml hdfs-site.xml.orig
+
+
+master (add new slave):
+  cd /usr/local/hadoop/conf/
+  vi slaves
+  master
+  phildesktop
+
+  scp core-site.xml hadoop@phildesktop:/usr/local/hadoop/conf
+  scp mapred-site.xml hadoop@phildesktop:/usr/local/hadoop/conf
+  scp hdfs-site.xml hadoop@phildesktop:/usr/local/hadoop/conf
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+slave (check the logs): 
+  ../bin/hadoop-daemon.sh start datanode
+  ../bin/hadoop-daemon.sh start tasktracker
+  or
+  ssh phildesktop '/usr/local/hadoop/bin/hadoop-daemon.sh start datanode'
+  ssh phildesktop '/usr/local/hadoop/bin/hadoop-daemon.sh start tasktracker'
+
+  cd /usr/local/hadoop/logs
+  tail -20f hadoop-hadoop-datanode-phildesktop.log &
+  tail -20f hadoop-hadoop-tasktracker-phildesktop.log &
+
+
+master:
+  bin/hadoop dfsadmin -report
+
+  http://http://master.cardiodx.com:50070 - web UI for HDFS name node(s)
+  http://http://master.cardiodx.com:50060 - web UI for task tracker(s) 
+  http://http://master.cardiodx.com:50030 - web UI for MapReduce job tracker(s)
+

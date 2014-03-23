@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StepTemplateWorkflow" table="STEP_TEMPLATE_WORKFLOW" schema="DNALIMS">
+        <comment>Information about workflow information for workflow type steps</comment>
+        <id name="stepTemplateId" type="big_decimal">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            <generator class="foreign">
+                <param name="property">stepTemplateByStepTemplateId</param>
+            </generator>
+        </id>
+        <many-to-one name="workflowStep" class="com.cardiodx.db.waban.table.WorkflowStep" fetch="select">
+            <column name="WORKFLOW_STEP_ID" precision="22" scale="0" />
+        </many-to-one>
+        <one-to-one name="stepTemplateByStepTemplateId" class="com.cardiodx.db.waban.table.StepTemplate" constrained="true"></one-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="stepTemplateByBranchStep" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="BRANCH_STEP" precision="22" scale="0" not-null="true">
+                <comment>The procedure step identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="comparison" type="string">
+            <column name="COMPARISON" length="10">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="comparisonValue" type="string">
+            <column name="COMPARISON_VALUE" length="256">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

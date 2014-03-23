@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.WorkflowSampleItemView" table="WORKFLOW_SAMPLE_ITEM_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.WorkflowSampleItemViewId">
+            <key-property name="workflowId" type="big_decimal">
+                <column name="WORKFLOW_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="workflowItemId" type="big_decimal">
+                <column name="WORKFLOW_ITEM_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="25" />
+            </key-property>
+            <key-property name="sampleBarcode" type="string">
+                <column name="SAMPLE_BARCODE" length="25" />
+            </key-property>
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="dateCompleted" type="date">
+                <column name="DATE_COMPLETED" length="7" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="errNumber" type="string">
+                <column name="ERR_NUMBER" length="30" />
+            </key-property>
+            <key-property name="errDescription" type="string">
+                <column name="ERR_DESCRIPTION" length="1000" />
+            </key-property>
+            <key-property name="lastProcResult" type="string">
+                <column name="LAST_PROC_RESULT" length="1000" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

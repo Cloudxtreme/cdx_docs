@@ -1,0 +1,67 @@
+
+See also: upgrade_problem-5.23.txt
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Copy certificates over....
+
+  Location: ~/gdrive/it/Private/ssl/wildcard/08-14-2012/apache
+    -rw-rw-r-- 1 cchou cardiodx 1911 2010-08-05 14:26 cardiodx.com.crt
+    -rw-rw-r-- 1 cchou cardiodx 4604 2010-08-05 14:26 gd_bundle.crt
+
+  492  mkdir tmp
+  493  cd tmp/
+  495  mkdir certs
+  496  cd certs/
+  499  mv cardiodx.com.crt wildcard.cardiodx.com.crt
+
+cd tmp/
+cd certs/
+-rw-r--r-- 1 root root 4604 2010-08-05 15:08 gd_bundle.crt
+-rw-r--r-- 1 root root 1911 2010-08-05 15:08 wildcard.cardiodx.com.crt
+
+
+# /opt/zimbra/bin/zmcertmgr deploycrt comm ~/tmp/certs/wildcard.cardiodx.com.crt ~/tmp/certs/gd_bundle.crt
+
+** Verifying /root/tmp/certs/wildcard.cardiodx.com.crt against /opt/zimbra/ssl/zimbra/commercial/commercial.key
+Certificate (/root/tmp/certs/wildcard.cardiodx.com.crt) and private key (/opt/zimbra/ssl/zimbra/commercial/commercial.key) match.
+Valid Certificate: /root/tmp/certs/wildcard.cardiodx.com.crt: OK
+** Copying /root/tmp/certs/wildcard.cardiodx.com.crt to /opt/zimbra/ssl/zimbra/commercial/commercial.crt
+** Appending ca chain /root/tmp/certs/gd_bundle.crt to /opt/zimbra/ssl/zimbra/commercial/commercial.crt
+** Saving server config key zimbraSSLCertificate...done.
+** Saving server config key zimbraSSLPrivateKey...done.
+** Installing mta certificate and key...done.
+** Installing slapd certificate and key...done.
+** Installing proxy certificate and key...done.
+** Creating pkcs12 file /opt/zimbra/ssl/zimbra/jetty.pkcs12...done.
+** Creating keystore file /opt/zimbra/mailboxd/etc/keystore...done.
+** Installing CA to /opt/zimbra/conf/ca...done.
+
+# su - zimbra
+
+$ zmcontrol stop
+Host webmail.cardiodx.com
+	Stopping stats...Done
+	Stopping mta...Done
+	Stopping spell...Done
+	Stopping snmp...Done
+	Stopping archiving...Done
+	Stopping antivirus...Done
+	Stopping antispam...Done
+	Stopping imapproxy...Done
+	Stopping mailbox...Done
+	Stopping logger...Done
+	Stopping ldap...Done
+
+
+$ zmcontrol start
+Host webmail.cardiodx.com
+	Starting ldap...Done.
+	Starting logger...Done.
+	Starting mailbox...Done.
+	Starting antispam...Done.
+	Starting antivirus...Done.
+	Starting snmp...Done.
+	Starting spell...Done.
+	Starting mta...Done.
+	Starting stats...Done.
+

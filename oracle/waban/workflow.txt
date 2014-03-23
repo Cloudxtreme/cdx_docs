@@ -1,0 +1,120 @@
+--
+-- bubble pop
+--
+select distinct to_char(c.date_created, 'HH:MI:SS') batch_time, cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist_sample cs, checklist c, checklist_content cc, procedure_template pt
+where cs.checklist_id = c.checklist_id
+and c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'Bubble Removal/Volume Check'
+and cs.status = 'Passed'
+and (cc.checklist_col > 0 and cc.checklist_row in (1, 4, 5))
+and to_char(c.date_created, 'MM-DD-YY') = '08-30-11'
+order by to_char(c.date_created, 'HH:MI:SS'), cc.checklist_col, cc.checklist_row
+
+select distinct to_char(c.date_created, 'HH:MI:SS') batch_time, cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist_sample cs, checklist c, checklist_content cc, procedure_template pt, 
+	sample s, accession a
+where cs.checklist_id = c.checklist_id
+and c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+  and cs.sample_id = s.sample_id
+  and a.accession_id = s.accession_id
+and pt.procedure_name = 'Bubble Removal/Volume Check'
+and cs.status = 'Passed'
+and (cc.checklist_col > 0 and cc.checklist_row in (1, 4, 5))
+and a.accession_number in ('TRF59159','TRF53714','TRF56829','TRF57092','TRF59160','TRF59148','TRF40699','TRF55682','TRF48754','TRF57455','TRF56137','TRF40700','TRF59149','TRF57093','TRF56853','TRF65367','TRF59161','TRF56138','TRF48832','TRF40701','TRF57413','TRF59162','TRF44165','TRF56040','TRF45885','TRF59151','TRF42477','TRF56733','TRF40702','TRF49417','TRF57414','TRF44698','TRF46302','TRF59152','TRF59142','TRF46303','TRF43654','TRF40044','TRF57415','TRF44168','TRF57405','TRF56736','TRF47155','TRF57416','TRF56065','TRF58413','TRF59144','TRF57406','TRF57417','TRF64867','TRF59145','TRF57418','TRF59146','TRF45594','TRF59157','TRF53580','TRF56717','TRF57463','TRF46308','TRF56828','TRF59147','TRF59136','TRF59158','TRF64858','TRF55702')
+order by to_char(c.date_created, 'HH:MI:SS'), cc.checklist_col, cc.checklist_row
+
+
+--
+-- rna extraction
+--
+select distinct to_char(c.date_created, 'HH:MI:SS') batch_time, cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist_sample cs, checklist c, checklist_content cc, procedure_template pt
+where cs.checklist_id = c.checklist_id
+and c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'RNA Extraction'
+and cs.status = 'Passed'
+and (cc.checklist_col > 0 and cc.checklist_row = 1)
+and to_char(c.date_created, 'MM-DD-YY') = '08-30-11'
+order by to_char(c.date_created, 'HH:MI:SS'), cc.checklist_col, cc.checklist_row
+
+--
+-- RNA Quantation
+-- 
+select distinct to_char(c.date_created, 'HH:MI:SS') batch_time, cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist_sample cs, checklist c, checklist_content cc, procedure_template pt
+where cs.checklist_id = c.checklist_id
+and c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'RNA Quantitation'
+and cs.status = 'Passed'
+and (cc.checklist_col > 0 and cc.checklist_row in (1, 12))
+and to_char(c.date_created, 'MM-DD-YY') = '08-30-11'
+order by to_char(c.date_created, 'HH:MI:SS'), cc.checklist_col, cc.checklist_row
+
+--
+-- RNA Normalization/RT Prep
+--
+select distinct to_char(c.date_created, 'HH:MI:SS') batch_time, cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist_sample cs, checklist c, checklist_content cc, procedure_template pt
+where cs.checklist_id = c.checklist_id
+and c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'RNA Normalization/RT Prep'
+and cs.status = 'Passed'
+and (cc.checklist_col > 0 and cc.checklist_row = 1)
+and to_char(c.date_created, 'MM-DD-YY') = '08-30-11'
+order by to_char(c.date_created, 'HH:MI:SS'), cc.checklist_col, cc.checklist_row
+
+--
+-- Sample addition...... it's done through a plate!!!!
+-- 
+
+select distinct to_char(c.date_created, 'HH:MI:SS') batch_time, cc.entered_value, c.completed
+from checklist c, checklist_content cc, procedure_template pt
+where  c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'Sample Addition'
+and cc.checklist_row = 2
+and to_char(c.date_created, 'MM-DD-YY') = '08-30-11'
+order by to_char(c.date_created, 'HH:MI:SS')
+
+select distinct accession_number
+from accession a, sample s, container c
+where a.accession_id = s.accession_id
+and c.container_id = s.container_id
+and c.container_id = 'AR013829';
+
+--
+-- roche 470
+--
+same as above!!
+
+
+
+--
+-- cp run
+--
+
+select a.accession_number, s.sample_id, sample_tube_id, c.status, final_score
+from accession a, sample s, cp_run c, cp_final_score cfs
+where a.accession_id = s.accession_id
+and s.sample_id = c.sample_id
+and c.cp_run_id = cfs.cp_run_id
+and c.container_id in ('AR013897','AR013876','AR013826','AR013836','AR013829','AR013835','AR013837','AR013901',
+'AR013916','AR013898','AR013895','AR013832','AR013902','AR013903','AR013838','AR013874',
+'AR013892','AR013877','AR013833','AR013900','AR013834','AR013878')
+order by a.accession_number;
+
+
+select a.accession_number, s.sample_id, sample_tube_id, c.status, final_score
+from accession a, sample s, cp_run c, cp_final_score cfs
+where a.accession_id = s.accession_id
+and s.sample_id = c.sample_id
+and c.cp_run_id = cfs.cp_run_id
+and a.accession_number in (
+'TRF56862','TRF61388','TRF65002','TRF61377','TRF61378','TRF56687','TRF38434','TRF65003','TRF65004','TRF56820','TRF53200','TRF40713','TRF56337','TRF57787','TRF32496','TRF43641','TRF53585','TRF43642','TRF55421','TRF61381','TRF53586','TRF56812','TRF61382','TRF61372','TRF61383','TRF56714','TRF54488','TRF53149','TRF61373','TRF66921','TRF56814','TRF40717','TRF39061','TRF52995','TRF61384','TRF53150','TRF40718','TRF61374','TRF61385','TRF57957','TRF57594','TRF56694','TRF65099','TRF61375','TRF61386','TRF55767','TRF56300','TRF61376','TRF61387');
+

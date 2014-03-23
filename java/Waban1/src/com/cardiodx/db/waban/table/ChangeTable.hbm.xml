@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ChangeTable" table="CHANGE_TABLE" schema="DNALIMS">
+        <comment>Information about tables that need a reason for change.</comment>
+        <id name="tableName" type="string">
+            <column name="TABLE_NAME" length="60" />
+            <generator class="assigned" />
+        </id>
+        <property name="auditTable" type="string">
+            <column name="AUDIT_TABLE" length="60" not-null="true" unique="true">
+                <comment>Name of the audit table used to audit the normal table. This allows for look up by audit table name.</comment>
+            </column>
+        </property>
+        <property name="screenName" type="string">
+            <column name="SCREEN_NAME" length="60">
+                <comment>Name of specific screen to check for change reason</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

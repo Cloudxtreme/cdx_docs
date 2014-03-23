@@ -1,0 +1,7 @@
+on wabandb
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SQL> alter database tempfile '/u01/app/oracle/oradata/ORCL/temp01.dbf' resize 2G;
+
+Database altered.
+

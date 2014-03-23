@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.OligoMixtureSorceView" table="OLIGO_MIXTURE_SORCE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.OligoMixtureSorceViewId">
+            <key-property name="oligoId" type="big_decimal">
+                <column name="OLIGO_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="oligoName" type="string">
+                <column name="OLIGO_NAME" length="50" />
+            </key-property>
+            <key-property name="assayName" type="string">
+                <column name="ASSAY_NAME" length="50" />
+            </key-property>
+            <key-property name="purpose" type="string">
+                <column name="PURPOSE" length="50" />
+            </key-property>
+            <key-property name="concentration" type="big_decimal">
+                <column name="CONCENTRATION" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

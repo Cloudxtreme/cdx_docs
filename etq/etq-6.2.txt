@@ -1,0 +1,283 @@
+etq 6.2
+
+s/w: ~/gdrive/it/software/EtQ/6.2/reliance20090427-1809.zip
+IQ: EtQ Installation Qualification (IQ) - Installation 6.2.doc
+
+
+--
+-- mysql:
+--
+
+cd /usr/
+mkdir mysql3309
+chown mysql:mysql mysql3309/
+
+cd mysql
+cp my3307.cnf my3309.cnf
+
+vi my3309.cnf
+max_connections = 1000
+max_allowed_packet = 32M
+
+chown mysql:mysql my3309.cnf
+
+
+
+su - mysql
+cd /usr/mysql
+
+(NOTE: The default database was initially created using ./configure command.)
+cd /usr/mysql/data
+cp -R mysql ../../mysql3309/
+
+
+cd /usr/mysql3309
+tail -20f etqdevel.err &
+
+
+cd /usr/mysql
+./bin/mysqld_safe --defaults-file=/usr/mysql/my3309.cnf &
+
+./bin/mysql -uroot -S/tmp/mysql62.sock
+show databases;
+
+(How to change password??????)
+
+./bin/mysqladmin -uroot -S/tmp/mysql62.sock shutdown
+
+./bin/mysql -uroot -S/tmp/mysql62.sock -p
+grant all on *.* to 'root'@'localhost' identified by 'podhe9e';
+flush privileges;
+
+./bin/mysql -uroot -S/tmp/mysql62.sock -p
+podhe9e
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+login as mysql
+
+cd /home/etq/reliance62/MySQLScripts/
+
+/usr/mysql/bin/mysql -uroot -S/tmp/mysql62.sock -p
+podhe9e
+
+-- for 6.0: 46 scripts installed
+-- for 6.2: 53 scripts installed
+
+\T /tmp/mysql62.log
+
+source ./StartupPatch/Startup-Patch.SQL;
+source ./1-ENGINE_SCHEMA.SQL;
+source ./2-ENGINE_DATA.SQL;
+source ./3-DATACENTER_SCHEMA.SQL;
+source ./4-DATACENTER_DATA.SQL;
+source ./5-ENGINE_CONSTRAINTS.SQL;
+source ./6-DATACENTER_CONSTRAINTS.SQL;
+source ./7-LOOKUPS_SCHEMA.SQL;
+source ./8-LOOKUPS_DATA.SQL;
+source ./9-LOOKUPS_CONSTRAINTS.SQL;
+source ./10-CUSTOMERS_SCHEMA.SQL;
+source ./11-CALIBRATION_SCHEMA.SQL;
+source ./12-SUPPLIER_SCHEMA.SQL;
+source ./13-SUPPLIER_RATING_DATA.SQL;
+source ./14-SUPPLIER_CONSTRAINTS.SQL;
+source ./15-SUPPLIERARC_SCHEMA.SQL;
+source ./16-AUDITS_SCHEMA.SQL;
+source ./17-AUDITS_DATA.SQL;
+source ./18-AUDITS_CONSTRAINTS.SQL;
+source ./19-AUDITSARC_SCHEMA.SQL;
+source ./20-CHANGE_SCHEMA.SQL;
+source ./21-COMPLAINTS_SCHEMA.SQL;
+source ./22-CORRACT_SCHEMA.SQL;
+source ./23-DELEGATION_SCHEMA.SQL;
+source ./24-TRAINING_SCHEMA.SQL;
+source ./25-DOCARC_SCHEMA.SQL;
+source ./26-DOCWORK_SCHEMA.SQL;
+source ./27-INCIDENTS_SCHEMA.SQL;
+source ./28-MATRET_SCHEMA.SQL;
+source ./29-QUALRECS_SCHEMA.SQL;
+source ./30-QUALRECSARC_SCHEMA.SQL;
+source ./31-VACATION1_SCHEMA.SQL;
+source ./32-RISK_SCHEMA.SQL;
+source ./33-RISK_DATA.SQL;
+source ./34-RISK_CONSTRAINTS.SQL;
+source ./35-MEETINGS_SCHEMA.SQL;
+source ./36-MSDS_SCHEMA.SQL;
+source ./37-MSDSARC_SCHEMA.SQL;
+source ./38-ASPECTS_SCHEMA.SQL;
+source ./39-ASPECTSARC_SCHEMA.SQL;
+source ./40-EMERGENCY_SCHEMA.SQL;
+source ./41-EMERGENCYARC_SCHEMA.SQL;
+source ./42-MONITORING_SCHEMA.SQL;
+source ./43-MONITORINGARC_SCHEMA.SQL;
+source ./44-REGULATORY_SCHEMA.SQL;
+source ./45-REGULATORYARC_SCHEMA.SQL;
+source ./46-EVALIDATOR_SCHEMA.SQL;
+source ./47-EVALIDATORARC_SCHEMA.SQL;
+source ./48-VALIDATION_SCHEMA.SQL;
+source ./49-VALIDATIONARC_SCHEMA.SQL;
+source ./50-PROJECT_SCHEMA.SQL;
+source ./51-NCMR_SCHEMA.SQL;
+source ./52-DEVIATION_SCHEMA.SQL;
+source ./53-REPORTING_SCHEMA.SQL;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- tomcat:
+--
+
+cd ~/Reliance_6.2/WAR/Binary
+cp reliance.war /usr/tomcat/webapps/reliance_62.war
+
+/usr/tomcat/webapps/reliance_62/ should be created by tomcat
+
+cd /usr/tomcat/webapps/reliance_62/wsdl
+diff CommandManager.wsdl ../../reliance_dev/wsdl/CommandManager.wsdl
+<          <wsdlsoap:address location="http://localhost:8080/reliance/services/CommandManager"/>
+>          <wsdlsoap:address location="http://10.10.37.32:80/reliance_dev/services/CommandManager"/>
+
+cd WEB-INF/props
+
+build.number
+ldap.cardiodx.com.properties
+
+./builders_config.properties
+./command_definitions.properties
+./config.properties
+./database.properties
+./database.properties.DB2
+./database.properties.DB2iSeries
+./database.properties.Oracle
+./database.properties.SQLServer
+./ldap.properties
+./log4j.properties
+./mail.properties
+./pdfGenerator_config.properties
+
+
+vi config.propertires
+< licenseKey=AB511777F0A0584C3643F88C703416E87F18A42DA57D0044CE791980E9CE8ADE09AA6E69EA91D248FF2C5B8A62E8AA68C34AB65C640A1170EC67BCDF6CC93403F4FCE2E4454FA917FFF63CBEAAFEFAA55D240546533259CD41343E3FC31D3EFDDE4C2183BDC73D417717FAC22264270FCF47AC8DD60B08226A8EE619EAC8E7AD0BD9E1CC8FC404936551F2C05D7F6480859BD82FB4232B77182C36EE0118CA763A1790F3B067E881AE52A9D76B87F9F1271343AD9DEC044D3595775CA5B758E2B1175F83CB73AD75D1FCCBD51EC424B3CB755227D5DCB2BC91DA4E0011C8C27FBDC2E0DF57189214EA399A5260AD6C786FC88785CA5D11FB7B37242639FD4E711B1ACA908A34BACE2826DCB1CD0B24FF1A6C917F754F8B50431B5B00520765A596DA2CE3FA670AFDF21444969F06AE0EDE0E2B3704D0682D0FD8C8A58D384B017D004ED01C9B5D26AE78C7FB6C0E4E268EDBDF331A4D8F1B2826DCB1CD0B24FF98263B6FFCA212638D8D9244D0B55A2D8B4A5D1BFF788AEB8B5D1AA3EBB7DBD94BF8F57E6FE07995345EFF564F4AECC111EF6A42C5A87F0A84CAA97299C6451C5707A0418F3A0BED4A3F562D0BC25EA9
+< systemEmail=admin@cardiodx.com
+< maxLoginFailures=10
+< indexRoot=/usr/tomcat/webapps/reliance_62/index
+< enableTestScriptGenerator=0
+
+
+mkdir /usr/tomcat/webapps/reliance_62/index
+
+
+cd /usr/tomcat/webapps/reliance_62/WEB-INF/classes
+java -classpath . com.etq.util.encryption.EtQEncryptionUtils podhe9e
+A09913D107DED3EFA82F44881B88D95084721632C3C3AA4D0CAF0B678F583C411F0799721362CC4F0CA2667D442B87A73AF09DEEF2FB2763
+
+vi database.properties
+
+- Add password for root
+- Change /RelianceDatabase to localhost
+- Change port from 3306 to 3309
+
+< password=A09913D107DED3EF23BBB466CF8E937D4C38755537FCC36227CC9B61429BBE4A3E464EBA11801171387BC3753D5F28446CE1BB44A4813DC7
+< ENGINE.url=jdbc:mysql://localhost:3309/ENGINE?autoReconnect=true
+< LOOKUPS.url=jdbc:mysql://localhost:3309/LOOKUPS?autoReconnect=true
+< CORRACT.url=jdbc:mysql://localhost:3309/CORRACT?autoReconnect=true
+< DELEGATION.url=jdbc:mysql://localhost:3309/DELEGATION?autoReconnect=true
+< DOCWORK.url=jdbc:mysql://localhost:3309/DOCWORK?autoReconnect=true
+< DOCARC.url=jdbc:mysql://localhost:3309/DOCARC?autoReconnect=true
+< DEVIATION.url=jdbc:mysql://localhost:3309/DEVIATION?autoReconnect=true
+< NCMR.url=jdbc:mysql://localhost:3309/NCMR?autoReconnect=true
+< CHANGE.url=jdbc:mysql://localhost:3309/CHANGE?autoReconnect=true
+< AUDITS.url=jdbc:mysql://localhost:3309/AUDITS?autoReconnect=true
+< AUDITSARC.url=jdbc:mysql://localhost:3309/AUDITSARC?autoReconnect=true
+< COMPLAINTS.url=jdbc:mysql://localhost:3309/COMPLAINTS?autoReconnect=true
+< CALIBRATION.url=jdbc:mysql://localhost:3309/CALIB?autoReconnect=true
+< REPORTING.url=jdbc:mysql://localhost:3309/REPORTING?autoReconnect=true
+< TRAINING.url=jdbc:mysql://localhost:3309/TRAINING?autoReconnect=true
+< MATRET.url=jdbc:mysql://localhost:3309/MATRET?autoReconnect=true
+< MEETINGS.url=jdbc:mysql://localhost:3309/MEETINGS?autoReconnect=true
+< INCIDENTS.url=jdbc:mysql://localhost:3309/INCIDENTS?autoReconnect=true
+< QUALRECS.url=jdbc:mysql://localhost:3309/QUALRECS?autoReconnect=true
+< QUALRECSARC.url=jdbc:mysql://localhost:3309/QUALRECSARC?autoReconnect=true
+< VACATION1.url=jdbc:mysql://localhost:3309/VACATION1?autoReconnect=true
+< VACATION2.url=jdbc:mysql://localhost:3309/VACATION2?autoReconnect=true
+< VACATION3.url=jdbc:mysql://localhost:3309/VACATION3?autoReconnect=true
+< VACATION4.url=jdbc:mysql://localhost:3309/VACATION4?autoReconnect=true
+< VACATION5.url=jdbc:mysql://localhost:3309/VACATION5?autoReconnect=true
+< VACATION6.url=jdbc:mysql://localhost:3309/VACATION6?autoReconnect=true
+< VACATION7.url=jdbc:mysql://localhost:3309/VACATION7?autoReconnect=true
+< VACATION8.url=jdbc:mysql://localhost:3309/VACATION8?autoReconnect=true
+< MEETINGS.url=jdbc:mysql://localhost:3309/MEETINGS?autoReconnect=true
+< RISK.url=jdbc:mysql://localhost:3309/RISK?autoReconnect=true
+< MSDS.url=jdbc:mysql://localhost:3309/MSDS?autoReconnect=true
+< MSDSARC.url=jdbc:mysql://localhost:3309/MSDSARC?autoReconnect=true
+< ASPECTS.url=jdbc:mysql://localhost:3309/ASPECTS?autoReconnect=true
+< ASPECTSARC.url=jdbc:mysql://localhost:3309/ASPECTSARC?autoReconnect=true
+< EMERGENCY.url=jdbc:mysql://localhost:3309/EMERGENCY?autoReconnect=true
+< EMERGENCYARC.url=jdbc:mysql://localhost:3309/EMERGENCYARC?autoReconnect=true
+< MONITORING.url=jdbc:mysql://localhost:3309/MONITORING?autoReconnect=true
+< MONITORINGARC.url=jdbc:mysql://localhost:3309/MONITORINGARC?autoReconnect=true
+< REGULATORY.url=jdbc:mysql://localhost:3309/REGULATORY?autoReconnect=true
+< REGULATORYARC.url=jdbc:mysql://localhost:3309/REGULATORYARC?autoReconnect=true
+< EVALIDATOR.url=jdbc:mysql://localhost:3309/EVALIDATOR?autoReconnect=true
+< EVALIDATORARC.url=jdbc:mysql://localhost:3309/EVALIDATORARC?autoReconnect=true
+< DATACENTER.url=jdbc:mysql://localhost:3309/DATACENTER?autoReconnect=true
+< PROJECT.url=jdbc:mysql://localhost:3309/PROJECT?autoReconnect=true
+< VALIDATION.url=jdbc:mysql://localhost:3309/VALIDATION?autoReconnect=true
+< VALIDATIONARC.url=jdbc:mysql://localhost:3309/VALIDATIONARC?autoReconnect=true
+< SUPPLIER.url=jdbc:mysql://localhost:3309/SUPPLIER?autoReconnect=true
+< SUPPLIERARC.url=jdbc:mysql://localhost:3309/SUPPLIERARC?autoReconnect=true
+< CUSTOMERS.url=jdbc:mysql://localhost:3309/CUSTOMERS?autoReconnect=true
+< CUSTOMERS.schema=CUSTOMERS
+
+
+cp /usr/tomcat/webapps/reliance_dev/WEB-INF/props/ldap.properties .
+
+# grep -v '#' ldap.properties 
+java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory
+java.naming.provider.url=ldaps://ldap.cardiodx.com/dc=cardiodx,dc=com
+java.naming.security.principal=cdxtest
+java.naming.security.credentials=cdxtest
+securityPrincipalTemplate=uid=ETQ$USER_NAME,ou=Users,dc=cardiodx,dc=com
+searchTemplate=uid
+java.naming.security.authentication=simple
+com.sun.jndi.ldap.connect.timeout=5000
+java.naming.referral=ignore
+ldap_uid=uid
+ldapCustomClass=
+ENGINE_USER_NAME=uid
+ENGINE_EMAIL=mail
+ENGINE_DISPLAY_NAME=displayName
+ENGINE_FIRST_NAME=cn
+ENGINE_LAST_NAME=sn
+ENGINE_IS_GROUP=objectclass
+ENGINE_LDAP_DOMAIN_NAME=DC
+PERSON_CLASS_TYPE=inetOrgPerson
+enableAddingNewUsers = 1
+enableDisablingDeletedUsers = 0
+searchCriteria=
+
+ln -s ldap.properties ldap.cardiodx.com.properties
+
+vi config.properties
+< ldapUnavailable=0
+< ldapVerboseLogging=1
+
+
+
+log4j.properties
+< log4j.appender.FILE.File=/usr/tomcat/logs/reliance_62.log
+
+
+mail.properties
+< host=smtp.cardiodx.com
+
+
+pdfGenerator_config.properties
+< EasyPDFServerHost = easypdf
+< EasyPDFServerPort = 8080
+< EasyPDFFolderLocalPath = /mnt/easyPDF
+< EasyPDFSharedFolderName = easyPDFTest
+
+
+
+

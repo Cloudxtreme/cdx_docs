@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Deadline" table="DEADLINE" schema="DNALIMS">
+        <comment>Information about the deadlines set for the job assigned to a user.</comment>
+        <id name="deadlineId" type="big_decimal">
+            <column name="DEADLINE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>FK FROM CHECKLIST TABLE(CHECKLIST_ID PK)</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="userName" type="string">
+            <column name="USER_NAME" length="30">
+                <comment>USER NAME or ROLE</comment>
+            </column>
+        </property>
+        <property name="userOrRole" type="string">
+            <column name="USER_OR_ROLE" length="4">
+                <comment>USER NAME OR ROLE NAME, VALUES ROLE OR USER</comment>
+            </column>
+        </property>
+        <property name="noDays" type="string">
+            <column name="NO_DAYS" length="10">
+                <comment>NO OF DAYS FOR NOTIFICATION</comment>
+            </column>
+        </property>
+        <property name="notificationFrequency" type="string">
+            <column name="NOTIFICATION_FREQUENCY" length="10">
+                <comment>FREQUENCY FOR NOTIFICATION</comment>
+            </column>
+        </property>
+        <property name="deadlineDate" type="date">
+            <column name="DEADLINE_DATE" length="7">
+                <comment>DEADLINE DATE FOR SAMPLE SHIPMENT</comment>
+            </column>
+        </property>
+        <property name="lastNotifiedDate" type="date">
+            <column name="LAST_NOTIFIED_DATE" length="7">
+                <comment>LAST NOTIFICATION DATA</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified the record;</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date that the record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

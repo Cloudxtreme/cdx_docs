@@ -1,0 +1,25 @@
+
+From: Hatem Irshaid, forwarded from Lori
+Subject: Fwd: Timeline discussion
+
+
+cardioDX.zip
+
+
+  621  cd reliance_dev/common/layouts/
+  623  ll CommentHistory.jsp 
+  624  ll CommentHistory_Tab.jsp 
+  627  mv CommentHistory.jsp CommentHistory.jsp.112208
+  628  mv CommentHistory_Tab.jsp.122208
+  629  mv CommentHistory_Tab.jsp CommentHistory_Tab.jsp.122208
+  630  mv CommentHistory.jsp.112208 CommentHistory.jsp.122208
+  631  cp ~/bugfix-122208/common/layouts/CommentHistory.jsp .
+  632  cp ~/bugfix-122208/common/layouts/CommentHistory_Tab.jsp .
+  633  ps -ef | grep java
+  634  cd /usr/tomcat/
+  636  cd bin/
+  641  kill -9 4520
+  643  /etc/init.d/tomcat start
+  644  cd ../logs/
+  646  tail -20f catalina.out 
+

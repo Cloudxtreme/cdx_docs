@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Transfer" table="TRANSFER" schema="DNALIMS">
+        <comment>Information about sample transfers from one tube to another.</comment>
+        <id name="transferId" type="big_decimal">
+            <column name="TRANSFER_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="reagent" class="com.cardiodx.db.waban.table.Reagent" fetch="select">
+            <column name="REAGENT_ID" precision="22" scale="0">
+                <comment>Reagent identifier for the reagent used in the dilution and foreign key to the REAGENT table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="sampleTableByIdFrom" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="ID_FROM" precision="22" scale="0" not-null="true">
+                <comment>The sample tube identifier for the initial tube (the tube the sample was transferred from). Foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="sampleTableByIdTo" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="ID_TO" precision="22" scale="0" not-null="true">
+                <comment>The sample tube identifier for the final tube (the tube the sample was transferred to). Foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                <comment>The step identifier and foreign key to the STEP_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="wholeTube" type="java.lang.Boolean">
+            <column name="WHOLE_TUBE" precision="1" scale="0">
+                <comment>Flag indicating whether or not the entire contents of the tube was transferred.</comment>
+            </column>
+        </property>
+        <property name="dilutionFactor" type="big_decimal">
+            <column name="DILUTION_FACTOR" precision="22" scale="0">
+                <comment>The dilution ratio used (dilutions only).</comment>
+            </column>
+        </property>
+        <property name="volumeFrom" type="big_decimal">
+            <column name="VOLUME_FROM" precision="22" scale="0">
+                <comment>The initial sample volume.</comment>
+            </column>
+        </property>
+        <property name="volumeTo" type="big_decimal">
+            <column name="VOLUME_TO" precision="22" scale="0">
+                <comment>The final sample volume.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="checklistCol" type="big_decimal">
+            <column name="CHECKLIST_COL" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

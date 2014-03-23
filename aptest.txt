@@ -1,0 +1,54 @@
+aptest installation
+
+http://www.aptest.com/atm2/documentation/2.17.02/readme/install-unix.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig isntall apache2 libx11-6 libgd2-xpm libgd2-xpm-dev libpng12-0 libjpeg62 libfreetype6
+wajig install subversion build-essential quilt autotools-dev -y
+wajig install libapache2-mod-perl2
+
+
+files:
+  atmSE_2.17.zip
+  LICENSE.dat
+
+cpan
+install Bundle::CPAN
+
+cd /var/www
+cp /root/LICENSE.dat ./data
+./INSTALL.pl
+
+
+
+For apache2:
+
+	<Directory /var/www>
+		AllowOverride All
+	</Directory>
+
+	PerlRequire "/var/www/ATMHandler.pm"
+
+
+http://aptest/checkSetup.pl
+
+
+???root@aptest:/usr/share/perl/5.8# ln -s /var/www/ATMHandler.pm .
+
+aptest:/usr/local/lib/site_perl#
+  393  ln -s /var/www/*.pm .
+  395  ln -s /var/www/lib/*.pm .
+
+
+
+wajig install mysql-server mysql-client
+
+  pwrd: cdxMysql
+
+
+
+
+GRANT ALL PRIVILEGES ON atm.* TO 'atm'@'localhost'
+IDENTIFIED BY 'cdxATM0806' WITH GRANT OPTION;
+

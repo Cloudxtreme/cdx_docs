@@ -1,0 +1,110 @@
+
+Copy the following files over:
+	cardiodev.zip  cardiodxfinal7.zip
+
+
+--
+-- restore mysql database
+--
+root@etqdevel:~/7.0# unzip cardiodxfinal7.zip
+
+vi cardiodxfinal7.zip
+    SET FOREIGN_KEY_CHECKS = 0;
+      :
+      : (all other sql statements)
+      :
+    SET FOREIGN_KEY_CHECKS = 1;
+
+/usr/mysql/bin/mysqladmin --defaults-file=/usr/mysql/my3307.cnf -S/tmp/mysqldev.sock -ppodhe9e shutdown
+
+cd /usr/mysql3307
+mv mysql ../mysql.3307.sav
+rm -rf *
+mv ../mysql.3307.sav/ mysql
+
+cd /usr/mysql
+./bin/mysqld_safe --defaults-file=/usr/mysql/my3307.cnf &
+
+vi my3307.cnf
+  add it before 'key_buffer'
+lower_case_table_names = 1
+
+./bin/mysql -u root -p -S /tmp/mysqldev.sock -A < /root/7.0/cardiodxfinal7.sql
+password --> 'root'
+
+
+--
+-- tomcat
+--
+  522  cd 7.0/
+  523  ls
+  524  ll
+  525  unzip cardiodev.zip
+
+root@etqdevel:~/7.0# cd /usr/tomcat/
+root@etqdevel:/usr/tomcat/webapps# mv reliance_dev reliance_dev.old
+root@etqdevel:/usr/tomcat/webapps# mv /root/7.0/cardiodev reliance_dev
+root@etqdevel:/usr/tomcat/webapps# cd reliance_dev/WEB-INF/props/
+
+vi log4j.properties
+log4j.appender.FILE.File=/usr/tomcat/logs/reliance_de_dev.log
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF/props# vi mail.properties
+host=smtp.cardiodx.com^M
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF/props# vi database.properties
+  change all to localhost:3307
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF/props# vi config.properties
+< licenseKey=AB511777F0A0584C6DFB6D34C47DD8F57F18A42DA57D0044CE791980E9CE8ADE09AA6E69EA91D248FF2C5B8A62E8AA68E1EEF537EC3D22FBEC67BCDF6CC93403F4FCE2E4454FA917FFF63CBEAAFEFAA55D240546533259CD41343E3FC31D3EFDDE4C2183BDC73D417717FAC22264270FCF47AC8DD60B08226A8EE619EAC8E7AD22C3CB23AE9FAE7DCB06E4F2A15F33463C9568E40417E630B0C77738A198CDBE13EBF18AD82717C00E5BC1965B802EC0FDCE80171AEE3D997E835B545C7C1117BDC4340A018515D41C10E223A4ECC946D20A4A31DCDB2D33A88F8D3FC3543F58575F92F55CDC295E37260A2718EC269D0379EBAD7ED43C071453B82E6BADC6403345BF35D7584664E33704DDE78FB40EA851854F36E1D7D9A16C9357E615DEBE589F42F62D8BFF8599D7C0FCC69C3B8BB71A5238D530BE434AB7925E067543A2095C0375D01BAF2D9CC94531BFDA4C6AED257FC06E47FE7B75375780369C166D6557D538A156022DB4DDC648E6D18314A71F3A882E7D98AE99D7C0FCC69C3B8BFF880CD776724A73AA2C9039EDD3C50C25ECA8AC4B488D0E719799F050D56EDE50418018CB778A6F5D3FDA3E732B471233B6CEBB045618CC11EF6A42C5A87F0A84CAA97299C6451CFDAE8B6C1BEFD399820AD19897E3B19B
+< systemEmail=admin@cardiodx.com
+< ldapUnavailable=0
+< indexRoot=/usr/index/reliance_dev
+< attachmentRoot=/usr/files/reliance_dev
+< jspellUnavailable=0
+< mailUnavailable=1
+< enableIcal4jTimeZoneAutomaticUpdate=1
+
+clear cache
+start tomcat
+
+https://etqdevel.cardiodx.com/reliance_dev/reliance
+  etqadministrator/123
+
+enterprise configuration center
+etq administrator
+reset password
+
+
+
+
+root@etqdevel:/usr/mysql/bin# ./mysql -u root -p -S /tmp/mysqldev.sock
+mysql> update mysql.user set password = PASSWORD('podhe9e') where user = 'root';
+Query OK, 4 rows affected (0.02 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+mysql> flush privilege;
+
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF/classes# java -classpath . com.etq.util.encryption.EtQEncryptionUtils podhe9e
+A09913D107DED3EF3E2BA9C3080F3EF92762B573117BE50E8DC92EA7BB0EDF999E742F3954858B45B05EB0DD7480F86FCA2B955ECB6C7BD9
+
+
+cp ldap.properties ldap.cardiodx.com.properties
+vi ldap.cardiodx.com.properties
+< java.naming.provider.url=ldaps://ldap.cardiodx.com/dc=cardiodx,dc=com
+< java.naming.security.principal=cdxtest
+< java.naming.security.credentials=cdxtest
+< securityPrincipalTemplate=uid=ETQ$USER_NAME,ou=Users,dc=cardiodx,dc=com
+< searchTemplate=uid
+< ENGINE_USER_NAME=uid
+< ENGINE_EMAIL=mail
+< ENGINE_DISPLAY_NAME=displayName
+< ENGINE_FIRST_NAME=cn
+< ENGINE_LAST_NAME=sn
+< PERSON_CLASS_TYPE=inetOrgPerson
+< enableAddingNewUsers = 1
+
+

@@ -1,0 +1,18 @@
+codec:
+
+wajig install gstreamer0.10-ffmpeg gstreamer0.10-gl gstreamer0.10-plugins-base \
+	gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse \
+	gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse libxine-extracodecs 
+
+wajig install totem-xine
+wajig install xine-ui libxine-extracodecs 
+
+
+#vi multimedia.txt 
+#deb http://ftp.osuosl.org/pub/pculture.org/democracy/linux/repositories/ubuntu edgy/
+#wajig install democracyplayer democracyplayer-data
+
+wajig install kino kinoplus kino-timfx kino-dvtitler
+
+wajig install audacity
+

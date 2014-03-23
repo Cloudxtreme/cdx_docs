@@ -1,0 +1,102 @@
+<head>
+  <style type="text/css" title="currentStyle">
+    @import "/kendoui.web.2013.1.319.open-source/styles/kendo.common.min.css";
+    @import "/kendoui.web.2013.1.319.open-source/styles/kendo.default.min.css";
+  </style>
+
+  <script type="text/javascript" language="javascript" src="/kendoui.web.2013.1.319.open-source/js/kendo.web.min.js"></script>
+</head>
+
+<%= form_for(@object) do |f| %>
+
+<div class='field'>Numeric:     <input type="number" id="numeric" value="17" min="0" max="100" step="1" /> <br /> </div>
+<div class='field'>Currency:    <input type="number" id="currency" value="30" min="0" /> <br /></div></div>
+<div class='field'>Percentage:  <input type="number" id="percentage" placeholder="between 0 and 1" min="0", max="1", step="0.01" /> <br /></div>
+<div class='field'>Exponencial: <input type="number" id="exp" required validationMessage="This is a required field" /> <br /></div>
+
+<div class='field'>Phone:       <input type="tel" id="tel" name="tel" class="k-textbox" pattern="\d{3}-\d{3}-\d{4}" placeholder="nnn-nnn-nnnn" required validationMessage="Ten digit phone number"/><br></div>
+
+<div class='field'>Datetime: <input type="datetime" id="datetimepicker" /> <br /></div>
+<div class='field'>Date:    <input type="date" id="datepicker" value="2011-03-25" /> <br /></div>
+<div class='field'>Time:    <input type="time" id="timepicker" value="10:00 AM" /> <br /></div>
+<div class='field'>Month:     <input type="month" id="monthpicker" value="November 2011" /> <br /></div>
+
+<div class='field'>Text:    <input type="text" id="fullname"  style="width:250px" name="fullname" class="k-textbox" placeholder="Full name" required validationMessage="Please enter {0}" /><br></div>
+<div class='field'>Search:  <input type="search" id="search" name="search" class="k-textbox" required validationMessage="Please select movie"/><br></div>
+<div class='field'>Email:     <input type="email" id="email" name="Email" class="k-textbox" placeholder="e.g. myname@example.net"  required data-email-msg="Email format is not valid" /><br></div>
+
+<div class='field'>Richtext: <textarea id="editor" rows="10" cols="30" style="width:540px;height:240px"></textarea> <br /></div>
+<div class='field'>Textarea: <textarea class="k-textbox">Textarea</textarea> <br /></div>
+<div class='field'>Checkbox: <input type="checkbox" name="Accept" required validationMessage="Acceptance is required" /> I accept the terms and condition of service <br /></div>
+
+<div class='field'>Weight:  <input id="custom" value="2" /> <br /></div>
+<div class='field'>URL:       <input id="url" type="url" class="k-textbox" /> <br /></div>
+
+<div id="climateCtrl"><input id="slider" class="temperature" /></div></div>
+<div id="climateCtrl"> <div id="rangeslider" class="humidity"> <input /><input /> </div> </div>
+<style> #climateCtrl { margin: 17px 10px 10px 10px; } </style>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<!-- ----------------------------------------------------------------- -->
+
+<script>
+
+$(document).ready(function() {
+
+  $(function() {
+    $("#test3_bike_date_test1").kendoDatePicker({
+        format: "yyyy-MM-dd"
+    });
+  });
+
+    var validator = $("#new_test3_bike").kendoValidator().data("kendoValidator"),
+    status = $(".status");
+
+    /////////////////
+    $("#numeric").kendoNumericTextBox( {format: "n2" });
+    $("#currency").kendoNumericTextBox({ format: "c" });
+    $("#percentage").kendoNumericTextBox({ format: "p", decimals: 5 });
+    $("#exp").kendoNumericTextBox({ format: "e" });
+    $("#monthpicker").kendoDatePicker({ start: "year", depth: "year", format: "MMMM yyyy" });
+    $("#datetimepicker").kendoDateTimePicker({ value:new Date() });
+    $("#datepicker").kendoDatePicker({format: "yyyy-MM-dd"});
+    $("#timepicker").kendoTimePicker();
+    $("#editor").kendoEditor();
+    $("#custom").kendoNumericTextBox({ format: "#.00 kg" });
+
+    // for sliders
+				function sliderOnSlide(e) { }
+				function sliderOnChange(e) { }
+				function rangeSliderOnSlide(e) { }
+				function rangeSliderOnChange(e) { }
+
+				$(document).ready(function() {
+						$("#slider").kendoSlider({
+								change: sliderOnChange,
+								slide: sliderOnSlide,
+								min: 0,
+								max: 30,
+								smallStep: 1,
+								largeStep: 10,
+								value: 18
+						});
+
+						$("#rangeslider").kendoRangeSlider({
+								change: rangeSliderOnChange,
+								slide: rangeSliderOnSlide,
+								min: 0,
+								max: 10,
+								smallStep: 1,
+								largeStep: 2,
+								tickPlacement: "both"
+						});
+				});
+
+});
+
+</script>
+

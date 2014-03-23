@@ -1,0 +1,139 @@
+Ata over ethernet vblade
+
+http://www.linuxjournal.com/article/8149
+https://help.ubuntu.com/community/ATAOverEthernet
+http://www.coraid.com/support/linux/EtherDrive-2.6-HOWTO.html
+http://support.coraid.com/support/linux/EtherDrive-2.6-HOWTO.html#toc5
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#
+# on both client and server (NOT needed!!)
+#
+
+wajig install build-essential linux-headers-`uname -r` -y
+
+(http://www.coraid.com/support/linux/)
+--wget http://www.coraid.com/support/linux/aoe6-62.tar.gz
+wget http://support.coraid.com/support/linux/aoe6-72.tar.gz
+make
+make install
+
+cd ~/aoe6-62/linux/Documentation/aoe
+chmod 755 udev-install.sh 
+./udev-install.sh
+
+modprobe aoe
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#
+# Server
+#
+wajig install vblade
+wajig isntall vblade-persist 
+
+--dd if=/dev/zero of=vblade0 count=1 bs=1M
+--vblade 1 1 eth0 vblade0 
+
+# runsv (runit)
+lvcreate -L+50M -n vblade2 vg0
+vblade-persist setup 1 3 eth0 /dev/vg0/vblade2
+vblade-persist ls
+vblade-persist auto 1 3 
+vblade-persist start 1 3
+
+vblade-persist destroy 1 3
+   lvchange -an /dev/vg0/xendrv
+   lvremove /dev/vg0/xendrv
+
+NOTE: reboot might be needed 
+   (warning: /var/lib/vblade-persist/vblades/e2.0: unable to open supervise/ok: file does not exist)
+
+
+
+# 
+# client:
+# 
+wajig install aoetools
+
+aoe-discover
+aoe-stat
+  e1.1         0.001GB   eth0 up      
+
+mkfs.ext3 /dev/etherd/e1.1
+mkdir /mnt/e1.1
+mount /dev/etherd/e1.1 /mnt/e1.1/
+
+
+vi aoe
+chmod 755 aoe
+sysv-rc-conf
+
+#! /bin/sh
+
+# chkconfig: 2345 27 22
+# description: aoe init script
+
+case "$1" in
+        "start")
+                # load any needed network drivers here
+
+                # replace "eth1" with your aoe network interface
+                #ifconfig eth1 up
+
+                # time for network interface to come up
+                #sleep 4
+
+                modprobe aoe
+
+                # time for AoE discovery and udev
+                sleep 3
+
+                # add your raid assemble commands here
+                # add any LVM commands if needed (e.g. vgchange)
+                # add your filesystem mount commands here
+
+                test -d /var/lock/subsys && touch /var/lock/subsys/aoe-init
+
+                # mount aoe devices
+                #mount /dev/etherd/e2.4 /mnt/e2.4
+
+                ;;
+        "stop")
+                # add your filesystem umount commands here
+                # deactivate LVM volume groups if needed
+                # add your raid stop commands here
+                rmmod aoe
+                rm -f /var/lock/subsys/aoe-init
+                ;;
+        *)
+                echo "usage: `basename $0` {start|stop}" 1>&2
+                ;;
+esac
+
+
+for jumbo frames, please read network.txt
+
+
+*****Problems:
+  How to remove a device (from the client)?
+  Why vblade-persist destroy from the server side doen't help to take the 
+   device 'down' from the client side?
+  --> lvscan will hang.....
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+qaoed - Mulithreaded ATA over Ethernet storage target qaoed(8)
+
+http://pi.nxs.se/~wowie/qaoed.tgz/
+http://pi.nxs.se/~wowie/aoeserver/v0.94/
+
+
+
+What to do when a device is removed on the server side? 
+  client(aoe-stat) shows the old size when size changed on the server side
+  hang/error on lvscan
+
+
+
+
+

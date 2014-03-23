@@ -1,0 +1,31 @@
+# more cuteflow.xml 
+<domain type='kvm'>
+  <name>cuteflow</name>
+  <uuid>1f44ad63-954b-4487-b3c2-ea87583bbfeb</uuid>
+  <memory>524288</memory>
+  <currentMemory>524288</currentMemory>
+  <vcpu>4</vcpu>
+  <os>
+    <type>hvm</type>
+    <boot dev='hd'/>
+  </os>
+  <clock offset='utc'/>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <devices>
+    <emulator>/usr/bin/kvm</emulator>
+    <disk type='file' device='disk'>
+      <source file='/dev/vg0/cuteflow'/>
+      <target dev='hda' bus='virtio'/>
+    </disk>
+    <interface type='bridge'>
+      <mac address='08:00:27:5d:7a:0d'/>
+      <source bridge='br0'/>
+      <model type='virtio'/>
+    </interface>
+    <input type='mouse' bus='ps2'/>
+    <graphics type='vnc' port='-1' listen='127.0.0.1'/>
+  </devices>
+</domain>
+

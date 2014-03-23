@@ -1,0 +1,79 @@
+wferun ruote
+
+
+http://rubyforge.org/frs/?group_id=2609
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+on ccmac, I did the following:
+
+wget http://rubyforge.org/frs/download.php/43042/ruote-web-0.9.19.zip
+unzip ruote-web-0.9.19.zip 
+cd ruote-web-0.9.19
+rake ruote:gem_install
+rake data:bootstrap
+rake data:populate
+
+./script/server -p 3002
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://openwferu.rubyforge.org/ttt/p0.html
+
+The Tea Testing Tea example:
+
+cp -rp ruote-web-0.9.19/ ttt
+
+vi database.yml 
+  database: ttt_development
+  username: ttt
+  password: ttt
+
+mysql -u root -p -e "grant select,insert,update,delete,create,drop,index on ttt_development.* to 'ttt'@'localhost' identified by 'ttt'" 
+
+mysql -u root -p -e "create database ttt_development CHARACTER SET utf8 COLLATE utf8_general_ci" 
+
+
+cd ttt/
+rake data:bootstrap
+rake data:populate
+(enter mysql root password)
+
+./script/server -p 3002
+http://ccmac:3002
+
+cd public/
+cd process_definitions/
+wget http://openwferu.rubyforge.org/defs/ttt/teatesting_0.2.xml
+
+login as admin:
+Click worklist
+Add 'reception' as the groupname
+   add teatesting_0.2.xml as the url
+Click the + sign
+
+*  5 regular users (reception, ted, tang, takeshi, planning) plus 1 admin user
+* 1 group (reception)
+* no store permissions (relying on the implicit permissions on the special user workitem store
+* 1 launch permission for the group reception on /process_definitions/teatesting_0.2.xml
+
+:
+:
+:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

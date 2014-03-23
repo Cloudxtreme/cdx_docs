@@ -1,0 +1,100 @@
+on 2.01
+hardware autodetect
+clock timezone EST
+clock server time.vortech.net
+password admin $1$$lFHDZzSaH5XyQJIWi/fl4. encrypted
+password debug $1$$lFHDZzSaH5XyQJIWi/fl4. encrypted
+fixup pptp
+fixup ftp
+fixup irc
+hostname wolverine
+domain-name cardiodx.com
+name-server 10.10.37.21
+
+# remember to add default route to post-boot for the secondary IP!!
+interface eth0 address 192.168.123.1/24
+interface eth1 address 10.10.37.2/21
+interface eth2 address 192.168.2.0/24
+interface eth3 address 192.168.3.0/24
+interface eth4 address 173.13.158.180/28
+interface eth4 address 173.13.158.181/28 secondary
+interface eth5 address 67.95.201.198/27
+interface eth5 address 67.95.201.199/27 secondary
+
+port-forward 67.95.201.194 10.10.37.22 udp 1194 1194
+port-forward 67.95.201.194 10.10.37.27 tcp 443 443
+port-forward 67.95.201.194 10.10.37.27 tcp 993 993
+port-forward 67.95.201.194 67.95.201.196 tcp 80 80
+port-forward 67.95.201.194 10.10.37.36 tcp 3389 3389
+port-forward 67.95.201.197 10.10.37.36 tcp 443 443
+
+icmp permit 10.10.32.0/21 all eth1
+access-list inout permit all 10.10.32.0/21 any
+access-list outin permit tcp any 10.10.37.27 443
+access-list outin permit tcp any 10.10.37.27 993
+access-list outin permit udp any 10.10.37.22 1194
+access-list outin permit tcp any 10.10.37.36 443
+access-list outdmz permit tcp any 67.95.201.196 25
+access-list outdmz permit tcp any 67.95.201.196 80
+access-list outdmz permit tcp any 67.95.201.196 465
+access-list outdmz permit tcp any 67.95.201.196 443
+access-list dmzin permit tcp 67.95.201.196 10.10.37.21 389
+access-list dmzin permit udp 67.95.201.196 10.10.37.21 53
+access-list dmzin permit udp 67.95.201.196 10.10.37.22 514
+access-list dmzout permit tcp 67.95.201.196 any 25
+access-list dmzout permit tcp 67.95.201.196 any 80
+access-list dmzout permit udp 67.95.201.196 any 123
+access-list infuse permit tcp 70.58.37.37 10.10.37.36 3389
+access-list infuse permit tcp 24.10.180.184 10.10.37.36 3389
+access-list infuse permit tcp 71.199.56.195 10.10.37.36 3389
+access-list infuse permit tcp 206.71.69.92 10.10.37.36 3389
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.12
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.12
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.96
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.97
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.5
+access-list clinix permit tcp 10.10.32.0/21 66.18.106.160/27
+access-list clinix permit tcp 66.18.106.160/27 10.10.36.42
+access-list clinix permit icmp 66.18.106.160/27 any
+access-list clinix permit tcp 66.18.106.160/27 10.10.37.106 9100
+
+nat eth4 10.10.32.0/21
+nat eth5 10.10.32.0/21
+
+ssh server enable 22
+ssh 10.10.32.0/21
+#qos rate 10000 10000
+http server disable
+http 10.10.32.0/21
+
+pptp server enable
+pptp proxyarp
+pptp local-address 10.10.37.251
+pptp address-pool 10.10.37.252 10.10.37.253
+pptp dns-server 10.10.37.21
+pptp user srikar srwelcome
+pptp user cchou cchou1200
+
+logging host 10.10.37.22
+
+ipsec tunnel eRT-2 10.10.32.0/21 12.3.153.0/24 via 12.149.54.90
+ipsec tunnel eRT-2 auth psk CDX2eResearch
+ipsec tunnel eRT-2 ike cipher 3des
+ipsec tunnel eRT-2 ike hash sha1
+ipsec tunnel eRT-2 ike lifetime 3600
+ipsec tunnel eRT-2 ike dh-group 2
+ipsec tunnel eRT-2 esp cipher 3des
+ipsec tunnel eRT-2 esp hash hmac_sha1
+ipsec tunnel eRT-2 esp lifetime 3600
+ipsec tunnel eRT-2 esp pfs-group 2
+ipsec tunnel clinix 10.10.32.0/21 66.18.106.160/27 via 66.18.99.68
+ipsec tunnel clinix auth psk cadx6795201194
+ipsec tunnel clinix ike cipher 3des
+ipsec tunnel clinix ike hash md5
+ipsec tunnel clinix ike lifetime 3600
+ipsec tunnel clinix ike dh-group 2
+ipsec tunnel clinix esp cipher 3des
+ipsec tunnel clinix esp hash hmac_md5
+ipsec tunnel clinix esp lifetime 28800
+ipsec tunnel clinix esp pfs-group 0
+

@@ -1,0 +1,10 @@
+1. Create the user 
+	INSERT INTO USERS(login, password_salt, crypted_password,
+		persistence_token, single_access_token, perishable_token, first_name, last_name) 
+	VALUES('llu@cardiodx.com', '0', '0', '0', '0', '0', 'Lin', 'Lu');
+2. Look up the just-created user_id (118, in this case)
+3. Add to the role
+	INSERT INTO roles_users(role_id, user_id, created_by) VALUES (1, 118, 1);
+
+
+

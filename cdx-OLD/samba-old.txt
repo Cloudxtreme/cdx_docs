@@ -1,0 +1,315 @@
+
+urpmi openldap-client
+urpmi openldap-servers
+	db42-utils-4.2.52-6mdk.i586
+	libltdl3-1.5.6-4mdk.i586
+	libunixODBC2-2.2.8-2.1.101mdk.i586
+	openldap-servers-2.1.30-3mdk.i586
+
+urpmi samba-server
+urpmi samba-client
+urpmi samba-doc
+
+urpmi pam_ldap
+
+
+-- 
+-- backup configuration files
+--
+cp /etc/openldap/slapd.conf ~
+cp /etc/openldap/ldap.conf ~
+cp /etc/samba/smb.conf ~
+cp /etc/pam.d/system-auth ~
+cp /etc/samba/smbldap_conf.pm ~
+cp /etc/ldap.conf ~/ldap.conf-etc
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/openldap/slapd.conf
+rootdn          "cn=Manager,dc=example,dc=com"		
+rootpw          secret
+
+~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/openldap/ldap.conf
+BASE    dc=example, dc=com
+HOST    127.0.0.1
+
+#URI     ldap://pdc
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+service ldap start
+--debugging...
+/usr/sbin/slapd -d -128 -u ldap
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/ldap.conf
+binddn cn=Manager,dc=example,dc=com
+bindpw secret
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+--vi base.ldif
+--ldapadd -a -W -x -D "cn=Manager,dc=example,dc=com" -f base.ldif
+
+
+service ldap stop
+cp -rp /var/lib/ldap /var/lib/ldap.sav
+service ldap start
+
+
+cd /etc/samba
+vi smbldap_conf.pm 
+$binddn = "cn=Manager,$suffix";
+
+
+smbldap-populate
+
+				Using builtin directory structure
+				Use of uninitialized value in concatenation (.) or string at /usr/bin/smbldap-populate line 102, <DATA> line 225.
+				Use of uninitialized value in concatenation (.) or string at /usr/bin/smbldap-populate line 102, <DATA> line 225.
+				Use of uninitialized value in concatenation (.) or string at /usr/bin/smbldap-populate line 102, <DATA> line 225.
+				Use of uninitialized value in concatenation (.) or string at /usr/bin/smbldap-populate line 102, <DATA> line 225.
+				Use of uninitialized value in concatenation (.) or string at /usr/bin/smbldap-populate line 102, <DATA> line 225.
+				Use of uninitialized value in concatenation (.) or string at /usr/bin/smbldap-populate line 102, <DATA> line 225.
+				adding new entry: dc=example,dc=com
+				adding new entry: ou=People,dc=example,dc=com
+				adding new entry: ou=Group,dc=example,dc=com
+				adding new entry: ou=Hosts,dc=example,dc=com
+				adding new entry: uid=Administrator,ou=People,dc=example,dc=com
+				failed to add entry: sambahomepath: value #0 invalid per syntax at /usr/bin/smbldap-populate line 323, <GEN1> line 6.
+				adding new entry: uid=nobody,ou=People,dc=example,dc=com
+				failed to add entry: sambahomepath: value #0 invalid per syntax at /usr/bin/smbldap-populate line 323, <GEN1> line 7.
+				adding new entry: cn=Domain Admins,ou=Group,dc=example,dc=com
+				adding new entry: cn=Domain Users,ou=Group,dc=example,dc=com
+				adding new entry: cn=Domain Guests,ou=Group,dc=example,dc=com
+				adding new entry: cn=Administrators,ou=Group,dc=example,dc=com
+				adding new entry: cn=Users,ou=Group,dc=example,dc=com
+				adding new entry: cn=Guests,ou=Group,dc=example,dc=com
+				adding new entry: cn=Power Users,ou=Group,dc=example,dc=com
+				adding new entry: cn=Account Operators,ou=Group,dc=example,dc=com
+				adding new entry: cn=Server Operators,ou=Group,dc=example,dc=com
+				adding new entry: cn=Print Operators,ou=Group,dc=example,dc=com
+				adding new entry: cn=Backup Operators,ou=Group,dc=example,dc=com
+				adding new entry: cn=Replicator,ou=Group,dc=example,dc=com
+				adding new entry: cn=Domain Computers,ou=Group,dc=example,dc=com
+
+
+ldapsearch -x -b "dc=example,dc=com" "(ObjectClass=*)"
+
+~~~~~~~~~~~~~~~~~~~~~~
+slapcat
+
+
+			???
+				dn: uid=root,ou=people,dc=example,dc=com
+				objectClass: person
+				objectClass: uidObject
+				uid: root
+				description: Account used by Samba servers to access user passwords
+				cn: root
+				sn: root
+				userPassword: {SSHA}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+			needed:
+				nis.schema 
+				cosine.schema
+				samba.schema
+
+
+			padl-MigrationTools.tar
+			tar zxvf padl-MigrationTools.tar
+			./migrate_passwd.pl /etc/passwd passwd.ldif
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/samba/smb.conf 
+
+netbios name = PDC
+
+search on ldap
+replace mydomain --> example
+
+
+add user script = /usr/share/samba/scripts/smbldap-useradd.pl '%u'
+delete user script = /usr/share/samba/scripts/smbldap-userdel.pl '%u'
+add user to group script = /usr/share/samba/scripts/smbldap-groupmod.pl -m '%u' '%g'
+delete user from group script = /usr/share/samba/scripts/smbldap-groupmod.pl -x '%u' '%g'
+set primary group script = /usr/share/samba/scripts/smbldap-usermod.pl -g '%g' '%u'
+add group script = /usr/share/samba/scripts/smbldap-groupadd.pl '%g' && /usr/share/samba/scripts/smbldap-groupshow.pl %g|awk '/^gidNumber:/ {print $2}'
+delete group script = /usr/share/samba/scripts/smbldap-userdel.pl '%g'
+
+???ldap admin dn = cn=example,dc=example,dc=com
+					^^^^^^^^
+					????
+ldap ssl = start_tls
+ldap machine suffix = ou=Hosts
+ldap user suffix = ou=People
+ldap group suffix = ou=Group
+
+
+service smb start
+
+testparm -s
+smbclient -U% -L localhost
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/etc/samba/smb.conf
+
+[global]
+   workgroup = MDKGROUP
+   netbios name = PDC
+   server string = Samba Server %v
+   printcap name = cups
+   load printers = yes
+   printing = cups
+   printer admin = @adm
+   log file = /var/log/samba/log.%m
+   max log size = 50
+  map to guest = bad user
+   security = user
+  encrypt passwords = yes
+  smb passwd file = /etc/samba/smbpasswd
+   socket options = TCP_NODELAY SO_RCVBUF=8192 SO_SNDBUF=8192
+
+
+add user script = /usr/share/samba/scripts/smbldap-useradd.pl '%u'
+delete user script = /usr/share/samba/scripts/smbldap-userdel.pl '%u'
+add user to group script = /usr/share/samba/scripts/smbldap-groupmod.pl -m '%u' '%g'
+delete user from group script = /usr/share/samba/scripts/smbldap-groupmod.pl -x '%u' '%g'
+set primary group script = /usr/share/samba/scripts/smbldap-usermod.pl -g '%g' '%u'
+add group script = /usr/share/samba/scripts/smbldap-groupadd.pl '%g' && /usr/share/samba/scripts/smbldap-groupshow.pl %g|awk '/^gidNumber:/ {print $2}'
+delete group script = /usr/share/samba/scripts/smbldap-userdel.pl '%g'
+
+
+ldap admin dn = cn=example,dc=example,dc=com
+ldap ssl = start_tls
+ldap port = 389
+ldap suffix = dc=example,dc=com
+ldap machine suffix = ou=Hosts
+ldap user suffix = ou=People
+ldap group suffix = ou=Group
+
+   dns proxy = no
+
+
+[homes]
+   comment = Home Directories
+   browseable = no
+   writable = yes
+
+[printers]
+   comment = All Printers
+   path = /var/spool/samba
+   browseable = no
+   guest ok = yes
+   writable = no
+   printable = yes
+   create mode = 0700
+   use client driver = yes
+
+[print$]
+   path = /var/lib/samba/printers
+   browseable = yes
+   write list = @adm root
+   guest ok = yes
+   inherit permissions = yes
+
+
+[pdf-gen]
+   path = /var/tmp
+   guest ok = No
+   printable = Yes
+   comment = PDF Generator (only valid users)
+   printing = bsd
+   print command = /usr/share/samba/scripts/print-pdf "%s" "%H" "//%L/%u" "%m" "%I" "%J" &
+    lpq command = /bin/true
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/pam.d/system-auth
+#%PAM-1.0
+
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so likeauth nullok
+auth        sufficient    pam_ldap.so use_first_pass
+auth        required      pam_deny.so
+
+account     required      pam_unix.so
+account     sufficient    pam_ldap.so
+
+password    required      pam_cracklib.so retry=3 minlen=2  dcredit=0  ucredit=0
+password    sufficient    pam_unix.so nullok use_authtok md5 shadow
+password    sufficient    pam_ldap.so use_authtok
+password    required      pam_deny.so
+
+session     required      pam_limits.so
+session     required      pam_unix.so
+session     optional      pam_ldap.so
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/sbin/slapd -d -128 -u ldap &
+
+cd /etc/openldap
+tail -20f /var/log/messages &  
+
+cd /var/log/samba
+tail -f log.127.0.0.1 &  
+tail -f log.nmbd &  
+tail -f log.pdc &  
+tail -f log.smbd &  
+
+
+
+smbpasswd -w secret
+Setting stored password for "cn=Manager,dc=example,dc=com" in secrets.tdb
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+/usr/share/samba/scripts/smbldap-useradd.pl -m -a david
+/usr/share/samba/scripts/smbldap-passwd.pl david
+
+
+ldapsearch -x -b "dc=example,dc=com" "(ObjectClass=*)" | grep david
+ldapsearch -x -b 'uid=david,ou=People,dc=example,dc=com' 
+
+
+
+smbclient //pdc/homes -U david
+
+??smbclient //pdc/homes -U david
+smbclient //pdc/printers -U david
+
+
+
+/usr/share/samba/scripts/smbldap-useradd.pl -m -a -u 1004 tom
+/usr/share/samba/scripts/smbldap-passwd.pl tom
+ldapsearch -x -b 'uid=tom,ou=People,dc=example,dc=com' 
+smbclient //pdc/homes -U tom
+
+/usr/share/samba/scripts/smbldap-useradd.pl -m -a -u 1002 ian
+/usr/share/samba/scripts/smbldap-passwd.pl ian
+ldapsearch -x -b 'uid=ian,ou=People,dc=example,dc=com' 
+
+??ssh -l ian pdc
+
+??/usr/bin/smbpasswd -a cchou
+
+
+
+
+
+
+
+
+
+

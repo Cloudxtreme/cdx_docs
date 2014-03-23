@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.OligoTrackingDisplayView" table="OLIGO_TRACKING_DISPLAY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.OligoTrackingDisplayViewId">
+            <key-property name="company" type="string">
+                <column name="COMPANY" length="100" />
+            </key-property>
+            <key-property name="reagentBarcode" type="string">
+                <column name="REAGENT_BARCODE" length="20" />
+            </key-property>
+            <key-property name="oligoName" type="string">
+                <column name="OLIGO_NAME" length="50" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="63" />
+            </key-property>
+            <key-property name="lotNumber" type="string">
+                <column name="LOT_NUMBER" length="20" />
+            </key-property>
+            <key-property name="volume" type="big_decimal">
+                <column name="VOLUME" precision="22" scale="0" />
+            </key-property>
+            <key-property name="expirationDate" type="date">
+                <column name="EXPIRATION_DATE" length="7" />
+            </key-property>
+            <key-property name="reagentId" type="big_decimal">
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="oligoId" type="big_decimal">
+                <column name="OLIGO_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="oligoSequence" type="string">
+                <column name="OLIGO_SEQUENCE" length="1000" />
+            </key-property>
+            <key-property name="modification5" type="string">
+                <column name="MODIFICATION_5" length="50" />
+            </key-property>
+            <key-property name="modification3" type="string">
+                <column name="MODIFICATION_3" length="50" />
+            </key-property>
+            <key-property name="internalModification" type="string">
+                <column name="INTERNAL_MODIFICATION" length="50" />
+            </key-property>
+            <key-property name="oligoType" type="string">
+                <column name="OLIGO_TYPE" length="50" />
+            </key-property>
+            <key-property name="temperature" type="string">
+                <column name="TEMPERATURE" length="10" />
+            </key-property>
+            <key-property name="concentration" type="big_decimal">
+                <column name="CONCENTRATION" precision="22" scale="0" />
+            </key-property>
+            <key-property name="unit" type="string">
+                <column name="UNIT" length="50" />
+            </key-property>
+            <key-property name="purpose" type="string">
+                <column name="PURPOSE" length="50" />
+            </key-property>
+            <key-property name="mixture" type="string">
+                <column name="MIXTURE" length="1" />
+            </key-property>
+            <key-property name="dateReceived" type="string">
+                <column name="DATE_RECEIVED" length="11" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="50" />
+            </key-property>
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="containerRow" type="big_decimal">
+                <column name="CONTAINER_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumn" type="big_decimal">
+                <column name="CONTAINER_COLUMN" precision="22" scale="0" />
+            </key-property>
+            <key-property name="assayName" type="string">
+                <column name="ASSAY_NAME" length="50" />
+            </key-property>
+            <key-property name="assayOwner" type="string">
+                <column name="ASSAY_OWNER" length="30" />
+            </key-property>
+            <key-property name="assayCondition" type="string">
+                <column name="ASSAY_CONDITION" length="1000" />
+            </key-property>
+            <key-property name="assayType" type="string">
+                <column name="ASSAY_TYPE" length="50" />
+            </key-property>
+            <key-property name="comments" type="string">
+                <column name="COMMENTS" />
+            </key-property>
+            <key-property name="roi" type="string">
+                <column name="ROI" length="30" />
+            </key-property>
+            <key-property name="roiId" type="big_decimal">
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,107 @@
+
+http://doc.openerp.com/install/linux/server/index.html#installing-the-required-packages
+
+wajig install postgresql
+
+
+wajig install python python-psycopg2 python-reportlab \
+     python-egenix-mxdatetime python-tz python-pychart \
+     python-pydot python-lxml python-vobject
+
+wajig install python-imaging python-libxml2 python-libxslt1
+
+python -V
+  Python 2.5.2
+
+scp openerp-server-5.0.14.tar.gz root@openerp:
+
+tar zxvf openerp-server-5.0.14.tar.gz 
+cd openerp-server-5.0.14/bin/
+--python openerp-server.py 
+python setup.py install
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/postgresql/8.3/main/pg_hba.conf 
+local   all         all                               trust
+
+/etc/init.d/postgresql-8.3 restart
+
+su - postgres
+
+createdb openerp
+
+createuser --pwprompt
+Enter password for new role: (secret07)
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create more new roles? (y/n) y
+
+psql -U openerp openerp
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /usr/share/doc/openerp-server-5.0.15
+more INSTALL
+
+openerp-server
+
+which openerp-server
+cd /usr/lib/python2.5/site-packages/openerp-server
+
+python ./bin/openerp-server.py -h
+python ./bin/openerp-server.py -r openerp -w secret07 -d openerp localhost
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/openerp-server.conf
+[options]
+verbose = False
+debug_mode = False
+logfile = /var/log/openerp-server.log
+process_user = openerp
+interface = 
+debug_mode = False
+secure = False
+port = 8609
+
+smtp_server = localhost
+smtp_user = False
+smtp_password = False
+
+db_user = openerp
+db_password = secret07
+db_host =
+db_port = 5432
+
+python /usr/lib/python2.5/site-packages/openerp-server/openerp-server.py --config=/etc/openerp-server.conf
+
+
+wajig install python python-dev build-essential
+wajig install python-setuptools
+cd ~/openerp-web-5.0.14/lib
+./populate.sh 
+
+  231  wget http://www.openerp.com/download/stable/source/openerp-web-5.0.14.tar.gz
+  233  tar zxvf openerp-web-5.0.14.tar.gz 
+
+--python ./openerp-web.py 
+
+easy_install -U openerp-web
+
+http://openerp.cardiodx.com:8080
+  Click Database
+  Click Password
+    default passwd: admin
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+ubuntu clauster hadoo
+
+
+http://hadoop.apache.org/core/
+http://www.michael-noll.com/wiki/Running_Hadoop_On_Ubuntu_Linux_(Multi-Node_Cluster)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.michael-noll.com/wiki/Running_Hadoop_On_Ubuntu_Linux_(Single-Node_Cluster)
+http://hadoop.apache.org/core/docs/current/hdfs_design.html
+http://blog.ring.idv.tw/comment.ser?i=231
+http://www.ibm.com/developerworks/cn/opensource/os-cn-hadoop1/index.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install sun-java6-jdk pgp -y
+
+vi /etc/jvm
+/usr/lib/jvm/java-6-sun
+
+addgroup hadoop
+adduser --ingroup hadoop hadoop
+
+#
+# configure ssh so hadoop1 can access 2 and 3 (w/o password)
+#
+
+cat >> /etc/modprobe.d/blacklist << EOF
+blacklist ipv6
+EOF
+
+reboot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+su - hadoop
+ssh-keygen -t rsa -P ""
+cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys
+exit
+
+wget http://mirrors.enquira.com/apache/hadoop/core/hadoop-0.17.1/hadoop-0.17.1.tar.gz
+tar zxvf hadoop-0.17.1.tar.gz 
+
+cd conf
+vi masters
+hadoop1
+
+vi slaves
+hadoop1
+hadoop2
+hadoop3
+
+vi hadoop-env.sh
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+
+  118  vi hadoop-site.xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://hadoop1:9000</value>
+</property>
+<property>
+  <name>mapred.job.tracker</name>
+  <value>hdfs://hadoop1:9001</value>
+</property>
+<property>
+  <name>dfs.name.dir</name>
+  <value>/home/hadoop/dfs/name</value>
+  </property>
+<property>
+  <name>dfs.data.dir</name>
+  <value>/home/hadoop/dfs/data</value>
+</property>
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+</property>
+</configuration>
+
+
+   63  cd hadoop-0.17.1/
+   65  cd bin/
+   67  ./hadoop namenode -format
+
+
+./start-all.sh
+
+
+http://hadoop1:50070/dfshealth.jsp
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  158  mkdir testdata
+  159  cd testdata/
+  160  echo "hello world bye hello" > file1.txt
+  161  echo "hadoop hello goodbye hadoop" > file2.txt
+  162  cd ..
+  166  /usr/local/hadoop/bin/hadoop dfs -put testdata input
+
+hadoop@hadoop1:/usr/local/hadoop$ ./bin/hadoop jar hadoop-0.17.1-examples.jar wordcount input output
+hadoop@hadoop1:/usr/local/hadoop$ ./bin/hadoop dfs -get output output
+hadoop@hadoop1:/usr/local/hadoop$ cat output/*
+
+for help, type:
+./bin/hadoop dfs
+
+
+./bin/hadoop dfs -ls
+./bin/hadoop dfs -mkdir /fooba
+
+./bin/hadoop dfsadmin -report
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example:
+http://hadoop.apache.org/core/docs/current/mapred_tutorial.html
+
+Shell commands(???):
+http://hadoop.apache.org/core/docs/current/api/org/apache/hadoop/streaming/package-summary.html
+
+
+

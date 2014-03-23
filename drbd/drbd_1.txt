@@ -1,0 +1,71 @@
+ubuntu DRBD replication block mirror
+
+http://www.drbd.org/docs/install/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**mingdesktop (MASTER):
+  lvcreate -L+100G -n brbd-master vg0
+**barbaradesktop1(SLAVE):
+  lvcreate -L+100G -n brbd-slave vg0
+
+**both machine:
+apt-get install drbd8-utils -y
+
+**mingdesktop:
+cd /etc/drbd/drbd.d
+
+vi global_common.conf
+	syncer {
+		rate 100M;
+	}
+
+vi r0.res
+resource r0 {
+  protocol C;
+  device /dev/drbd0;
+  meta-disk internal;
+  startup {
+    wfc-timeout 15;
+    degr-wfc-timeout 60;
+  }
+  net {
+    cram-hmac-alg sha1;
+    shared-secret "topSecret$463";
+    allow-two-primaries;
+  }
+  on mingdesktop {
+    disk /dev/vg0/brbd-master;
+    address 10.10.35.86:7788;
+  }
+  on barbaradesktop1 {
+    disk /dev/vg0/brbd-slave;
+    address 10.10.35.72:7788;
+  }
+}
+
+
+scp r0.res barbaradesktop1:/etc/drbd.d
+
+**both machines:
+  drbdadm create-md r0
+  service drbd start
+  cat /proc/drbd
+
+***mingdesktop (or primary):
+   drbdadm -- --overwrite-data-of-peer primary r0
+   mkfs.xfs /dev/drbd0
+   mkdir drbd
+   mount /dev/drbd0 /root/drbd/
+
+~~~~~~~~~~~~
+1.2. Testing
+***mingdesktop:
+cp -r /etc/default /srv
+umount /srv
+drbdadm secondary r0
+
+***barbaradesktop1:
+drbdadm primary r0
+mount /dev/drbd0 /srv
+
+

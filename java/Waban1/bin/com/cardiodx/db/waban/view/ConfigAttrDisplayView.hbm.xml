@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.ConfigAttrDisplayView" table="CONFIG_ATTR_DISPLAY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.ConfigAttrDisplayViewId">
+            <key-property name="attributeName" type="string">
+                <column name="ATTRIBUTE_NAME" length="30" />
+            </key-property>
+            <key-property name="objectType" type="string">
+                <column name="OBJECT_TYPE" length="30" />
+            </key-property>
+            <key-property name="attributeType" type="string">
+                <column name="ATTRIBUTE_TYPE" length="30" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="configAttributeId" type="big_decimal">
+                <column name="CONFIG_ATTRIBUTE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variableId" type="big_decimal">
+                <column name="VARIABLE_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

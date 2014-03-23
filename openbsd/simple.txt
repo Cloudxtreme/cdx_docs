@@ -1,0 +1,29 @@
+# more hostname.em1 
+inet 67.95.201.198 255.255.255.224
+
+# more hostname.bge1 
+inet 10.10.37.2 255.255.248.0
+
+# more mygate 
+67.95.201.193
+
+
+# more pf.conf
+xo = "em1"
+internal = "bge1"
+local = "lo0"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+pass in on $internal from 10.10.32.0/21 to any
+
+pass in on $xo proto icmp to any 
+pass in on $internal
+
+
+# more rc.local 
+sysctl net.inet.ip.forwarding=1
+sysctl net.inet.ip.multipath=1
+

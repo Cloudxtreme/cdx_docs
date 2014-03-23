@@ -1,0 +1,39 @@
+
+from real image to xen image
+
+--
+-- install xen kernel module
+--
+mount /dev/sdd hardy64/
+mount -o bind /dev hardy64/dev
+mount -t proc /proc/ hardy64/proc/
+chroot hardy64/ bash
+
+  107  wajig install linux-ubuntu-modules-2.6.24-24-xen
+  109  ll /lib/modules/2.6.24-24-xen/modules.dep
+
+
+vi /etc/fstab
+#/dev/sda1  /boot           ext3    relatime        0       2
+#/dev/mapper/vg0-swap none            swap    sw              0       0
+/dev/xvda1 /               xfs     relatime        0       1
+
+exit
+umount hardy64/proc/
+umount hardy64/dev
+umount hardy64/
+
+
+--
+-- change the console setting
+--
+cd /etc/event.d
+vi tty1 
+exec /sbin/getty 38400 xvc0
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. set independent_wallclock=1, and run ntpd on domU, or
+2. set independent_wallclock=0, and run ntpd on dom0 only. 

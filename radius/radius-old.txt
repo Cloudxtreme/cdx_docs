@@ -1,0 +1,46 @@
+http://oriol.joor.net/blog/?itemid=1631
+http://www.hep.phys.soton.ac.uk/~jhe/documents/WPA-Authentication+RADIUS-HOWTO.html
+http://www.hep.phys.soton.ac.uk/~jhe/documents/WPA-Authentication+RADIUS-HOWTO.html
+
+
+wajig install freeradius-ldap
+
+
+cd /etc/freeradius/
+
+vi users (add)
+"test" Auth-Type := Local, User-Password == "test"
+
+/etc/init.d# ./freeradius restart
+
+radtest test test localhost 0 testing123
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# vi clients.conf 
+client 10.10.37.0/24 {
+        secret          = cdxRAD2500
+        shortname       = 10.10.37.0@CDX
+}
+
+
+vi radiusd.conf
+under authenticate {
+      pam
+#     unix
+
+vi users
+#DEFAULT      Auth-Type = System
+DEFAULT       Auth-Type = Pam
+
+
+-- linux account (through PAM)
+radtest cchou cchou1200 pdc 0 cdxRAD2500
+
+
+# for debugging
+freeradius -sfxxyz -l stdout
+
+
+
+realm

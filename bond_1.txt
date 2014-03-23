@@ -1,0 +1,8 @@
+
+
+
+cd /proc/net/bonding
+cat bond0 
+
+ifenslave -c bond0 eth3
+

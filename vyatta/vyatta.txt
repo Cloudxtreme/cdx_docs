@@ -1,0 +1,263 @@
+vyatta
+
+http://www.vyatta.org/forum/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+boot from install cd (vc 5.02)
+  login as vyatta/vyatta
+install-system
+  4096MB
+reboot
+
+dmesg | grep eth
+  eth0: Intel  (comcast)      173.13.158.180/28
+  eth1: Intel  (xo)           67.95.201.198/27
+  eth2: Tigon3
+  eht3: Tigon3 (internal)     10.10.37.2/21
+  eth4: RTL8110s (dmz)
+  eth5: RTL8110s
+
+
+(login from console)
+configure
+
+set interfaces ethernet eth3 address 10.10.37.2/21
+#set service https
+set service ssh
+commit
+exit
+
+(login from laptop)
+set interfaces ethernet eth1 address 67.95.201.198/27
+
+set system host-name vyatta
+set system gateway-address 67.95.201.193
+set system domain-name cardiodx.com
+set system name-server 10.10.37.21
+set system ntp-server 69.59.150.135
+set system time-zone US/Pacific
+commit
+save
+exit
+
+sudo bash
+apt-get update
+apt-get upgrade
+
+reboot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- nat and default firewall
+--
+set service nat rule 1 
+set service nat rule 1 outbound-interface eth1
+set service nat rule 1 source address 10.10.32.0/21
+set service nat rule 1 type masquerade 
+
+(ping from internal machine .... cchoudesktop)
+
+
+-- first firewall rule
+set firewall name from_internet rule 1 action accept
+set firewall name from_internet rule 1 state established enable 
+set firewall name from_internet rule 1 state new disable 
+set firewall name from_internet rule 1 state related enable 
+set firewall name from_internet rule 1 state invalid disable 
+
+set interfaces ethernet eth1 firewall in name from_internet
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- test on PAT (port 80 on cchoudesktop)
+--
+set service nat rule 10 
+set service nat rule 10 type destination 
+set service nat rule 10 protocol tcp
+set service nat rule 10 destination address 67.95.201.198
+set service nat rule 10 destination port 80
+set service nat rule 10 inside-address address 10.10.36.190
+set service nat rule 10 inbound-interface eth1 
+
+
+-- add a new firewall rule
+set firewall name from_internet rule 10 
+set firewall name from_internet rule 10 protocol tcp
+set firewall name from_internet rule 10 action accept 
+set firewall name from_internet rule 10 log disable   
+set firewall name from_internet rule 10 source address 0.0.0.0/0
+set firewall name from_internet rule 10 destination address 10.10.36.190
+set firewall name from_internet rule 10 destination port 80               
+
+(Use firefox and connect from outside to 67.95.201.198)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- DMZ 
+--
+
+set interfaces ethernet eth4 address 10.10.43.1/24
+ 
+(ping from both side)
+vyatta: ping 10.10.43.2
+dmz:    ping 10.10.43.1
+
+
+set interfaces ethernet eth1 address 67.95.201.200/27
+
+set service nat rule 50 type source 
+set service nat rule 50 protocol all          
+set service nat rule 50 source address 10.10.43.2
+set service nat rule 50 destination address 0.0.0.0/0
+set service nat rule 50 outbound-interface eth1
+set service nat rule 50 outside-address address 67.95.201.200
+
+set service nat rule 51 type destination 
+set service nat rule 51 protocol all          
+set service nat rule 51 source address 0.0.0.0/0
+set service nat rule 51 inbound-interface eth1
+set service nat rule 51 destination address 67.95.201.200 
+set service nat rule 51 inside-address address 10.10.43.2 
+
+(in dmz)
+ping www.google.com
+browse www.google.com
+
+set firewall name from_internet
+set firewall name from_internet rule 50
+set firewall name from_internet rule 50 protocol tcp
+set firewall name from_internet rule 50 action accept
+set firewall name from_internet rule 50 log disable
+set firewall name from_internet rule 50 source address 0.0.0.0/0
+set firewall name from_internet rule 50 destination address 10.10.43.2
+set firewall name from_internet rule 50 destination port 3389
+
+(From outside, remote desktop to 67.95.201.200)
+(From inside, remote desktop to 67.95.201.200)
+  Why can't I remote desktop to 10.10.43.2?????
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- Load balancing
+--
+set interfaces ethernet eth0 address 173.13.158.180/28
+set interfaces ethernet eth0 firewall in name from_internet
+
+set protocols static route 0.0.0.0/0 next-hop 173.13.158.190
+set protocols static route 0.0.0.0/0 next-hop 67.95.201.193
+
+
+set load-balancing wan interface-health eth0 failure-count 5
+set load-balancing wan interface-health eth0 nexthop 173.13.158.190
+set load-balancing wan interface-health eth0 ping 74.125.19.104
+
+set load-balancing wan interface-health eth1 failure-count 5
+set load-balancing wan interface-health eth1 nexthop 67.95.201.193
+set load-balancing wan interface-health eth1 ping 74.125.19.104
+
+# traffic from internal
+set load-balancing wan rule 10 inbound-interface eth3
+set load-balancing wan rule 10 interface eth0 weight 5
+set load-balancing wan rule 10 interface eth1 weight 1
+set load-balancing wan rule 10 source address 10.10.32.0/21
+
+# traffic from dmz
+#     dmz (that has XO IPs) will only go through XO
+set load-balancing wan rule 20 inbound-interface eth4
+set load-balancing wan rule 20 interface eth1 weight 1
+set load-balancing wan rule 20 source address 10.10.43.0/24
+
+show load-balancing
+
+
+NOTE: can't ping 10.10.43.2 any more.  Can only ping 67.95.201.200
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- NOTE: for changing firewall ruls, you have to run the following!!!!!
+--
+
+# delete protocols
+delete load-balancing 
+
+# set firewall name from_internet rule 10 action reject 
+# set firewall name from_internet rule 50 action reject 
+
+# set protocols static route 0.0.0.0/0 next-hop 173.13.158.190
+# set protocols static route 0.0.0.0/0 next-hop 67.95.201.193
+
+set load-balancing wan interface-health eth0 failure-count 5
+set load-balancing wan interface-health eth0 nexthop 173.13.158.190
+set load-balancing wan interface-health eth0 ping 74.125.19.104
+
+set load-balancing wan interface-health eth1 failure-count 5
+set load-balancing wan interface-health eth1 nexthop 67.95.201.193
+set load-balancing wan interface-health eth1 ping 74.125.19.104
+
+set load-balancing wan rule 10 inbound-interface eth3
+set load-balancing wan rule 10 interface eth0 weight 5
+set load-balancing wan rule 10 interface eth1 weight 1
+set load-balancing wan rule 10 source address 10.10.32.0/21
+
+set load-balancing wan rule 20 inbound-interface eth4
+set load-balancing wan rule 20 interface eth1 weight 1
+set load-balancing wan rule 20 source address 10.10.43.0/24
+
+commit
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- to vyatta (protect the firewall!!!!)
+set firewall name to_vyatta 
+set firewall name to_vyatta rule 1 action accept
+set firewall name to_vyatta rule 1 state established enable 
+set firewall name to_vyatta rule 1 state new disable 
+set firewall name to_vyatta rule 1 state related enable 
+set firewall name to_vyatta rule 1 state invalid disable 
+
+set firewall name to_vyatta rule 2
+set firewall name to_vyatta rule 2 description "ICMP echo request"
+set firewall name to_vyatta rule 2 action accept
+set firewall name to_vyatta rule 2 protocol icmp
+set firewall name to_vyatta rule 2 icmp type 8
+set firewall name to_vyatta rule 2 log disable
+
+set interfaces ethernet eth0 firewall local name to_vyatta
+set interfaces ethernet eth1 firewall local name to_vyatta
+
+
+ping 67.95.201.200
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+??????
+NOTE: ping doesn't work for 173.13.158.180?????
+  http://centralops.net/co/
+
+
+set service nat rule 2
+set service nat rule 2 outbound-interface eth4
+set service nat rule 2 source address 10.10.32.0/21
+set service nat rule 2 type masquerade
+
+
+set firewall name from_inside 
+set firewall name from_inside rule 1 action accept
+set firewall name from_inside rule 1 protocol all
+set firewall name from_inside rule 1 log disable
+set firewall name from_inside rule 1 source address 10.10.32.0/21
+set firewall name from_inside rule 1 destination address 0.0.0.0/0
+
+set interfaces ethernet eth3 firewall in name from_inside
+
+
+
+
+
+
+
+
+
+

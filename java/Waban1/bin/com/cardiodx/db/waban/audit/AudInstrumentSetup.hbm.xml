@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudInstrumentSetup" table="AUD_INSTRUMENT_SETUP" schema="DNALIMS">
+        <comment>Audit information of INSTRUMENT_SETUP table</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="instrumentSetupId" type="big_decimal">
+            <column name="INSTRUMENT_SETUP_ID" precision="22" scale="0">
+                <comment>Maintenance Schedule Identifier and Primary Key</comment>
+            </column>
+        </property>
+        <property name="instrumentId" type="big_decimal">
+            <column name="INSTRUMENT_ID" precision="22" scale="0">
+                <comment>Instrument Identifier</comment>
+            </column>
+        </property>
+        <property name="duration" type="big_decimal">
+            <column name="DURATION" precision="22" scale="0">
+                <comment>Duration of the maintenance</comment>
+            </column>
+        </property>
+        <property name="username" type="string">
+            <column name="USERNAME" length="30">
+                <comment>User name who is assigned for this maintenance</comment>
+            </column>
+        </property>
+        <property name="notificationLeadTime" type="big_decimal">
+            <column name="NOTIFICATION_LEAD_TIME" precision="22" scale="0">
+                <comment>Lead time required for notification of the maintenance</comment>
+            </column>
+        </property>
+        <property name="maintenanceGap" type="big_decimal">
+            <column name="MAINTENANCE_GAP" precision="22" scale="0">
+                <comment>Gap between two maintenance</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="30">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

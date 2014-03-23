@@ -1,0 +1,39 @@
+myorigin = cardiodx.com
+
+myhostname = mail.cardiodx.com
+mydomain = cardiodx.com
+mydestination =
+local_recipient_maps =
+local_transport = error:local mail delivery is disabled
+virtual_alias_maps = hash:/etc/postfix/virtual
+
+mynetworks = 127.0.0.0/8 10.10.37.0/24
+masquerade_domains = $mydomain
+masquerade_classes = envelope_recipient, header_recipient, envelope_sender, header_sender
+masquerade_exceptions = sampletest
+relay_domains = cardiodx.com
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+relay_recipient_maps =
+transport_maps = hash:/etc/postfix/transport
+
+mailbox_size_limit = 70240000
+message_size_limit = 70240000
+
+# sasl authentication
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+
+# tls
+smtpd_enforce_tls = no
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+smtpd_tls_key_file = /etc/postfix/ssl/smtp.key
+smtpd_tls_cert_file = /etc/postfix/ssl/smtp.crt
+smtpd_tls_CAfile = /etc/postfix/ssl/ca.crt
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
+
+
+#defer_transports = smtp, relay

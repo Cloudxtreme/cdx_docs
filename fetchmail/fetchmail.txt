@@ -1,0 +1,140 @@
+fetchmail sample notification 
+
+wajig install fetchmail
+wajig isntall librmail-ruby1.8
+
+root@webmail:~/snparser# more fetchmailrc 
+poll webmail.cardiodx.com proto imap: username snparser password cdxtest
+mda "cat | /root/snparser/parse_mail.rb"
+idle
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ fetchmail -f fetchmailrc -v --ssl
+
+/etc/init.d/fetchmail-cdx
+	fetchmail -f /root/snparser/fetchmailrc --pidfile /var/run/fetchmail_snparser.pid --ssl  --syslog & 
+
+
+# cd snparser/
+# more fetchmailrc 
+poll webmail.cardiodx.com proto imap: username snparser password cdxtest
+mda "cat | /root/snparser/parse_mail.rb"
+idle
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more parse_mail.rb 
+#!/usr/bin/ruby -w
+
+require 'date'
+require 'rmail'
+require 'net/smtp'
+
+CDX_HOLIDAYS=[ Date.new(2007,07,24) ]
+
+msg_yes = <<END_OF_MSG_YES
+This is an automated response to your email. If you are notifying CardioDx of a sample shipment, please PROCEED to ship the samples today. 
+Prior to shipment, send an electronic copy of the Sample Tracking Manifest as an attachment to the Notification email to CardioDx, Inc. at samplereceipt@cardiodx.com containing the foll
+owing information:
+        Investigator Name_________________________
+        Institution Name_________________________
+        Institution Address_______________________
+        Date Sample Ship________________________
+        Name of Courier: Federal Express        World Courier   Other___________
+        Airbill Number(s)________________________________________________
+
+The Ship To address is below. (you will get an automated email response identical to this one).
+Ship samples to:
+CardioDx, Inc.
+Attn:  Sample Receiving
+2500 Faber Place
+Palo Alto, CA 94303
+END_OF_MSG_YES
+
+msg_yes_but_not_tomorrow = <<END_OF_MSG_YES_BUT_NOT_TOMORROW
+This is an automated response to your email. If you are notifying CardioDx of a sample shipment, please PROCEED to ship the samples today. HOWEVER, please do not ship tomorrow as we wil
+l be unavailable to receive the samples. Prior to shipment, send an electronic copy of the Sample Tracking Manifest as an attachment to the Notification email to CardioDx, Inc. at sampl
+ereceipt@cardiodx.com containing the following information:
+        Investigator Name_________________________
+        Institution Name_________________________
+        Institution Address_______________________
+        Date Sample Ship________________________
+        Name of Courier: Federal Express        World Courier   Other___________
+        Airbill Number(s)________________________________________________
+
+The Ship To address is below. (you will get an automated email response identical to this one).
+Ship samples to:
+CardioDx, Inc.
+Attn:  Sample Receiving
+2500 Faber Place
+Palo Alto, CA 94303
+END_OF_MSG_YES_BUT_NOT_TOMORROW
+
+msg_no = <<END_OF_MSG_NO
+This is an automated response to your email. If you are notifying CardioDx of a sample shipment, please DO NOT ship the samples today as we will be unavailable to receive them. You may 
+safely ship the samples on SHIP_DATE.
+END_OF_MSG_NO
+
+def is_holiday?(chkdate=Date.today)
+  return true if chkdate.wday==6 or chkdate.wday==0
+  CDX_HOLIDAYS.each {|holiday| return true if chkdate == holiday}
+  return false
+end
+
+def is_tomorrow_holiday?(chkdate=Date.today)
+  return is_holiday?(chkdate+1)
+end
+
+def is_day_after_tomorrow_holiday?(chkdate=Date.today)
+  return is_holiday?(chkdate+2)
+end
+
+
+def find_next_available_shipment_day(chkdate=Date.today)
+  while is_holiday?(chkdate) or is_tomorrow_holiday?(chkdate) 
+    chkdate+=1
+  end
+  return chkdate
+end
+
+# Fix RMail related classes to be more well behaved
+class RMail::Address::List
+  def to_s
+    self.addresses.join(",")
+  end
+end
+class RMail::Address
+  def to_s
+    self.format
+  end
+end
+
+message = RMail::Parser.read(STDIN)
+header=message.header
+from=header.from
+to=header.to
+date=header.date
+subject=header.subject
+body=message.body
+
+mail=RMail::Message.new()
+if is_tomorrow_holiday? then
+  available_date=find_next_available_shipment_day
+  available_date_str=Date::MONTHNAMES[available_date.mon] + " #{available_date.day}, #{available_date.year}"
+  msg_no=msg_no.gsub(/SHIP_DATE/, available_date_str)
+  mail.body="#{msg_no}\n\n"
+elsif is_day_after_tomorrow_holiday? then
+  mail.body="#{msg_yes_but_not_tomorrow}\n\n"
+else
+  mail.body="#{msg_yes}\n\n"
+end
+#body.each("\n") {|line| mail.body += "> #{line}"}
+
+mail.header.from = 'samplenotification@cardiodx.com (Sample Notification)'
+mail.header.reply_to = 'samplereceipt@cardiodx.com (Sample Receipt)'
+recipients=[from, 'samplenotificationmembers@cardiodx.com']
+mail.header.to = recipients.join(',')
+mail.header.subject="RE: #{subject}"
+
+smtp = Net::SMTP.start('localhost', 25)
+smtp.send_message mail.to_s, mail.header.from, recipients
+smtp.finish

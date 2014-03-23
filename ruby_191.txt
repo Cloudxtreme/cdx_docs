@@ -1,0 +1,3 @@
+  126  apt-get install ruby1.9.1
+  129  apt-get install ri1.9.1 rdoc1.9.1 libopenssl-ruby1.9.1 ruby1.9.1-dev libpgsql-ruby1.9.1
+

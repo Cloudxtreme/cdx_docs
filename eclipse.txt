@@ -1,0 +1,16 @@
+
+http://maven.apache.org/guides/mini/guide-ide-eclipse.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+mvn -Declipse.workspace=/root/workspace/ eclipse:add-maven-repo
+mvn eclipse:eclipse
+
+eclipse
+
+File --> Import --> General --> Existing Projects into Workspace
+  Next --> 
+  
+  root directory --> /root/MyOpenClinica302
+
+Finish
+

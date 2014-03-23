@@ -1,0 +1,86 @@
+# more pf.conf
+int_if = "bge1"
+cc_if = "em0"
+xo_if = "em1"
+dmz_if = "re0"
+local_if = "lo0"
+
+cc_gw = "173.13.158.190"
+xo_gw = "67.95.201.193"
+int_net = "10.10.32.0/21"
+
+remote_gw = "67.95.201.201"
+remote_net = "192.168.10.0/24"
+ert_gw = "12.149.54.90"
+clinix_gw = "66.18.99.68"
+
+block in
+pass out keep state
+
+nat on $xo_if -> ($xo_if)
+nat on $cc_if -> ($cc_if)
+
+pass in on $int_if
+pass in on $xo_if proto icmp to any 
+pass in on $cc_if proto icmp to any 
+
+# IPSec
+#pass quick on $xo_if from $remote_gw
+#pass quick on $xo_if from $ert_gw
+#pass quick on $xo_if from $clinix_gw
+
+pass in on $xo_if proto udp from $remote_gw to $xo_if port {isakmp, ipsec-nat-t}
+pass in on $xo_if proto esp from $remote_gw to $xo_if
+
+#pass in on $xo_if proto udp from $ert_gw to $xo_if port {isakmp, ipsec-nat-t}
+#pass in on $xo_if proto esp from $ert_gw to $xo_if
+#
+#pass in on $xo_if proto udp from $clinix_gw to $xo_if port {isakmp, ipsec-nat-t}
+#pass in on $xo_if proto esp from $clinix_gw to $xo_if
+
+pass in quick on enc0 proto icmp
+pass in quick on enc0 proto ipencap all
+pass in quick on enc0 proto tcp from $remote_net to $int_net port 22
+
+# DMZ
+nat pass on $cc_if from 10.10.43.2 to any port 22 -> 67.95.201.199
+rdr pass on $cc_if proto tcp to 67.95.201.199 port 22 -> 10.10.43.2
+
+pass in on $dmz_if proto tcp to any port {http,https} keep state
+pass in on $dmz_if proto icmp to any keep state
+pass in on $dmz_if proto udp to any port domain keep state
+#pass out on $dmz_if proto tcp from any to 10.10.43.2 port 22 
+
+rdr pass on $cc_if proto tcp to 173.13.158.180 port 80 -> 10.10.35.17
+rdr pass on $xo_if proto tcp to 67.95.201.198 port 80 -> 10.10.35.17
+
+# Load Balancing
+load_balance_route  = "route-to { (" $cc_if $cc_gw "), (" $xo_if $xo_gw ") } round-robin"
+
+pass in on $local_if $load_balance_route proto tcp to ! $int_net flags S/SA modulate state
+pass in on $local_if $load_balance_route proto { udp, icmp } to ! $int_net keep state
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# more pf.conf
+xo = "bge0"
+internal = "em0"
+local = "lo0"
+remote_gw = "67.95.201.198"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+
+pass in on $xo proto tcp from 67.95.201.192/27 to any port 22
+
+pass in on $internal
+
+pass in on $xo proto udp from $remote_gw to $xo port {isakmp, ipsec-nat-t}
+pass in on $xo proto esp from $remote_gw to $xo
+
+pass in quick on enc0 proto icmp 
+pass in quick on enc0 proto ipencap all
+pass in quick on enc0 proto tcp from 10.10.32.0/21 to 192.168.10.2/32 port 3389
+

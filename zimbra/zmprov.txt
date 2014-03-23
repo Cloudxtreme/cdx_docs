@@ -1,0 +1,129 @@
+
+
+KW: zmprov gqu localhost shared calendar
+
+zmprov ma cchou@cardiodx.com title 'IT Manager'
+zmprov ga cchou@cardiodx.com | grep -i title 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Give read permission on melinda and deb's calendar to Janna
+
+[zimbra@webmail ~]$ zmmailbox -z -m melinda gfg /Calendar
+Inherit  Permissions    Type  Display
+-------  -----------  ------  -------
+[zimbra@webmail ~]$ zmmailbox -z -m melinda mfg /Calendar account josborne r
+[zimbra@webmail ~]$ zmmailbox -z -m melinda gfg /Calendar
+Inherit  Permissions    Type  Display
+-------  -----------  ------  -------
+  false            r  accoun  josborne@cardiodx.com
+
+[zimbra@webmail ~]$ zmmailbox -z -m dkilpatrick mfg /Calendar account josborne r
+[zimbra@webmail ~]$ zmmailbox -z -m dkilpatrick gfg /Calendar
+Inherit  Permissions    Type  Display
+-------  -----------  ------  -------
+  false            r  accoun  josborne@cardiodx.com
+
+
+Go to Janna's machine. right click calendar, add the calendar:
+email address
+/Calendar
+Display 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 1004  zmmailbox help
+ 1005  zmmailbox help commands
+? 1006  zmmailbox gfg borat-7900@cardiodx.com
+? 1007  zmmailbox borat-7900@cardiodx.com gfg /Calendar
+
+ 1008  zmmailbox -z -m borat-7900 gfg /Calendar
+ 1009  zmmailbox -z -m bruno-7900 gfg /Calendar
+ 1010  zmmailbox -z -m bruno-7900 mfg /Calendar account cchou@cardiodx.com r
+ 1011  zmmailbox -z -m bruno-7900 gfg /Calendar
+ 1012  zmmailbox -z -m cchou cm -c red -V appointment /Bruno-7900 bruno-7900 /Calendar
+ 1014  zmmailbox -z -m bruno-7900 mfg /Calendar account cchou@cardiodx.com none
+ 1015  zmmailbox -z -m bruno-7900 gfg /Calendar
+ 1016  zmmailbox -z -m bruno-7900 mfg /Calendar account everyone r
+ 1017  zmmailbox -z -m bruno-7900 gfg /Calendar
+
+for i in alig-7900 bertramfxp borat-7900 bruno-7900 quagmirefx stewienx; do echo $i; zmmailbox -z -m $i gfg /Calendar ; done 
+
+for i in bridget rachel klin kkrall michael siw jim cchou; do zmmailbox -z -m $i cm -c red -V appointment /Borat-7900 borat-7900 /Calendar; echo $i; done
+for i in bridget rachel klin kkrall michael siw jim cchou; do zmmailbox -z -m $i cm -c cyan -V appointment /Bruno-7900 bruno-7900 /Calendar; echo $i; done
+for i in bridget rachel klin kkrall michael siw jim cchou; do zmmailbox -z -m $i cm -c green -V appointment /Ali_G-7900 alig-7900 /Calendar; echo $i; done
+for i in bridget rachel klin kkrall michael siw jim cchou; do zmmailbox -z -m $i cm -c purple -V appointment /Bertram_FXp bertramfxp /Calendar; echo $i; done
+for i in bridget rachel klin kkrall michael siw jim cchou; do zmmailbox -z -m $i cm -c yellow -V appointment /Quagmire_FX quagmirefx /Calendar; echo $i; done
+for i in bridget rachel klin kkrall michael siw jim cchou; do zmmailbox -z -m $i cm -c gray -V appointment /Stewie_NX stewienx /Calendar; echo $i; done
+
+
+~~~~~~~~~~~~~~~~~~~~~~~ trip calendar ~~~~~~~~~~~~~~~~~~~~~~~
+zmmailbox -z -m trip mfg /Calendar account srikar@cardiodx.com rwidx
+zmmailbox -z -m srikar cm -c yellow -V appointment /"Trip Calendar" trip /Calendar
+zmmailbox -z -m trip mfg /Calendar account clinical rwidx
+
+for i in amy wtingley dwilliams llittleford acaptain epadilla; do zmmailbox -z -m $i cm -c yellow -V appointment /"Trip Calendar" trip /Calendar; echo $i; done
+
+zmmailbox -z -m cchou cm -c yellow -V appointment /"Trip Calendar" trip /Calendar;
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~ conf rooms ~~~~~~~~~~~~~~~~~~~~~~~
+ 1013  zmmailbox -z -m crick mfg /Calendar account everyone r
+ 1014  zmmailbox -z -m curie mfg /Calendar account everyone r
+ 1015  zmmailbox -z -m darwin mfg /Calendar account everyone r
+ 1016  zmmailbox -z -m einstein mfg /Calendar account everyone r
+ 1017  zmmailbox -z -m mendel mfg /Calendar account everyone r
+ 1018  zmmailbox -z -m newton mfg /Calendar account everyone r
+
+zmmailbox -z -m kzabala cm -c yellow -V appointment /"Crick" crick /Calendar
+zmmailbox -z -m kzabala cm -c red -V appointment /"Curie" curie /Calendar
+zmmailbox -z -m kzabala cm -c green -V appointment /"Darwin" darwin /Calendar
+zmmailbox -z -m kzabala cm -c gray -V appointment /"Eisntein" einstein /Calendar
+zmmailbox -z -m kzabala cm -c pink -V appointment /"Mendel" mendel /Calendar
+zmmailbox -z -m kzabala cm -c purple -V appointment /"Newton" newton /Calendar
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+zmprov help command | grep -i distri
+zmprov gadl
+
+zmprov gdl discern_pi@cardiodx.com
+zmprov gdl discern_sc@cardiodx.com
+
+zmprov gdl predict_pi@cardiodx.com
+zmprov gdl predict_sc@cardiodx.com
+
+
+zmprov gdl discern_pi@cardiodx.com | grep zimbraMailForwardingAddress | awk '{print $2}'
+zmprov gdl discern_sc@cardiodx.com | grep zimbraMailForwardingAddress | awk '{print $2}'
+zmprov gdl predict_pi@cardiodx.com | grep zimbraMailForwardingAddress | awk '{print $2}'
+zmprov gdl predict_sc@cardiodx.com | grep zimbraMailForwardingAddress | awk '{print $2}'
+
+
+ 1011  zmprov adlm it@cardiodx.com cchou2008@cardiodx.com
+ 1013  zmprov rdlm it@cardiodx.com cchou2008@cardiodx.com
+ 1014  zmprov gdl it@cardiodx.com
+
+
+
+
+zmmailbox -z -m mendel mfg /Calendar account everyone@cardiodx.com r
+zmmailbox -z -m einstein mfg /Calendar account everyone@cardiodx.com r
+zmmailbox -z -m curie mfg /Calendar account everyone@cardiodx.com r
+zmmailbox -z -m darwin mfg /Calendar account everyone@cardiodx.com r
+zmmailbox -z -m crick mfg /Calendar account everyone@cardiodx.com r
+zmmailbox -z -m newton mfg /Calendar account everyone@cardiodx.com r
+zmmailbox -z -m allhands mfg /Calendar account everyone@cardiodx.com r
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+prov> sm cchou@cardiodx.com
+
+search -l 5000 -t contact 24469
+
+
+
+

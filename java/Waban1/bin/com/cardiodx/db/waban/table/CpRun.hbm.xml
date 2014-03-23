@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CpRun" table="CP_RUN" schema="DNALIMS">
+        <id name="cpRunId" type="big_decimal">
+            <column name="CP_RUN_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" fetch="select">
+            <column name="CONTAINER_ID" length="20" not-null="true" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="instrument" class="com.cardiodx.db.waban.table.Instrument" fetch="select">
+            <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="status" type="string">
+            <column name="STATUS" length="50" />
+        </property>
+        <property name="dateImported" type="date">
+            <column name="DATE_IMPORTED" length="7" not-null="true" />
+        </property>
+        <property name="importedBy" type="string">
+            <column name="IMPORTED_BY" length="30" not-null="true" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+        <set name="cdxCpRunQcs" table="CDX_CP_RUN_QC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CP_RUN_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign Key to the CP Run table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CdxCpRunQc" />
+        </set>
+        <set name="cdxCpRunBatchs" table="CDX_CP_RUN_BATCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CP_RUN_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign Key to the CP Run table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CdxCpRunBatch" />
+        </set>
+        <set name="cpNormalizedValues" table="CP_NORMALIZED_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CP_RUN_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpNormalizedValue" />
+        </set>
+        <set name="cpRunReports" table="CP_RUN_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CP_RUN_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRunReport" />
+        </set>
+        <set name="cpValues" table="CP_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CP_RUN_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpValue" />
+        </set>
+        <set name="cpFinalScores" table="CP_FINAL_SCORE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CP_RUN_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpFinalScore" />
+        </set>
+    </class>
+</hibernate-mapping>

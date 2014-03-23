@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudFreezer" table="AUD_FREEZER" schema="DNALIMS">
+        <comment>Audit of information about freezers.</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="freezerId" type="big_decimal">
+            <column name="FREEZER_ID" precision="22" scale="0" not-null="true">
+                <comment>Freezer identifier.</comment>
+            </column>
+        </property>
+        <property name="testingFacilityId" type="big_decimal">
+            <column name="TESTING_FACILITY_ID" precision="22" scale="0">
+                <comment>Test facility identifier.</comment>
+            </column>
+        </property>
+        <property name="building" type="string">
+            <column name="BUILDING" length="20">
+                <comment>The building the freezer is in.</comment>
+            </column>
+        </property>
+        <property name="room" type="string">
+            <column name="ROOM" length="20">
+                <comment>The room the freezer is in.</comment>
+            </column>
+        </property>
+        <property name="freezerNumber" type="string">
+            <column name="FREEZER_NUMBER" length="20">
+                <comment>The freezer number found on the freezer.</comment>
+            </column>
+        </property>
+        <property name="NOfShelves" type="big_decimal">
+            <column name="N_OF_SHELVES" precision="22" scale="0" not-null="true">
+                <comment>The number of shelves the freezer contains.</comment>
+            </column>
+        </property>
+        <property name="NOfRacksPerShelf" type="big_decimal">
+            <column name="N_OF_RACKS_PER_SHELF" precision="22" scale="0" not-null="true">
+                <comment>The number of racks the freezer contains.</comment>
+            </column>
+        </property>
+        <property name="NOfBoxesPerRack" type="big_decimal">
+            <column name="N_OF_BOXES_PER_RACK" precision="22" scale="0" not-null="true">
+                <comment>The number of boxes the freezer contains.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created the record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified the record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date the record was last modified.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

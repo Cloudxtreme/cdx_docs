@@ -1,0 +1,3 @@
+wipe lvm meta information
+
+dd if=/dev/zero of=/dev/sda3 bs=2048 count=1

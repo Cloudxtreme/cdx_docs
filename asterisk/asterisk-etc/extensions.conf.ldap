@@ -1,0 +1,76 @@
+[general]
+static=yes
+writeprotect=no
+
+[globals]
+NUFONE=IAX2/cardiodx@NuFone
+SBC=ZAP/g1
+
+[macro-stdexten]
+exten => s,1,NoOp(${CALLERIDNUM})
+exten => s,2,Dial(${ARG1},20)
+exten => s,3,Voicemail(u${MACRO_EXTEN})
+exten => s,4,Hangup()
+exten => s,103,Voicemail(b${MACRO_EXTEN})
+exten => s,104,Hangup()
+
+[macro-nufonetrunk]
+exten => s, 1, Dial(${NUFONE}/${MACRO_EXTEN})
+exten => s, 102, Hangup
+
+[macro-sbctrunk]
+exten => s, 1, Set(CALLERID(num)=6505658084)
+exten => s, 2, Dial(${SBC}/${ARG1})
+exten => s, 103, Hangup
+
+
+[macro-fax]
+exten => s, 1, Set(FAXFILE=/var/spool/asterisk/fax.tif)
+exten => s, 2, rxfax(${FAXFILE}|debug)
+exten => s, 3, LDAPget(EMAIL=email/${EXTEN})
+exten => s, 4, hangup
+
+;exten => h, 1, system(tiff2pdf -p letter -f ${FAXFILE} | mime-construct --to it@cardiodx.com --subject "Fax" --attachment fax.pdf --type application/pdf --file -)
+;exten => h, 1, system(tiff2pdf -p letter -f ${FAXFILE} | mime-construct --to cchou@cardiodx.com --subject "Fax" --attachment fax.pdf --type application/pdf --file -)
+exten => h, 1, system(tiff2pdf -p letter -f ${FAXFILE} | mime-construct --to ${EMAIL} --subject "Fax" --attachment fax.pdf --type application/pdf --file -)
+
+
+[outgoing]
+exten => _1NXXNXXXXXX, 1, Macro(sbctrunk,${EXTEN})
+
+[pstn]
+exten => 0185, 1, Answer
+exten => 0185, 2, MusicOnHold(default)
+
+exten => 0914, 1, Answer
+exten => 0914, 2, Ringing
+exten => 0914, 3, Wait(5)
+exten => 0914, 4, Macro(sbctrunk,14088883248)
+
+exten => 0915, 1, Answer
+exten => 0915, 2, MusicOnHold(default)
+
+exten => 0916, 1, Answer
+exten => 0916, 2, Meetme(1234)
+
+exten => 0917, 1, Answer
+exten => 0917, 2, Ringing
+exten => 0917, 3, Wait(5)
+
+exten => 2702, 1, Answer
+exten => 2702, 2, LDAPget(EMAIL=email/${EXTEN})
+exten => 2702, 3, MusicOnHold(default)
+
+exten => 2799, 1, Answer
+exten => 2799, 2, MusicOnHold(default)
+
+exten => 1388, 1, Answer
+exten => 1388, 2, MusicOnHold(default)
+
+exten => 1389, 1, Answer
+exten => 1389, 2, MusicOnHold(default)
+
+exten => fax, 1, Macro(fax)
+
+[default]
+

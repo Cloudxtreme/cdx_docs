@@ -1,0 +1,79 @@
+http://www.howtoforge.com/network_bonding_ubuntu_6.10
+http://www.cyberciti.biz/howto/question/static/linux-ethernet-bonding-driver-howto.php
+http://www.debian-administration.org/articles/350
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.cyberciti.biz/howto/question/static/linux-ethernet-bonding-driver-howto.php
+
+NOTE: The active-backup, balance-tlb and balance-alb modes do not require any specific configuration of the switch. 
+
+        balance-rr or 0
+        active-backup or 1
+        balance-xor or 2
+        broadcast or 3
+        802.3ad or 4
+        balance-tlb or 5
+        balance-alb or 6
+
+
+mii-tool
+ethtool eth0 
+ethtool eth1
+
+apt-get install ifenslave
+
+vi /etc/modprobe.d/aliases
+# Append to the bottom of this file:
+alias bond0 bonding
+#alias eth0 e100
+#alias eth1 e100
+options bonding mode=6 miimon=100
+
+vi /etc/modprob.d/arch/i386
+# Append to the bottom of this file:
+alias bond0 bonding
+options bonding mode=6 miimon=100 downdelay=200 updelay=200
+
+vi /etc/network/interfaces
+auto bond0
+iface bond0 inet static
+   address 10.10.37.89
+   netmask 255.255.248.0
+   network 10.10.32.0
+   broadcast 10.10.39.255
+   gateway 10.10.37.1
+   post-up ifenslave bond0 eth0 eth1
+
+
+reboot
+
+
+
+How to monitor:
+cat /proc/net/bonding/bond0 
+bwm-ng
+
+tcpdump -i eth0
+tcpdump -i eth1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LACP (Bonding mode is 4 (802.3ad Dynamic link aggregation))
+http://www.gimlisnipple.com/?p=319
+http://documentation.netgear.com/fs728tp/enu/202-10231-02/FS728TP_UG-06-06.html
+
+On the switch, you need to create a separate link aggregation group (or "bond" or "LAG") for each individual server. 
+So if you have Server #1 and Server #2, you need to configure LAG #1 and LAG #2 on the switch.
+
+Most "smart" switches (web interface) have a separate configuration page for assigning switch ports to LAGs. 
+
+Specifically, you'll need to assign each server's real (physical) switch ports to that server's LAG. If Server #1 plugs into switch ports 5 and 6, then you assign switch ports 5 and 6 to LAG #1. Server #2 gets the same treatment, except its switch ports get assigned to LAG #2.
+
+Configure the LAG-specific parameters for each LAG. Make sure you configure the LACP timeout parameter identically for each LAG/server pair. Generally, you want to use a "short" (1 second) LACP timeout, but it's most important that the settings are the same on both sides. You'll also want to make sure that the LAG type is correct: Many switches support multiple link aggregation/bonding types, chiefly Cisco's Portchannel and 802.3ad. You must configure your LAGs for DYNAMIC 802.3ad operation, to match how your Linux machines are configured.
+
+Finally, you should configure any VLAN, trunking, or other port-specific parameters for each LAG. For these parameters, your switch will treat each LAG as if it were just another switch port--it can be tagged or trunked, you can turn on Jumbo frames, you can filter traffic, etc. Whatever settings you gave the underlying, real member ports are ignored while those ports are assigned to the LAG.
+
+After you've configured your LAGs and assigned their port settings, you should be able to check the status of each one through the switch interface. It will report some kind of link state, probably an overall state for the whole bonded group plus the states of the individual real links in the group. You may get more information, depending on your switch interface.
+
+On the Linux server, run cat /proc/net/bonding/bond0 (change 'bond0' to whatever your bond device name is) to see the status of the whole bond and the member links. This shows a stanza for the bond and each member link, and each stanza will have a line like 'MII Status: up' if it's healthy and functioning.
+

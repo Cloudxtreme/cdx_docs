@@ -1,0 +1,57 @@
+--
+-- rails user
+--
+  398  useradd rails
+  422  vi /etc/passwd
+  402  mkdir /home/rails
+
+  403  cd /home/
+  405  chown rails:rails rails/
+
+  406  cd rails/
+  413  cp /root/.bashrc .
+  415  chown rails:rails .bashrc
+  418  cp /root/.profile .
+  419  chown rails:rails .profile
+  423  su - rails
+
+--
+-- create a rails server
+--
+su - rails
+rails dashboard
+cd dashboard/
+ruby script/server 
+
+		http://dashboard.cardiodx.com:3000
+
+vi database.yml
+development:
+  adapter: mysql
+  database: dashboard
+  host: localhost
+  username: root
+  password: secret07
+(also test and production)
+
+./script/generate controller Say
+cd app/controllers/
+vi say_controller.rb 
+class SayController < ApplicationController
+  def hello
+  end
+end
+
+cd app/views/say/
+vi hello.rhtml
+hello
+
+restart rails server!!!!!
+
+http://dashboard.cardiodx.com:3000/say/hello
+
+
+
+
+
+

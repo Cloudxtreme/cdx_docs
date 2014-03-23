@@ -1,0 +1,97 @@
+apt-cacher apt-cacher-ng
+
+
+http://ubuntuforums.org/showthread.php?t=981085
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig search apt-cacher-ng
+
+cd /etc/apt-cacher-ng
+vi acng.conf
+CacheDir: /data/apt-cacher-ng
+
+  494  mkdir /data/apt-cacher-ng
+  495  chown apt-cacher-ng:apt-cacher-ng /data/apt-cacher-ng
+
+/etc/init.d/apt-cacher-ng restart
+
+
+http://bksrv:3142/acng-report.html
+
+
+--
+-- import
+--
+cd /data/apt-cacher-ng
+mkdir -p -m 2755 _import
+chown -R apt-cacher-ng:apt-cacher-ng _import
+
+cp -rp /var/cache/apt/archives/* _import
+
+
+-->> go to one client machine
+
+cat > /etc/apt/apt.conf <<EOF
+Acquire::http::Proxy "http://aptcacher.cardiodx.com:3142";
+EOF
+
+
+mv sources.list sources.list.orig
+cat > sources.list << EOF
+deb http://us.archive.ubuntu.com/ubuntu/ jaunty main restricted universe multiverse
+#deb-src http://us.archive.ubuntu.com/ubuntu/ jaunty main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ jaunty-updates main restricted universe multiverse
+#deb-src http://us.archive.ubuntu.com/ubuntu/ jaunty-updates main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu jaunty-security main restricted universe multiverse
+#deb-src http://security.ubuntu.com/ubuntu jaunty-security main restricted universe multiverse
+
+# deb http://us.archive.ubuntu.com/ubuntu/ jaunty-backports main restricted universe multiverse
+# deb-src http://us.archive.ubuntu.com/ubuntu/ jaunty-backports main restricted universe multiverse
+# deb http://archive.canonical.com/ubuntu jaunty partner
+# deb-src http://archive.canonical.com/ubuntu jaunty partner
+EOF
+
+
+apt-get update
+
+
+-->> on the aptcacher server web interface
+click "Start Import"
+
+cd /data/apt-cacher-ng/_import
+rm *.deb
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- import from backup
+--
+
+?????
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

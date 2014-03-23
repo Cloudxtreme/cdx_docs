@@ -1,0 +1,62 @@
+
+Reliance 6.0a Patch.zip
+
+--
+-- Backup EtQ
+--
+backup tomcat:
+root@etqdevel:/usr/tomcat/webapps# cp -rp reliance_dev /root/backup_6.0/
+
+backup mysql database:
+/usr/mysql/bin/mysqldump -u root -p --all-databases -S /tmp/mysqldev.sock | bzip2 -c > db_dump-dev.bz2
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- upgrade EtQ
+--
+copy patch files over:
+
+root@etqdevel:~/Reliance_6.0a/Reliance/common/layouts# cp * /usr/tomcat/webapps/reliance_dev/common/layouts
+root@etqdevel:~/Reliance_6.0a/Reliance/engine/layouts# cp * /usr/tomcat/webapps/reliance_dev/engine/layouts/
+root@etqdevel:~/Reliance_6.0a/Reliance/WEB-INF# cp -rp classes/ /usr/tomcat/webapps/reliance_dev/WEB-INF/
+root@etqdevel:~/Reliance_6.0a/Reliance/WEB-INF# cp -rp lib/ /usr/tomcat/webapps/reliance_dev/WEB-INF/
+
+cp * /usr/tomcat/webapps/reliance_dev/imports/
+
+root@etqdevel:~/Reliance_6.0a/sql/MySQL# /usr/mysql/bin/mysql -u root -p -S /tmp/mysqldev.sock
+mysql> source UpgradePatch.sql
+
+
+root@etqdevel:/usr/tomcat/bin# export PATH=$PATH:/usr/jdk1.5.0_10/bin/
+root@etqdevel:/usr/tomcat/bin# export JAVA_HOME=/usr/jdk1.5.0_10/
+
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF/props# vi log4j.properties
+log4j.appender.CONS.Threshold=INFO
+log4j.appender.CONS=org.apache.log4j.ConsoleAppender
+log4j.appender.FILE.Threshold=INFO
+log4j.appender.FILE.layout.DateFormat=ISO8601
+
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/common/localization/core# vi standard_errors.properties
+< 958 = Users listed in group [ {0} ] are not allowed to access {1} application
+< 959 = Users listed in group [ {0} ] are not allowed to access {1} application views
+< 960 = Failed to get the phase setting with ID= {0}
+<
+1641,1643d1636
+< 8004 = Failed to retrieve remote object {0} from primary server
+< 8005 = Directory {0} is not assessable
+< 8006 = File {0} is not assessable
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/common/localization/layouts# vi layouts_text.properties
+170d169
+< ENGINE_CUSTOMIZATION_FORMULAS_INSTRUCTIONS = For the following three fields, use the design name of the activities workflows.
+< DATACENTER_LOCATION_ADMIN_INSTRUCTIONS2 = and they must be listed in group (Location Administrators)
+
+
+root@etqdevel:/usr/tomcat/bin# ./shutdown.sh
+root@etqdevel:/usr/tomcat/work# rm -rf Catalina/
+root@etqdevel:/usr/tomcat/bin# ./startup.sh
+
+

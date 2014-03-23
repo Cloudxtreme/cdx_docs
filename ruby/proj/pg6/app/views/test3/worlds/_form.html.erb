@@ -1,0 +1,113 @@
+<style scoped>
+  .required {
+    font-weight: bold;
+  }
+  .container-section {
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border-color: rgba(255,255,255,0.2);
+    background: -moz-linear-gradient(top,  rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.07) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.01)), color-stop(100%,rgba(0,0,0,0.07)));
+    background: -webkit-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: -o-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: -ms-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: linear-gradient(to bottom,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+  }
+</style>
+
+<%= form_for(@object, :html => {:id => 'test3_world'}) do |f| %>
+  <% if @object.errors.any? %>
+    <div id='error_explanation'>
+      <h2><%= pluralize(@object.errors.count, 'error') %> prohibited this object from being saved:</h2>
+      <ul>
+      <% @object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% collection = Admin::Collection.find_by_name('World') # ' %>
+  <% html_table_width = collection.html_table_width=='' ? 3: collection.html_table_width.to_i %>
+
+  <% fields = Admin::Field.includes(:dtype).joins(:collection, :dtype).where("admin_collections.name = 'World'").order('display_order') %>
+	<div class="container-section">
+  <table width='100%'>
+    <td align='right'> <label for='fullname' class='required'>Name:</label></td>
+    <td align='left'>
+      <input id='test3_world_name' 
+						name='test3_world[name]' 
+						class='k-textbox' 
+						type='text' 
+						validationMessage='Name is required!' 
+						required 
+						value='<%=@object['name']%>'/> <br />
+      <span class='k-invalid-msg' data-for='test3_world[name]'></span>
+    </td>
+    <%(1..html_table_width-1).each do |i| %>
+      <td></td> <td></td>
+    <% end %>
+  <% fields.each do |field| %>
+    <% required='required' if field.html_required %>
+
+    <%=raw('<tr>') if field.display_order.to_i == 1 %>
+    <% if Test3::World.is_lut_column?(field.name) %>
+      <td align='right'><%= f.label field.name, field.label, :class=>required %>:</td>
+      <td align='left'>
+        <%= f.select(field.name, Test3::World.selection_data(field.name)) %>
+        <span class='k-invalid-msg' data-for='test3_world[<%=field.name%>]'></span>
+      </td>
+    <% elsif Test3::World.is_foreign_key?(field.name) %>
+    	<% if params[field.name] %>
+				<td><%= f.hidden_field field.name, :value => params[field.name] %></td>
+    	<% elsif @object[field.name] %>
+      	<td align='right'><%= f.label field.name %></td>
+      	<td align='left'><%= f.select(field.name, Test3::World.selection_data(field.name), :selected => @object[field.name]) %></td>
+    	<% else %>
+      	<td align='right'><%= f.label field.name %></td>
+      	<td align='left'><%= f.select(field.name, Test3::World.selection_data(field.name)) %></td>
+    	<% end %>
+    <% else %>
+      <td align='right'><%= f.label field.name, field.label, :class=>required %>:</td>
+      <td align='left'>
+        <%= raw(field.html_input_string(Test3::World.downcase_namespace_base, Test3::World.downcase_name, @object[field.name])) %>
+        <span class='k-invalid-msg' data-for='test3_world[<%=field.name%>]'></span>
+      </td>
+    <% end %>
+    <%=raw('</tr>') if field.display_order.to_i%html_table_width == 0 %>
+  <% end %>
+
+	</table>
+	</div>
+  <br />
+
+  <div class='actions'>
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function() {
+    var validator = $('#test3_world').kendoValidator().data('kendoValidator'),
+    status = $('.status');
+
+    <% fields = Admin::Field.includes(:dtype).joins(:collection, :dtype).where("admin_collections.name = 'World'") %>
+    <% fields.each do |field| %>
+			<% if Admin::Field.is_foreign_key? and params[field.name] %>
+				<% # do nothing! %>
+			<% else %>
+	      <%=raw(field.widget_string(Test3::World.downcase_namespace_base, Test3::World.downcase_name)) \
+            if field.widget_string(Test3::World.downcase_namespace_base, Test3::World.downcase_name) -%>
+			<% end %>
+    <% end %>
+  });
+</script>
+
+
+

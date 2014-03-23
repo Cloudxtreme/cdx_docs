@@ -1,0 +1,23 @@
+postgres sql
+
+http://www.cyberciti.biz/faq/howto-add-postgresql-user-account/
+
+su - postgres
+
+
+-- for restoring testlims, restore sira first!!!
+
+psql
+create user rails with password '';
+
+create database sire;
+grant all privileges on database sire to rails;
+
+create database testlims;
+grant all privileges on database testlims to rails;
+\q
+
+
+psql -d sire -f sire.sql 
+psql -d testlims -f prodlims_new.sql 
+

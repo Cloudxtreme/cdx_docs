@@ -1,0 +1,31 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+cardiodx.com		IN SOA	sunlight.cardiodx.com. florin.cardiodx.com. (
+				2001042717 ; serial
+				86400      ; refresh (1 day)
+				21600      ; retry (6 hours)
+				3600000    ; expire (5 weeks 6 days 16 hours)
+				3600       ; minimum (1 hour)
+				)
+			NS	sunlight.cardiodx.com.
+$ORIGIN cardiodx.com.
+10.10.37-214		A	10.10.37.214
+10.10.37-215		A	10.10.37.215
+10.10.37-216		A	10.10.37.216
+10.10.37-217		A	10.10.37.217
+10.10.37-218		A	10.10.37.218
+10.10.37-219		A	10.10.37.219
+10.10.37-220		A	10.10.37.220
+10.10.37-221		A	10.10.37.221
+10.10.37-222		A	10.10.37.222
+$TTL 10800	; 3 hours
+blueberry		A	10.10.37.200
+$TTL 86400	; 1 day
+cardiodx		A	216.71.116.162
+$TTL 10800	; 3 hours
+cchouxp			A	10.10.37.101
+$TTL 86400	; 1 day
+localhost		A	127.0.0.1
+moonlight		A	10.10.37.23
+sunlight		A	10.10.37.178
+www			A	216.71.116.162

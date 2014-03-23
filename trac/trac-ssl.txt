@@ -1,0 +1,45 @@
+<VirtualHost *:80>
+        RewriteEngine   on
+        RewriteCond     %{SERVER_PORT} ^80$
+        RewriteRule     ^(.*)$ https://%{SERVER_NAME}$1 [L,R]
+</VirtualHost>
+
+
+<VirtualHost *:443>
+        ServerAdmin webmaster@localhost
+        ServerName trac.cardiodx.com
+        DocumentRoot /var/www
+        ErrorLog /var/log/apache2/error.trac.log
+        CustomLog /var/log/apache2/access.trac.log combined
+
+        SSLEngine on
+        SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+        SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+
+        <Location /projects>
+                SetHandler mod_python
+                PythonInterpreter main_interpreter
+                PythonHandler trac.web.modpython_frontend
+                PythonOption TracEnvParentDir /var/lib/trac
+                PythonOption TracUriRoot /projects
+                #SetEnv PYTHON_EGG_CACHE /tmp
+                PythonOption PYTHON_EGG_CACHE /tmp
+        </Location>
+
+        # use the following for one authorization for all projects (names containing "-" are not detected):
+        <LocationMatch "/projects/[[:alnum:]]+/login">
+                AuthBasicAuthoritative off
+                AuthPAM_Enabled on
+                AuthType Basic
+                AuthName "PAM"
+                require valid-user
+                require group "Domain Users"
+#            AuthType Basic
+#            AuthName "trac"
+#            AuthUserFile /etc/apache2/dav_svn.passwd
+#            Require valid-user
+        </LocationMatch>
+
+</VirtualHost>
+
+

@@ -1,0 +1,25 @@
+from="backup.cardiodx.com",command="/root/validate-rsync" ssh-rsa  PUBLIC_KEY_STRING root@backup.cardiodx.com
+
+root@pdc:/root# more validate-rsync 
+#!/bin/sh
+
+case "$SSH_ORIGINAL_COMMAND" in
+        *\&*)
+                echo "Rejected"
+                ;;
+        *\;*)
+                echo "Rejected"
+                ;;
+        rsync\ --server*)
+                $SSH_ORIGINAL_COMMAND
+                ;;
+        *)
+                echo "Rejected"
+                ;;
+esac
+
+
+rsync -arvz --include="*.txt" --include="*.doc" --include="*.xls" --include="*.ppt" --include="*.pdf" --include="*.html" --include="*/" --exclude="*" /backup/daily.0/pdc/data/samba/groups root@cchoudesktop:/data/tmp
+
+rsync -ar --include="*.txt" --include="*.text" --include="*.doc" --include="*.xls" --include="*.ppt" --include="*.pdf" --include="*.html" --include="*.htm" --include="*/" --exclude="*" /home/cchou/gdrive/it/Documentation/ .
+

@@ -1,0 +1,28 @@
+lsmod | grep cpu
+cpufreq_userspace       5408  0 
+cpufreq_stats           7744  0 
+freq_table              6048  2 speedstep_centrino,cpufreq_stats
+cpufreq_powersave       2944  0 
+cpufreq_ondemand        8876  2 
+cpufreq_conservative     8712  0 
+
+
+ls /sys/devices/system/cpu/ 
+
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies 
+2167000 2000000 1833000 1667000 1500000 1333000 1000000 
+
+wajig install cpufrequtils 
+
+
+  515  cpufreq-info 
+  517  cpufreq-set -g performance
+  520  cpufreq-set -g powersave
+
+
+vi /etc/default/cpufrequtils 
+ENABLE="true"
+GOVERNOR="ondemand"
+MAX_SPEED=2167000
+MIN_SPEED=1000000
+

@@ -1,0 +1,22 @@
+
+<script>
+
+$(document).ready(function(){
+
+  $("#search").keyup(function() {
+    var form = $(this).parents("form"); // grab the form wrapping the search bar.
+    var url = form.attr("action"); // grab the URL from the form's action value.
+    var formData = form.serialize(); // grab the data in the form
+    $.get(url, formData, function(html) { // perform an AJAX get, the trailing function is what happens on successful get.
+      $("#results").html(html); // replace the "results" div with the result of action taken
+    });
+  });
+
+});
+</script>
+
+  <form id="searchform" accept-charset="utf-8" method="get" action="/products.json">
+    Search: <input id="search" name="search" type="text" autocomplete="off" title="Search location, company, description..." />      
+  </form>
+
+<div id="results"></div>

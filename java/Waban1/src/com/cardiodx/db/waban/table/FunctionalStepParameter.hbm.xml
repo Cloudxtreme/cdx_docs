@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.FunctionalStepParameter" table="FUNCTIONAL_STEP_PARAMETER" schema="DNALIMS">
+        <comment>Contains defined parameters available for functional steps.</comment>
+        <id name="functionalStepParameterId" type="big_decimal">
+            <column name="FUNCTIONAL_STEP_PARAMETER_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="functionalStep" class="com.cardiodx.db.waban.table.FunctionalStep" fetch="select">
+            <column name="FUNCTIONAL_STEP_ID" precision="22" scale="0" not-null="true">
+                <comment>The type of step identifier and foreign key to the FUNCTIONAL_STEP table.</comment>
+            </column>
+        </many-to-one>
+        <property name="parameterName" type="string">
+            <column name="PARAMETER_NAME" length="100" not-null="true">
+                <comment>The name of the parameter.</comment>
+            </column>
+        </property>
+        <property name="mandatory" type="java.lang.Boolean">
+            <column name="MANDATORY" precision="1" scale="0">
+                <comment>Set to "1" if this parameter must have a value.</comment>
+            </column>
+        </property>
+        <property name="parameterType" type="string">
+            <column name="PARAMETER_TYPE" length="1" not-null="true">
+                <comment>The type of parameter: B - boolean, S - string, I - integer, R - real number.</comment>
+            </column>
+        </property>
+        <property name="discreteValues" type="string">
+            <column name="DISCRETE_VALUES" length="100">
+                <comment>Any list of values that this parameter is limited to. Each value is separated by a pipe character (|).</comment>
+            </column>
+        </property>
+        <property name="defaultValue" type="string">
+            <column name="DEFAULT_VALUE" length="100">
+                <comment>An entry here will be the default parameter value.</comment>
+            </column>
+        </property>
+        <set name="stepTemplateParameters" table="STEP_TEMPLATE_PARAMETER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FUNCTIONAL_STEP_PARAMETER_ID" precision="22" scale="0" not-null="true">
+                    <comment>The functional step parameter identifier. Part of the primary key and foreign key to the FUNCTIONAL_STEP_PARAMETER table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateParameter" />
+        </set>
+    </class>
+</hibernate-mapping>

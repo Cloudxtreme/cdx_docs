@@ -1,0 +1,159 @@
+linux ubuntu nfs xen live migrateion
+
+wajig install nfs-kernel-server
+vi /etc/exports
+/home/xen *(rw,sync,no_root_squash)
+
+xm migrate -live xen1 xensrv1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+linux ubuntu nfs
+Live migration (You'll hvae to use lvm):
+http://www.performancemagic.com/iscsi-xen-howto/
+
+cd /etc/xen
+cp xend-config.sxp xend-config.sxp.orig
+vi xend-config.sxp
+# -*- sh -*-
+
+(logfile /var/log/xen/xend.log)
+#(loglevel DEBUG)
+
+#(xend-http-server no)
+#(xend-unix-server no)
+#(xend-tcp-xmlrpc-server no)
+#(xend-unix-xmlrpc-server yes)
+#(xend-relocation-server no)
+(xend-relocation-server yes)
+(xend-relocation-port 8002)
+(xend-relocation-address '')
+(xend-relocation-hosts-allow '')
+#(xend-relocation-hosts-allow '^localhost$ ^localhost\\.localdomain$')
+#(external-migration-tool '')
+
+#(xend-unix-path /var/lib/xend/xend-socket)
+#(xend-port            8000)
+#(xend-address '')
+#(console-limit 1024)
+(network-script network-bridge)
+(vif-script vif-bridge)
+(dom0-min-mem 196)
+(dom0-cpus 0)
+#(enable-dump no)
+
+(vnc-listen '127.0.0.1')
+(vncpasswd '')
+# (vnc-tls 1)
+# (vnc-x509-cert-dir /etc/xen/vnc)
+# (vnc-x509-verify 1)
+
+
+/etc/init.d# ./xend restart
+
+xensrv2# xm migrate --live xen1 xensrv1
+xensrv1# xm migrate --live xen1 xensrv2
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://sysadmin.wikia.com/wiki/Live_migration_xen
+
+# on aoesrv1 (shared device):
+lvcreate -L+10G -n xen vg0
+vblade-persist setup 2 5 eth0 /dev/vg0/xen 
+vblade-persist auto 2 5
+vblade-persist start 2 5
+
+
+############################
+# on xensrv1:
+############################
+modprobe aoe
+aoe-discover
+aoe-stat
+pvcreate /dev/etherd/e2.5 
+vgcreate vg_xen /dev/etherd/e2.5
+lvcreate -L+6G -n xen2-disk vg_xen
+lvcreate -L+1G -n xen2-swap vg_xen
+
+mount /dev/vg_xen/xen2-disk /mnt/xen
+tar xvf ubuntu_image.tar /mnt/xen
+  (/mnt/xen should have /home, /etc, /usr, etc.)
+grub (chroot)????
+
+# vi xen1.cfg
+kernel      = '/boot/vmlinuz-2.6.24-19-xen'
+ramdisk     = '/boot/initrd.img-2.6.24-19-xen'
+memory      = '128'
+root        = '/dev/xvda2 ro'
+disk        = [
+                  'phy:/dev/vg_xen/xen2-swap,xvda1,w',
+                  'phy:/dev/vg_xen/xen2-disk,xvda2,w',
+              ]
+name        = 'xen2'
+dhcp        = 'dhcp'
+vif         = [ 'mac=00:16:3E:1A:6B:5B' ]
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+extra = '2 console=xvc0'
+
+
+scp xen2.cfg root@xensrv2:/etc/xen
+ on lvm
+############################
+# on xensrv2
+############################
+
+modprobe aoe
+aoe-discover
+aoe-stat
+pvscan
+vgscan
+lvscan
+
+xm list
+xm create xen2.cfg
+xm console xen2
+
+xm migrate --live xen2 xensrv1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+# For Windows on lvm
+#
+pvcreate /dev/etherd/e2.6
+vgcreate vg_win /dev/etherd/e2.6 
+lvcreate -L+5.9G -n xen2-win vg_win
+
+# vi win_lvm.cfg
+kernel      = '/usr/lib/xen/boot/hvmloader'
+builder     = 'hvm'
+memory      = '128'
+vcpus       = '2'
+disk        = [
+                  'phy:/dev/vg_win/xen2-win,hda,w',
+                  'phy:/dev/cdrom,ioemu:hdc:cdrom,r',
+              ]
+device_model = '/usr/lib/xen/bin/qemu-dm'
+name        = 'win_lvm'
+dhcp        = 'dhcp'
+#vif         = [ 'mac=00:16:3E:B2:52:4F' ]
+vif = [ 'type=ioemu, bridge=eth0' ]
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+
+#extra = '2 console=xvc0'
+boot        = 'd'
+vnc         = 1
+sdl=0
+vncviewer=1
+vncpasswd=''
+
+
+
+dd if=/home/xen/domains/win32/win32.img of=/dev/vg_win/xen2-wi
+xm create win_lvm.cfg
+scp win_lvm.cfg root@xensrv2:/etc/xen
+
+
+

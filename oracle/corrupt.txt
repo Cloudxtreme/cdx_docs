@@ -1,0 +1,93 @@
+
+https://support.oracle.com/CSP/main/article?cmd=show&type=NOT&id=28814.1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+root@ccllims:/u01/app/oracle/admin/ORCL/bdump# grep -i 'corrupt block' alert_ORCL.log | grep -v Found
+Corrupt block relative dba: 0x01456117 (file 5, block 352535)
+Corrupt block relative dba: 0x014676e8 (file 5, block 423656)
+Corrupt block relative dba: 0x014676e8 (file 5, block 423656)
+Corrupt block relative dba: 0x014676e8 (file 5, block 423656)
+Corrupt block relative dba: 0x014676e8 (file 5, block 423656)
+Corrupt block relative dba: 0x01422470 (file 5, block 140400)
+Corrupt block relative dba: 0x01422470 (file 5, block 140400)
+Corrupt block relative dba: 0x01410231 (file 5, block 66097)
+Corrupt block relative dba: 0x01410231 (file 5, block 66097)
+Corrupt block relative dba: 0x01477298 (file 5, block 488088)
+Corrupt block relative dba: 0x01477298 (file 5, block 488088)
+Corrupt block relative dba: 0x01477298 (file 5, block 488088)
+Corrupt block relative dba: 0x01416836 (file 5, block 92214)
+
+SQL> select tablespace_name, file_id, relative_fno from dba_data_files;
+
+TABLESPACE_NAME 		  FILE_ID RELATIVE_FNO
+------------------------------ ---------- ------------
+USERS					4	     4
+SYSAUX					3	     3
+UNDOTBS1				2	     2
+SYSTEM					1	     1
+SCE_CONTENT				5	     5
+SCE_DATA				6	     6
+INDX					7	     7
+
+
+
+SQL> select tablespace_name, segment_type, owner, segment_name 
+from dba_extents 
+where file_id = 5 and 352535 between block_id and block_id + blocks-1;
+
+TABLESPACE_NAME 	       SEGMENT_TYPE	  OWNER
+------------------------------ ------------------ ------------------------------
+SEGMENT_NAME
+--------------------------------------------------------------------------------
+SCE_CONTENT		       LOBSEGMENT	  SCESCHEMA
+SYS_LOB0000051796C00013$$
+
+
+SQL> select table_name, column_name 
+from dba_lobs 
+where owner = 'SCESCHEMA' and segment_name = 'SYS_LOB0000051796C00013$$';
+
+TABLE_NAME
+------------------------------
+COLUMN_NAME
+--------------------------------------------------------------------------------
+VERSIONEDDOCUMENT
+CONTENT
+
+
+set serverout on
+exec dbms_output.enable(100000);
+declare
+	 error_1578 exception;
+	 pragma exception_init(error_1578,-1578);
+	 n number;
+	 cnt number:=0;
+	 badcnt number:=0;
+	begin
+	  for cursor_lob in
+	        (select rowid r, &LOB_COLUMN_NAME L from &OWNER..&TABLE_NAME)
+	  loop
+	    begin
+	      n:=dbms_lob.instr(cursor_lob.L,hextoraw('AA25889911'),1,999999) ;
+	    exception
+	     when error_1578 then
+	       dbms_output.put_line('Got ORA-1578 reading LOB at '||cursor_lob.R);
+	       badcnt:=badcnt+1;
+	    end;
+    cnt:=cnt+1;
+  end loop;
+  dbms_output.put_line('Scanned '||cnt||' rows - saw '||badcnt||' errors');
+end;
+/
+
+Enter value for lob_column_name: CONTENT
+Enter value for owner: SCESCHEMA
+Enter value for table_name: VERSIONEDDOCUMENT
+
+Got ORA-1578 reading LOB at AAAMpUAAGAAABeVAAF
+Scanned 4769 rows - saw 1 errors
+
+
+
+

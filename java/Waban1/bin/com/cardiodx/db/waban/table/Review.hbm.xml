@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Review" table="REVIEW" schema="DNALIMS">
+        <comment>Review</comment>
+        <id name="reviewId" type="big_decimal">
+            <column name="REVIEW_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist Identifier and Foreign key to checklist table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="reviewName" type="string">
+            <column name="REVIEW_NAME">
+                <comment>Name of REVIEW</comment>
+            </column>
+        </property>
+        <property name="reviewNotes" type="string">
+            <column name="REVIEW_NOTES">
+                <comment>Notes for REVIEW</comment>
+            </column>
+        </property>
+        <property name="username" type="string">
+            <column name="USERNAME" length="30">
+                <comment>REVIEW User Name</comment>
+            </column>
+        </property>
+        <property name="rolename" type="string">
+            <column name="ROLENAME" length="30">
+                <comment>REVIEW Role Name</comment>
+            </column>
+        </property>
+        <property name="md5digest" type="string">
+            <column name="MD5DIGEST" length="100">
+                <comment>Md5digest</comment>
+            </column>
+        </property>
+        <property name="checklistRow" type="big_decimal">
+            <column name="CHECKLIST_ROW" precision="22" scale="0">
+                <comment>Checklist Row.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,69 @@
+headless virtualbox no display
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.howtoforge.com/vboxheadless-running-virtual-machines-with-virtualbox-2.0-on-a-headless-ubuntu-8.04-server
+
+cd /etc/apt/sources.list.d
+vi virtualbox.list 
+deb http://download.virtualbox.org/virtualbox/debian hardy non-free
+
+wget -q http://download.virtualbox.org/virtualbox/debian/sun_vbox.asc -O- | sudo apt-key add -
+
+wajig update
+wajig install linux-headers-$(uname -r) build-essential
+wajig install virtualbox-2.0
+
+-- after ugradding new linux kernel, you also need to run the following:
+wajig install linux-headers-$(uname -r)
+/etc/init.d/vboxdrv setup
+
+	- Not used:
+	VBoxManage createvm -name "Ubuntu 8.04 Server" -register
+	VBoxManage modifyvm "Ubuntu 8.04 Server" -memory "256MB" -acpi on -boot1 dvd -nic1 nat
+	VBoxManage createvdi -filename "Ubuntu_8_04_Server.vdi" -size 10000 -register
+	VBoxManage modifyvm "Ubuntu 8.04 Server" -hda "Ubuntu_8_04_Server.vdi"
+	VBoxManage registerimage dvd /home/ubuntu-8.04.1-server-i386.iso
+	VBoxManage modifyvm "Ubuntu 8.04 Server" -dvd /home/ubuntu-8.04.1-server-i386.iso
+
+~~~~~~~~~~~~~~~~~
+wajig install uml-utilities
+--wajig install bridge-utils
+
+tunctl -t tap0 
+brctl addif br0 tap0
+brctl show
+sudo ifconfig tap0 up
+ifconfig
+
+-- Use GUI to create the VM
+VirtualBox 
+Network:
+	Attach to: Host Interface
+	Interface Name: tap0
+
+
+-- Config windows box
+add to domain
+  domain users --> administrator
+enable remote desktop
+  domain users -->
+enabel firewall port on "Remote Desktop"
+
+
+-- start the VM
+VBoxHeadless -p 3390 -startvm WinXP &
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://bimma.me.uk/2007/09/30/ubuntu-creating-host-interface-networking-for-virtualbox/
+
+--need to test
+vi /etc/network/interfaces
+auto tap0
+iface tap0 inet manual
+uml_proxy_ether eth0
+
+
+
+
+

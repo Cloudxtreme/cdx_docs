@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AnonymizationQuery" table="ANONYMIZATION_QUERY" schema="DNALIMS">
+        <comment>Anonymization Query</comment>
+        <id name="anonQueryId" type="big_decimal">
+            <column name="ANON_QUERY_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="queryClause" type="string">
+            <column name="QUERY_CLAUSE" length="2000" not-null="true">
+                <comment>Query clause</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

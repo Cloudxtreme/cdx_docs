@@ -1,0 +1,7 @@
+
+
+
+export HADOOP_CONF_DIR
+export HADOOP_SLAVES=
+
+bin/slaves.sh "mkdir -p /tmp/hadoop"

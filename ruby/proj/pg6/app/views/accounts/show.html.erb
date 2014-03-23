@@ -1,0 +1,57 @@
+<p id="notice"><%= notice %></p>
+
+<% Account.display_columns.each do |column_name| %>
+  <p>
+  <b><%=column_name.titleize%>: </b>
+    <%=Account.get_final_value(column_name, @object[column_name]) %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_account_path(@object) %> |
+<%= link_to 'Accounts', accounts_path %> 
+
+<% Account.my_child_objects.each do |child_object| %> 
+
+	<% dtable = child_object.name.gsub(/::/, '_') %>
+
+	<script type="text/javascript">
+		$(document).ready( function () {
+			$(<%="'##{dtable}'"%>).dataTable();
+		} );
+	</script>
+
+	<h1><%= child_object.base_class %></h1>
+
+	<table cellpadding="0" cellspacing="0" border="0" class="display" id="<%=dtable%>">
+		<thead>
+			<tr>
+				<% child_object.display_columns.each do |column_name| %>
+					<th width="20%"><%=column_name.titleize%></th>
+				<% end %>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% child_object.where("#{Account.me_as_foreign_key} = #{@object.id}").each do |object| %>
+			<tr>
+				<% child_object.display_columns.each do |column_name| %>
+					<td>
+            <% if child_object.is_foreign_key?(column_name) %>
+              <a href='<%=child_object.find_associate_obj(column_name).object_path(object[column_name]) %>'><%= child_object.get_final_value(column_name, object[column_name])%></a>
+            <% else %>
+              <%= child_object.get_final_value(column_name, object[column_name])%>
+            <% end %>
+					</td>
+				<% end %>
+				<td><%= link_to 'Show', object %>/<%= link_to 'Edit', edit_account_path(object)%>/<%= link_to 'Destroy', object, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table><br>
+<br>
+<%= link_to 'Accounts', accounts_path %> | 
+<%= link_to 'New Account', new_account_path(Account.me_as_foreign_key => @object.id)%>
+
+<% end %>
+
+

@@ -1,0 +1,27 @@
+
+
+firefox local link
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mac:
+  under Allications
+  Contents -> MacOS -> greprefs -> all.js
+
+Linux: 
+  /usr/share/firefox/greprefs -> all.js
+
+
+
+flash plugin:
+
+32 bit: 
+/usr/lib/flashplugin-nonfree/libflashplayer.so
+
+64 bit:
+/var/lib/flashplugin-nonfree/npwrapper.libflashplayer.so
+/usr/lib/libflashsupport.so
+
+
+
+Multiple revisions:
+	http://odyniec.net/blog/2010/02/running-multiple-versions-of-firefox-in-ubuntu-9-10/

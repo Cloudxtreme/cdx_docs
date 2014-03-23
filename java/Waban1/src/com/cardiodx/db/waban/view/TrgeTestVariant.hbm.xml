@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeTestVariant" table="TRGE_TEST_VARIANT" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeTestVariantId">
+            <key-property name="testId" type="big_decimal">
+                <column name="TEST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variantId" type="big_decimal">
+                <column name="VARIANT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="indexCaseId" type="string">
+                <column name="INDEX_CASE_ID" length="4000" />
+            </key-property>
+            <key-property name="indexCasePk" type="big_decimal">
+                <column name="INDEX_CASE_PK" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

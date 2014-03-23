@@ -1,0 +1,88 @@
+adding 2nd node to the cluster
+
+slave: 
+  vi sources.list
+  deb http://archive.canonical.com/ lucid partner
+
+  apt-get update -o Acquire::http::No-Cache=True
+  wajig update
+  wajig install sun-java6-jdk -y
+  java -version
+    java version "1.6.0_22"
+
+  addgroup hadoop
+  adduser --ingroup hadoop hadoop
+
+master:
+  su - hadoop
+  ssh-copy-id -i $HOME/.ssh/id_rsa.pub jonathandesktop
+  ssh jonathandesktop
+
+  scp hadoop-0.20.2.tar.gz root@jonathandesktop:
+
+slave:
+  cd /usr/local
+  tar zxvf ~/hadoop-0.20.2.tar.gz
+  ln -s hadoop-0.20.2/ hadoop
+  chown -R hadoop:hadoop hadoop*
+
+  may also need to do on master:
+    Otherwise master will get "Incompatible namespaceIDs in 
+    /usr/local/hadoop-datastore/hadoop-hadoop/dfs/data error!!!"
+
+  rm -rf /usr/local/hadoop-datastore
+  mkdir -p /usr/local/hadoop-datastore/hadoop-hadoop
+  chown -R hadoop:hadoop /usr/local/hadoop-datastore
+  chmod -R 750 /usr/local/hadoop-datastore
+
+  su - hadoop
+  cd /usr/local/hadoop/conf/
+  vi hadoop-env.sh
+  export JAVA_HOME=/usr/lib/jvm/java-6-sun
+  export HADOOP_OPTS=-Djava.net.preferIPv4Stack=true
+
+  mv core-site.xml core-site.xml.orig
+  mv mapred-site.xml mapred-site.xml.orig
+  mv hdfs-site.xml hdfs-site.xml.orig
+
+
+master (add new slave):
+  vi slaves
+  master
+  jonathandesktop
+
+  vi hdfs-site.xml
+  <value>2</value>
+
+  scp core-site.xml hadoop@jonathandesktop:/usr/local/hadoop/conf
+  scp mapred-site.xml hadoop@jonathandesktop:/usr/local/hadoop/conf
+  scp hdfs-site.xml hadoop@jonathandesktop:/usr/local/hadoop/conf
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+master (start hdfs and map-reduce daemons):
+  cd /usr/local/hadoop
+  ./bin/stop-all.sh 
+  bin/hadoop namenode -format
+
+  bin/start-dfs.sh 
+  jps
+
+  bin/start-mapred.sh 
+  jps
+  
+
+slave (check the logs): 
+  cd /usr/local/hadoop/logs
+  tail -20f hadoop-hadoop-datanode-jonathandesktop.log &
+  tail -20f hadoop-hadoop-tasktracker-jonathandesktop.log &
+
+
+master (run the map-reduce jobs):
+  154  bin/hadoop fs -mkdir gutenberg
+  162  bin/hadoop dfs -copyFromLocal ~/gutenberg/* gutenberg
+  166  bin/hadoop jar hadoop-0.20.2-examples.jar wordcount gutenberg gutenberg-output
+  168  bin/hadoop dfs -cat gutenberg-output/part-r-00000 | awk '{print $2,$1}' | sort -rn | more
+
+	bin/hadoop dfsadmin -report
+

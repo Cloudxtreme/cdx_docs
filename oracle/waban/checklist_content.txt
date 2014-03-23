@@ -1,0 +1,15 @@
+
+select cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist c, checklist_content cc, procedure_template pt
+where c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and c.checklist_id = 19300
+order by cc.checklist_col, cc.checklist_row;
+
+
+select cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist c, checklist_content cc
+where c.checklist_id = cc.checklist_id
+and c.checklist_id = 19300
+order by cc.checklist_col, cc.checklist_row;
+

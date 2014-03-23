@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudMaintenanceSchedule" table="AUD_MAINTENANCE_SCHEDULE" schema="DNALIMS">
+        <comment>Audit information of table MAINTENANCE_SCHEDULE</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="maintenanceScheduleId" type="big_decimal">
+            <column name="MAINTENANCE_SCHEDULE_ID" precision="22" scale="0">
+                <comment>Maintenance Schedule Identifier and Primary Key</comment>
+            </column>
+        </property>
+        <property name="instrumentSetupId" type="big_decimal">
+            <column name="INSTRUMENT_SETUP_ID" precision="22" scale="0">
+                <comment>Instrument Setup Identifier</comment>
+            </column>
+        </property>
+        <property name="scheduleDate" type="date">
+            <column name="SCHEDULE_DATE" length="7">
+                <comment>Scheduled date for maintenance</comment>
+            </column>
+        </property>
+        <property name="scheduleTime" type="string">
+            <column name="SCHEDULE_TIME" length="5">
+                <comment>Scheduled time for maintenance</comment>
+            </column>
+        </property>
+        <property name="actualDownDate" type="date">
+            <column name="ACTUAL_DOWN_DATE" length="7">
+                <comment>Actual date of starting the maintenance</comment>
+            </column>
+        </property>
+        <property name="actualDownTime" type="string">
+            <column name="ACTUAL_DOWN_TIME" length="5">
+                <comment>Actual time of starting the maintenance</comment>
+            </column>
+        </property>
+        <property name="actualUpDate" type="date">
+            <column name="ACTUAL_UP_DATE" length="7">
+                <comment>Actual date when maintenance is over</comment>
+            </column>
+        </property>
+        <property name="actualUpTime" type="string">
+            <column name="ACTUAL_UP_TIME" length="5">
+                <comment>Actual time when maintenance is over</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="20">
+                <comment>Status of the maintenance</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="30">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

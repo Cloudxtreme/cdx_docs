@@ -1,0 +1,139 @@
+# uname -a
+OpenBSD openbsd.cardiodx.com 4.6 GENERIC.MP#89 i386
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more .profile 
+#export PKG_PATH=ftp://ftp.openbsd.org/pub/OpenBSD/4.6/packages/i386/
+export PKG_PATH=http://openbsd.berkeley.edu/pub/OpenBSD/4.6/packages/i386/
+
+
+sysctl net.inet.ip.forwarding=1
+sysctl net.inet.ip.multipath=1
+
+# vi /etc/sysctl.conf
+net.inet.ip.forwarding=1
+net.inet.ip.multipath=1
+net.inet.esp.enable=1
+net.inet.ah.enable=1
+
+
+# more rc.conf.local 
+ntpd_flags='s'             # enabled during install
+ftpproxy_flags=
+
+
+# pkg_info
+pkg_add -i bash
+pkg_add -i vim
+
+chsh 
+Shell: /usr/local/bin/bash
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more hostname.em0 
+inet 173.13.158.180 255.255.255.240
+inet alias 173.13.158.182 255.255.255.240
+
+!route add -mpath default 173.13.158.190
+
+
+# more hostname.em1 
+inet 67.95.201.198 255.255.255.224
+inet alias 67.95.201.199 255.255.255.224
+
+!route add -mpath default 67.95.201.193
+!route add -net 12.149.54.90/32 67.95.201.193
+!route add -net 12.3.153.0/24 67.95.201.193
+
+!route add -net 66.18.99.68/32 67.95.201.193
+!route add -net 66.18.106.160/27 67.95.201.193
+
+# more hostname.bge1 
+inet 10.10.37.2 255.255.248.0
+
+# more hostname.re0  
+inet 10.10.43.1 255.255.255.0
+
+
+(vi /etc/mygate
+  67.95.201.193)
+sh /etc/netstart
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more pf.conf
+
+internal  = "bge1"
+comcast = "em0"
+xo = "em1"
+dmz1 = "re0"
+
+cc_gw = "173.13.158.190"
+xo_gw = "67.95.201.193"
+cdx_net = "10.10.0.0/16"
+
+local = "{" lo0 $internal $dmz1 "}"
+external = "{" $comcast $xo "}"
+
+# try repeating comcast 5 times to 1 for xo below to get 5:1 load balance
+load_balance_route  = "route-to { (" $comcast $cc_gw "), (" $xo $xo_gw ") } round-robin"
+
+
+set state-policy if-bound
+set skip on lo0
+
+#  default deny
+block in 
+pass out
+
+pass in on $internal
+
+pass in on $dmz1 proto tcp to $internal:network port {ssh smtp ldap} keep state
+pass in on $dmz1 proto udp to $internal:network port {domain} keep state
+
+pass in on $dmz1 proto tcp to ! $cdx_net port {http https} keep state
+pass in on $dmz1 proto udp to ! $cdx_net port {ntp} keep state
+
+#  nat outgoing connections on each internet interface
+nat on $comcast -> ($comcast)
+nat on $xo -> ($xo)
+
+nat pass on $comcast from 10.10.43.2 to any port 22 -> 173.13.158.182
+rdr pass on $comcast proto tcp to 173.13.158.182 port 22 -> 10.10.43.2
+
+nat pass on $xo from 10.10.43.2 to any port 22 -> 67.95.201.199
+rdr pass on $xo proto tcp to 67.95.201.199 port 22 -> 10.10.43.2
+
+#binat pass on $comcast from 10.10.43.2 -> 173.13.158.182
+#binat pass on $xo from 10.10.43.2 -> 67.95.201.199
+
+# rdr i.e., port-forward for webmail, lms
+rdr pass on $xo proto tcp to 67.95.201.198 port 80 -> 10.10.35.17
+rdr pass on $comcast proto tcp to 173.13.158.180 port 80 -> 10.10.35.17
+
+# openvpn on firewall
+# rules for dmz to internal access
+
+#  load balance outgoing tcp traffic from internal network. 
+pass in on $local $load_balance_route proto tcp to ! $cdx_net flags S/SA modulate state
+pass in on $local $load_balance_route proto { udp, icmp } to ! $cdx_net keep state
+
+#ftp
+nat-anchor "ftp-proxy/*"
+rdr-anchor "ftp-proxy/*"
+rdr pass on $local proto tcp from any to any port 21 -> 127.0.0.1 port 8021 
+
+#pass out on $xo route-to ($comcast $cc_gw) from $comcast:network
+#pass out on $comcast route-to ($xo $xo_gw) from $xo:network
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+pfctl -nvf /etc/pf.conf
+ptctl -Fa -f /etc/pf.conf
+
+
+
+
+

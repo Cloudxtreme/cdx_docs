@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudAllele" table="AUD_ALLELE" schema="DNALIMS">
+        <comment>Audit of description of alleles for a given gene.</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="alleleId" type="big_decimal">
+            <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                <comment>Allele identifier.</comment>
+            </column>
+        </property>
+        <property name="geneId" type="big_decimal">
+            <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                <comment>Gene identifier.</comment>
+            </column>
+        </property>
+        <property name="alleleName" type="string">
+            <column name="ALLELE_NAME" length="50">
+                <comment>The allele name.</comment>
+            </column>
+        </property>
+        <property name="alleleLongName" type="string">
+            <column name="ALLELE_LONG_NAME" length="100">
+                <comment>The allele name.</comment>
+            </column>
+        </property>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Number in sequence for display</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

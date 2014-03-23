@@ -1,0 +1,26 @@
+git ruby wferu
+
+wajig install git-core
+
+git clone git://github.com/jmettraux/ruote.git
+
+gem install ruby_parser --no-rdoc --no-ri
+
+gem install rufus-decision --no-rdoc --no-ri
+
+  110  rake gem
+  111  rake qtest
+  112  rake --trace qtest 
+
+
+  569  mv ruote-0.9.19/ ruote-0.9.19.orig
+  570  mv /home/cchou/ruote-0.9.20/ .
+  571  ln -s ruote-0.9.20/ ruote-0.9.19
+  572  gem insall rufus-lru
+  573  gem install rufus-lru
+  574  gem install rufus-scheduler
+  575  history
+
+
+
+

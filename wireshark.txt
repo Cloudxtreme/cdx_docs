@@ -1,0 +1,50 @@
+ethereal wireshark
+
+
+http://www.wireshark.org/docs/wsug_html_chunked/index.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+see also 
+
+wajig install wireshark
+
+
+
+tshark -n -c 5120 -i eth0 -w pcapture.http tcp port http
+tshark -n -c 5120 -i eth0 -w pcapture-3.http
+tshark -z ip_hosts,tree -r pcapture.http
+
+
+tshark -n -c 512 -i eth0 -w pcapture host macklaptop
+
+
+  -z argument must be one of :
+     afp,rtt
+     ansi_a,
+     bootp,stat,
+     conv,
+     dcerpc,rtt,
+     dests,tree
+     gsm_a,
+     h225,counter
+     h225,srt
+     http,stat,
+     http,tree
+     http_req,tree
+     http_srv,tree
+     io,phs
+     io,stat,
+     ip_hosts,tree
+     isup_msg,tree
+     mgcp,rtd
+     plen,tree
+     proto,colinfo,
+     ptype,tree
+     rpc,programs
+     rpc,rtt,
+     sctp,stat
+     sip,stat
+     smb,rtt
+     smb,sids
+     wsp,stat,
+
+

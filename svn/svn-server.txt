@@ -1,0 +1,32 @@
+
+
+wajig install xinetd
+wajig install subversion
+
+cd /etc/xinetd.d
+vi svnserve 
+
+# default: on
+# Subversion server
+
+service svn
+{
+        socket_type     = stream
+        protocol        = tcp
+        user            = www-data
+        wait            = no
+        disable         = no
+        server          = /usr/bin/svnserve
+        server_args     = -i -r /data/svn/repos 
+        port            = 3690
+}
+
+
+cd /data/svn
+vi svnserve.conf 
+[general]
+auth-access = write
+password-db = passwd
+
+
+/etc/init.d/snv restart

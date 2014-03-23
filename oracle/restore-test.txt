@@ -1,0 +1,25 @@
+
+
+create an snapshot through lvcreate -s
+
+lvcreate -s -L+15G -n test25426 /dev/vg0/waban25426
+  527  cp waban25426.xml test25426.xml
+  531  virt-viewer -c qemu:///system test25426 &
+
+rename hostname under
+  /etc/hosts
+  tnsnames.ora
+  listener.ora
+
+start the sytem shutdown db abort
+
+rm all files under /u01/app/oracle/oradata/ORCL
+
+on 
+root@bksrv
+cd /backup/daily.0/ccllims/u01/app/oracle/dbdump
+cat db_files.tar.gz | ssh root@test25426 'cd /u01/app/oracle/oradata/ORCL/; tar zxvf -'
+
+
+cat db_restored.tar.gz | ssh root@ccltest21 'cd /u01/app/oracle/oradata/ORCL/; tar zxvf -'
+

@@ -1,0 +1,8 @@
+
+
+tcpdump -nq -i eth1 | egrep -v '10.10.35.89|10.10.37' > out.3
+cat out.3 | awk '{print $3}' | awk -F. '{print $1"."$2"."$3"."$4}' | sort | uniq -c | sort -nr | head -n 10 
+
+
+tcpdump -qn -c 5000 > tcpdump
+

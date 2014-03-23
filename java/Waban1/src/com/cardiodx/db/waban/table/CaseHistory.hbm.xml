@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CaseHistory" table="CASE_HISTORY" schema="DNALIMS">
+        <comment>Information used to store CASE History Data.</comment>
+        <id name="caseHistId" type="big_decimal">
+            <column name="CASE_HIST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="caseStatus" class="com.cardiodx.db.waban.table.CaseStatus" fetch="select">
+            <column name="CASE_STATUS_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="testAccession" class="com.cardiodx.db.waban.table.TestAccession" fetch="select">
+            <column name="TEST_ACCESSION_ID" precision="22" scale="0" not-null="true">
+                <comment>Test Accession identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="checklistId" type="big_decimal">
+            <column name="CHECKLIST_ID" precision="22" scale="0" />
+        </property>
+        <property name="procedureName" type="string">
+            <column name="PROCEDURE_NAME" length="20">
+                <comment>Name of the Procedure Analyst I,Analyst II,Conflict Resolution</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

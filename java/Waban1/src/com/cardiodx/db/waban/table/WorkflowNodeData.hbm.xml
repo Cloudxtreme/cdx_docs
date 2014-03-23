@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.WorkflowNodeData" table="WORKFLOW_NODE_DATA" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.table.WorkflowNodeDataId">
+            <key-property name="workflowNodeId" type="big_decimal">
+                <column name="WORKFLOW_NODE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="workflowDataslotId" type="big_decimal">
+                <column name="WORKFLOW_DATASLOT_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="workflowDataslot" class="com.cardiodx.db.waban.table.WorkflowDataslot" update="false" insert="false" fetch="select">
+            <column name="WORKFLOW_DATASLOT_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="paramType" type="string">
+            <column name="PARAM_TYPE" length="30" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ConcentrationAdjustment" table="CONCENTRATION_ADJUSTMENT" schema="DNALIMS">
+        <comment>Information about concentration adjustments made while using the SpectraMAX for DNA purification.</comment>
+        <id name="concentrationAdjustmentId" type="big_decimal">
+            <column name="CONCENTRATION_ADJUSTMENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="reagent" class="com.cardiodx.db.waban.table.Reagent" fetch="select">
+            <column name="REAGENT_ID" precision="22" scale="0">
+                <comment>Reagent identifier and foreign key to the REAGENT table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>Step identifier and foreign key to the STEP_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="instrument" class="com.cardiodx.db.waban.table.Instrument" fetch="select">
+            <column name="INSTRUMENT_ID" precision="22" scale="0">
+                <comment>Instrument identifier and foreign key to the INSTRUMENT table.</comment>
+            </column>
+        </many-to-one>
+        <property name="operation" type="string">
+            <column name="OPERATION" length="1">
+                <comment>Type of operation performed (Dilution, Measurement, etc.).</comment>
+            </column>
+        </property>
+        <property name="concentration" type="big_decimal">
+            <column name="CONCENTRATION" precision="22" scale="0">
+                <comment>The new concentration value.</comment>
+            </column>
+        </property>
+        <property name="volumeInitial" type="big_decimal">
+            <column name="VOLUME_INITIAL" precision="22" scale="0">
+                <comment>The initial volume.</comment>
+            </column>
+        </property>
+        <property name="volumeAdded" type="big_decimal">
+            <column name="VOLUME_ADDED" precision="22" scale="0">
+                <comment>The added volume.</comment>
+            </column>
+        </property>
+        <property name="userComment" type="string">
+            <column name="USER_COMMENT" length="80">
+                <comment>Text comments about the concentration adjustment.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="filename" type="string">
+            <column name="FILENAME" length="60" />
+        </property>
+        <property name="checklistCol" type="big_decimal">
+            <column name="CHECKLIST_COL" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

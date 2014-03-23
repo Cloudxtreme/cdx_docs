@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ChecklistComment" table="CHECKLIST_COMMENT" schema="DNALIMS">
+        <comment>Accumulated comments that are recorded while performing procedures on samples.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.ChecklistCommentId">
+            <key-property name="checklistContentId" type="big_decimal">
+                <column name="CHECKLIST_CONTENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="checklistContent" class="com.cardiodx.db.waban.table.ChecklistContent" update="false" insert="false" fetch="select">
+            <column name="CHECKLIST_CONTENT_ID" precision="22" scale="0" not-null="true">
+                <comment>Identifies the result the comment is attached to. Part of the primary key and a foreign key to the CHECKLIST_CONTENT table.</comment>
+            </column>
+        </many-to-one>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="500">
+                <comment>Text comments about the step involved.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

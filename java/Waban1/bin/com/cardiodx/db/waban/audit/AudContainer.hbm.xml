@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudContainer" table="AUD_CONTAINER" schema="DNALIMS">
+        <comment>Audit of information about containers used to hold samples.</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="containerId" type="string">
+            <column name="CONTAINER_ID" length="20">
+                <comment>Container identifier.</comment>
+            </column>
+        </property>
+        <property name="freezerId" type="big_decimal">
+            <column name="FREEZER_ID" precision="22" scale="0">
+                <comment>Freezer identifier.</comment>
+            </column>
+        </property>
+        <property name="containerMapId" type="big_decimal">
+            <column name="CONTAINER_MAP_ID" precision="22" scale="0">
+                <comment>Map identifier.</comment>
+            </column>
+        </property>
+        <property name="compartment" type="string">
+            <column name="COMPARTMENT" length="20">
+                <comment>Compartment location.</comment>
+            </column>
+        </property>
+        <property name="shelf" type="string">
+            <column name="SHELF" length="20">
+                <comment>Shelf location.</comment>
+            </column>
+        </property>
+        <property name="rack" type="string">
+            <column name="RACK" length="20">
+                <comment>Rack location.</comment>
+            </column>
+        </property>
+        <property name="location" type="string">
+            <column name="LOCATION" length="50">
+                <comment>Specific location within a shelf.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="50">
+                <comment>A description of the container.</comment>
+            </column>
+        </property>
+        <property name="checkoutBy" type="string">
+            <column name="CHECKOUT_BY" length="30">
+                <comment>User who checked out the container.</comment>
+            </column>
+        </property>
+        <property name="dateCheckout" type="date">
+            <column name="DATE_CHECKOUT" length="7">
+                <comment>The date the container was checked out.</comment>
+            </column>
+        </property>
+        <property name="discarded" type="java.lang.Boolean">
+            <column name="DISCARDED" precision="1" scale="0">
+                <comment>Flag indicating this container has been discarded.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created the record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified the record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date the record was last modified.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+        <property name="containerCondition" type="string">
+            <column name="CONTAINER_CONDITION" length="50" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="50" />
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="4000" />
+        </property>
+    </class>
+</hibernate-mapping>

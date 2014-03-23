@@ -1,0 +1,66 @@
+wajig install encfs
+
+   61  mkdir sdb1
+   62  mount /dev/sdb1 /media/sdb1/
+       cd /media/sdb1/encrypted
+   73  cp /home/cchou/dot_encfs5 .encfs5
+   74  encfs /media/sdb1/encrypted /media/sdb1/decrypted/
+   75  cd ../decrypted/
+
+   90  fusermount -u /media/sdb1/decrypted/
+   89  rm .encfs5 
+
+
+root@ccubuntu:/media# fdisk /dev/sdc
+Hex code (type L to list codes): 83
+Command (m for help): w
+
+wajig install xfsprogs
+
+mkfs.xfs -f /dev/sdc1 
+
+mount /dev/sdc1 /media/sdc1/
+root@ccubuntu:/media# cd sdc1/
+root@ccubuntu:/media/sdc1# mkdir decrypted encrypted
+
+
+  187  cd ../../sdc1/
+  189  cd encripted/
+  191  cp /media/sdb1/encrypted/.encfs5 .
+  192  encfs /media/sdc1/encripted /media/sdc1/decrypted
+  194  cd ../
+  196  cd decrypted/
+
+
+rsync -av --delete /mnt/backup/daily.0 .
+
+
+  518  rm -rf /backup/daily.29/webmail/opt/zimbra/backup/sessions/full-200801??.*
+  519  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-2008*
+  520  rm -rf /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-200801??.*
+  521  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-2008*
+  522  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-200802*
+  523  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-200803*
+  524  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-200802*
+  525  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/*-200802*
+  526  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/full-2008*
+  527  ls -ald /backup/daily.0/webmail/opt/zimbra/backup/sessions/full-2008*
+  528  ls -ald /backup/daily.0/webmail/opt/zimbra/backup/sessions/*
+  529  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200801*
+  530  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200801??.*
+  531  rm -rf /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200801??.*
+  532  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200801??.*
+  533  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200701??.*
+  534  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200802??.*
+  535  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/????-200802??.*
+  536  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/????-200803??.*
+  538  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-2007????.*
+  539  rm -rf /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-2007????.*
+  540  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200801??.*
+  541* ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200802?
+  542  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200801??.*
+  543  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/incr-200803??.*
+  544  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/*-200803??.*
+  545  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/*-200802??.*
+  546  ls -ald /backup/daily.*/webmail/opt/zimbra/backup/sessions/*-200803??.*
+

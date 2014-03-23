@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<%
+  @column_names = Admin::Field.display_columns
+  @url = Admin::Field.url
+  @parent_objects = Admin::Field.my_parents
+%>
+
+
+<% @column_names.each do |column_name| %>
+	<p>
+  <b><%=column_name.titleize%>: </b>
+		<%=find_value(@parent_objects, column_name, @object[column_name]) %>
+	</p>
+<% end %>
+
+
+<%= link_to 'Edit', "#{@url}/#{@object[:id]}/edit/" %> |
+<%= link_to 'Back', @url %>

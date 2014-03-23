@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudRoiAttributeFld" table="AUD_ROI_ATTRIBUTE_FLD" schema="DNALIMS">
+        <comment>Audit Information about attribute value for an ROI</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in CHANGE_REASON table</comment>
+            </column>
+        </property>
+        <property name="roiAttributeFldId" type="big_decimal">
+            <column name="ROI_ATTRIBUTE_FLD_ID" precision="22" scale="0">
+                <comment>ROI attribute field identifier</comment>
+            </column>
+        </property>
+        <property name="roiId" type="big_decimal">
+            <column name="ROI_ID" precision="22" scale="0">
+                <comment>ROI identifier.</comment>
+            </column>
+        </property>
+        <property name="organizationId" type="big_decimal">
+            <column name="ORGANIZATION_ID" precision="22" scale="0">
+                <comment>Organization identifier.</comment>
+            </column>
+        </property>
+        <property name="contactId" type="big_decimal">
+            <column name="CONTACT_ID" precision="22" scale="0">
+                <comment>Contact identifier.</comment>
+            </column>
+        </property>
+        <property name="attributeValue" type="string">
+            <column name="ATTRIBUTE_VALUE" length="4000">
+                <comment>Attribute value.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Subsidiary identifier.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="configAttributeId" type="big_decimal">
+            <column name="CONFIG_ATTRIBUTE_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

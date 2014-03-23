@@ -1,0 +1,8 @@
+hibernate reverse engineering ant
+
+http://www.cereslogic.com/pages/2008/08/05/hibernate-tools-tips-for-reverse/
+
+
+
+
+

@@ -1,0 +1,26 @@
+http://www.remoteroot.net/2007/07/18/10/
+
+iptables -N dropandlog
+iptables -A dropandlog -m limit --limit 15/minute -j LOG --log-prefix Firewall:
+iptables -A dropandlog -j DROP
+
+iptables -A INPUT -p tcp --dport 22 -j dropandlog
+
+
+in-out
+out-in
+out-dmz
+dmz-in
+dmz-out
+ert
+clinix
+infuse
+
+icmp-limit
+icmp-rules
+
+http-fw
+ssh-fw
+
+
+

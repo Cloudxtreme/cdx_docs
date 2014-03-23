@@ -1,0 +1,46 @@
+
+http://www.linuxdynasty.org/howto-setup-gfs2-with-clustering.html
+
+
+
+kvmsrv4, kvmsrv6, kvmsrv7
+
+-- each host:
+wajig install gfs2-tools clvm cman rgmanager 
+
+
+-- on kvmsrv7
+ccs_tool create cdxcluster
+
+   29  ccs_tool addfence -C kvmsrv7_ipmi fence_manual
+   30  ccs_tool addfence -C kvmsrv6_ipmi fence_manual
+   31  ccs_tool addfence -C kvmsrv4_ipmi fence_manual
+
+
+   42  ccs_tool addnode -C kvmsrv7 -n 1 -v 1 -f kvmsrv7_ipmi
+   43  ccs_tool addnode -C kvmsrv6 -n 2 -v 1 -f kvmsrv6_ipmi
+   44  ccs_tool addnode -C kvmsrv4 -n 3 -v 1 -f kvmsrv4_ipmi
+
+   33  cd /etc/cluster/
+   36  scp cluster.conf root@kvmsrv4:/etc/cluster
+   37  scp cluster.conf root@kvmsrv6:/etc/cluster
+
+# ccs_tool lsnode
+
+Cluster name: cdxcluster, config_version: 7
+
+Nodename                        Votes Nodeid Fencetype
+kvmsrv7                            1    1    kvmsrv7_ipmi
+kvmsrv6                            1    2    kvmsrv6_ipmi
+kvmsrv4                            1    3    kvmsrv4_ipmi
+
+
+r# ccs_tool lsfence
+Name             Agent
+kvmsrv7_ipmi     fence_manual
+kvmsrv6_ipmi     fence_manual
+kvmsrv4_ipmi     fence_manual
+
+
+/etc/init.d/cman start
+

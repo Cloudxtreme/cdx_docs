@@ -1,0 +1,18 @@
+
+Not working for Lucid?????
+
+  267  cd /var/lib/ldap/
+  269  /etc/init.d/slapd stop
+  272  rm *
+  273  /etc/init.d/slapd start
+
+
+  320  cd /etc/ldap/
+  323  cd slapd.d/
+
+  336  /etc/init.d/slapd stop
+  337  mv slapd.d/ slapd.d.orig
+  338  mkdir slapd.d/
+  339  chown openldap\\\:openldap slapd.d/
+  342  chmod 750 slapd.d/
+

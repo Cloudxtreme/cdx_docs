@@ -1,0 +1,156 @@
+
+
+% mdadm -A /dev/md1 /dev/sd[abcd]2
+mdadm: /dev/md1 assembled from 2 drives - not enough to start the array.
+
+% mdadm -A /dev/md1 -f /dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2
+mdadm: forcing event count in /dev/sdc2(2) from 103554941 upto 103554957
+mdadm: clearing FAULTY flag for device 2 in /dev/md1 for /dev/sdc2
+mdadm: /dev/md1 has been started with 3 drives (out of 4).
+
+% mdadm /dev/md1 -a /dev/sdd2
+mdadm: re-added /dev/sdd2
+
+% cat mdstat 
+Personalities : [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] 
+md1 : active raid10 sdd2[4] sda2[0] sdc2[2] sdb2[1]
+      1953310976 blocks 64K chunks 2 near-copies [4/3] [UUU_]
+      [>....................]  recovery =  0.0% (116800/976655488) finish=417.6min speed=38933K/sec
+      
+md0 : active raid1 sda1[0] sdd1[3] sdc1[2] sdb1[1]
+      104320 blocks [4/4] [UUUU]
+      
+
+However, when rebooting, got the same error message!!!!!!
+
+fix: mdadm -A /dev/md1 /dev/sda2 /dev/sdb2 /dev/sdc2
+
+reboot works fine
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+% mdadm -E /dev/sd[abcd]2
+/dev/sda2:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3c32d828:ddae16a7:618f8e7d:408a2dc0
+  Creation Time : Fri Feb 15 15:59:02 2008
+     Raid Level : raid10
+  Used Dev Size : 976655488 (931.41 GiB 1000.10 GB)
+     Array Size : 1953310976 (1862.82 GiB 2000.19 GB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 1
+
+    Update Time : Sun May  9 13:26:40 2010
+          State : clean
+ Active Devices : 2
+Working Devices : 2
+ Failed Devices : 4
+  Spare Devices : 0
+       Checksum : 3f523ec9 - correct
+         Events : 0.103554957
+
+         Layout : near=2, far=1
+     Chunk Size : 64K
+
+      Number   Major   Minor   RaidDevice State
+this     0       8        2        0      active sync   /dev/sda2
+
+   0     0       8        2        0      active sync   /dev/sda2
+   1     1       8       18        1      active sync   /dev/sdb2
+   2     2       0        0        2      faulty removed
+   3     3       0        0        3      faulty removed
+/dev/sdb2:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3c32d828:ddae16a7:618f8e7d:408a2dc0
+  Creation Time : Fri Feb 15 15:59:02 2008
+     Raid Level : raid10
+  Used Dev Size : 976655488 (931.41 GiB 1000.10 GB)
+     Array Size : 1953310976 (1862.82 GiB 2000.19 GB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 1
+
+    Update Time : Sun May  9 13:26:40 2010
+          State : clean
+ Active Devices : 2
+Working Devices : 2
+ Failed Devices : 4
+  Spare Devices : 0
+       Checksum : 3f523edb - correct
+         Events : 0.103554957
+
+         Layout : near=2, far=1
+     Chunk Size : 64K
+
+      Number   Major   Minor   RaidDevice State
+this     1       8       18        1      active sync   /dev/sdb2
+
+   0     0       8        2        0      active sync   /dev/sda2
+   1     1       8       18        1      active sync   /dev/sdb2
+   2     2       0        0        2      faulty removed
+   3     3       0        0        3      faulty removed
+/dev/sdc2:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3c32d828:ddae16a7:618f8e7d:408a2dc0
+  Creation Time : Fri Feb 15 15:59:02 2008
+     Raid Level : raid10
+  Used Dev Size : 976655488 (931.41 GiB 1000.10 GB)
+     Array Size : 1953310976 (1862.82 GiB 2000.19 GB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 1
+
+    Update Time : Sun May  9 13:25:06 2010
+          State : active
+ Active Devices : 3
+Working Devices : 3
+ Failed Devices : 2
+  Spare Devices : 0
+       Checksum : 39261ee3 - correct
+         Events : 0.103554941
+
+         Layout : near=2, far=1
+     Chunk Size : 64K
+
+      Number   Major   Minor   RaidDevice State
+this     2       8       34        2      active sync   /dev/sdc2
+
+   0     0       8        2        0      active sync   /dev/sda2
+   1     1       8       18        1      active sync   /dev/sdb2
+   2     2       8       34        2      active sync   /dev/sdc2
+   3     3       0        0        3      faulty removed
+/dev/sdd2:
+          Magic : a92b4efc
+        Version : 00.90.00
+           UUID : 3c32d828:ddae16a7:618f8e7d:408a2dc0
+  Creation Time : Fri Feb 15 15:59:02 2008
+     Raid Level : raid10
+  Used Dev Size : 976655488 (931.41 GiB 1000.10 GB)
+     Array Size : 1953310976 (1862.82 GiB 2000.19 GB)
+   Raid Devices : 4
+  Total Devices : 4
+Preferred Minor : 1
+
+    Update Time : Mon May  3 06:07:07 2010
+          State : active
+ Active Devices : 4
+Working Devices : 4
+ Failed Devices : 0
+  Spare Devices : 0
+       Checksum : 3910e86c - correct
+         Events : 0.102709415
+
+         Layout : near=2, far=1
+     Chunk Size : 64K
+
+      Number   Major   Minor   RaidDevice State
+this     3       8       50        3      active sync   /dev/sdd2
+
+   0     0       8        2        0      active sync   /dev/sda2
+   1     1       8       18        1      active sync   /dev/sdb2
+   2     2       8       34        2      active sync   /dev/sdc2
+   3     3       8       50        3      active sync   /dev/sdd2
+

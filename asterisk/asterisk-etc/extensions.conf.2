@@ -1,0 +1,84 @@
+[general]
+static=yes
+writeprotect=no
+
+[globals]
+NUFONE=IAX2/cardiodx@NuFone
+SBC=ZAP/g1
+
+[macro-stdexten]
+exten => s,1,NoOp(${CALLERIDNUM})
+exten => s,2,Dial(${ARG1},20)
+exten => s,3,Voicemail(u${MACRO_EXTEN})
+exten => s,4,Hangup()
+exten => s,103,Voicemail(b${MACRO_EXTEN})
+exten => s,104,Hangup()
+
+[macro-nufonetrunk]
+exten => s, 1, Dial(${NUFONE}/${MACRO_EXTEN})
+exten => s, 102, Hangup
+
+[macro-sbctrunk]
+exten => s, 1, Set(CALLERID(num)=6505658084)
+;exten => s, 1, Set(CALLERID(all)=CardioDX, Inc. <6505658084>)
+exten => s, 2, Dial(${SBC}/${MACRO_EXTEN})
+exten => s, 103, Hangup
+
+
+[macro-fax]
+exten => s, 1, Set(FAXFILE=/var/spool/asterisk/fax.tif)
+exten => s, 2, rxfax(${FAXFILE}|debug)
+exten => s, 3, hangup
+
+exten => h, 1, system(tiff2pdf -p letter -f ${FAXFILE} | mime-construct --to cchou@cardiodx.com --subject "Fax" --attachment fax.pdf --type application/pdf --file -)
+
+[macro-faxsend]
+;exten => s, 1, txfax(ZAP/g1/16505658202, /var/spool/asterisk/fax.tif|caller|debug)
+exten => s, 1, Dial(${SBC}/16505658202)
+exten => s, 2, SetVar(FAXFILE=/var/spool/asterisk/fax.tif)
+exten => s, 3, SetVar(LOCALHEADERINFO=CardioDx)
+exten => s, 4, SetVar(LOCALSTATIONID=CardioDx)
+exten => s, 5, txfax(${FAXFILE}|caller|debug) 
+exten => s, 6, hangup
+
+[default]
+;exten => _1NXXNXXXXXX, 1, Macro(nufonetrunk, ${EXTEN})
+exten => _1NXXNXXXXXX, 1, Macro(sbctrunk, ${EXTEN})
+
+exten => 200, 1, Goto(14088883248, 1)
+
+;exten => 200, 1, Wait(60)
+;exten => 200, 2, txfax(ZAP/g1/16505658202, /home/cchou/image.tif|caller|debug)
+;exten => 200, 3, Hangup
+
+exten => 221,1,Macro(stdexten,SIP/221)
+
+exten => s, 1, Answer
+exten => s, 2, Ringing
+exten => s, 3, Wait(60)
+exten => s, 4, Hangup
+;exten => s, 4, Goto(14088883248, 1)
+
+exten => fax, 1, Macro(fax)
+
+[pstn]
+exten => _1NXXNXXXXXX, 1, Macro(sbctrunk, ${EXTEN})
+;exten => _09XX, 1, Goto(14088883248, 1)
+
+exten => 0185, 1, Answer
+exten => 0185, 2, Ringing
+exten => 0185, 3, Wait(5)
+;exten => 0185, 4, Meetme(1234)
+
+exten => 0914, 1, Answer
+exten => 0914, 2, Ringing
+exten => 0914, 3, Wait(5)
+exten => 0914, 4, Goto(14088883248, 1)
+
+exten => 0915, 1, Answer
+exten => 0915, 2, MusicOnHold(default)
+
+exten => 0916, 1, Answer
+exten => 0916, 2, Meetme(1234)
+
+exten => 0917, 1, Macro(faxsend)

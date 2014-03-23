@@ -1,0 +1,79 @@
+iproute2 fwmark mangle
+
+http://linux-ip.net/html/adv-multi-internet.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+root@vyatta:/etc/iproute2# ip rule
+0:	from all lookup local 
+32764:	from all fwmark 0x2 lookup 2 
+32765:	from all fwmark 0x1 lookup 1 
+32766:	from all lookup main 
+32767:	from all lookup default 
+
+root@vyatta:/etc/iproute2# ip route show table 1
+default via 173.13.158.190 dev eth0 
+
+root@vyatta:/etc/iproute2# ip route show table 2
+default via 67.95.201.193 dev eth1 
+
+ot@vyatta:/etc/iproute2# ip route show table main
+default  proto zebra 
+	nexthop via 67.95.201.193  dev eth1 weight 1
+	nexthop via 173.13.158.190  dev eth0 weight 1
+10.10.32.0/21 dev eth3  proto kernel  scope link  src 10.10.37.2 
+10.10.43.0/24 dev eth4  proto kernel  scope link  src 10.10.43.1 
+67.95.201.192/27 dev eth1  proto kernel  scope link  src 67.95.201.198 
+127.0.0.0/8 dev lo  proto kernel  scope link  src 127.0.0.1 
+173.13.158.176/28 dev eth0  proto kernel  scope link  src 173.13.158.180 
+
+
+root@vyatta:/etc/iproute2# iptables -t mangle -nvL
+Chain PREROUTING (policy ACCEPT 35027 packets, 5326K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+59907 3818K ISP_1      all  --  eth3   *       10.10.32.0/21        0.0.0.0/0           state NEW statistic mode random probability 0.833333 
+12008  757K ISP_2      all  --  eth3   *       10.10.32.0/21        0.0.0.0/0           state NEW 
+  984 93647 CONNMARK   all  --  eth3   *       10.10.32.0/21        0.0.0.0/0           CONNMARK restore 
+   51  5697 ISP_2      all  --  eth4   *       10.10.43.0/24        0.0.0.0/0           state NEW 
+  182 46577 CONNMARK   all  --  eth4   *       10.10.43.0/24        0.0.0.0/0           CONNMARK restore 
+
+Chain ISP_1 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+59907 3818K CONNMARK   all  --  *      *       0.0.0.0/0            0.0.0.0/0           CONNMARK xset 0x1/0xffffffff 
+59907 3818K MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0           MARK xset 0x1/0xffffffff 
+59907 3818K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain ISP_2 (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+12059  763K CONNMARK   all  --  *      *       0.0.0.0/0            0.0.0.0/0           CONNMARK xset 0x2/0xffffffff 
+12059  763K MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0           MARK xset 0x2/0xffffffff 
+12059  763K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+root@vyatta:/etc/iproute2# iptables -t nat -nvL
+Chain PREROUTING (policy ACCEPT 71541 packets, 3335K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   62  3696 DNAT       tcp  --  eth1   *       0.0.0.0/0            67.95.201.198       tcp dpt:80 to:10.10.36.190 
+   61  3662 DNAT       all  --  eth1   *       0.0.0.0/0            67.95.201.200       to:10.10.43.2 
+
+Chain POSTROUTING (policy ACCEPT 10431 packets, 630K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+11849  719K VYATTA_PRE_SNAT_HOOK  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    6   472 MASQUERADE  all  --  *      eth1    10.10.32.0/21        0.0.0.0/0           
+  475 28937 SNAT       all  --  *      eth1    10.10.43.2           0.0.0.0/0           to:67.95.201.200 
+
+Chain OUTPUT (policy ACCEPT 10282 packets, 619K bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain VYATTA_PRE_SNAT_HOOK (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 5557  334K WANLOADBALANCE  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+10912  660K RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain WANLOADBALANCE (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   16  1088 SNAT       all  --  *      *       0.0.0.0/0            0.0.0.0/0           connmark match 0x1 to:173.13.158.180 
+   29  2004 SNAT       all  --  *      *       0.0.0.0/0            0.0.0.0/0           connmark match 0x2 to:67.95.201.198 
+
+
+

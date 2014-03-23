@@ -1,0 +1,41 @@
+set serveroutput on
+
+begin
+for idx in 2..5 loop
+  dbms_output.put_line (idx);
+end loop;
+end;
+/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create table test (id int);
+
+begin
+for idx in 1..32767 loop 
+  --dbms_output.put_line (idx);
+	insert into test values(idx);
+end loop;
+end;
+/  
+
+
+select count(id) from test where id not in
+(select cp_run_id from cp_run);
+
+select id from test
+minus
+select cp_run_id from cp_run
+;
+
+delcare
+  r1 cp_run%rowtype;
+  cursor c1 is
+    select cp_run_id from cp_run where cp_run_id > 30000;
+begin
+  open c1;
+  fetch c1 into r1;
+  dbms_output.put_line(r1.cp_run_id);
+	close c1;
+end;
+/
+

@@ -1,0 +1,127 @@
+ruote fix
+openwferu filepersistedengine activeparticipant
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+install ruote 0.9.19 and apply the folloging fix:
+  (bug #22158 : "ArgumentError: OpenWFE::Extras is not missing constant Field!")
+
+
+cd /usr/lib/ruby/gems/1.8/gems/ruote-0.9.19/
+
+
+lib/openwfe/extras/participants/activeparticipants.rb
+
+line 154
+#    has_many :fields, :dependent => :destroy
+ has_many(
+ :fields,
+ :dependent => :delete_all,
+ :class_name => 'OpenWFE::Extras::Field')
+
+
+line 479
+#    belongs_to :workitem
+belongs_to :workitem, :class_name => 'OpenWFE::Extras::Workitem'
+
+
+lib/openwfe/workitem.rb
+line 320
+#        v = @attributes[k]
+#      s << "    #{k.inspect} => #{v.inspect},\n"
+s << "    #{k.inspect} => #{@attributes[k].inspect},\n"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$ more createDB.rb 
+#!/usr/bin/ruby 
+
+require 'pp'
+require 'rubygems'
+require 'activerecord'
+require 'openwfe/def'
+require 'openwfe/workitem'
+require 'openwfe/engine/engine'
+require 'openwfe/engine/file_persisted_engine'
+require 'openwfe/participants/storeparticipants'
+require 'openwfe/extras/expool/dbexpstorage'
+require 'openwfe/extras/expool/dberrorjournal'
+require 'openwfe/extras/engine/db_persisted_engine'
+require 'openwfe/extras/participants/activeparticipants'
+
+ActiveRecord::Base.establish_connection(:adapter=>'mysql',
+                                        :host =>'localhost',
+                                        :username =>'root',
+                                        :password=>'montalvo',
+                                        :database=>'test')
+OpenWFE::Extras::ExpressionTables.up
+OpenWFE::Extras::ProcessErrorTables.up
+OpenWFE::Extras::WorkitemTables.up
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ rails wferu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ more database.yml 
+development:
+  adapter: mysql
+  database: pto
+  username: root
+  password: montalvo
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$ more environment.rb
+require 'openwfe/def'
+require 'openwfe/workitem'
+require 'openwfe/engine/engine'
+require 'openwfe/engine/file_persisted_engine'
+require 'openwfe/extras/participants/activeparticipants'
+:
+:
+:
+require 'config/cdx_engine'
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$ more cdx_engine.rb 
+$engine = OpenWFE::FilePersistedEngine.new(:definition_in_launchitem_allowed => true)
+$engine.register_participant :bob, OpenWFE::Extras::ActiveParticipant
+$engine.register_participant :alice, OpenWFE::Extras::ActiveParticipant
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./script/generate controller test
+
+touch app/views/test/index.rhtml
+touch app/views/test/launch.rhtml
+touch app/views/test/proceed.rhtml
+
+$ more application.rb 
+class TheProcessDefinition0 < OpenWFE::ProcessDefinition
+    sequence do
+      participant :alice
+      participant :bob
+    end
+end
+
+$ more test_controller.rb 
+class TestController < ApplicationController
+
+	def index
+	end
+
+	def launch
+		li = OpenWFE::LaunchItem.new(TheProcessDefinition0)
+		fei = $engine.launch li
+		puts "started process '#{fei.workflow_instance_id}'\n"
+	end
+
+	def proceed
+		puts params[:user]
+		wi = OpenWFE::Extras::Workitem.find_by_participant_name(params[:user])
+		puts wi
+		wi.proceed($engine)		
+	end
+
+end
+

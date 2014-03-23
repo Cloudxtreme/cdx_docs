@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbGeneRegion" table="MDB_GENE_REGION" schema="DNALIMS">
+        <id name="geneRegionId" type="big_decimal">
+            <column name="GENE_REGION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mdbStructure" class="com.cardiodx.db.waban.table.MdbStructure" fetch="select">
+            <column name="STRUCTURE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="startPos" type="big_decimal">
+            <column name="START_POS" precision="22" scale="0" />
+        </property>
+        <property name="length" type="big_decimal">
+            <column name="LENGTH" precision="22" scale="0" />
+        </property>
+        <property name="type" type="string">
+            <column name="TYPE" length="100" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="100" not-null="true" />
+        </property>
+        <property name="regionNumber" type="big_decimal">
+            <column name="REGION_NUMBER" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="isComplement" type="java.lang.Boolean">
+            <column name="IS_COMPLEMENT" precision="1" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbVariantStructRels" table="MDB_VARIANT_STRUCT_REL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_REGION_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariantStructRel" />
+        </set>
+    </class>
+</hibernate-mapping>

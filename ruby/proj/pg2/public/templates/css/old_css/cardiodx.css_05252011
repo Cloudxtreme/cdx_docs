@@ -1,0 +1,1979 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* CardioDx */
+/* Authored by: Jonathan Anonuevo/CardioDx, Inc. */
+/* Testing only */
+div {
+	border:0px solid #a8162c;
+}
+
+/*#container div {
+	border-left:1px solid red;
+	border-right:1px solid red;
+}*/
+
+/*#hmain #content h2 {
+	border:1px solid red;
+}
+
+#hmain #links {
+	border:1px solid red;
+}
+
+#access {
+	border:1px solid red;
+}*/
+
+
+/* Basic Layout */
+body {
+	padding:0;
+	margin:0;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+img {
+	border:none;
+}
+
+.clear {
+	clear:both;
+	margin:0px;
+	padding:0px;
+	line-height:0px;
+}
+
+#theater {
+	margin:0 auto;
+	position:relative;
+	/*margin-top:20px;
+	border:1px solid #A8162c;
+	padding:0px;
+	width:965px;
+	height:423px;
+	background:#A8162c;*/
+}
+
+#container {
+	width:965px;
+	margin:0 auto;
+}
+
+
+
+
+
+/* Search */
+
+/*#ticker {
+	display:none;
+}*/
+
+#ticker {
+	width:100%;
+	height:20px;
+	float:left;
+	padding-top:2px;
+}
+
+a.Gloss {
+	border-bottom:1px single;
+	line-height:1.7em;
+}
+
+/* Additional Color Styles */
+h1 {
+	color:#ffffff;
+	text-transform:uppercase;
+	margin-left:107px;
+	font-weight:bold;
+}
+
+
+
+h2 {
+	color:#a8162c;
+	font-size:16px;
+	padding-bottom:15px;
+	margin-top:0px;
+	padding-top:0px;
+}
+
+h3 {
+	color:#a8162c;
+	font-size:12px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+	/*margin-left:0px;
+	padding-left:0px;*/
+}
+
+h4 {
+	color:#a7a7aa;
+	font-size:12px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+}
+
+#hmain p {
+	margin-top:0px;
+	padding-top:3px;
+	color:#000000;
+	padding-bottom:8px;
+	line-height:18px;
+}
+
+#hmain a:link a:visited {
+	color:#a8162c;
+}
+
+#hmain a:hover {
+	color:#a8162c;
+	text-decoration:underline;
+}
+
+
+#footer p, #footer a {
+	color:#a7a7aa;
+	font-size:10px;
+}
+
+.nounderline {
+	text-decoration:underline;
+}
+
+blockquote {
+	color:#000000;
+}
+
+
+
+/* Theme */
+#main #headbanner {
+	width:757px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-welcome {
+	background:url(../../images/for_patients_welcome_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-welcome h1 {
+	color:#a8162c;
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .for-patients-corus-cad-overview {
+	background:url(../../images/for_patients_corus_cad_overview_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-corus-cad-overview h1 {
+	color:#a8162c;
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .for-patients-insurance-coverage {
+	background:url(../../images/for_patients_insurance_coverage_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-insurance-coverage h1 {
+	color:#a8162c;
+	font-size:2em;
+	margin-top:40px;
+	margin-left:180px;
+}
+
+#main .for-patients-faqs {
+	background:url(../../images/for_patients_faqs_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-faqs h1 {
+	color:#a8162c;
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .for-patients-patient-glossary {
+	background:url(../../images/for_patients_patient_glossary_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-patient-glossary h1 {
+	color:#a8162c;	
+	font-size:2em;
+	margin-top:35px;
+}
+
+#main .for-patients-unassigned-1 {
+	background:url(../../images/for_patients_unassigned_1_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-unassigned-1 h1 {
+	color:#a8162c;
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .for-patients-unassigned-2 {
+	background:url(../../images/for_patients_unassigned_2_banner.jpg) no-repeat right top;
+	height:105px;
+	width:756px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .for-patients-unassigned-2 h1 {
+	color:#a8162c;
+	font-size:2em;
+	margin-top:40px;
+}
+
+/* Main Theme */
+
+#main .corus-cad {
+	background:url(../../images/main_interior_banner.jpg) no-repeat right top;
+	height:106px;
+	width:765px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .corus-cad h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .clinical-studies {
+	background:url(../../images/main_interior_banner.jpg) no-repeat right top;
+	height:106px;
+	width:765px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .clinical-studies h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .clinician-resources {
+	background:url(../../images/main_interior_banner.jpg) no-repeat right top;
+	height:106px;
+	width:765px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .clinician-resources h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .about-cardiodx {
+	background:url(../../images/main_interior_banner.jpg) no-repeat right top;
+	height:106px;
+	width:765px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .about-cardiodx h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+#main .else {
+	background:url(../../images/main_interior_banner.jpg) no-repeat right top;
+	height:106px;
+	width:765px;
+	float:left;
+	padding:0 0 0 23px;
+}
+
+#main .else h1 {
+	font-size:2em;
+	margin-top:40px;
+}
+
+/* Header Basic Layout */
+#header {
+	height:116px;
+	overflow:hidden;
+}
+
+#logo {
+	float:left;
+	margin-left:4px;
+}
+
+#logo a {
+	outline:none;
+}
+
+#banner {
+	position:relative;
+}
+
+#navigation {
+	width:842px;
+	height:45px;
+	/*
+	background:url(../../images/nav_bg.jpg) no-repeat top right;
+	*/
+}
+
+#header-right {
+	float:right;
+	margin-top:7px;
+}
+
+
+
+/* Buckets Styles */
+#buckets {
+	width:inherit;
+	min-height:120px;
+	margin:0 auto;
+	margin-top:15px;
+}
+
+#bkt1, #bkt2, #bkt3 {
+	width:312px;
+	padding-left:12px;
+	float:left;
+	min-height:120px;
+	padding-bottom:10px solid;
+	color:#000000;
+}
+
+#bkt1 a.corus-cad_bkt1_link:link, #bkt2 a.clinical-studies_bkt2_link:link, #bkt3 a.corus-cad-video_bkt3_link:link {
+	color:#A7A7AA 
+}
+
+#bkt1 a.corus-cad_bkt1_link:hover, #bkt2 a.clinical-studies_bkt2_link:hover, #bkt3 a.corus-cad-video_bkt3_link:hover {
+	color:#a8162c;
+}
+
+#bkt1 a.corus-cad_bkt1:hover, #bkt2 a.clinical-studies_bkt2:hover, #bkt3 a.corus-cad-video_bkt3:hover {
+	color:#a8162c;
+}
+
+#bkt1 {
+	margin-left:-12px;
+}
+
+#bkt1 .corus-cad_bkt1 {
+        height:20px;
+        text-align:left;
+        font-size:15px;
+        display:block;
+        border-bottom:5px solid;
+	margin-bottom:20px;
+	margin-top:9px;
+        color:#a7a7aa;
+	text-transform:uppercase;
+	text-decoration:none;
+}
+
+#bkt2 .clinical-studies_bkt2 {
+        height:20px;
+        text-align:left;
+        font-size:15px;
+        display:block;
+        border-bottom:5px solid;
+	margin-bottom:20px;
+	margin-top:9px;
+        color:#a7a7aa;
+	text-transform:uppercase;
+	text-decoration:none;
+}
+
+#bkt3 .corus-cad-video_bkt3 {
+        height:20px;
+        text-align:left;
+        font-size:15px;
+        display:block;
+        border-bottom:5px solid;
+	margin-bottom:20px;
+	margin-top:9px;
+        color:#a7a7aa;
+	text-transform:uppercase;
+	text-decoration:none;
+}
+
+#bkt1 img, #bkt2 img, #bkt3 img {
+	padding-bottom:18px;
+	border:none;
+	margin-left:0px;
+}
+
+#bkt1 p, #bkt2 p, #bkt3 p {
+	padding-bottom:13px;
+	padding-top:0px;
+	margin:0px;
+	color:#a7a7aa;
+	line-height:16px;
+}
+
+#bkt1 a, #bkt2 a, #bkt3 a {
+	border:none;
+	outline:none;
+}
+
+#bkt3 img {
+	padding-bottom:21px;
+}
+
+
+
+/* Main Area Styles */
+/*#main {
+	border:1px solid red;
+}
+
+#hbody {
+	border:1px solid green;
+}*/
+
+#hmain {
+	width:758px; float:left;
+	/*border:1px solid orange;*/
+	padding-bottom:20px;
+	padding-left:22px;
+}
+
+#hmain #content p {
+	line-height:18px;
+	color:#000000;
+	padding-left:0px;
+	margin-left:0px;
+}
+
+#hmain #content a:link, #hmain #content a:hover {
+	color:#a8162c;
+}
+
+#hmain #minheight {
+	height:100px;
+	width:1px;
+	float:right;
+}
+
+#hmain #content {
+	float:left;
+	width:565px;
+	padding-left:2px;
+	margin-top:5px;
+	padding-right:28px;
+	color:#000000;
+}
+
+#hmain #content_right {
+	float:right;
+	width:158px;
+	margin-top:5px;
+	padding-top:27px;
+}
+
+/*#hmain #title {
+	width:575px;
+	float:left;
+	padding-top:0px;
+	margin-top:0px;
+}
+
+#hmain #title h2 {
+	margin:0px;
+	padding:35px 0px 15px 0px;
+	padding-left:2px;
+}*/
+
+h2 {
+	padding-left:2px;
+	padding-bottom:5px;
+}
+
+
+
+/* Footer Styles */
+#footer {
+	background:url(../../images/footer_line.gif) top left no-repeat;
+	width:959px;
+	color:#a8162c;
+	padding-top:17px;
+	/*margin-left:1px;*/
+	margin:0 auto;
+}
+
+#footer p {
+	color:#a8162c;
+}
+
+#footer #copyright {
+	float:left;
+	padding-top:0px;
+	margin-top:0px;
+}
+
+#footer #copyright p {
+	color:#a7a7aa;
+	padding-top:0px;
+	margin-top:0px;
+}
+
+#footer #footer_nav {
+	float:right;
+	padding-top:0px;
+	margin-top:0px;
+}
+
+#footer #footer_nav p {
+	padding-top:0px;
+	margin-top:0px;
+}
+
+#footer #footer_nav a {
+	text-decoration:none;
+	padding-left:3px;
+	padding-right:3px;
+	padding-top:0px;
+	margin-top:0px;
+}
+
+#footer #footer_nav a:hover {
+	color:#a8162c;
+}
+
+
+
+/* Sub Nav Styles */
+#noNav {width:182px; float:left;padding-left:0;margin-left:0;/*border:1px solid blue;*/ margin-bottom:50px;}
+
+#noNav #subnav_main {
+	width:inherit;
+	padding-top:24px;
+	height:180px;
+	background-color: #a7a7aa;
+	background-image: url(../../images/subnav_top.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+#noNav #subnav_bot {
+	width:inherit;
+	background:url(../../images/subnav_bot.jpg) bottom left no-repeat #a7a7aa;
+	height:30px;
+}
+
+
+
+/* Registration Form CC Styles */
+#form_cc {
+	width:182px;
+	float:left;
+	padding-left:0;
+	margin-left:0;
+	/*border:1px solid blue;*/
+	margin-bottom:50px;
+}
+
+#form_cc #subnav_main {
+	width:inherit;
+	background:url(../../images/subnav_top_red.jpg) top left no-repeat #a8162c;
+	padding-top:12px;
+height:180px;
+}
+
+#form_cc #subnav_bot {
+	width:inherit; 
+	background:url(../../images/subnav_bot_red.jpg) bottom left no-repeat #a8162c;
+	height:30px;
+}
+
+#form_cc #subnav_arrow {
+	padding-left:40px;
+	width:132px;
+	color:#fff;
+	background:url(../../images/subnav_arrow_red.jpg) 8px 0px no-repeat;
+}
+
+#subnav {
+	width:182px;
+	float:left;
+	padding-left:0;
+	margin-left:0;
+	/*border:1px solid blue;*/
+	height:300px;
+	}
+
+#subnav a {
+	outline:none;
+}
+
+#subnav_main {
+	width:inherit;
+	background:url(../../images/subnav_top.jpg) top left no-repeat #a7a7aa;
+	padding-top:24px;
+}
+
+#subnav_main ul {
+	width:170px;
+	padding:0px;
+	margin:0px;
+}
+
+#subnav_main ul ul {
+	display:none;
+}
+
+#subnav_main ul li {
+	list-style-type:none;
+	padding:0 0 0 7px; 
+	margin-left:5px;
+	border-top:1px solid #a8162c;
+}
+
+#subnav_main ul li a {
+	text-decoration:none;
+	color:#ffffff;
+	display:block;
+	padding-top:6px;
+	padding-bottom:6px;
+	padding-left:30px;
+	margin-left:5px;
+}
+
+#subnav_main ul li a:active, #subnav_main ul li a:hover  {
+	padding-left:30px;
+	background:url(../../images/subnav_arrow.gif) top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+}
+
+/*#subnav_main ul li.active-nav {
+	padding-left:30px;
+	background:url(../../images/subnav_arrow.gif) top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+}*/
+
+#subnav_main li #parent-open li.active-nav a {
+	padding-left:30px;
+	background:url(../../images/subnav_arrow.gif) top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+}
+
+#subnav_main li.active-nav ul {
+	display:block;
+}
+
+#subnav_main li#parent-open ul {
+	display:block;
+}
+
+#subnav_main li.active-nav ul ul {
+	display:none;
+}
+
+#subnav_main li#parent-open ul ul {
+	display:none;
+}
+
+#subnav_main li#team ul {
+	display:none;
+}
+
+#subnav_main li#parent-open li a {
+	color:#a7a7aa;
+	width:114px; 
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	background:none;
+	font-weight:normal;
+}
+
+#subnav_main li#parent-open li:hover a {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:25px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+#subnav_main li#parent-open li.active-nav a {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:25px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+#subnav_main ul ul {
+	padding:0 0 0 10px;
+	margin:0;
+	background-image:none;
+	width:135px;
+}
+
+#subnav_main ul ul li {
+	border:none;
+	padding:0px;
+	margin:0px;
+}
+
+#subnav_main ul ul li a {
+	color:#a7a7aa;
+	width:114px;
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+}
+
+#subnav_main ul ul li a:hover {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+}
+
+#subnav_bot {
+	width:inherit;
+	background:url(../../images/subnav_bot.jpg) bottom left no-repeat #a7a7aa;
+	height:30px;
+}
+
+
+
+/* Sub Nav Hover Styles */
+#subnav_main ul li.active-nav a {
+	padding-left:30px;
+	background:url(../../images/subnav_arrow.gif) top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+}
+
+#subnav_main ul li ul li a {
+	color:#a7a7aa;
+	width:114px;
+	padding-top:0px;
+	padding-bottom:5px;
+	/* margin-left:10px;*/
+	padding-left:10px;
+	margin-left:22px;
+	background:none;
+	font-weight:normal;
+}
+
+#subnav_main ul li ul li a:hover {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:22px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+#subnav_main ul li.active-nav ul li a {
+	color:#ffffff;
+	width:120px;
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin-left:22px;
+	background:none;
+	font-weight:normal;
+}
+
+#subnav_main ul li.active-nav ul li a:hover {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:22px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+#subnav_main ul li ul li.active-nav a {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:22px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+
+
+/* Common Nav */
+#nav a {
+	text-decoration:none;
+	display:block;
+	outline:none;
+	cursor:pointer;
+}
+
+#nav li {
+	float:left;
+	padding:0px;
+	list-style-type:none;
+}
+
+#nav ul {
+	float:left;
+	width:182px;
+	position:absolute;
+	left:-999em;
+	margin:0px 0px 0px 6px;
+	background:url(../../images/mainnav_bot.gif) bottom left no-repeat transparent;
+	padding-bottom:20px;
+	padding-top:20px;
+	padding-left:0px;
+}
+
+#nav ul li {
+	width:170px;
+	display:block;
+}
+
+#nav ul li:hover {
+	width:170px;
+}
+
+#nav ul li a {
+	display:block;
+}
+
+#nav ul ul {
+	width:150px;
+	display:none;
+}
+
+#nav li:hover ul, #nav li:hover ul ul, #nav li:hover ul ul ul, #nav li.sfhover ul ul, #nav li.sfhover ul ul ul {
+	left:-999em;
+	z-index:100000;
+}
+
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul, #nav li li li li.sfhover ul {
+	left:auto;
+	z-index:100000;
+}
+
+
+
+/* Unique Nav */
+#nav {
+	font:10px Arial, Helvetica, sans-serif;
+	padding-top:4px;
+	margin-top:0px;
+	margin-left:50px;
+	text-transform:uppercase;
+}
+
+#nav a {
+	padding:0;
+	margin-left:8px;
+	font-size:11px;
+}
+
+#nav li #fir a {
+	background:none;
+}
+
+#nav li #fir a #active {
+	color:#fff;
+	background:transparent;
+}
+
+#nav a:hover {
+	color:#a8162c;
+}
+
+#nav a #active {
+	color:#a8162c;
+	background:transparent;
+}
+
+#nav #active-nav {
+	font-weight:normal;
+}
+
+#nav #active-nav li a {
+	font-weight:normal;color:#fff;
+}
+
+#nav #active-nav li a:hover {
+	color:#000;
+}
+
+#nav li #fir ul {
+}
+
+#nav ul {
+	font:10px Arial, Helvetica, sans-serif;
+	text-transform:none;font-weight:normal;
+	border-top:8px solid white;
+	z-index:100000;
+}
+
+#nav ul li {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #a8162c;
+}
+
+#nav ul li a {
+	color:#ffffff;
+	background:none;
+	padding:5px 0px 5px 22px;
+	margin:0px;
+	padding-left:28px;
+	margin-left:7px;
+	padding-top:8px;
+	padding-bottom:8px;
+	cursor:pointer;
+}
+
+#nav ul li a:hover {
+	background:url(../../images/subnav_arrow_hover.gif)
+	top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+	padding-bottom:8px;
+}
+
+#nav ul ul li a:hover {
+	color:#a8162c;
+}
+
+#nav ul ul {
+	background:#a7a7aa;
+	border:0;
+	margin:-22px 0px 0px 182px;
+}
+
+#nav li:hover, #nav li.sfhover {
+	background:transparent;
+	color:#a8162c;
+}
+
+#nav li li:hover, #nav li li.sfhover {
+	background:#a7a7aa;
+	color:#a8162c;
+}
+
+#nav .corus-cad {
+        width:95px;
+        height:27px;
+	padding-top:3px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a7a7aa;
+}
+
+#nav .clinical-studies {
+        width:206px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a7a7aa;
+}
+
+#nav .clinician-resources {
+        width:168px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a7a7aa;
+}
+
+#nav .for-patients {
+        width:104px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a7a7aa;
+}
+
+#nav .about-cardiodx {
+        width:130px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a7a7aa;
+}
+
+#nav .corus-cad #nav li:hover a.corus-cad, #nav li.sfhover a.corus-cad {
+        width:95px;
+        height:27px;
+	padding-top:3px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .clinical-studies #nav li:hover a.corus-cad, #nav li.sfhover a.corus-cad {
+        width:206px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .clinician-resources #nav li:hover a.corus-cad, #nav li.sfhover a.corus-cad {
+        width:163px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .for-patients #nav li:hover a.corus-cad, #nav li.sfhover a.corus-cad {
+        width:104px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .about-cardiodx #nav li:hover a.corus-cad, #nav li.sfhover a.corus-cad {
+        width:130px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .corus-cadactive {
+        width:95px;
+        height:27px;
+	padding-top:4px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .clinical-studiesactive {
+        width:206px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .clinician-resourcesactive {
+        width:158px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .for-patientsactive {
+        width:104px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+#nav .about-cardiodxactive {
+        width:130px;
+        height:23px;
+	padding-top:7px;
+        text-align:center;
+        font-size:14px;
+        display:block;
+        border-bottom:5px solid;
+        color:#a8162c;
+}
+
+
+/* Additional Styles for Nav */
+#subnav_main a.company ul {
+	border:1px solid #a8162c;
+}
+
+
+
+/* Testing to close Management Sub Nav */
+
+
+
+/* Search Page */
+#global {
+	float:right;
+	width:170px;
+	height:30px;
+	margin-top:-4px;
+	font-size:10px;
+	font-color:#000000;
+	text-decoration:none;
+	text-transform:uppercase;
+}
+
+#global a:link, #global a:visited {
+	color:#000000;
+	text-decoration:none;
+}
+
+/*#global a {
+	text-transform:uppercase;
+	text-decoration:none;
+	color:#a7a7aa;
+	font-size:10px;
+	background:url(../../images/red-dot.gif) right no-repeat;
+	padding-right:9px;
+	line-height:16px;
+}*/
+
+#global a {
+	outline:none;
+}
+
+#global a:hover {
+	color:#a8162c;
+}
+
+#searchArea {
+	float:left;
+	width:565px;
+}
+
+#hbpagestop {
+	padding-bottom:0px;
+	margin-bottom:0px;
+}
+
+#frmSearch {
+	float:right;
+}
+
+
+
+/* Search Result */
+#hbSearch ul {
+	list-style-type:none;
+	padding:0px;
+	margin:0px;
+	padding-left:2px;
+}
+
+#hbSearch li {
+	padding-bottom:15px;
+	line-height:19px;
+}
+
+#search {
+	float:right;
+	width:140px;
+	text-align:right;
+	height:40px;
+	padding-right:10px;
+}
+
+.searchPosition {
+	vertical-align:top;
+	/* background:url(../../images/search-input.gif) no-repeat top left; width:113px;padding:5px 2px 3px 2px; */
+	border:1px solid #a7a7aa;
+	width:110px;
+	height:17px;
+	margin-top:2px;
+	padding-top:3px; 
+	
+	}
+
+
+
+/*  ul Styles */
+#content ul {
+	padding-left:0px;
+	list-style-type:none;
+	margin-top:10px;
+}
+
+#content ul li {
+	padding-left:25px;
+	background: url(../../images/bullet_dot.gif) no-repeat top left;
+	margin-bottom:7px;
+}
+
+#content li.print-icon {
+	text-align:right;
+	background:transparent;
+}
+
+#content .print-icon a:hover {
+	background:url(../../images/print_icon_hover.jpg) no-repeat top right transparent;
+}
+
+/* Press */
+.listingWidth {
+	float:left;
+	width:550px;
+	padding-left:2px;
+	margin-top:5px;
+}
+
+#pressRow {
+	width:550px;
+	margin-top:5px;
+}
+
+.prTitle {
+	padding-bottom:0px;
+	font-size:15px;
+	padding-top:4px;
+}
+
+.prSubTitle {
+	font-style:italic;
+}
+
+a.back {
+}
+
+
+
+/* Listing Tool */
+#newsRow {
+	width:565px;
+	margin-top:5px;
+	padding-right:28px;
+	padding-left:2px;
+	color:#a7a7aa;
+}
+
+#newRow p {
+	padding:0px;
+	margin:0px;
+}
+
+
+
+/* Publications */
+.publicationsId {
+	font-style:italic;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+.briefTitle {
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+.author {
+	line-height:17px;
+}
+
+.txtAbstract p {
+	margin-bottom:0px;
+	padding-bottom:0px;
+}
+
+
+
+/* Glossary */
+#newsRow #cont p {
+}
+
+#hmain table {
+	width:565px;
+}
+
+#hmain table .glossary p {
+	margin-bottom:0px;
+	padding-bottom:1px;
+}
+
+#subnav_main li ul ul{
+	display:none;
+}
+
+#subnav_main li #parent-open ul li ul {
+	display:none;
+}
+
+
+
+/* Access Styles */
+#access {
+	height:16px;
+	padding-top:5px;
+	padding-bottom:6px;
+	margin-top:0px; 
+	margin-bottom:0px;
+	width:100%;
+	background:url(../../images/access_bg.jpg) top right no-repeat;
+}
+	
+#access a {
+	color:#999;
+	text-decoration:none;
+	font-size:11px;
+}
+
+#access a:hover {
+	color:#666;
+}
+
+#access ul {
+	padding:0px;
+	margin:0px;
+	float:right;
+	padding-right:1px;
+	list-style-type:none;
+}
+
+#access ul li {
+	list-style-type:none;
+	float:left;
+	margin-left:10px;
+	padding-bottom:10px;
+	list-style-type:none;
+	background:transparent;
+	float:left;
+	padding-left:0px;
+}
+
+#access ul li img {
+	margin-right:4px;
+}
+
+#access ul li #pri {
+	background:left url(../../images/print_icon.jpg) no-repeat transparent;
+	width:16px;
+	height:15px;
+	display:block;
+}
+
+#access ul li #pri:hover {
+	background:left url(../../images/print_icon_hover.jpg) no-repeat transparent;
+}
+
+#access ul li #ema {
+	background:left url(../../images/email_icon.jpg) no-repeat transparent;
+	width:17px;
+	height:14px;
+	display:block;
+}
+
+#access ul li #ema:hover {
+	background:left url(../../images/email_icon_hover.jpg) no-repeat transparent;
+}
+
+#publication {
+	color:#a7a7aa;
+	padding-top:8px;
+	margin-bottom:33px;
+}
+
+#publication p {
+	padding-left:5px;
+	padding-top:13px;
+	line-height:16px;
+	padding-bottom:0px;
+	margin-bottom:0px;
+}
+
+#links {
+	color:#000000;
+	padding-top:8px;
+	margin-bottom:33px;
+}
+
+#links p {
+	padding-left:5px;
+	padding-top:13px;
+	line-height:16px;
+	padding-bottom:0px;
+	margin-bottom:0px;
+}
+
+#links .related-links {
+	color:#a8162c;
+	text-align:left;
+        font-size:12px;
+        display:block;
+        border-bottom:3px solid;
+	border-color:#a8162c;
+	height:18px;
+}
+
+#links a:link, #links a:hover {
+	text-decoration:none;
+}
+
+#links a.link:link {
+	color:#a7a7aa;
+}
+
+#links a.link:hover {
+	color:#a8162c;
+}
+
+#events {
+	color:#a7a7aa;
+	margin-bottom:5px;
+}
+#events p {
+	padding-left:5px;
+	padding-top:7px;
+}
+
+
+
+/* Site Map */
+#oleft, #oright {
+	width:200px;
+	float:left;
+	color:#a7a7aa;
+	margin-right:15px;
+}
+
+#oleft a, #oright a {
+	text-decoration:none;
+}
+
+#oleft a:hover, #oright a:hover {
+	text-decoration:underline;
+}
+
+#oleft ul, #oright ul {
+	padding-top:0px;
+	margin-top:0px;
+	margin-top:5px;
+	margin-left:0px;
+	padding-bottom:2px;
+	margin-bottom:0px;
+	/* border-bottom:5px solid #ccc;*/
+}
+
+/*#oleft ul ul, #oright ul ul {
+	border-bottom:none;
+}*/
+
+#oleft ul li, #oright ul li {
+	background:none;
+	padding-left:0px;
+}
+
+#oleft ul li ul, #oright ul li ul {
+	padding-top:5px;
+	margin-top:0px;
+}
+
+#oleft ul li ul li, #oright ul li ul li {
+	padding-bottom:0px;
+}
+
+#oleft ul li ul li ul, #oright ul li ul li ul{
+	padding-top:10px;
+}
+
+
+
+/* Back to Top */
+.glossary a {
+	outline:none;
+}
+
+.backtop {
+	background:url(../../images/toparrow.jpg) no-repeat left;
+	width:100%;
+	height:11px;
+	display:block;
+	outline:none;
+}
+
+
+
+/* References */
+h5 {
+	padding-bottom:0px;
+	margin-bottom:0px;
+	font-size:11px;
+}
+
+#content hr {
+	border:none;
+	border-top:1px dotted #a7a7aa;
+	height:1px;
+}
+
+#content ol {
+	padding-left:0px;
+	margin-left:25px;
+	color:#a7a7aa;
+}
+
+#content ol li {
+	padding-left:5px;
+	padding-bottom:5px;
+	color:#a7a7aa;
+}
+
+.backtop {
+	outline:none;
+}
+
+.glossarytop {
+	color:#bbb;
+}
+
+.footnote {
+	font-size:11px;
+}
+
+
+
+/* Team Module */
+.teamsection {
+	width:565px;
+	float:left;
+	/*border:1px solid orange;*/
+	padding:2px 0 0px 2px;
+}
+
+.teamsection span.title {
+	color:#a8162c;
+	font-weight:bold;
+	font-size:13px;
+}
+
+.teamsection span.job {
+	color:#a7a7aa;
+	font-weight:bold;
+	border-left:1px solid #ccc;
+	padding-left:5px;
+	font-size:11px;
+}
+
+.teamsection p {
+	color:#a7a7aa;
+	font-size:12px;
+	padding-bottom:0px;
+	margin-bottom:0px;
+}
+
+.teamsection a {
+	outline:none;
+}
+
+
+
+/*#teamtop ul {
+	list-style-type:none;
+}
+
+#teamtop li {
+	margin:0px;
+	padding:0px;
+	margin-bottom:6px;
+	list-style-type:none;
+}*/
+
+#teamtop {
+	width:100%;
+	border-bottom:1px dotted #ccc;
+	padding-bottom:2px;
+	padding-top:22px;
+}
+
+#teamtop ul li {
+	padding:0px;
+	margin:0px;
+	background:none;
+	padding-bottom:5px;
+}
+
+#teamtop ul li a {
+	outline:none;
+}
+
+/* Print Component in templates directory */
+
+fieldset
+{
+   border-width: 0;
+}
+        
+#printbuttons {
+	float:right;
+	text-align:right;
+	width:125px;
+}
+
+#printcontent {
+	border-bottom:100px solid #a7a7aa;
+	margin-bottom:2em;
+	margin-top:1em;
+}
+
+#breadcrumbs {
+	border-top:1px solid #a7a7aa;
+	padding-top:1em;
+	margin-top:1em;
+	clear:both;
+}
+
+#printheadbanner {
+	font-size:6px;
+	font-style:bold;
+	margin-top:-2em;
+	padding-top:2em;
+	padding-bottom:3em;
+}
+
+
+#printfooter {
+	margin-top:-117px;
+	padding:1em;
+	text-align:center;
+}
+
+
+/* Patient */
+
+.patient h1 {
+	color:#a8162c;
+	text-transform:uppercase;
+	margin-left:107px;
+	font-weight:bold;
+}
+
+/*Patient Sub Nav Styles */
+
+/* Sub Nav Styles */
+#PatientnoNav {width:182px; float:left;padding-left:0;margin-left:0;/*border:1px solid blue;*/ margin-bottom:50px;}
+
+#PatientnoNav #Patientsubnav_main {
+	width:inherit;
+	padding-top:24px;
+	height:180px;
+	background-color: #a7a7aa;
+	background-image: url(../../images/subnav_top.jpg);
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+
+#PatientnoNav #Patientsubnav_bot {
+	width:inherit;
+	background:url(../../images/patient_subnav_bot.jpg) bottom left no-repeat #a8162c;
+	height:30px;
+}
+
+
+
+
+
+#Patientsubnav {
+	width:182px;
+	float:left;
+	padding-left:0;
+	margin-left:0;
+	/*border:1px solid blue;*/
+	height:300px;
+	}
+
+#subnav a {
+	outline:none;
+}
+
+#Patientsubnav_main {
+	width:inherit;
+	background:url(../../images/patient_subnav_top.jpg) top left no-repeat #a8162c;
+	padding-top:24px;
+}
+
+#Patientsubnav_main ul {
+	width:170px;
+	padding:0px;
+	margin:0px;
+}
+
+#Patientsubnav_main ul ul {
+	display:none;
+}
+
+#Patientsubnav_main ul li {
+	list-style-type:none;
+	padding:0 0 0 7px; 
+	margin-left:5px;
+	border-top:1px solid #cccccc;
+}
+
+#Patientsubnav_main ul li a {
+	text-decoration:none;
+	color:#cccccc;
+	display:block;
+	padding-top:6px;
+	padding-bottom:6px;
+	padding-left:30px;
+	margin-left:5px;
+}
+
+#Patientsubnav_main ul li a:active, #Patientsubnav_main ul li a:hover  {
+	padding-left:30px;
+	background:url(../../images/patient_subnav_arrow.gif) top left no-repeat;
+	color:#ffffff;
+	font-weight:bold;
+}
+
+/*#subnav_main ul li.active-nav {
+	padding-left:30px;
+	background:url(../../images/subnav_arrow.gif) top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+}*/
+
+#Patientsubnav_main li #Patientparent-open li.active-nav a {
+	padding-left:30px;
+	background:url(../../images/patient_subnav_arrow.gif) top left no-repeat;
+	color:#a8162c;
+	font-weight:bold;
+}
+
+#Patientsubnav_main li.active-nav ul {
+	display:block;
+}
+
+#Patientsubnav_main li#Patientparent-open ul {
+	display:block;
+}
+
+#Patientsubnav_main li.active-nav ul ul {
+	display:none;
+}
+
+#Patientsubnav_main li#parent-open ul ul {
+	display:none;
+}
+
+#Patientsubnav_main li#team ul {
+	display:none;
+}
+
+#Patientsubnav_main li#Patientparent-open li a {
+	color:#ffffff;
+	width:114px; 
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	background:none;
+	font-weight:normal;
+}
+
+#Patientsubnav_main li#Patientparent-open li:hover a {
+	color:#ffffff;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:25px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+#Patientsubnav_main li#Patientparent-open li.active-nav a {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:25px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+#Patientsubnav_main ul ul {
+	padding:0 0 0 10px;
+	margin:0;
+	background-image:none;
+	width:135px;
+}
+
+#Patientsubnav_main ul ul li {
+	border:none;
+	padding:0px;
+	margin:0px;
+}
+
+#Patientsubnav_main ul ul li a {
+	color:#a7a7aa;
+	width:114px;
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+}
+
+#Patientsubnav_main ul ul li a:hover {
+	color:#a8162c;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+}
+
+#Patientsubnav_bot {
+	width:inherit;
+	background:url(../../images/patient_subnav_bot.jpg) bottom left no-repeat #a7a7aa;
+	height:30px;
+}
+
+
+
+/* Sub Nav Hover Styles */
+#Patientsubnav_main ul li.active-nav a {
+	padding-left:30px;
+	background:url(../../images/patient_subnav_arrow.gif) top left no-repeat;
+	color:#ffffff;
+	font-weight:bold;
+}
+
+#Patientsubnav_main ul li ul li a {
+	color:#cccccc;
+	width:114px;
+	padding-top:0px;
+	padding-bottom:5px;
+	/* margin-left:10px;*/
+	padding-left:10px;
+	margin-left:22px;
+	background:none;
+	font-weight:normal;
+}
+
+#Patientsubnav_main ul li ul li a:hover {
+	color:#ffffff;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:22px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+#Patientsubnav_main ul li.active-nav ul li a {color:#a7a7aa;
+	width:120px;
+	padding-top:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin-left:22px;
+	background:none;
+	font-weight:normal;
+}
+
+#Patientsubnav_main ul li.active-nav ul li a:hover {
+	color:#ffffff;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:22px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}
+
+#Patientsubnav_main ul li ul li.active-nav a {
+	color:#ffffff;
+	padding:0px;
+	padding-bottom:5px;
+	padding-left:10px;
+	margin:0px;
+	margin-left:22px;
+	/* margin-left:10px;*/
+	background:url(../../images/subnav_ul_arrow_hover.gif) top left no-repeat;
+	font-weight:bold;
+}

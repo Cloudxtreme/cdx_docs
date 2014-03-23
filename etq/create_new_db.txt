@@ -1,0 +1,12 @@
+
+cp my3307.cnf my3306.cnf
+vi my3306.cnf
+  change 3307 to 3306
+  chnage /tmp/mysqldev.sock to /tmp/mysqlcc.sock
+
+mkdir mysql3306
+cp -rp mysql3307/mysql mysql3306
+chown mysql:mysql mysql3306/mysql
+
+su mysql -c "cd /usr/mysql; ./bin/mysqld_safe --defaults-file=/usr/mysql/my3306.cnf" &
+

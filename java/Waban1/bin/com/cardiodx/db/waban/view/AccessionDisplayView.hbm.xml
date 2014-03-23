@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.AccessionDisplayView" table="ACCESSION_DISPLAY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.AccessionDisplayViewId">
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="25" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="dateReceived" type="date">
+                <column name="DATE_RECEIVED" length="7" />
+            </key-property>
+            <key-property name="resultStatus" type="string">
+                <column name="RESULT_STATUS" length="20" />
+            </key-property>
+            <key-property name="destroyed" type="java.lang.Boolean">
+                <column name="DESTROYED" precision="1" scale="0" />
+            </key-property>
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="studyTitle" type="string">
+                <column name="STUDY_TITLE" length="200" />
+            </key-property>
+            <key-property name="sponsorStudyNumber" type="string">
+                <column name="SPONSOR_STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="studyDirector" type="string">
+                <column name="STUDY_DIRECTOR" length="30" />
+            </key-property>
+            <key-property name="sponsorStudyTitle" type="string">
+                <column name="SPONSOR_STUDY_TITLE" length="200" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="40" />
+            </key-property>
+            <key-property name="company" type="string">
+                <column name="COMPANY" length="100" />
+            </key-property>
+            <key-property name="dateReceived1" type="string">
+                <column name="DATE_RECEIVED1" length="11" />
+            </key-property>
+            <key-property name="gpiCode" type="string">
+                <column name="GPI_CODE" length="1000" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

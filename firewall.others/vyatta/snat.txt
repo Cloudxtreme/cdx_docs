@@ -1,0 +1,68 @@
+iproute2 fwmark iprule multi-home routing
+
+http://linux-ip.net/html/adv-multi-internet.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                                 ________
+                                          +------------+        /
+                                  67.17.28.14          |       |
+                (eth1)      +-------------+ Provider 1 +-------
+        __  205.254.211.179 |             |            |     /
+    ___/  \_         +------+-------+     +------------+    |
+  _/        \__      |     if1      |                      /
+ /             \     |              |                      |
+| Local network -----+ Linux router |                      |     Internet
+ \_           __/    |              |                      |
+   \__     __/       |     if2      |                      \
+      \___/          +------+-------+     +------------+    |
+                67.17.28.12 |             |            |     \
+                  (eth4)    +--->>>>>-----+ Provider 2 +-------
+                                    67.17.28.14        |       |
+                                          +------------+        \________
+
+We'll use iptables to select traffic bound for destination ports 80 and 443 
+	originating in the main office desktop network through eht4.
+
+1) Copy the main routing table to another routing table and set the alternate default route.
+2) Use iptables/ipchains to mark traffic with fwmark.
+3) Add a rule to the routing policy database.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1)
+# ip route show table main
+default via 205.254.211.254 dev eth1
+
+# ip route flush table 4
+# ip route show table main | grep -Ev ^default \
+>   | while read ROUTE ; do
+>     ip route add table 4 $ROUTE
+> done
+
+# ip route add table 4 default via 67.17.28.14
+# ip route show table 4
+default via 67.17.28.14 dev eth4
+
+
+2)
+# iptables -t mangle -A PREROUTING -p tcp --dport 80  -s 192.168.99.0/24 -j MARK --set-mark 4
+# iptables -t mangle -A PREROUTING -p tcp --dport 443 -s 192.168.99.0/24 -j MARK --set-mark 4
+# iptables -t mangle -nvL
+
+# iptables -t nat -A POSTROUTING -o eth4 -j SNAT --to-source 67.17.28.12
+# iptables -t nat -A POSTROUTING -o eth1 -j SNAT --to-source 205.254.211.179
+
+With these iptables lines we have instructed netfilter to mark packets matching these criteria with the fwmark 
+and we have prepared the NAT rules so that our outbound packets will originate from the correct IPs.
+
+
+3)
+# ip rule add fwmark 4 table 4
+# ip rule show
+32765:  from all fwmark 4 lookup 4 
+32766:  from all lookup main 
+
+# ip route flush cache
+
+
+
+
+

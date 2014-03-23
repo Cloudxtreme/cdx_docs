@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.CdxCurrentReportView2" table="CDX_CURRENT_REPORT_VIEW_2" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.CdxCurrentReportView2Id">
+            <key-property name="cpRunReportId" type="big_decimal">
+                <column name="CP_RUN_REPORT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="25" />
+            </key-property>
+            <key-property name="cpRunId" type="big_decimal">
+                <column name="CP_RUN_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="cpRunStatus" type="string">
+                <column name="CP_RUN_STATUS" length="50" />
+            </key-property>
+            <key-property name="versionedDocumentId" type="big_decimal">
+                <column name="VERSIONED_DOCUMENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="fileName" type="string">
+                <column name="FILE_NAME" length="100" />
+            </key-property>
+            <key-property name="reportType" type="string">
+                <column name="REPORT_TYPE" length="100" />
+            </key-property>
+            <key-property name="reportId" type="string">
+                <column name="REPORT_ID" length="100" />
+            </key-property>
+            <key-property name="dateReceived" type="date">
+                <column name="DATE_RECEIVED" length="7" />
+            </key-property>
+            <key-property name="dateFaxed" type="date">
+                <column name="DATE_FAXED" length="7" />
+            </key-property>
+            <key-property name="turnAroundTime" type="big_decimal">
+                <column name="TURN_AROUND_TIME" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,64 @@
+
+
+http://www.jdmz.net/ssh/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+install rsync on both client and server
+
+install rsnapshot (a perl script) on the server 
+
+
+generate keys 
+	id_rsa  
+	id_rsa.pub  
+	known_hosts
+
+copy id_rsa.put to the client as authorized_keys2
+
+
+vi authorized_keys2
+
+from="backup.cardiodx.com",command="/root/validate-rsync" ssh-rsa AAAAB3NzaC1yc2
+EAAAABIwAAAIEA2OfY5+zxMxGq8Uzua29htQ6hLflcKxVVdOl1WrWTApAMNJACdne/zoQsUzV+nNbDJa
+n3MbHjMNI0vZEv9K4Xt8nSzc8plvEql5SvYvsJORKkIEL9iVOibni1Z48pMNCj+hrtHrw6lMDVOxpmrD
+O89JB1FSboisU0vwia/JE1LzE= root@backup.cardiodx.com
+
+
+vi validate-rsync
+#!/bin/sh
+
+case "$SSH_ORIGINAL_COMMAND" in
+        *\&*)
+                echo "Rejected"
+                ;;
+        *\;*)
+                echo "Rejected"
+                ;;
+        rsync\ --server*)
+                $SSH_ORIGINAL_COMMAND
+                ;;
+        *)
+                echo "Rejected"
+                ;;
+esac
+
+test it using: rsync -avz -e ssh remoteuser@remotehost:/remote/dir /this/dir/ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/rsnapshot.conf
+
+rshapshot daily
+
+
+
+cd /etc/cron.daily
+
+vi rsnapshot_daily
+#!/bin/bash
+/usr/bin/rsnapshot daily
+
+
+vi /etc/crontab
+

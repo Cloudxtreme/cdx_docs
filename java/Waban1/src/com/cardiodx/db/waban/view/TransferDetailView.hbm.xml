@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TransferDetailView" table="TRANSFER_DETAIL_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TransferDetailViewId">
+            <key-property name="transferId" type="big_decimal">
+                <column name="TRANSFER_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="stepTemplateId" type="big_decimal">
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="wholeTube" type="java.lang.Boolean">
+                <column name="WHOLE_TUBE" precision="1" scale="0" />
+            </key-property>
+            <key-property name="dilutionFactor" type="big_decimal">
+                <column name="DILUTION_FACTOR" precision="22" scale="0" />
+            </key-property>
+            <key-property name="reagentId" type="big_decimal">
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="sampleIdFrom" type="big_decimal">
+                <column name="SAMPLE_ID_FROM" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionIdFrom" type="big_decimal">
+                <column name="ACCESSION_ID_FROM" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleTubeIdFrom" type="string">
+                <column name="SAMPLE_TUBE_ID_FROM" length="25" />
+            </key-property>
+            <key-property name="volumeFrom" type="big_decimal">
+                <column name="VOLUME_FROM" precision="22" scale="0" />
+            </key-property>
+            <key-property name="descriptionFrom" type="string">
+                <column name="DESCRIPTION_FROM" length="30" />
+            </key-property>
+            <key-property name="containerIdFrom" type="string">
+                <column name="CONTAINER_ID_FROM" length="20" />
+            </key-property>
+            <key-property name="containerRowFrom" type="big_decimal">
+                <column name="CONTAINER_ROW_FROM" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumnFrom" type="big_decimal">
+                <column name="CONTAINER_COLUMN_FROM" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleIdTo" type="big_decimal">
+                <column name="SAMPLE_ID_TO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionIdTo" type="big_decimal">
+                <column name="ACCESSION_ID_TO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleTubeIdTo" type="string">
+                <column name="SAMPLE_TUBE_ID_TO" length="25" />
+            </key-property>
+            <key-property name="volumeTo" type="big_decimal">
+                <column name="VOLUME_TO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="descriptionTo" type="string">
+                <column name="DESCRIPTION_TO" length="30" />
+            </key-property>
+            <key-property name="containerIdTo" type="string">
+                <column name="CONTAINER_ID_TO" length="20" />
+            </key-property>
+            <key-property name="containerRowTo" type="big_decimal">
+                <column name="CONTAINER_ROW_TO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumnTo" type="big_decimal">
+                <column name="CONTAINER_COLUMN_TO" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,11 @@
+http://developer.amazonwebservices.com/connect/entry.jspa?entryID=530
+
+
+http://www.gridvm.org/amazon-encourages-ec2-image-sharing.html
+
+http://docs.amazonwebservices.com/AWSEC2/2008-02-01/GettingStartedGuide/?ref=get-started
+
+
+alien ./ec2-ami-tools.noarch.rpm
+wajig list-files ec2-ami-tools
+

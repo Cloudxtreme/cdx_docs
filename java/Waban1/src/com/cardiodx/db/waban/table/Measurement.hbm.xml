@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Measurement" table="MEASUREMENT" schema="DNALIMS">
+        <comment>Information about spectrophotometer and fluorimetry files.</comment>
+        <id name="measurementId" type="big_decimal">
+            <column name="MEASUREMENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                <comment>Foreign key to the STEP_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Foreign key to the CHECKLIST table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="instrument" class="com.cardiodx.db.waban.table.Instrument" fetch="select">
+            <column name="INSTRUMENT_ID" precision="22" scale="0">
+                <comment>Instrument identifier and foreign key to the INSTRUMENT table.</comment>
+            </column>
+        </many-to-one>
+        <property name="filename" type="string">
+            <column name="FILENAME" length="256">
+                <comment>Output file name from the spectrophotometer.</comment>
+            </column>
+        </property>
+        <property name="fileDatetime" type="date">
+            <column name="FILE_DATETIME" length="7">
+                <comment>Date the output file was generated.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <set name="dnaSpecs" table="DNA_SPEC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MEASUREMENT_ID" precision="22" scale="0">
+                    <comment>Measurement identifier and foreign key to the MEASUREMENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaSpec" />
+        </set>
+        <set name="dnaFluors" table="DNA_FLUOR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MEASUREMENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Measurement identifier and foreign key to the MEASUREMENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaFluor" />
+        </set>
+    </class>
+</hibernate-mapping>

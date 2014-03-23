@@ -1,0 +1,75 @@
+
+
+
+for wolverine, at run time (and run time only), it'll generate /etc/sysconf/includes directory.
+and extract many .php files over.
+
+Here is how you debug (and understand the php code).
+
+Go to /etc/sysconf/includes:
+
+
+# vi test.php 
+
+#!/usr/bin/php -q
+
+<?php
+
+  print("123");
+
+?>
+
+
+# test.php 
+123
+
+
+
+running network cards:
+
+  businfo vendor:model module
+  ----------------------------
+	0100	8086:105e	e1000
+	0101	8086:105e	e1000
+	0200	14e4:1677	tg3
+	0300	14e4:1659	tg3
+	0400	10ec:8169	r8169
+	0410	10ec:8169	r8169
+
+
+vi /etc/sysconf/niclist
+8086:105e e1000
+10ec:8169 r8169
+
+/usr/local/etc/sysconf/niclist
+
+
+# ip addr help 
+
+ip addr show
+8: eth4: <BROADCAST,MULTICAST,UP,10000> mtu 1500 qdisc pfifo_fast qlen 1000
+    link/ether 00:15:17:be:ee:76 brd ff:ff:ff:ff:ff:ff
+    inet 173.13.158.180/28 brd 173.13.158.191 scope global eth4
+9: eth5: <BROADCAST,MULTICAST,UP,10000> mtu 1500 qdisc pfifo_fast qlen 100
+    link/ether 00:15:17:be:ee:77 brd ff:ff:ff:ff:ff:ff
+    inet 67.95.201.198/27 brd 67.95.201.223 scope global eth5
+    inet 67.95.201.199/27 brd 67.95.201.223 scope global secondary eth5
+
+
+ip addr flush dev eth5
+
+ip addr add 173.13.158.180/28 brd 173.13.158.191 scope global dev eth4
+ip link set eth4 up
+
+ip addr add 67.95.201.198/27 brd 67.95.201.223 scope global dev eth5
+ip addr add 67.95.201.199/27 brd 67.95.201.223 scope global dev eth5
+ip link set eth5 up
+
+
+ip -s link
+
+tcpdump -nq -i eth4
+
+ip route show cache | grep -v broadcast | grep -v 'cache' | grep -v eth1
+
+

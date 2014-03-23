@@ -1,0 +1,31 @@
+
+vi Gemfile
+
+gem 'salesforce_bulk'
+
+bundle install
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+rails console
+
+client = SalesforceBulk::Api.new('hub@cardiodx.com', 'test789')
+
+????
+t = client.query("User", "Id != NULL limit 20")
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi test.rb
+client = Databasedotcom::Client.new("config/databasedotcom.yml")
+client.authenticate :username => 'hub@cardiodx.com', :password => 'test789'
+
+client.materialize("User")
+u = SFDC_Models::User.first
+puts u.FirstName
+
+bundle exec rails runner "eval(File.read 'test.rb')"
+
+bundle exec rails runner test.rb
+

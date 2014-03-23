@@ -1,0 +1,33 @@
+pdbedit samba password strength policy
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+
+45 days (3888000 seconds).
+
+
+pdbedit -P "min password length" -C 10		
+pdbedit -P "password history" -C 5		(save 5 pwrds)
+pdbedit -P "minimum password age" -C 604800	(can't change within 7 days)
+pdbedit -P "maximum password age" -C 7776000 	(change every 90 days)
+pdbedit -P "bad lockout attempt" -C 7		
+pdbedit -P "lockout duration" -C 30		(30 minutes, if forever:-1)
+
+
+    * password history
+    * user must logon to change password
+    * lockout duration
+    * reset count minutes
+    * disconnect time
+    * refuse machine password change
+
+pdbedit -y -i tdbsam -e ldapsam 
+
+perl -e 'print time'
+
+
+pdbedit -r username --pwd-must-change-time=XXXXYYYY
+
+
+
+
+

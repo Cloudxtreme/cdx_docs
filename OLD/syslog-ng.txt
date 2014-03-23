@@ -1,0 +1,152 @@
+http://www.balabit.com/products/syslog_ng/
+
+configure
+make 
+make install
+
+
+mkdir /etc/syslog-ng
+cp contrib/fedora-packaging/syslog-ng.conf /etc/syslog-ng
+--
+-- client
+--
+
+# syslog-ng configuration file.
+#
+# See syslog-ng(8) and syslog-ng.conf(5) for more information.
+#
+# This config file should work identical in all respects to a default
+# syslogd Mandrake 7.2 system
+#
+# 20001113 - vdanen@mandrakesoft.com
+
+options { sync (0);
+          time_reopen (10);
+          log_fifo_size (1000);
+          long_hostnames (off);
+          use_dns (no);
+          use_fqdn (no);
+          create_dirs (no);
+          keep_hostname (yes);
+        };
+
+source sys      { unix-stream ("/dev/log"); internal(); };
+destination loghost     { udp("10.10.37.22" port(514)); };
+
+log { source(sys); destination(loghost); };
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- server
+--
+
+# syslog-ng configuration file.
+#
+# See syslog-ng(8) and syslog-ng.conf(5) for more information.
+#
+# This config file should work identical in all respects to a default
+# syslogd Mandrake 7.2 system
+#
+# 20001113 - vdanen@mandrakesoft.com
+
+options { sync (0);
+          time_reopen (10);
+          log_fifo_size (1000);
+          long_hostnames (off);
+          use_dns (yes);
+          use_fqdn (no);
+          create_dirs (no);
+          keep_hostname (yes);
+        };
+
+source sys      { unix-stream ("/dev/log"); internal(); };
+source remote   { udp(); };
+
+destination std { file( "/data/log/$HOST/$YEAR$MONTH/$FACILITY" create_dirs(yes)); };
+
+log { source(sys); destination(std); };
+log { source(remote); destination(std); };
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+yslog-ng      Starts syslog-ng/klogd.
+#
+#
+# chkconfig: 2345 30 99
+# description: Syslog is the facility by which many daemons use to log \
+# messages to various system log files.  Syslog-ng is a more powerful \
+# system logger than syslog.
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+[ -f /sbin/syslog-ng ] || exit 0
+[ -f /sbin/klogd ] || exit 0
+
+RETVAL=0
+KERNEL=`/bin/uname -r`
+SYSMAP=/boot/System.map
+
+start() {
+        gprintf "Starting system logger: "
+        # we don't want the MARK ticks
+        cd /
+    daemon syslog-ng
+    RETVAL=$?
+    echo
+    gprintf "Starting kernel logger: "
+        [ -f $SYSMAP-$KERNEL ] && SYSMAP=$SYSMAP-$KERNEL
+    daemon klogd -k $SYSMAP
+    echo
+    [ $RETVAL -eq 0 ] && touch /var/lock/subsys/syslog-ng
+}
+
+stop() {
+        gprintf "Shutting down kernel logger: "
+    killproc klogd
+    echo
+    gprintf "Shutting down system logger: "
+    killproc syslog-ng
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/syslog-ng
+
+}
+
+# See how we were called.
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  status)
+        status syslog-ng
+        status klogd
+        RETVAL=$?
+        ;;
+  restart|reload)
+        stop
+        start
+        RETVAL=$?
+        ;;
+  condrestart)
+        if status syslog-ng >& /dev/null; then
+                stop
+                start
+        fi
+        ;;
+  *)
+        gprintf "Usage: syslog-ng {start|stop|status|restart|condrestart}\n"
+        exit 1
+esac
+
+exit $RETVAL
+
+

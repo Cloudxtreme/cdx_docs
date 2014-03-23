@@ -1,0 +1,21 @@
+
+https://docs.djangoproject.com/en/1.4/intro/tutorial01/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+python-pip
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+wajig install python-django
+
+
+django-admin startproject mysite
+
+-- python mysite/manage.py runserver 8080
+-- python mysite/manage.py runserver 10.10.36.25:8080
+python mysite/manage.py runserver ssp.cardiodx.com:8080
+
+
+
+

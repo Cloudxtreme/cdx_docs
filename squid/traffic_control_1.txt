@@ -1,0 +1,103 @@
+
+# more cdx.tc 
+#include "fields.tc" 
+#include "ports.tc"
+
+#define INTERFACE  eth0 
+
+dev INTERFACE {
+    egress {
+        class ( <$server> ) if ip_dst == 10.10.37.0/24 ;
+        class ( <$other> )   if 1 ; 
+
+        htb () { 
+            class ( rate 53Mbps, ceil 53Mbps ) { 
+                $server   = class ( rate 53Mbps, ceil 53Mbps ) { sfq; } ; 
+                $other    = class ( rate  3Mbps, ceil  3Mbps ) { sfq; } ; 
+            }
+        }
+    }
+}
+      
+
+# tcng cdx.tc 
+
+# ================================ Device eth0 ================================
+
+tc qdisc add dev eth0 handle 1:0 root dsmark indices 4 default_index 0
+tc qdisc add dev eth0 handle 2:0 parent 1:0 htb
+tc class add dev eth0 parent 2:0 classid 2:1 htb rate 6625000bps ceil 6625000bps
+tc class add dev eth0 parent 2:1 classid 2:2 htb rate 6625000bps ceil 6625000bps
+tc qdisc add dev eth0 handle 3:0 parent 2:2 sfq
+tc class add dev eth0 parent 2:1 classid 2:3 htb rate 375000bps ceil 375000bps
+tc qdisc add dev eth0 handle 4:0 parent 2:3 sfq
+tc filter add dev eth0 parent 2:0 protocol all prio 1 tcindex mask 0x3 shift 0
+tc filter add dev eth0 parent 2:0 protocol all prio 1 handle 2 tcindex classid 2:3
+tc filter add dev eth0 parent 2:0 protocol all prio 1 handle 1 tcindex classid 2:2
+tc filter add dev eth0 parent 1:0 protocol all prio 1 u32 match u32 0xa0a2500 0xffffffff at 16 classid 1:1
+tc filter add dev eth0 parent 1:0 protocol all prio 1 u32 match u32 0x0 0x0 at 0 classid 1:2
+
+
+# tcng cdx.tc > cdx.sh 
+# ./cdx.sh 
+
+
+wget http://s3.amazonaws.com/cardiodx/plasma_coat_extraction_022608.mp4
+
+
+tc -s qdisc show dev eth0
+tc -s qdisc ls dev
+
+wondershaper clear eth0
+
+tc qdisc del dev eth0 root  
+tc qdisc del dev eth0 ingress
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more cdx.tc 
+#include "fields.tc" 
+#include "ports.tc"
+
+dev eth0 {
+    egress {
+        class ( <$server> ) if ip_dst == 10.10.37.0/24 ;
+        class ( <$other> )   if 1 ; 
+
+        htb () { 
+            class ( rate 50Mbps, ceil 53Mbps ) { 
+                $server   = class ( rate 50Mbps, ceil 53Mbps ) { sfq; } ; 
+                $other    = class ( rate  3Mbps, ceil  5Mbps ) { sfq; } ; 
+            }
+        }
+    }
+}
+      
+dev eth1 {
+    egress {
+        class ( <$server> ) if ip_src == 10.10.37.0/24 ;
+        class ( <$other> )   if 1 ;
+
+        htb () {
+            class ( rate 10Mbps, ceil 13Mbps ) {
+                $server   = class ( rate 10Mbps, ceil 13Mbps ) { sfq; } ;
+                $other    = class ( rate  3Mbps, ceil  3Mbps ) { sfq; } ;
+            }
+        }
+    }
+}
+
+dev eth2 {
+    egress {
+        class ( <$server> ) if ip_src == 10.10.37.0/24 ;
+        class ( <$other> )   if 1 ;
+
+        htb () {
+            class ( rate 10Mbps, ceil 13Mbps ) {
+                $server   = class ( rate 10Mbps, ceil 13Mbps ) { sfq; } ;
+                $other    = class ( rate  3Mbps, ceil  3Mbps ) { sfq; } ;
+            }
+        }
+    }
+}
+

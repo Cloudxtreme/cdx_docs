@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CdxCpRunQc" table="CDX_CP_RUN_QC" schema="DNALIMS">
+        <id name="cdxCpRunQcId" type="big_decimal">
+            <column name="CDX_CP_RUN_QC_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="cpRun" class="com.cardiodx.db.waban.table.CpRun" fetch="select">
+            <column name="CP_RUN_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign Key to the CP Run table</comment>
+            </column>
+        </many-to-one>
+        <property name="runQcStatus" type="string">
+            <column name="RUN_QC_STATUS" length="40" />
+        </property>
+        <property name="pbmcData" type="string">
+            <column name="PBMC_DATA">
+                <comment>Data for PBMC QC Check</comment>
+            </column>
+        </property>
+        <property name="pbmcStatus" type="string">
+            <column name="PBMC_STATUS" length="40">
+                <comment>Status for PBMC QC Check</comment>
+            </column>
+        </property>
+        <property name="negcontrolData" type="string">
+            <column name="NEGCONTROL_DATA">
+                <comment>Data for Negative Control QC Check</comment>
+            </column>
+        </property>
+        <property name="negcontrolStatus" type="string">
+            <column name="NEGCONTROL_STATUS" length="40">
+                <comment>Status for Negative Control QC Check</comment>
+            </column>
+        </property>
+        <property name="expProfileData" type="string">
+            <column name="EXP_PROFILE_DATA">
+                <comment>Data for expression profile QC Check</comment>
+            </column>
+        </property>
+        <property name="expProfileStatus" type="string">
+            <column name="EXP_PROFILE_STATUS" length="40">
+                <comment>Status for expression profile QC Check</comment>
+            </column>
+        </property>
+        <property name="genomicData" type="string">
+            <column name="GENOMIC_DATA">
+                <comment>Data for Genomic QC Check</comment>
+            </column>
+        </property>
+        <property name="genomicStatus" type="string">
+            <column name="GENOMIC_STATUS" length="40">
+                <comment>Status for Genomic QC Check</comment>
+            </column>
+        </property>
+        <property name="sdData" type="string">
+            <column name="SD_DATA">
+                <comment>Data for SD QC Check</comment>
+            </column>
+        </property>
+        <property name="sdStatus" type="string">
+            <column name="SD_STATUS" length="40">
+                <comment>Status for SD QC Check</comment>
+            </column>
+        </property>
+        <property name="cpData" type="string">
+            <column name="CP_DATA">
+                <comment>Data for CP QC Check</comment>
+            </column>
+        </property>
+        <property name="cpStatus" type="string">
+            <column name="CP_STATUS" length="40">
+                <comment>Status for CP QC Check</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.IdentifiedSampleAttribute" table="IDENTIFIED_SAMPLE_ATTRIBUTE" schema="DNALIMS">
+        <comment>Sample attributes for identified samples.</comment>
+        <id name="identifiedSampleAttributeId" type="big_decimal">
+            <column name="IDENTIFIED_SAMPLE_ATTRIBUTE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="identifiedSample" class="com.cardiodx.db.waban.table.IdentifiedSample" fetch="select">
+            <column name="IDENTIFIED_SAMPLE_ID" precision="22" scale="0">
+                <comment>Pending sample identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="attributeName" type="string">
+            <column name="ATTRIBUTE_NAME" length="20" not-null="true">
+                <comment>Attribute or identifier name.</comment>
+            </column>
+        </property>
+        <property name="attributeValue" type="string">
+            <column name="ATTRIBUTE_VALUE" length="40">
+                <comment>Attribute or description entry.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date Modified</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="32">
+                <comment>Modified By</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

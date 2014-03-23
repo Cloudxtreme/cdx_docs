@@ -1,0 +1,7 @@
+wajig install durep
+
+wajig install apache2
+
+dpkg-reconfigure durep -plow
+
+http://backup/durep/_backup_daily.0/Latest/0.html

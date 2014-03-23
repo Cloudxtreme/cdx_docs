@@ -1,0 +1,10 @@
+kvm: from disk image to lvm
+
+http://www.fissore.org/blog/kvm-from-image-file-to-lvm/
+
+
+??? kvm-img convert disk0.qcow2 -O raw disk0.raw
+dd if=disk0.raw of=/dev/vg01/vm1 bs=1M
+
+
+

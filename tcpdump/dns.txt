@@ -1,0 +1,17 @@
+
+wajig install dnsmasq
+
+vi /etc/dnsmasq.conf 
+listen-address=127.0.0.1
+
+/etc/init.d/dnsmasq restart
+
+more /etc/resolv.conf 
+search cardiodx.com
+nameserver 127.0.0.1
+nameserver 10.10.37.21
+
+dig google.com
+
+tcpdump -q -i eth1 "not host itsrv"
+

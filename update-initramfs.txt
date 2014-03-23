@@ -1,0 +1,13 @@
+update initramfs
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+wajig install linux-image-2.6.24-23-server 
+wajig purge linux-image-2.6.24-16-server linux-image-server linux-server linux-ubuntu-modules-2.6.24-16-server
+wajig install linux-image-server linux-server linux-ubuntu-modules-2.6.24-23-server 
+
+
+update-initramfs -k all -u -v
+update-initramfs -k 2.6.24-23-server -u -v
+

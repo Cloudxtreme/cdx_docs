@@ -1,0 +1,36 @@
+
+For more info, please read apache2_ssl_1_.txt
+
+NameVirtualHost intranet.cardiodx.com:80
+<VirtualHost intranet.cardiodx.com:80>
+  ServerName intranet.cardiodx.com
+  Redirect permanent / https://wiki.cardiodx.com/
+</VirtualHost>
+
+
+NameVirtualHost wiki.cardiodx.com:80
+<VirtualHost wiki.cardiodx.com:80>
+  ServerName wiki.cardiodx.com
+  Redirect permanent / https://wiki.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost wiki.cardiodx.com:443>
+  ServerName wiki.cardiodx.com
+  #DocumentRoot /data/apache/intranet/
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+  SSLCertificateChainFile /etc/apache2/ssl/gd_bundle.crt
+#  SSLCertificateChainFile /etc/apache2/ssl/gd_intermediate_bundle.crt
+
+  ProxyPass / http://wiki.cardiodx.com:3302/
+  ProxyPassReverse / http://wiki.cardiodx.com:3302/
+  ProxyPreserveHost On
+
+  ErrorLog "|/usr/bin/logger -p local0.err"
+  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+  CustomLog "|/usr/bin/logger -p local1.info" privacy_format
+  LogLevel warn
+</VirtualHost>
+
+

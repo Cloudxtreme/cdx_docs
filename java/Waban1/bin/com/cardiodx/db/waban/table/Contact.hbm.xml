@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Contact" table="CONTACT" schema="DNALIMS">
+        <comment>Information about a contacts external to the lab.</comment>
+        <id name="contactId" type="big_decimal">
+            <column name="CONTACT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="ORGANIZATION_ID" precision="22" scale="0">
+                <comment>The organization identifier and foreign key to the ORGANIZATION table.</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="40" not-null="true">
+                <comment>The representative's full name.</comment>
+            </column>
+        </property>
+        <property name="mname" type="string">
+            <column name="MNAME" length="2" />
+        </property>
+        <property name="lname" type="string">
+            <column name="LNAME" length="40" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" length="40">
+                <comment>The representative's job title.</comment>
+            </column>
+        </property>
+        <property name="contactType" type="string">
+            <column name="CONTACT_TYPE" length="50">
+                <comment>Type of contact record</comment>
+            </column>
+        </property>
+        <property name="address1" type="string">
+            <column name="ADDRESS1" length="40">
+                <comment>The first line of the sponsor representative's (street) address.</comment>
+            </column>
+        </property>
+        <property name="address2" type="string">
+            <column name="ADDRESS2" length="40">
+                <comment>The second line of the sponsor representative's (street) address.</comment>
+            </column>
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="30">
+                <comment>The sponsor representative's city.</comment>
+            </column>
+        </property>
+        <property name="state" type="string">
+            <column name="STATE" length="30">
+                <comment>The sponsor representative's state.</comment>
+            </column>
+        </property>
+        <property name="zipCode" type="string">
+            <column name="ZIP_CODE" length="10">
+                <comment>The sponsor representative's zip code.</comment>
+            </column>
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" length="30">
+                <comment>The sponsor representative's country.</comment>
+            </column>
+        </property>
+        <property name="email" type="string">
+            <column name="EMAIL">
+                <comment>The representative's email address.</comment>
+            </column>
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="30">
+                <comment>The representative's full phone number.</comment>
+            </column>
+        </property>
+        <property name="fax" type="string">
+            <column name="FAX" length="30">
+                <comment>The representative's full fax number.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="sampleVariableFldTbls" table="SAMPLE_VARIABLE_FLD_TBL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>FOREIGN KEY TO CONTACT TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleVariableFldTbl" />
+        </set>
+        <set name="dnaDestructionRequests" table="DNA_DESTRUCTION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Contact Identifier and Foreign Key to Contact tanle.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionRequest" />
+        </set>
+        <set name="patientVariableFlds" table="PATIENT_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Representative identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PatientVariableFld" />
+        </set>
+        <set name="roiAttributeFlds" table="ROI_ATTRIBUTE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Contact identifier and foreign key to CONTACT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiAttributeFld" />
+        </set>
+        <set name="testAttributeFlds" table="TEST_ATTRIBUTE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Contact identifier and foreign key to CONTACT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestAttributeFld" />
+        </set>
+        <set name="investigatorProtocols" table="INVESTIGATOR_PROTOCOL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Representative identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InvestigatorProtocol" />
+        </set>
+        <set name="organizationVariableFlds" table="ORGANIZATION_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>FK - Identifier to Contact table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OrganizationVariableFld" />
+        </set>
+        <set name="studyProtocols" table="STUDY_PROTOCOL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>The sponsor representative's identifier and foreign key to the SPONSOR_REPRESENTATIVE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyProtocol" />
+        </set>
+        <set name="subsidiaries" table="SUBSIDIARY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Subsidiary" />
+        </set>
+        <set name="caseVariableFldTables" table="CASE_VARIABLE_FLD_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Representative identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseVariableFldTable" />
+        </set>
+        <set name="sampleReceptions" table="SAMPLE_RECEPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Contact ID of the contact per FK to CONTACT TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleReception" />
+        </set>
+        <set name="userses" table="USERS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Foreign key to Contact table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Users" />
+        </set>
+        <set name="studyVariableFlds" table="STUDY_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Representative identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyVariableFld" />
+        </set>
+        <set name="testVariableFlds" table="TEST_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Contact identifier and foreign key to CONTACT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestVariableFld" />
+        </set>
+        <set name="accessionVariableFldTables" table="ACCESSION_VARIABLE_FLD_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0">
+                    <comment>Representative identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionVariableFldTable" />
+        </set>
+    </class>
+</hibernate-mapping>

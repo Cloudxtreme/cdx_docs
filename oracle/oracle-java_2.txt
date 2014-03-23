@@ -1,0 +1,29 @@
+http://stackoverflow.com/questions/4267545/where-does-system-out-println-output-goes-in-oracle-java-class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+public class SimpleJava {
+   public static void showMessage() {
+      System.out.println("Here we are");
+    }
+}
+
+
+/u01/app/oracle/product/10.2.0/db_1/jdk/bin/javac SimpleJava.java
+loadjava -v -resolve -force -user dnalims/hyielddna SimpleJava.class 
+
+
+SQL> create or replace procedure call_simplejava
+  2  as language java
+  3  name 'SimpleJava.showMessage()';
+  4  /
+
+
+-- to sqlplus screen
+	SQL> set serveroutput on;
+	SQL> call dbms_java.set_output(50);
+
+
+SQL> execute call_simplejava;
+Here we are
+
+

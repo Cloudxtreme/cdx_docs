@@ -1,0 +1,9 @@
+
+title           Ubuntu 8.04.2, kernel 2.6.24-24-server
+root            (hd0,0)
+kernel          /vmlinuz-2.6.24-24-server root=/dev/mapper/vg0-root ro quiet splash maxcpus=2
+initrd          /initrd.img-2.6.24-24-server
+quiet
+
+
+

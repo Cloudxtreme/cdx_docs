@@ -1,0 +1,1 @@
+http://www.mkyong.com/hibernate/hibernate-one-to-one-relationship-example/

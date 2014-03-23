@@ -1,0 +1,123 @@
+gluster dht afr mirror
+
+http://www.gluster.org/docs/index.php/Mixing_DHT_and_AFR
+
+--
+-- server
+--
+volume posix
+  type storage/posix
+  option directory /home/dht
+end-volume
+
+volume brick
+  type features/locks
+  subvolumes posix
+end-volume
+
+volume posix-mirror
+  type storage/posix
+  option directory /home/dht-mirror
+end-volume
+ 
+volume brick-mirror
+  type features/locks
+  subvolumes posix-mirror
+end-volume
+
+volume server
+  type protocol/server
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  option auth.addr.brick-mirror.allow *
+  subvolumes brick brick-mirror
+end-volume
+
+
+--
+-- client
+--
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume remote1-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick-mirror
+end-volume
+
+volume remote2-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick-mirror
+end-volume
+
+volume afr0
+  type cluster/afr
+  subvolumes remote1 remote2-mirror
+end-volume
+
+volume afr1
+  type cluster/afr
+  subvolumes remote2 remote1-mirror
+end-volume
+
+volume hash
+  type cluster/dht
+  subvolumes afr0 afr1
+end-volume
+
+
+
+touch ./file{0,1,2,3,4,5,6,7,8}
+
+-->>>on gluster1:
+ ll /home/dht
+total 0
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file3
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file4
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file7
+ll /home/dht-mirror/
+total 0
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file0
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file1
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file2
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file5
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file6
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file8
+
+
+-->>>on gluster2:
+ll /home/dht
+total 0
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file0
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file1
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file2
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file5
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file6
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file8
+ll /home/dht-mirror/
+total 0
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file3
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file4
+-rw-r--r-- 1 root root 0 2009-01-08 15:16 file7
+
+
+
+
+
+
+

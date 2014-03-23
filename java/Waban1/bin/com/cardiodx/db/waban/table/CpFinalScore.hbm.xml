@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CpFinalScore" table="CP_FINAL_SCORE" schema="DNALIMS">
+        <id name="cpFinalScoreId" type="big_decimal">
+            <column name="CP_FINAL_SCORE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="cpRun" class="com.cardiodx.db.waban.table.CpRun" fetch="select">
+            <column name="CP_RUN_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="finalScore" type="string">
+            <column name="FINAL_SCORE" length="20" not-null="true" />
+        </property>
+        <property name="dateCalculated" type="date">
+            <column name="DATE_CALCULATED" length="7" not-null="true" />
+        </property>
+        <property name="calculatedBy" type="string">
+            <column name="CALCULATED_BY" length="30" not-null="true" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

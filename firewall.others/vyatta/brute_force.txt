@@ -1,0 +1,8 @@
+
+set firewall name STOP-BRUTE rule 10 action drop
+set firewall name STOP-BRUTE rule 10 protocol tcp
+set firewall name STOP-BRUTE rule 10 destination port 22
+set firewall name STOP-BRUTE rule 10 state new enable
+set firewall name STOP-BRUTE rule 10 recent count 3
+set firewall name STOP-BRUTE rule 10 recent time 30
+

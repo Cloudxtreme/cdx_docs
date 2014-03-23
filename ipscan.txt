@@ -1,0 +1,7 @@
+scan ip on the network
+
+http://linuxpoison.blogspot.com/2008/11/fast-and-simple-ip-and-port-scanner.html
+
+
+download and install ipscan_3.0-beta3_i386.deb
+run ./ipscan

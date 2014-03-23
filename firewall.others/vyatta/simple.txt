@@ -1,0 +1,90 @@
+
+-- 
+-- simple configuration
+--
+ 
+firewall {
+     name ALLOW_ESTABLISHED {
+         rule 10 {
+             action accept
+             state {
+                 established enable
+             }
+         }
+     }
+ }
+ interfaces {
+     ethernet eth0 {
+         address 173.13.158.180/28
+         hw-id 00:15:17:be:ee:76
+     }
+     ethernet eth1 {
+         address 67.95.201.198/27
+         hw-id 00:15:17:be:ee:77
+     }
+     ethernet eth2 {
+         duplex auto
+         hw-id 00:13:72:87:03:89
+     }
+     ethernet eth3 {
+         address 10.10.37.2/21
+         hw-id 00:10:18:53:6b:f6
+     }
+     ethernet eth4 {
+         duplex auto
+         hw-id 00:22:3f:ef:c9:97
+     }
+     ethernet eth5 {
+         duplex auto
+         hw-id 00:22:3f:ef:c2:f2
+     }
+     loopback lo {
+     }
+ }
+ load-balancing {
+ }
+ protocols {
+ }
+ service {
+     nat {
+         rule 1 {
+             outbound-interface eth0
+             source {
+                 address 10.10.32.0/21
+             }
+             type masquerade
+         }
+     }
+     ssh {
+         allow-root false
+     }
+ }
+ system {
+     domain-name cardiodx.com
+     gateway-address 173.13.158.190
+     host-name vyatta
+     login {
+         user root {
+             authentication {
+                 encrypted-password $1$SsBjLiuH$rxAbb9lZWNKkFBcb5n0Zi1
+             }
+         }
+         user vyatta {
+             authentication {
+                 encrypted-password $1$Vq0CgdhK$oozrCMDSkEqnuwYJ3nC0q/
+             }
+         }
+     }
+     name-server 10.10.37.21
+     ntp-server 69.59.150.135
+     package {
+         auto-sync 1
+         repository community {
+             components main
+             distribution stable
+             url http://packages.vyatta.com/vyatta
+         }
+     }
+     time-zone US/Pacific
+ }
+

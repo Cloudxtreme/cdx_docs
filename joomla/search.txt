@@ -1,0 +1,15 @@
+
+-- taking out the 'advanced search' feature
+cd /var/www/joomla/components/com_search/views/search/tmpl 
+cp default_form.php default_form.php.sav
+vi default_form.php
+<?php defined('_JEXEC') or die('Restricted access'); ?>
+
+-- taking out the border for the search result
+cd /var/www/joomla/templates/css
+vi cardiodx.css
+fieldset
+{
+   border-width: 0;
+}
+

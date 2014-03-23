@@ -1,0 +1,275 @@
+Multi-Specialty  - 193200000X 
+Single Specialty  - 193400000X 
+Allergy & Immunology - 207K00000X 
+Anesthesiology - 207L00000X 
+Pediatric Anesthesiology - 207LP3000X 
+Clinical Pharmacology - 208U00000X 
+Colon & Rectal Surgery - 208C00000X 
+Dermatology - 207N00000X 
+Electrodiagnostic Medicine - 204R00000X 
+Emergency Medicine - 207P00000X 
+Family Medicine - 207Q00000X 
+Adolescent Medicine - 207QA0000X 
+General Practice - 208D00000X 
+Hospitalist - 208M00000X 
+Independent Medical Examiner - 202C00000X 
+Internal Medicine - 207R00000X 
+Adolescent Medicine - 207RA0000X 
+Cardiovascular Disease - 207RC0000X 
+Hematology - 207RH0000X 
+Legal Medicine - 209800000X 
+Neurological Surgery - 207T00000X 
+Nuclear Medicine - 207U00000X 
+Neuromusculoskeletal Medicine & OMM - 204D00000X 
+Neuromusculoskeletal Medicine, Sports Medicine - 204C00000X 
+Obstetrics & Gynecology - 207V00000X 
+Obstetrics  - 207VX0000X 
+Ophthalmology - 207W00000X 
+Oral & Maxillofacial Surgery - 204E00000X 
+Orthopaedic Surgery - 207X00000X 
+Otolaryngology - 207Y00000X 
+Hematology - 207ZH0000X 
+Pediatrics - 208000000X 
+Adolescent Medicine - 2080A0000X 
+Phlebology - 202K00000X 
+Physical Medicine & Rehabilitation - 208100000X 
+Plastic Surgery - 208200000X 
+Pain Medicine - 208VP0000X 
+Surgery - 208600000X 
+Thoracic Surgery (Cardiothoracic Vascular Surgery) - 208G00000X 
+Transplant Surgery - 204F00000X 
+Urology - 208800000X 
+Behavioral Analyst - 103K00000X 
+Clinical Neuropsychologist - 103G00000X 
+Counselor - 101Y00000X 
+Marriage & Family Therapist - 106H00000X 
+Poetry Therapist - 102X00000X 
+Psychoanalyst - 102L00000X 
+Psychologist - 103T00000X 
+Educational - 103TE1000X 
+Family - 103TF0000X 
+Social Worker - 104100000X 
+Chiropractor - 111N00000X 
+Advanced Practice Dental Therapist - 125K00000X 
+Dental Assistant - 126800000X 
+Dental Hygienist - 124Q00000X 
+Dental Laboratory Technician - 126900000X 
+Dental Therapist - 125J00000X 
+Dentist - 122300000X 
+Denturist - 122400000X 
+Dietary Manager - 132700000X 
+Dietetic Technician, Registered - 136A00000X 
+Dietitian, Registered - 133V00000X 
+Nutritionist - 133N00000X 
+Emergency Medical Technician, Basic - 146N00000X 
+Emergency Medical Technician, Intermediate - 146M00000X 
+Emergency Medical Technician, Paramedic - 146L00000X 
+Personal Emergency Response Attendant - 146D00000X 
+Optometrist - 152W00000X 
+Technician/Technologist - 156F00000X 
+Licensed Practical Nurse - 164W00000X 
+Licensed Psychiatric Technician - 167G00000X 
+Licensed Vocational Nurse - 164X00000X 
+Registered Nurse - 163W00000X 
+Administrator - 163WA2000X 
+General Practice - 163WG0000X 
+Hospice - 163WH1000X 
+Pain Management - 163WP0000X 
+Reproductive Endocrinology/Infertility - 163WR1000X 
+Wound Care - 163WW0000X 
+Adult Companion - 372600000X 
+Chore Provider - 372500000X 
+Day Training/Habilitation Specialist - 373H00000X 
+Doula - 374J00000X 
+Home Health Aide - 374U00000X 
+Homemaker - 376J00000X 
+Nurse's Aide - 376K00000X 
+Nursing Home Administrator - 376G00000X 
+Religious Nonmedical Nursing Personnel - 374T00000X 
+Religious Nonmedical Practitioner - 374K00000X 
+Technician - 374700000X 
+Acupuncturist - 171100000X 
+Case Manager/Care Coordinator - 171M00000X 
+Clinical Ethicist - 174V00000X 
+Community Health Worker - 172V00000X 
+Contractor - 171W00000X 
+Driver - 172A00000X 
+Funeral Director - 176P00000X 
+Genetic Counselor, MS - 170300000X 
+Health Educator - 174H00000X 
+Homeopath - 175L00000X 
+Interpreter - 171R00000X 
+Lactation Consultant, Non-RN - 174N00000X 
+Legal Medicine - 173000000X 
+Mechanotherapist - 172M00000X 
+Medical Genetics, Ph.D. Medical Genetics - 170100000X 
+Midwife - 176B00000X 
+Midwife, Lay - 175M00000X 
+Military Health Care Provider - 171000000X 
+Naprapath - 172P00000X 
+Naturopath - 175F00000X 
+Reflexologist - 173C00000X 
+Sleep Specialist, PhD - 173F00000X 
+Specialist - 174400000X 
+Veterinarian - 174M00000X 
+Pharmacist - 183500000X 
+General Practice - 1835G0000X 
+Pharmacy Technician - 183700000X 
+Advanced Practice Midwife - 367A00000X 
+Anesthesiologist Assistant - 367H00000X 
+Clinical Nurse Specialist - 364S00000X 
+Neonatal - 364SN0000X 
+Nurse Anesthetist, Certified Registered - 367500000X 
+Nurse Practitioner - 363L00000X 
+Family - 363LF0000X 
+Neonatal - 363LN0000X 
+Physician Assistant - 363A00000X 
+Assistant, Podiatric - 211D00000X 
+Podiatrist - 213E00000X 
+General Practice - 213EG0000X 
+Sports Medicine - 213ES0000X 
+Anaplastologist - 229N00000X 
+Art Therapist - 221700000X 
+Clinical Exercise Physiologist - 224Y00000X 
+Dance Therapist - 225600000X 
+Developmental Therapist - 222Q00000X 
+Kinesiotherapist - 226300000X 
+Massage Therapist - 225700000X 
+Mastectomy Fitter - 224900000X 
+Music Therapist - 225A00000X 
+Occupational Therapist - 225X00000X 
+Occupational Therapy Assistant - 224Z00000X 
+Orthotic Fitter - 225000000X 
+Orthotist - 222Z00000X 
+Pedorthist - 224L00000X 
+Physical Therapist - 225100000X 
+Physical Therapy Assistant - 225200000X 
+Prosthetist - 224P00000X 
+Pulmonary Function Technologist - 225B00000X 
+Recreation Therapist - 225800000X 
+Rehabilitation Counselor - 225C00000X 
+Rehabilitation Practitioner - 225400000X 
+Respiratory Therapist, Certified - 227800000X 
+Educational - 2278E1000X 
+Patient Transport - 2278P4000X 
+Respiratory Therapist, Registered - 227900000X 
+Educational - 2279E1000X 
+Patient Transport - 2279P4000X 
+Specialist/Technologist - 225500000X 
+Audiologist - 231H00000X 
+Audiologist-Hearing Aid Fitter - 237600000X 
+Hearing Instrument Specialist - 237700000X 
+Specialist/Technologist - 235500000X 
+Speech-Language Pathologist - 235Z00000X 
+Student in an Organized Health Care Education/Training Program - 390200000X 
+Perfusionist - 242T00000X 
+Radiologic Technologist - 247100000X 
+Radiology Practitioner Assistant - 243U00000X 
+Specialist/Technologist Cardiovascular - 246X00000X 
+Specialist/Technologist, Health Information - 246Y00000X 
+Specialist/Technologist, Other - 246Z00000X 
+Geneticist, Medical (PhD) - 246ZG1000X 
+Illustration, Medical - 246ZI1000X 
+Specialist/Technologist, Pathology - 246Q00000X 
+Blood Banking - 246QB0000X 
+Chemistry - 246QC1000X 
+Hematology - 246QH0000X 
+Immunology - 246QI0000X 
+Technician, Cardiology - 246W00000X 
+Technician, Health Information - 247000000X 
+Technician, Other - 247200000X 
+Technician, Pathology - 246R00000X 
+Local Education Agency (LEA) - 251300000X 
+Case Management - 251B00000X 
+Community/Behavioral Health - 251S00000X 
+Day Training, Developmentally Disabled Services - 251C00000X 
+Early Intervention Provider Agency - 252Y00000X 
+Foster Care Agency - 253J00000X 
+Home Health - 251E00000X 
+Home Infusion - 251F00000X 
+Hospice Care, Community Based - 251G00000X 
+In Home Supportive Care - 253Z00000X 
+Nursing Care - 251J00000X 
+Program of All-Inclusive Care for the Elderly (PACE) Provider Organization - 251T00000X 
+Public Health or Welfare - 251K00000X 
+Supports Brokerage - 251X00000X 
+Voluntary or Charitable - 251V00000X 
+Clinic/Center - 261Q00000X 
+Augmentative Communication  - 261QA3000X 
+Dental - 261QD0000X 
+Medically Fragile Infants and Children Day Care - 261QM3000X 
+Migrant Health - 261QM1000X 
+Physical Therapy - 261QP2000X 
+Student Health - 261QS1000X 
+Epilepsy Unit - 273100000X 
+Medicare Defined Swing Bed Unit - 275N00000X 
+Psychiatric Unit - 273R00000X 
+Rehabilitation Unit - 273Y00000X 
+Rehabilitation, Substance Use Disorder Unit - 276400000X 
+Christian Science Sanitorium - 287300000X 
+Chronic Disease Hospital - 281P00000X 
+Children - 281PC2000X 
+General Acute Care Hospital - 282N00000X 
+Children - 282NC2000X 
+Long Term Care Hospital - 282E00000X 
+Military Hospital - 286500000X 
+Military General Acute Care Hospital - 2865M2000X 
+Psychiatric Hospital - 283Q00000X 
+Rehabilitation Hospital - 283X00000X 
+Children - 283XC2000X 
+Religious Nonmedical Health Care Institution - 282J00000X 
+Special Hospital - 284300000X 
+Clinical Medical Laboratory - 291U00000X 
+Dental Laboratory - 292200000X 
+Military Clinical Medical Laboratory - 291900000X 
+Physiological Laboratory - 293D00000X 
+Exclusive Provider Organization - 302F00000X 
+Health Maintenance Organization - 302R00000X 
+Point of Service - 305S00000X 
+Preferred Provider Organization - 305R00000X 
+Alzheimer Center (Dementia Center) - 311500000X 
+Assisted Living Facility - 310400000X 
+Christian Science Facility - 317400000X 
+Custodial Care Facility - 311Z00000X 
+Hospice, Inpatient - 315D00000X 
+Intermediate Care Facility, Mental Illness  - 310500000X 
+Intermediate Care Facility, Mentally Retarded - 315P00000X 
+Nursing Facility/Intermediate Care Facility - 313M00000X 
+Skilled Nursing Facility - 314000000X 
+Lodging - 177F00000X 
+Meals - 174200000X 
+Community Based Residential Treatment Facility, Mental Illness - 320800000X 
+Community Based Residential Treatment Facility, Mental Retardation and/or Developmental Disabilities - 320900000X 
+Psychiatric Residential Treatment Facility - 323P00000X 
+Residential Treatment Facility, Emotionally Disturbed Children - 322D00000X 
+Residential Treatment Facility, Mental Retardation and/or Developmental Disabilities - 320600000X 
+Residential Treatment Facility, Physical Disabilities - 320700000X 
+Substance Abuse Rehabilitation Facility - 324500000X 
+Respite Care - 385H00000X 
+Blood Bank - 331L00000X 
+Department of Veterans Affairs (VA) Pharmacy - 332100000X 
+Durable Medical Equipment & Medical Supplies - 332B00000X 
+Oxygen Equipment & Supplies - 332BX2000X 
+Emergency Response System Companies - 333300000X 
+Eye Bank - 332G00000X 
+Eyewear Supplier (Equipment, not the service) - 332H00000X 
+Hearing Aid Equipment - 332S00000X 
+Home Delivered Meals - 332U00000X 
+Indian Health Service/Tribal/Urban Indian Health (I/T/U) Pharmacy - 332800000X 
+Medical Foods Supplier - 335G00000X 
+Military/U.S. Coast Guard Pharmacy - 332000000X 
+Non-Pharmacy Dispensing Site - 332900000X 
+Organ Procurement Organization - 335U00000X 
+Pharmacy - 333600000X 
+Portable X-Ray Supplier - 335V00000X 
+Prosthetic/Orthotic Supplier - 335E00000X 
+Air Carrier - 344800000X 
+Ambulance - 341600000X 
+Bus - 347B00000X 
+Military/U.S. Coast Guard Transport - 341800000X 
+Non-emergency Medical Transport (VAN) - 343900000X 
+Private Vehicle - 347C00000X 
+Secured Medical Transport (VAN) - 343800000X 
+Taxi - 344600000X 
+Train - 347D00000X 
+Transportation Broker - 347E00000X 

@@ -1,0 +1,9 @@
+asterisk queue metrics monitoring reporting
+
+http://queuemetrics.com/download.jsp
+
+
+wajig install tomcat5.5
+
+wget http://queuemetrics.com/download/QueueMetrics-1.5.1-trial.tar.gz
+tar zxvf QueueMetrics-1.5.1-trial.tar.gz 

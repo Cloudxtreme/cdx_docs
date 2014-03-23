@@ -1,0 +1,91 @@
+http://www.redhat.com/docs/manuals/csgfs/admin-guide/index.html
+http://sources.redhat.com/cluster/doc/usage.txt
+http://mirror.atrpms.net/centos/4/docs/html/rh-cs-en-4/index.html
+
+
+wajig install clvm 
+wajig install gfs
+
+depmod -a
+modprobe dm-mod
+modprobe gfs
+modprobe lock_dlm
+modprobe dlm
+
+
+vi lvm.conf
+
+ccsd
+vi cluster.con
+
+--ccs_tool addnodeids
+ccs_tool create mycluster
+ccs_tool addfence apc fence_apc ipaddr=apc.domain.net user=apc password=apc
+ccs_tool addnode gfs -n 1 -f apc port=1
+ccs_tool addnode gclient1 -n 2 -f apc port=1
+ccs_tool addnode gclient2 -n 3 -f apc port=1
+
+
+ccs_tool lsnode
+
+
+/etc/init.d/cman start
+
+cman_tool status
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/lvm/lvm.conf
+locking_library = "liblvm2clusterlock.so"
+locking_type = 2 
+library_dir = "/lib/lvm2"
+
+
+/etc/cluster/cluster.conf
+<?xml version="1.0"?>
+<cluster name="mycluster" config_version="5">
+
+<cman expected_votes="1">
+  <multicast addr="224.0.0.1"/>
+</cman>
+
+<fence_daemon post_join_delay="60">
+</fence_daemon>
+
+<clusternodes>
+  <clusternode name="gfs" nodeid="1">
+         <fence>
+                <method name="single">
+                        <device name="gnbd" ipaddr="10.10.36.13"/>
+                </method>
+        </fence>
+  </clusternode>
+
+  <clusternode name="gclient1" nodeid="2">
+         <fence>
+                <method name="single">
+                        <device name="gnbd" ipaddr="10.10.36.23"/>
+                </method>
+        </fence>
+  </clusternode>
+
+  <clusternode name="gclient2" nodeid="3">
+        <fence>
+                <method name="single">
+                        <device name="gnbd" ipaddr="10.10.36.34"/>
+                </method>
+        </fence>
+  </clusternode>
+</clusternodes>
+
+<fencedevices>
+        <fencedevice name="gnbd" agent="fence_gnbd"/>
+</fencedevices>
+
+</cluster>
+
+
+
+
+

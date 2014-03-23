@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.SampleTable" table="SAMPLE_TABLE" schema="DNALIMS">
+        <comment>Information about samples that have been accessioned into the system.</comment>
+        <id name="sampleId" type="big_decimal">
+            <column name="SAMPLE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" fetch="select">
+            <column name="CONTAINER_ID" length="20">
+                <comment>The container identifier for the container that holds the sample. A foreign key to the CONTAINER table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="accession" class="com.cardiodx.db.waban.table.Accession" fetch="select">
+            <column name="ACCESSION_ID" precision="22" scale="0">
+                <comment>Accession identifier and foreign key to the ACCESSION table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="sampleTubeId" type="string">
+            <column name="SAMPLE_TUBE_ID" length="25" unique="true">
+                <comment>The sample's tube identifier.</comment>
+            </column>
+        </property>
+        <property name="clientSampleTubeId" type="string">
+            <column name="CLIENT_SAMPLE_TUBE_ID" length="25">
+                <comment>The sponsor's sample tube identifier.</comment>
+            </column>
+        </property>
+        <property name="numberInAccSequence" type="big_decimal">
+            <column name="NUMBER_IN_ACC_SEQUENCE" precision="22" scale="0">
+                <comment>Display order in list.</comment>
+            </column>
+        </property>
+        <property name="containerRow" type="big_decimal">
+            <column name="CONTAINER_ROW" precision="22" scale="0">
+                <comment>The sample's row location in its container.</comment>
+            </column>
+        </property>
+        <property name="containerColumn" type="big_decimal">
+            <column name="CONTAINER_COLUMN" precision="22" scale="0">
+                <comment>The sample's column location in its container.</comment>
+            </column>
+        </property>
+        <property name="sampleCondition" type="string">
+            <column name="SAMPLE_CONDITION" length="20">
+                <comment>Sample condition (good, broken, etc.) as received from the sponsor.</comment>
+            </column>
+        </property>
+        <property name="sourceType" type="string">
+            <column name="SOURCE_TYPE" length="30">
+                <comment>What type of sample material is being accessioned (cells, whole blood, etc.).</comment>
+            </column>
+        </property>
+        <property name="initialVolume" type="string">
+            <column name="INITIAL_VOLUME" length="16">
+                <comment>The amount of sample received from the sponsor.</comment>
+            </column>
+        </property>
+        <property name="dateReceived" type="date">
+            <column name="DATE_RECEIVED" length="7">
+                <comment>Date the sample(s) were received in house.</comment>
+            </column>
+        </property>
+        <property name="datePurified" type="date">
+            <column name="DATE_PURIFIED" length="7">
+                <comment>Date the sample(s) were purified by the laboratory.</comment>
+            </column>
+        </property>
+        <property name="volume" type="big_decimal">
+            <column name="VOLUME" precision="22" scale="0">
+                <comment>Current sample amount.</comment>
+            </column>
+        </property>
+        <property name="concentration" type="big_decimal">
+            <column name="CONCENTRATION" precision="22" scale="0">
+                <comment>The current sample concentration.</comment>
+            </column>
+        </property>
+        <property name="yield" type="big_decimal">
+            <column name="YIELD" precision="22" scale="0">
+                <comment>The sample yield ( (conc x vol)/1000 ).</comment>
+            </column>
+        </property>
+        <property name="finalStorageTube" type="java.lang.Boolean">
+            <column name="FINAL_STORAGE_TUBE" precision="1" scale="0">
+                <comment>Flag for whether or not the sample is ready for final disposition.</comment>
+            </column>
+        </property>
+        <property name="sampleStatus" type="string">
+            <column name="SAMPLE_STATUS" length="50">
+                <comment>Status of the sample (discarded, empty, etc.).</comment>
+            </column>
+        </property>
+        <property name="sampleShipped" type="date">
+            <column name="SAMPLE_SHIPPED" length="7">
+                <comment>Date the sample was returned to the sponsor.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="pcrSetupPlaceRois" table="PCR_SETUP_PLACE_ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Sample ID Identifier and foreign key to SAMPLE_TABLE.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrSetupPlaceRoi" />
+        </set>
+        <set name="checklistReagents" table="CHECKLIST_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0">
+                    <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistReagent" />
+        </set>
+        <set name="requestSpecimens" table="REQUEST_SPECIMEN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RequestSpecimen" />
+        </set>
+        <set name="dnaSpecs" table="DNA_SPEC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaSpec" />
+        </set>
+        <set name="specimenShipmentSamples" table="SPECIMEN_SHIPMENT_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SpecimenShipmentSample" />
+        </set>
+        <set name="cpValuesForSampleId" table="CP_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpValue" />
+        </set>
+        <set name="concentrationAdjustments" table="CONCENTRATION_ADJUSTMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConcentrationAdjustment" />
+        </set>
+        <set name="shipmentSamples" table="SHIPMENT_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ShipmentSample" />
+        </set>
+        <set name="dnaDestructionSamples" table="DNA_DESTRUCTION_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>SAMPLE_ID and Foreign Key to SAMPLE table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionSample" />
+        </set>
+        <set name="checklistContents" table="CHECKLIST_CONTENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0">
+                    <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistContent" />
+        </set>
+        <set name="traceTransfers" table="TRACE_TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceTransfer" />
+        </set>
+        <set name="checklistSamples" table="CHECKLIST_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistSample" />
+        </set>
+        <set name="cpValuesForParentSampleId" table="CP_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PARENT_SAMPLE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpValue" />
+        </set>
+        <set name="transfersForIdTo" table="TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ID_TO" precision="22" scale="0" not-null="true">
+                    <comment>The sample tube identifier for the final tube (the tube the sample was transferred to). Foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Transfer" />
+        </set>
+        <set name="accessionProcedures" table="ACCESSION_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0">
+                    <comment>The most recent sample id (an in house id field for the sample, which may change as the sample is transferred).</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionProcedure" />
+        </set>
+        <set name="mtpSamples" table="MTP_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MtpSample" />
+        </set>
+        <set name="sampleVariableFldTbls" table="SAMPLE_VARIABLE_FLD_TBL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0">
+                    <comment>FOREIGN KEY TO SAMPLE TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleVariableFldTbl" />
+        </set>
+        <set name="workflowProcChecklists" table="WORKFLOW_PROC_CHECKLIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to Sample_Table table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorkflowProcChecklist" />
+        </set>
+        <set name="transfersForIdFrom" table="TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ID_FROM" precision="22" scale="0" not-null="true">
+                    <comment>The sample tube identifier for the initial tube (the tube the sample was transferred from). Foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Transfer" />
+        </set>
+        <set name="assayResults" table="ASSAY_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0">
+                    <comment>Used within the lab to track samples. A foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResult" />
+        </set>
+        <set name="pendingSampleTables" table="PENDING_SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0">
+                    <comment>Sample identifier used by the lab and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PendingSampleTable" />
+        </set>
+        <set name="worklistSamples" table="WORKLIST_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Sample identifier used by the lab. Part of the primary key and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorklistSample" />
+        </set>
+        <set name="cpRuns" table="CP_RUN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRun" />
+        </set>
+        <set name="dnaFluors" table="DNA_FLUOR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaFluor" />
+        </set>
+    </class>
+</hibernate-mapping>

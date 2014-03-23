@@ -1,0 +1,164 @@
+--
+-- host 1 (w/ load balancing)
+--
+
+# more hostname.em0 
+inet 173.13.158.180 255.255.255.240
+inet alias 173.13.158.182 255.255.255.240
+!route add -mpath default 173.13.158.190
+
+# more hostname.em1 
+inet 67.95.201.198 255.255.255.224
+!route add -mpath default 67.95.201.193
+
+
+# more hostname.re0 
+inet 10.10.43.1 255.255.255.0
+
+# more hostname.bge1 
+inet 10.10.37.2 255.255.248.0
+
+# more isakmp.conf   
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+# DPD-check-interval=30
+
+# more ipsec.conf    
+#ike esp from 10.10.32.0/21 to 192.168.10.0/24 peer 67.95.201.201 psk cdxTest123
+# Test
+ike esp from 10.10.32.0/21 to 192.168.10.0/24 peer 67.95.201.201 \
+ main auth hmac-sha1 enc 3des group modp1024 \
+ quick auth hmac-sha1 enc 3des group modp1024 \
+ psk cdxTest123
+
+# eRT-2
+ike esp from 10.10.32.0/21 to 12.3.153.0/24 peer 12.149.54.90 \
+ main auth hmac-sha1 enc 3des group modp1024 \
+ quick auth hmac-sha1 enc 3des group modp1024 \
+ psk CDX2eResearch
+
+# clinix
+ike esp from 10.10.32.0/21 to 66.18.106.160/27 peer 66.18.99.68 \
+  main auth hmac-md5 enc 3des group modp1024 \
+  quick auth hmac-md5 enc 3des group none \
+  psk cadx6795201194
+
+
+# more pf.conf   
+internal = "bge1"
+comcast = "em0"
+xo = "em1"
+dmz1 = "re0"
+local = "lo0"
+
+cc_gw = "173.13.158.190"
+xo_gw = "67.95.201.193"
+cdx_net = "10.10.0.0/16"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+nat on $comcast -> ($comcast)
+
+pass in on $internal
+#pass in on $xo proto icmp to any 
+pass quick on $xo from 67.95.201.201    # Test
+pass quick on $xo from 12.149.54.90     # eRT-2
+pass quick on $xo from 66.18.99.68      # clinix
+
+#set skip on enc0
+pass in quick on $xo proto udp from 67.95.201.194 to 67.95.201.201 port isakmp
+pass in quick on $xo proto esp from 67.95.201.194 to 67.95.201.201
+
+pass in quick on enc0 proto icmp
+pass in quick on enc0 proto ipencap all
+pass in quick on enc0 proto tcp from 192.168.10.2/32 to 10.10.32.0/21 port 22
+
+
+load_balance_route  = "route-to { (" $comcast $cc_gw "), (" $xo $xo_gw ") } round-robin"
+
+pass in on $local $load_balance_route proto tcp to ! $cdx_net flags S/SA modulate state
+pass in on $local $load_balance_route proto { udp, icmp } to ! $cdx_net keep state
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- host 2
+--
+
+# more hostname.bge0 
+inet 67.95.201.201 255.255.255.224
+!route add -net 10.10.32.0/21 67.95.201.193
+
+# more hostname.em0  
+inet 192.168.10.1 255.255.255.0
+
+# more mygate 
+67.95.201.193
+
+
+# more isakmpd.conf
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+
+
+# more ipsec.conf
+ike esp from 192.168.10.0/24 to 10.10.32.0/21 peer 67.95.201.198 \
+  main auth hmac-sha1 enc 3des group modp1024 \
+  quick auth hmac-sha1 enc 3des group modp1024 \
+  psk cdxTest123
+
+
+# more pf.conf
+
+xo = "bge0"
+internal = "em0"
+local = "lo0"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+
+pass in on $xo proto tcp from 67.95.201.192/27 to any port 22
+
+pass in on $internal
+
+pass in quick on $xo proto udp from 67.95.201.194 to 67.95.201.201 port isakmp
+pass in quick on $xo proto esp from 67.95.201.194 to 67.95.201.201
+
+pass in quick on enc0 proto icmp 
+pass in quick on enc0 proto ipencap all
+pass in quick on enc0 proto tcp from 10.10.32.0/21 to 192.168.10.2/32 port 3389
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#(host-1) netstat -nr | grep 192
+Encap:
+Source             Port  Destination        Port  Proto SA(Address/Proto/Type/Direction)
+192.168.10/24      0     10.10.32/21        0     0     67.95.201.201/esp/use/in
+10.10.32/21        0     192.168.10/24      0     0     67.95.201.201/esp/require/out
+
+#(host-2) netstat -nr | grep 10.10
+Encap:
+Source             Port  Destination        Port  Proto SA(Address/Proto/Type/Direction)
+10.10.32/21        0     192.168.10/24      0     0     67.95.201.198/esp/use/in
+192.168.10/24      0     10.10.32/21        0     0     67.95.201.198/esp/require/out
+
+
+# ping from network-1 to network-2
+# tcpdump -nq -i enc0
+tcpdump: listening on enc0, link-type ENC
+19:09:11.436217 (authentic,confidential): SPI 0x61488aee: 10.10.35.17 > 192.168.10.2: icmp: 8 0 (DF) (encap)
+19:09:11.437982 (authentic,confidential): SPI 0x01bfcd8e: 192.168.10.2 > 10.10.35.17: icmp: 0 0 (DF) (encap)
+
+# tcpdump -nq -i em1
+tcpdump: listening on em1, link-type EN10MB
+19:10:37.443391 67.95.201.198.4500 > 67.95.201.201.61334: udp 116 (DF)
+19:10:37.445172 67.95.201.201.61334 > 67.95.201.198.4500: udp 116 (DF)
+
+
+

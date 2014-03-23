@@ -1,0 +1,45 @@
+--
+-- before
+--
+select * from cp_run where cp_run_id = 28502;
+
+select cp_run_id from cp_final_score where cp_run_id = 28502;
+select cp_run_id from cdx_cp_run_qc where cp_run_id = 28502;
+select cp_run_id from cp_run_report where cp_run_id = 28502;
+select cp_run_id from cdx_cp_run_batch where cp_run_id = 28502;
+select cp_run_id from cp_value where cp_run_id = 28502;
+select cp_run_id from cp_normalized_value where cp_run_id = 28502;
+
+exec ChangeReasonPackage.SetChangeReason('v_3_0_6 - Change CP_RUN_IDs');
+
+create or replace trigger cascade_update_cp_run
+after update of cp_run_id on cp_run
+for each row
+begin
+   update cp_final_score set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cdx_cp_run_qc set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cp_run_report set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cdx_cp_run_batch set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cp_value set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cp_normalized_value set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+end;
+/
+
+update cp_run set cp_run_id = -32766 where cp_run_id = 28502;
+
+drop trigger cascade_update_cp_run;
+
+exec ChangeReasonPackage.ResetChangeReason;
+
+--
+-- after
+--
+select * from cp_run where cp_run_id = -32766;
+
+select cp_run_id from cp_final_score where cp_run_id = -32766;
+select cp_run_id from cdx_cp_run_qc where cp_run_id = -32766;
+select cp_run_id from cp_run_report where cp_run_id = -32766;
+select cp_run_id from cdx_cp_run_batch where cp_run_id = -32766;
+select cp_run_id from cp_value where cp_run_id = -32766;
+select cp_run_id from cp_normalized_value where cp_run_id = -32766;
+

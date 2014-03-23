@@ -1,0 +1,63 @@
+ubuntu network monitoring
+
+http://www.ubuntugeek.com/bandwidth-monitoring-tools-for-ubuntu-users.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- overview
+--
+wajig install bmon
+bmon (in Mega Bytes)
+  hit g and d
+
+
+use up/down currsor to see diff interffaces
+
+
+wajig install cbm
+cbm
+
+
+-- 
+-- what machine?
+--
+wajig install iftop
+
+(in Mega Bits)
+iftop -b -P -i bond0 
+
+
+--
+-- (for disk IO) what process?
+--
+pidstat -d 5
+
+
+--
+-- file downloading status
+--
+wajig install speedometer
+
+speedometer -rx eth0 -tx eth0
+speedometer -rx eth0 -c -tx eth0
+
+wget http://mirrors.xmission.com/ubuntu-cd/9.10/ubuntu-9.10-alternate-amd64.iso
+speedometer -f ubuntu-9.10-alternate-amd64.iso
+
+--
+-- packets
+--
+wajig install pktstat
+
+pktstat -t
+pktstat -t -T 
+
+pktstat -n -t
+pktstat -n -t -T 
+
+pktstat -t -T -n -i eth1 "not (src net 10.10.37.0/24 or dst net 10.10.37.0/24)"
+
+-- See also iperf.txt
+
+
+
+

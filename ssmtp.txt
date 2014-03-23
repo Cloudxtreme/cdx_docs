@@ -1,0 +1,61 @@
+ssmtp
+
+wajig install ssmtp mailx -y
+
+# cd /etc/ssmtp
+
+# more ssmtp.conf 
+root=
+mailhub=mail.cardiodx.com
+rewriteDomain=cardiodx.com
+hostname=devlims
+FromLineOverride=YES
+
+mailx -v -s 'test' cchou@cardiodx.com < /etc/hosts
+
+mailx -s 'test' cchou@cardiodx.com < /etc/hosts
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+problem on trac
+
+root@trac:~# wajig install ssmtp
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be REMOVED:
+  exim4 exim4-base exim4-config exim4-daemon-light
+The following NEW packages will be installed:
+  ssmtp
+0 upgraded, 1 newly installed, 4 to remove and 5 not upgraded.
+Need to get 50.8kB of archives.
+After this operation, 3736kB disk space will be freed.
+Do you want to continue [Y/n]? 
+Get:1 http://mirror.anl.gov hardy-updates/universe ssmtp 2.61-13ubuntu1.1 [50.8kB]
+Fetched 50.8kB in 0s (2538kB/s)
+Preconfiguring packages ...
+(Reading database ... 22517 files and directories currently installed.)
+Removing exim4 ...
+dpkg: exim4-config: dependency problems, but removing anyway as you request:
+ exim4-base depends on exim4-config (>= 4.30) | exim4-config-2; however:
+  Package exim4-config is to be removed.
+  Package exim4-config-2 is not installed.
+  Package exim4-config which provides exim4-config-2 is to be removed.
+ exim4-base depends on exim4-config (>= 4.30) | exim4-config-2; however:
+  Package exim4-config is to be removed.
+  Package exim4-config-2 is not installed.
+  Package exim4-config which provides exim4-config-2 is to be removed.
+Removing exim4-config ...
+dpkg: exim4-daemon-light: dependency problems, but removing anyway as you request:
+ mailx depends on exim4 | mail-transport-agent; however:
+  Package exim4 is not installed.
+  Package mail-transport-agent is not installed.
+  Package exim4-daemon-light which provides mail-transport-agent is to be removed.
+Removing exim4-daemon-light ...
+ * Stopping MTA                                                                                                                                                [ OK ] 
+Removing exim4-base ...
+Selecting previously deselected package ssmtp.
+(Reading database ... 22380 files and directories currently installed.)
+Unpacking ssmtp (from .../ssmtp_2.61-13ubuntu1.1_amd64.deb) ...
+Setting up ssmtp (2.61-13ubuntu1.1) ...
+

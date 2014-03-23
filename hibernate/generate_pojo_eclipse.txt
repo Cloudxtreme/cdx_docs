@@ -1,0 +1,47 @@
+http://www.wikihow.com/Generate-Hibernate-Pojo-Classes-from-DB-Tables
+
+Use the following method to generate db objects:
+  ~/hdrive/workspace/hibernate_examples/example1/ 
+  cd bin 
+	java com.vaannila.course.Main
+
+
+cchou@cchoudesktop:~/java/packages/myHSQLdb$ java -cp ../hsqldb-2.2.5/lib/hsqldb.jar org.hsqldb.Server
+
+Start eclipse
+
+Create a new 'Java' project
+  righ click the project
+    --> Build Path --> Configure Build Path
+
+
+File -> New -> Other -> Hibernate -> Hibernate Configuration File
+Session factory name: Test
+Database dialect: HSQL
+Driver class: org.hsqldb.jdbcDriver
+Connection URL: jdbc:hsqldb:hsql://localhost/
+Username: sa
+
+File -> New -> Other -> Hibernate -> Hibernate Console Configuration
+Project: Test1
+Database Connection: [Hibernate configured connection]
+Property file: /Test1/hibernate.properties
+Configuration file: /Test1/src/hibernate.cfg.xml
+
+File -> New -> Other -> Hibernate -> Hibernate Reverse Engineering 
+  Console configuration :Test1
+  Click Refresh
+
+
+Click ihibernate.reveng.xml
+  --> click 'Hibernate' button (green arrow w/ a green circle)
+  --> Click Hibernate Code Generation Configuration
+  --> Console configuration: Test1
+      Check: REverse engineer from JDBC Connection
+			  Package: com.vaannila.course
+        reveng.xml: /Test1/src/hibernate.reveng.xml
+      --> Click Apply
+  --> Click Run
+
+  
+

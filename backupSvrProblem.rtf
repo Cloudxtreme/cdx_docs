@@ -1,0 +1,46 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww16820\viewh13900\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+\
+backup server problem (see how much I can remember)\
+it was mirrored w/ 2 500 gb drives and 1 drive went bad\
+now it only has 1 drive\
+\
+insert 2 new 750 gb drives\
+need to add a 3rd drive\
+try to do 3 way mirror and remove the 1 drive\
+mdamd -G -n 3 /dev/md0 should change the drive number to 3\
+mdadm /dev/md0 /dev/sdb1 /dev/sdc1 should add 2 more drives to md0\
+\
+remove the 1st drive, and reboot\
+somehow the md output from /proc/mdstat is out of sequence\
+\
+can't remove any drive since they may not be the last one ---- you can only remove the last drive\
+\
+failed the drive and add it back\
+\
+mdadm /dev/md0 -f /dev/sdb1 -r /dev/sdb1\
+\
+reboot\
+\
+md can't bee seen by initrd since it doen't know much about the md\
+\
+need to recreate initrd \
+mkinitrd /boot/image-name version-number will create a new one\
+\
+if it's lilo, you'll always need to run lilo from the command prompt\
+\
+\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+# lilo on pdc\
+\
+cd /mnt/backups/images/server/\
+mount -o bind /dev /mnt/backups/images/server/i386/dev\
+mount -t proc /proc /mnt/backups/images/server/i386/proc \
+\
+\
+lilo -r /root foo}

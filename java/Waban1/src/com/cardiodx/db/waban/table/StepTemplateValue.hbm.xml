@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StepTemplateValue" table="STEP_TEMPLATE_VALUE" schema="DNALIMS">
+        <comment>Information about values for a list type of step template</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.StepTemplateValueId">
+            <key-property name="stepTemplateId" type="big_decimal">
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numberInSequence" type="big_decimal">
+                <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" update="false" insert="false" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>The procedure step identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="value" type="string">
+            <column name="VALUE" length="256" not-null="true">
+                <comment>The description of this step's function.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

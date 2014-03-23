@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CdxCpRunBatch" table="CDX_CP_RUN_BATCH" schema="DNALIMS">
+        <id name="cdxCpRunBatchId" type="big_decimal">
+            <column name="CDX_CP_RUN_BATCH_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="cpRun" class="com.cardiodx.db.waban.table.CpRun" fetch="select">
+            <column name="CP_RUN_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign Key to the CP Run table</comment>
+            </column>
+        </many-to-one>
+        <property name="batch" type="string">
+            <column name="BATCH" length="40" not-null="true">
+                <comment>Name of batch</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

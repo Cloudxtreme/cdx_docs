@@ -1,0 +1,10 @@
+
+
+select procedure_name, c.checklist_name, to_char(c.date_created, 'MM/DD/YYYY HH24:MI:SS') date_created
+from checklist c, procedure_template p
+where c.procedure_template_id = p.procedure_template_id
+and to_char(c.date_created,'MM/DD/YYYY') = '05/06/2011'
+order by date_created;
+
+
+

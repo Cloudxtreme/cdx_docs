@@ -1,0 +1,7 @@
+
+smbldap-groupmod -m pdewitt,lschoch paas
+
+  716  service nscd restart
+  717  service nslcd restart
+  718  service apache2 restart
+

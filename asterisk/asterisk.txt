@@ -1,0 +1,89 @@
+
+program installed on the test asterisk server (2500 Faber Drive):
+
+	wajig packages:
+		build-essential
+		(not needed?) cmucl-source 
+		libncurses5-dev (for termcap)
+		libssl-dev
+		linux-headers-2.6.15-28-server (zaptel)
+		libxml2, libxml2-dev (spandsp) 
+		libtiff4-dev
+                mpg123 (musicOnHold)
+                libnewt-dev (zttool)
+
+	zaptel-1.2.16 (zaptel-1.2.14-r1t1.tgz)
+		(need to use make install since checkinstall will try to overwrite a kernel file)
+		Ger R1T1 driver from Rhino
+		ftp://ftp.rhinoequipment.com/R1T1/Drivers/latest/r1t1.c
+		change Makefile	
+		MODULES:=zaptel r1t1 tor2 torisa
+
+		make
+                make zttool
+		make install
+		make install-udev
+		make config
+
+		(?) modprobe ztdummy
+		modprobe zaptel
+		(?) modprobe r1t1
+
+
+
+	libpri-1.2.4.tar.gz  (http://ftp.digium.com/pub/libpri/)
+		make
+		make install
+
+	spandsp-0.0.2pre26.tar.gz  (http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.2pre26/)
+	spandsp_patches  (copy 3 files to asterisk - http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.2pre26/asterisk-1.2.x/)  
+		app_rxfax.c, app_txfax.c, Makefile.patch  ==> asterisk/apps 
+		patch <Makefile.patch
+
+  		575  ./configure --prefix=/usr
+  		576  make clean
+  		577  make 
+  		578  make install
+
+		
+	asterisk-1.2.15.tar.gz   
+		make
+		make install
+		make samples
+	
+	asterfax
+
+	LDAPget
+
+
+fax dir: /var/spool/asterisk/fax
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+dabber
+libspandsp0
+checkinstall spandsp
+wajig force asterisk-app-fax
+checkinstall
+dpkg
+wajig source
+fakeroot
+~~~~~~~~~~~~~~~~~~~~~
+
+libzaptel 
+copy r1t1.c to here and vi the Makefile
+
+libpri
+(use checkinstall)
+
+
+
+Apr 12 21:19:20 WARNING[4447]: chan_zap.c:1072 zt_open: Unable to specify channel 1: No such device or address
+
+root@asdfgf:/etc# ztcfg -vvv
+
+
+
+

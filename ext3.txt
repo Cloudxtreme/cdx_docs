@@ -1,0 +1,39 @@
+resize ext3 file system lvm
+
+[root@ora01 ~]# lvscan
+  ACTIVE            '/dev/VolGroup00/root' [4.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/swap' [1.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/oracle' [3.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/test' [20.00 MB] inherit
+
+
+[root@ora01 ~]# pvscan
+  PV /dev/hda2   VG VolGroup00   lvm2 [9.89 GB / 1.88 GB free]
+  Total: 1 [9.89 GB] / in use: 1 [9.89 GB] / in no VG: 0 [0   ]
+
+
+[root@ora01 ~]# lvextend -L+1G /dev/VolGroup00/root
+  Extending logical volume root to 5.00 GB
+  Logical volume root successfully resized
+
+
+[root@ora01 ~]# lvscan
+  ACTIVE            '/dev/VolGroup00/root' [5.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/swap' [1.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/oracle' [3.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/test' [20.00 MB] inherit
+
+
+[root@ora01 ~]# resize2fs /dev/VolGroup00/root
+resize2fs 1.39 (29-May-2006)
+Filesystem at /dev/VolGroup00/root is mounted on /; on-line resizing required
+Performing an on-line resize of /dev/VolGroup00/root to 1310720 (4k) blocks.
+The filesystem on /dev/VolGroup00/root is now 1310720 blocks long.
+
+[root@ora01 ~]# df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/VolGroup00-root
+                       5201536   3826088   1113320  78% /
+tmpfs                   501208         0    501208   0% /dev/shm
+
+

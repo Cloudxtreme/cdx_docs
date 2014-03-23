@@ -1,0 +1,35 @@
+
+server:
+ apt-get install memcached
+
+client: 
+ libmemcached
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://www.linuxjournal.com/article/7451?page=0,1
+
+http://blog.gridcentriclabs.com/2010/07/how-to-build-10-core-memcached-cluster.html
+
+
+memcached + apache:
+  http://www.mabishu.com/blog/2009/12/08/using-memcache-server-as-apache-content-cach/
+
+ruby&rails:
+  http://nubyonrails.com/articles/memcached-basics-for-rails
+  http://guides.rubyonrails.org/caching_with_rails.html
+
+  gem install memcache-client (oracle/IQ_portal.txt)
+
+Prog:
+  http://code.google.com/p/memcached/wiki/NewProgramming
+
+# perl
+my $memclient = Cache::Memcached->new({ servers => [ '10.0.0.10:11211', '10.0.0.11:11211' ]});
+
+# pseudocode
+memcli = new Memcache
+memcli:add_server('10.0.0.10:11211')
+
+
+

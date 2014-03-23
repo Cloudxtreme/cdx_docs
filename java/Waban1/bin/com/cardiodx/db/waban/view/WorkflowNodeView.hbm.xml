@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.WorkflowNodeView" table="WORKFLOW_NODE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.WorkflowNodeViewId">
+            <key-property name="workflowItemId" type="big_decimal">
+                <column name="WORKFLOW_ITEM_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="workflowNodeId" type="big_decimal">
+                <column name="WORKFLOW_NODE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="workflowId" type="big_decimal">
+                <column name="WORKFLOW_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nodeName" type="string">
+                <column name="NODE_NAME" length="50" />
+            </key-property>
+            <key-property name="nodeType" type="string">
+                <column name="NODE_TYPE" length="4000" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="50" />
+            </key-property>
+            <key-property name="traverseCount" type="big_decimal">
+                <column name="TRAVERSE_COUNT" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="assignedTo" type="string">
+                <column name="ASSIGNED_TO" length="30" />
+            </key-property>
+            <key-property name="procedureName" type="string">
+                <column name="PROCEDURE_NAME" length="120" />
+            </key-property>
+            <key-property name="sopNumber" type="string">
+                <column name="SOP_NUMBER" length="20" />
+            </key-property>
+            <key-property name="sopVersion" type="string">
+                <column name="SOP_VERSION" length="10" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

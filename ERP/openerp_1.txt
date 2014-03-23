@@ -1,0 +1,36 @@
+
+(Not used!)
+
+ubuntu hardy openerp
+
+**** manual install 
+
+--
+--postgresql
+--
+wajig install postgresql
+
+
+
+su - postgres
+
+$ createuser --createdb --username postgres --no-createrole --pwprompt openerp
+Enter password for new role: (openerp)
+Enter it again: (openerp)
+Shall the new role be a superuser? (y/n) n
+
+
+wajig install python python-psycopg2 python-reportlab \
+     python-egenix-mxdatetime python-tz python-pychart \
+     python-pydot python-lxml python-vobject
+
+    4  wget http://www.openerp.com/download/stable/source/openerp-server-5.0.14.tar.gz
+    6  tar zxvf openerp-server-5.0.14.tar.gz 
+
+  182  cd openerp-server-5.0.14/
+  185  python setup.py install
+
+openerp-server 
+
+
+

@@ -1,0 +1,90 @@
+apache ssl proxy to rails (lims)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Install apache2:
+wajig install apache2
+  apache2 apache2-mpm-worker apache2-utils apache2.2-common
+
+cd /etc/apache2
+mkdir ssl
+cd ssl
+
+copy certificates, keys, etc.
+  - wildcard.cardiodx.com.crt
+  - wildcard.cardiodx.com.key
+  - gd_intermediate_bundle.crt 
+  from pdc:/data/samba/groups/it/Private/ssl/wildcard to ssl dir
+
+chown www-data *
+chmod 660 *
+
+~~~~~~~~~~~~~~~~~~~~~
+--
+-- configure proxy
+--
+
+vi limited_launch.site
+NameVirtualHost clia_b_cchou.cardiodx.com:80
+<VirtualHost clia_b_cchou.cardiodx.com:80>
+  ServerName clia_b_cchou.cardiodx.com
+  Redirect permanent / https://clia_b_cchou.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost clia_b_cchou.cardiodx.com:443>
+  ServerName clia_b_cchou.cardiodx.com
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+  SSLCertificateChainFile /etc/apache2/ssl/gd_intermediate_bundle.crt
+
+  ProxyPass / http://clia_b_cchou.cardiodx.com:4000/
+  ProxyPassReverse / http://clia_b_cchou.cardiodx.com:4000/
+  ProxyPreserveHost On
+  RequestHeader set X_FORWARDED_PROTO 'https'
+
+#  ErrorLog "|/usr/bin/logger -p local0.err"
+#  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+#  CustomLog "|/usr/bin/logger -p local1.info" privacy_format 
+#  LogLevel warn
+</VirtualHost>
+
+--
+-- allow proxy on this apache server
+--
+cd mods-available
+vi proxy.conf
+  #Deny from all
+  Allow from .cardiodx.com
+
+~~~~~~~~~~~~~~~~~~~~~
+a2enmod ssl
+a2enmod rewrite
+a2enmod proxy_http
+  --a2enmod proxy
+a2dissite default
+a2enmod headers
+a2ensite limited_launch.site
+
+vi ports.conf
+Listen 80
+Listen 443
+-- restart apache
+/etc/init.d/apache2 force-reload
+
+
+--
+-- test
+--
+https://clia_b_cchou.cardiodx.com
+
+
+for https: read apache2_ssl_1.txt
+
+cd OpenClinica-3.1.1-Community/install-docs/linux
+cp tomcat /etc/init.d
+
+chkconfig --add tomcat
+
+
+
+
+

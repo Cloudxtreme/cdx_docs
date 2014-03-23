@@ -1,0 +1,43 @@
+mount kvm image
+
+http://blog.dustinkirkland.com/2008/10/mounting-kvm-disk-image.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install kpartx
+
+
+  790  losetup /dev/loop0 /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.hardy32-lun-0
+  791  kpartx -av /dev/loop0
+
+  794  mkdir hardy32
+  795  cd hardy32/
+  817  mkdir newroot
+
+  818  mount /dev/mapper/loop0p2 newroot/
+  819  cd newroot/
+  821  mount /dev/mapper/loop0p1 boot/
+
+  824  tar czvf ../hardy32.tar.gz *
+
+  832  umount /root/hardy32/newroot/boot
+  833  umount /root/hardy32/newroot
+
+  834  kpartx -dv /dev/loop0
+  835  losetup -d /dev/loop0
+
+
+-- recover minitab:
+  554  losetup /dev/loop0 /dev/vg1/minitab
+  556  kpartx -av /dev/loop0 
+  559  mkdir minitab
+  563  mount -t ntfs-3g /dev/mapper/loop0p1 minitab/ -o force
+
+  564  cd minitab/
+  567  cd Program\ Files/
+  572  cd Documents\ and\ Settings/
+  589  tar czvf ~/jim.tar.gz jim/
+
+  596  umount minitab/
+  597  kpartx -dv /dev/loop0
+  598  losetup -d /dev/loop0
+

@@ -1,0 +1,90 @@
+
+wajig install virtualbox
+
+wajig install virtualbox-ose
+wajig install virtualbox-ose-modules-2.6.24-16-generic
+
+etc/init.d# ./vboxdrv start
+
+vi /etc/group
+add user to vboxgroup
+
+
+http://ubuntuforums.org/showthread.php?t=346185
+
+wajig install uml-utilities
+wajig install bridge-utils 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  IP of gutsydesktop: 10.10.36.42
+
+  511  tunctl -t tap0 -u cchou
+  513  chmod 666 /dev/net/tun 
+  514  brctl addbr br0
+  517  /sbin/ifconfig eth0 0.0.0.0 promisc
+  518  /usr/sbin/brctl addif br0 eth0
+  519  /sbin/dhclient br0
+  521  /usr/sbin/brctl addif br0 tap0
+  522  ifconfig tap0 10.10.37.123 up
+  523  bash -c 'echo 1 > /proc/sys/net/ipv4/conf/tap0/proxy_arp'
+  525  route add -host 10.10.36.42 dev tap0
+  526  arp -Ds 10.10.36.42 eth0 pub
+
+ifconfig tap0 down
+brctl show
+brctl delif br0 tap0
+
+On VirtualBox:
+Network: Adapter0, interface, tap0
+
+***For tap1:
+sudo tunctl -t tap1 -u cchou
+brctl addif br0 tap1
+sudo brctl addif br0 tap1
+brctl show
+sudo ifconfig tap1 up
+ifconfig
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+VBoxManage list vms
+VBoxManage list runningvms
+VBoxManage startvm 8d8d7e6b-17c5-413e-d6b4-5853c48b3e6bd
+VBoxManage showvdiinfo easypdf.vdi
+
+# clone a virtualbox
+vboxmanage clonevdi winxp.vdi easypdf.vdi
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://help.ubuntu.com/community/VirtualBox#Create A Bridge
+
+cd /etc/udev/rules.d/
+vi 20-names.rules 
+KERNEL=="tun",                          NAME="net/%k",  GROUP="vboxusers",     MODE="0660"
+
+/etc/init.d/udev restart
+(restart change the group to uml-net????)
+
+ll /dev/net/tun
+
+# vi /etc/networking/interfaces
+iface lo inet loopback
+
+iface eth0 inet dhcp
+
+auto tap0
+iface tap0 inet manual
+tunctl_user cchou
+uml_proxy_arp ccdesktop
+uml_proxy_ether eth0
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0 tap0
+	bridge_maxwait 0
+
+
+For testing....
+# ifconfig tap0 10.10.37.123 up
+
+

@@ -1,0 +1,24 @@
+
+
+set service nat rule 9
+set service nat rule 9 type destination
+set service nat rule 9 protocol tcp
+set service nat rule 9 destination address 173.13.158.180
+set service nat rule 9 destination port 80
+set service nat rule 9 inside-address address 10.10.36.190
+set service nat rule 9 inbound-interface eth0
+
+
+set firewall name from_internet rule 9
+set firewall name from_internet rule 9 protocol tcp
+set firewall name from_internet rule 9 action accept
+set firewall name from_internet rule 9 log disable
+set firewall name from_internet rule 9 source address 0.0.0.0/0
+set firewall name from_internet rule 9 destination address 10.10.36.190
+set firewall name from_internet rule 9 destination port 80
+
+
+set firewall name from_internet rule 9 action reject
+
+
+

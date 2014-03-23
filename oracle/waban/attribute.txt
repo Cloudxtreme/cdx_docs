@@ -1,0 +1,67 @@
+
+col value for a30
+select svf.study_protocol_id, var.variable_name, limspackage.study_att_value(svf.study_variable_fld_id) value
+from study_variable_fld svf, protocol_defined_variable pdv, variable var 
+where svf.protocol_defined_variable_id = pdv.protocol_defined_variable_id 
+and pdv.variable_id = var.variable_id 
+and var.variable_name in ('Min Sample Volume', 'Max Sample Volume')
+and svf.study_protocol_id in (2, 53, 117);
+
+select var.variable_name, limspackage.study_att_value(svf.study_variable_fld_id)
+from study_variable_fld svf, protocol_defined_variable pdv, variable var
+where svf.protocol_defined_variable_id = pdv.protocol_defined_variable_id
+and pdv.variable_id = var.variable_id
+and var.variable_name like 'M%'
+and svf.study_protocol_id = 2;
+
+
+select variable_name 
+from variable
+where variable_name like 'CDX%';
+
+SELECT attribute_name, attribute_value
+FROM discrete_attribute_table
+WHERE attribute_name like 'CDX%';
+
+SELECT attribute_name, attribute_value
+FROM discrete_attribute_table
+WHERE attribute_name like 'CDX%_SCE';
+
+
+SELECT attribute_name, attribute_value
+FROM discrete_attribute_table
+WHERE attribute_name like '%CONTROL%';
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+select distinct accession_id, variable_label, avf.value
+from protocol_defined_variable pdv, accession_variable_fld_table avf
+where pdv.protocol_defined_variable_id = avf.protocol_defined_variable_id
+and attribute_level_id = 'A'
+and (upper(variable_label) like '%PHONE%' or upper(variable_label) like '%FAX%')
+order by accession_id desc;
+
+select * from accession_variable_fld_table where accession_id = 23351;
+
+select LIMS_ATTR_UTIL.GET_ACCESSION_ATTR(23351, 'Patient Phone') from dual;
+
+select variable_label, avf.value
+from protocol_defined_variable pdv, accession_variable_fld_table avf
+where pdv.protocol_defined_variable_id = avf.protocol_defined_variable_id
+and attribute_level_id = 'A'
+and (upper(variable_label) like '%PHONE%' or upper(variable_label) like '%FAX%')
+and avf.accession_id = 23351;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+col value for a30;
+select sp.study_title, svf.study_protocol_id, variable_label, value
+from study_protocol sp, protocol_defined_variable pdv, study_variable_fld svf
+where sp.study_protocol_id = svf.study_protocol_id
+and pdv.protocol_defined_variable_id = svf.protocol_defined_variable_id
+and variable_label like 'Accession Prefix';
+
+
+
+
+
+

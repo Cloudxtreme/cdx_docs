@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StepTemplateParameter" table="STEP_TEMPLATE_PARAMETER" schema="DNALIMS">
+        <comment>Contains the values for defined functional step parameters.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.StepTemplateParameterId">
+            <key-property name="stepTemplateId" type="big_decimal">
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="functionalStepParameterId" type="big_decimal">
+                <column name="FUNCTIONAL_STEP_PARAMETER_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="functionalStepParameter" class="com.cardiodx.db.waban.table.FunctionalStepParameter" update="false" insert="false" fetch="select">
+            <column name="FUNCTIONAL_STEP_PARAMETER_ID" precision="22" scale="0" not-null="true">
+                <comment>The functional step parameter identifier. Part of the primary key and foreign key to the FUNCTIONAL_STEP_PARAMETER table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" update="false" insert="false" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>The procedure step identifier. Part of the primary key and foreign key to the STEP_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="value" type="string">
+            <column name="VALUE" length="30">
+                <comment>The functional step parameter value.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

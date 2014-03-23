@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  label: MyString
+  data_type: MyString
+  created_by: 1
+  modified_by: 1
+  created_at: 2013-04-10 18:19:27
+  modified_at: 2013-04-10 18:19:27
+
+two:
+  name: MyString
+  label: MyString
+  data_type: MyString
+  created_by: 1
+  modified_by: 1
+  created_at: 2013-04-10 18:19:27
+  modified_at: 2013-04-10 18:19:27

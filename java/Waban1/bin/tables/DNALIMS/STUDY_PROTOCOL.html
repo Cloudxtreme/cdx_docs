@@ -1,0 +1,1594 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+	<head>
+		<title>Hibernate Mappings - Table Info</title>
+		<link rel="stylesheet" type="text/css" href="../../assets/doc-style.css" title="Style"/>
+	</head>
+	<body>
+
+	<div id="header">
+
+		<div id="logo">
+			<a href="http://www.hibernate.org/" target="_blank">
+				<img src="../../assets/hibernate_logo.gif" alt="Hibernate"/>
+			</a>
+		</div>
+
+		<ul><li><a href="../index.html" target="_top">Tables</a></li><li><a href="../../entities/index.html" target="_top">Entities</a></li></ul>
+
+		<hr/>
+
+	</div>
+
+		<h4>Schema DNALIMS</h4>
+		<h2>Table STUDY_PROTOCOL</h2>
+
+			<p>Information about study protocols.</p>
+
+		<table id="column_summary">
+			<thead>
+				<tr>
+					<th class="MainTableHeading" colspan="7">
+						Column Summary
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 14%">
+						Name
+					</th>
+					<th style="width: 14%">
+						SqlType
+					</th>
+					<th style="width: 14%">
+						Length
+					</th>
+					<th style="width: 14%">
+						Precision
+					</th>
+					<th style="width: 14%">
+						Scale
+					</th>
+					<th style="width: 14%">
+						Nullable
+					</th>
+					<th style="width: 14%">
+						Unique
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_PROTOCOL_ID">
+								STUDY_PROTOCOL_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							false
+						</td>
+						<td>
+							true
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_NUMBER">
+								STUDY_NUMBER
+							</a>
+						</td>
+						<td>
+							varchar2(20 char)
+						</td>
+						<td>
+							20
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SPONSOR_STUDY_NUMBER">
+								SPONSOR_STUDY_NUMBER
+							</a>
+						</td>
+						<td>
+							varchar2(20 char)
+						</td>
+						<td>
+							20
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_TITLE">
+								STUDY_TITLE
+							</a>
+						</td>
+						<td>
+							varchar2(200 char)
+						</td>
+						<td>
+							200
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_DIRECTOR">
+								STUDY_DIRECTOR
+							</a>
+						</td>
+						<td>
+							varchar2(30 char)
+						</td>
+						<td>
+							30
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							false
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SPONSOR_STUDY_TITLE">
+								SPONSOR_STUDY_TITLE
+							</a>
+						</td>
+						<td>
+							varchar2(200 char)
+						</td>
+						<td>
+							200
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CONTACT_ID">
+								CONTACT_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CASCADE_ACCESSION_NUMBER">
+								CASCADE_ACCESSION_NUMBER
+							</a>
+						</td>
+						<td>
+							number(1,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							1
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_BARCODE_LENGTH">
+								BARCODE_LENGTH
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_FINAL_TUBE_BARCODE_LOW_VALUE">
+								FINAL_TUBE_BARCODE_LOW_VALUE
+							</a>
+						</td>
+						<td>
+							varchar2(20 char)
+						</td>
+						<td>
+							20
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_FINAL_TUBE_BARCODE_HIGH_VALUE">
+								FINAL_TUBE_BARCODE_HIGH_VALUE
+							</a>
+						</td>
+						<td>
+							varchar2(20 char)
+						</td>
+						<td>
+							20
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_CLOSED">
+								STUDY_CLOSED
+							</a>
+						</td>
+						<td>
+							number(1,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							1
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SHIP_DNA_BACK">
+								SHIP_DNA_BACK
+							</a>
+						</td>
+						<td>
+							number(1,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							1
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_ACCESSION_VAR_OCX">
+								ACCESSION_VAR_OCX
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_VAR_OCX">
+								STUDY_VAR_OCX
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_PATIENT_VAR_OCX">
+								PATIENT_VAR_OCX
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_URL">
+								STUDY_URL
+							</a>
+						</td>
+						<td>
+							varchar2(400 char)
+						</td>
+						<td>
+							400
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_TYPE">
+								STUDY_TYPE
+							</a>
+						</td>
+						<td>
+							varchar2(50 char)
+						</td>
+						<td>
+							50
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CREATED_BY">
+								CREATED_BY
+							</a>
+						</td>
+						<td>
+							varchar2(30 char)
+						</td>
+						<td>
+							30
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_DATE_CREATED">
+								DATE_CREATED
+							</a>
+						</td>
+						<td>
+							date
+						</td>
+						<td>
+							7
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_MODIFIED_BY">
+								MODIFIED_BY
+							</a>
+						</td>
+						<td>
+							varchar2(30 char)
+						</td>
+						<td>
+							30
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_DATE_MODIFIED">
+								DATE_MODIFIED
+							</a>
+						</td>
+						<td>
+							date
+						</td>
+						<td>
+							7
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SUBSIDIARY_ID">
+								SUBSIDIARY_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+		<table id="primary_key">
+			<thead>
+				<tr>
+					<th class="MainTableHeading" colspan="2">
+						Primary Key
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 50%">
+						Name
+					</th>
+					<th style="width: 50%">
+						Columns
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr>
+						<td>
+								PK_STUDY_PROTOCOL2
+						</td>
+						<td>
+								<a href="#column_detail_STUDY_PROTOCOL_ID">
+									STUDY_PROTOCOL_ID
+								</a>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+			<table id="foreign_keys">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="3">
+							Foreign Keys
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 33%">
+							Name
+						</th>
+						<th style="width: 33%">
+							Referenced Table
+						</th>
+						<th style="width: 33%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								FK_STUDY_OCX_STUDY
+							</td>
+							<td>
+								<a href="OCX_LOAD.html" target="generalFrame">
+									OCX_LOAD
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_VAR_OCX">
+										STUDY_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK7F3FE86E1B026DA
+							</td>
+							<td>
+								<a href="OCX_LOAD.html" target="generalFrame">
+									OCX_LOAD
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_PATIENT_VAR_OCX">
+										PATIENT_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK7F3FE86E3837B98
+							</td>
+							<td>
+								<a href="CONTACT.html" target="generalFrame">
+									CONTACT
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_CONTACT_ID">
+										CONTACT_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_STUDY_OCX_PATIENT
+							</td>
+							<td>
+								<a href="OCX_LOAD.html" target="generalFrame">
+									OCX_LOAD
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_PATIENT_VAR_OCX">
+										PATIENT_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK7F3FE86E2B8A459E
+							</td>
+							<td>
+								<a href="OCX_LOAD.html" target="generalFrame">
+									OCX_LOAD
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_VAR_OCX">
+										STUDY_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_STUDY_PROT_CONTACT
+							</td>
+							<td>
+								<a href="CONTACT.html" target="generalFrame">
+									CONTACT
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_CONTACT_ID">
+										CONTACT_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_STUDY_PROTOCOL_SID
+							</td>
+							<td>
+								<a href="SUBSIDIARY.html" target="generalFrame">
+									SUBSIDIARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK7F3FE86E89A67BFC
+							</td>
+							<td>
+								<a href="SUBSIDIARY.html" target="generalFrame">
+									SUBSIDIARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK7F3FE86EF177E4F9
+							</td>
+							<td>
+								<a href="OCX_LOAD.html" target="generalFrame">
+									OCX_LOAD
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_ACCESSION_VAR_OCX">
+										ACCESSION_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_STUDY_OCX_ACC
+							</td>
+							<td>
+								<a href="OCX_LOAD.html" target="generalFrame">
+									OCX_LOAD
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_ACCESSION_VAR_OCX">
+										ACCESSION_VAR_OCX
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+			
+			<table id="unique_keys">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="2">
+							Unique Keys
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 50%">
+							Name
+						</th>
+						<th style="width: 50%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								PK_STUDY_PROTOCOL2
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_PROTOCOL_ID">
+										STUDY_PROTOCOL_ID
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+		
+			<table id="indexes">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="2">
+							Indexes
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 50%">
+							Name
+						</th>
+						<th style="width: 50%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								IDX_STUDY_PROT_PAT_OCX
+							</td>
+							<td>
+									<a href="#column_detail_PATIENT_VAR_OCX">
+										PATIENT_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_STUDY_PROT_STUDY_OCX
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_VAR_OCX">
+										STUDY_VAR_OCX
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_STUDY_PROTOCOL_SID
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_STUDY_PROT_CONTACT
+							</td>
+							<td>
+									<a href="#column_detail_CONTACT_ID">
+										CONTACT_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_STUDY_PROT_ACC_OCX
+							</td>
+							<td>
+									<a href="#column_detail_ACCESSION_VAR_OCX">
+										ACCESSION_VAR_OCX
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+		
+			<p id="column_detail" class="MainTableHeading">
+				Column Detail
+			</p>
+				
+				<h3 id="column_detail_STUDY_PROTOCOL_ID">STUDY_PROTOCOL_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> false
+					</li>
+					<li>
+						<strong>Unique:</strong> true
+					</li>
+					<li>
+						<strong>Comment:</strong> Study protocol identifier and primary key.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_NUMBER">STUDY_NUMBER</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(20 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 20
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> A unique study identifier used in house by laboratory personnel.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SPONSOR_STUDY_NUMBER">SPONSOR_STUDY_NUMBER</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(20 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 20
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> The sponsor's study identifier.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_TITLE">STUDY_TITLE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(200 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 200
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> A unique protocol identifier used in house by laboratory personnel.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_DIRECTOR">STUDY_DIRECTOR</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(30 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 30
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> false
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Person in charge of this study.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SPONSOR_STUDY_TITLE">SPONSOR_STUDY_TITLE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(200 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 200
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> The sponsor's protocol identifier.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CONTACT_ID">CONTACT_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> The sponsor representative's identifier and foreign key to the SPONSOR_REPRESENTATIVE table.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CASCADE_ACCESSION_NUMBER">CASCADE_ACCESSION_NUMBER</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(1,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 1
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Flag indicating whether or not the sample tube ids are to be automatically generated based upon the accession number.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_BARCODE_LENGTH">BARCODE_LENGTH</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Length of the sponsor's barcodes.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_FINAL_TUBE_BARCODE_LOW_VALUE">FINAL_TUBE_BARCODE_LOW_VALUE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(20 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 20
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Beginning barcode for a range of sample tubes sent back to the sponsor.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_FINAL_TUBE_BARCODE_HIGH_VALUE">FINAL_TUBE_BARCODE_HIGH_VALUE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(20 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 20
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Ending barcode for a range of sample tubes sent back to the sponsor.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_CLOSED">STUDY_CLOSED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(1,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 1
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Flag to indicate whether or not a study is complete.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SHIP_DNA_BACK">SHIP_DNA_BACK</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(1,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 1
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Flag indicating whether or not DNA samples are to be shipped back to the sponsor.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_ACCESSION_VAR_OCX">ACCESSION_VAR_OCX</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Used to store the name of the OCX control used to display attributes for the accession.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_VAR_OCX">STUDY_VAR_OCX</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Used to store the name of the OCX control used to display attributes for the accession.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_PATIENT_VAR_OCX">PATIENT_VAR_OCX</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Used to store the name of the OCX control used to display attributes for the accession.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_URL">STUDY_URL</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(400 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 400
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> URL associated with the STUDY
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_TYPE">STUDY_TYPE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(50 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 50
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Type of Study
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CREATED_BY">CREATED_BY</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(30 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 30
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> User who created this record.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_DATE_CREATED">DATE_CREATED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> date
+					</li>
+					<li>
+						<strong>Length:</strong> 7
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Date this record was created.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_MODIFIED_BY">MODIFIED_BY</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(30 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 30
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> User who last modified this record.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_DATE_MODIFIED">DATE_MODIFIED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> date
+					</li>
+					<li>
+						<strong>Length:</strong> 7
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Date this record was last modified.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SUBSIDIARY_ID">SUBSIDIARY_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				
+
+	</body>
+</html>

@@ -1,0 +1,76 @@
+lucid init upstart
+
+http://upstart.ubuntu.com/getting-started.html
+
+jobs under:  
+  /etc/init
+
+Check syslog-ng.txt
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+update-rc.d -f syslog-ng remove
+
+cd /etc/init
+vi syslog-ng.conf
+
+#
+# syslog-ng
+#
+
+description "Syslog-ng daemon"
+
+#start on (local-filesystems and net-device-up IFACE!=lo)
+#start on (local-filesystems and net-device-up IFACE=br0)
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on runlevel [!2345]
+
+expect fork
+respawn
+
+pre-start script
+    test -x /usr/sbin/syslog-ng || { stop; exit 0; }
+    mkdir -p -m0755 /var/run/syslog-ng
+end script
+
+exec /usr/sbin/syslog-ng -p /var/run/syslog-ng/syslog-ng.pid
+
+
+-- disable logrotate for syslog-ng
+cd /etc/logrotate.d
+rm syslog-ng
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+start syslog-ng
+status syslog-ng
+
+logger -t test -p local0.info "test on syslog-ng"
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /etc/init
+
+ssh.conf
+  #start on (local-filesystems and net-device-up IFACE=br0)
+  start on (local-filesystems and net-device-up IFACE=eth0)
+
+libvirt-bin.conf
+  update-rc.d -f libvirt-bin remove
+  start on (local-filesystems and net-device-up IFACE=br0)
+
+
+ureadahead-other.conf
+start on local-filesystems
+  mv ureadahead-other.conf ureadahead-other.conf.disabled
+
+apport.conf
+  mv apport.conf apport.conf.disabled
+  
+atd.conf
+  mv atd.conf atd.conf.disabled
+
+mdadm 
+  cd /etc/mdadm
+  vi mdadm.conf
+
+  change 00.90 to 0.90
+

@@ -1,0 +1,127 @@
+--
+-- http://pig.apache.org/docs/r0.5.0/setup.html
+--
+should have: 
+  java 1.6 
+  hadoop 20 
+
+wajig install ant junit
+
+wget http://www.gtlib.gatech.edu/pub/apache//hadoop/pig/stable/pig-0.7.0.tar.gz
+cd /usr/local/
+tar zxvf /home/hadoop/pig-0.7.0.tar.gz 
+ln -s pig-0.7.0/ pig
+
+~~~~~~~~~~~~
+su - hadoop
+export PATH=/usr/local/hadoop/bin/:/usr/local/pig/bin:$PATH
+export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.22/
+
+cd /usr/local/pig/conf
+vi pig.properties
+fs.default.name=hdfs://master:54310
+
+cd 
+tar zxvf pigtutorial.tar.gz 
+cd pigtmp/
+cp /etc/passwd .
+
+--
+-- local mode
+--
+# pig -x local
+A = load '/etc/passwd' using PigStorage(':'); 
+B = foreach A generate $0 as id;
+dump B; 
+store B into 'id.out';
+
+--
+-- hadoop mode
+--
+hadoop fs -put /etc/passwd .
+
+# pig
+    ...... Connecting to hadoop file system at: hdfs://master:54310
+
+A = load 'passwd' using PigStorage(':');
+B = foreach A generate $0 as id;
+dump B;
+store B into 'id.out';
+
+vi id.pig
+A = load 'passwd' using PigStorage(':');
+B = foreach A generate $0 as id;
+dump B;
+store B into 'id.out';
+
+--
+-- embeded mode
+--
+vi idlocal.java 
+javac -cp ./pig.jar idlocal.java 
+java -cp pig.jar:. idlocal
+
+vi idmapred.java 
+javac -cp ./pig.jar idmapreduce.java
+java -cp pig.jar:. idmapreduce
+   ????  Connecting to hadoop file system at: file:///
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- http://pig.apache.org/docs/r0.5.0/tutorial.html
+--
+local mode:
+  java -cp ./pig.jar org.apache.pig.Main -x local script1-local.pig
+  (taks forever......)
+
+
+hadoop mode:
+  /usr/local/hadoop/bin/hadoop fs -copyFromLocal excite.log.bz2 .
+  --export HADOOPSITEPATH=/usr/local/hadoop/conf
+  export HADOOP_CONF_DIR=/usr/local/hadoop/conf
+  
+  java -cp ./pig.jar:$HADOOP_CONF_DIR org.apache.pig.Main script1-hadoop.pig
+
+
+  bin/hadoop job -list
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- http://vimeo.com/4294127
+--
+pig -e copyFromLocal excite-small.log excite-small.log 
+pig
+ls
+
+log = load 'excite-small.log' as (user, time, query);
+grpd = group log by user;
+cntd = foreach grpd generate group, COUNT(log) as cnt;
+store cntd into 'output';
+cat output
+
+vi demo.pig
+log = load 'excite-small.log' as (user, time, query);
+grpd = group log by user;
+cntd = foreach grpd generate group, COUNT(log) as cnt;
+fltrd = filter cntd by cnt > 50;
+store fltrd into 'fltered';
+
+pig demp.pig
+pig -e cat fltered
+
+more word.pig 
+A = load 'gutenberg';
+B = foreach A generate flatten(TOKENIZE($0)) as word;
+C = filter B by word matches '\\w+';
+D = group C by word;
+E = foreach D generate COUNT(C), group;
+store E into 'gutenberg_feq';
+
+
+vi join.pig
+bard = LOAD 'shakespeare_req' AS (freq, word);
+kjv = LOAD 'bible_freq' AS (freq, word);
+inboth = JOIN bard BY word, kjv BY word;
+STORE inboth INTO 'both.out';
+
+

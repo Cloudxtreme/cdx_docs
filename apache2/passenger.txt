@@ -1,0 +1,75 @@
+--
+-- create rails app
+--
+
+rails demo
+
+cd demo/
+touch production.sqlite3
+./script/server 
+
+http://cchoudesktop.cardiodx.com:3000/
+
+./script/generate controller Say
+cd app/controllers
+
+vi say_controller.rb 
+class SayController < ApplicationController
+  def hello
+  end
+end
+
+cd ../views/say
+more hello.rhtml 
+hello
+
+^c to kill the server
+./script/server
+
+
+http://cchoudesktop.cardiodx.com:3000/say/hello
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install apache2 libcurl4-openssl-dev \
+ dpkg-dev build-essential apache2-prefork-dev libapr1-dev libaprutil1-dev \
+ ruby ruby1.8 linux-libc-dev libc6-dev ruby1.8-dev \
+ ri1.8 irb1.8 libldap-ruby1.8 libopenssl-ruby libopenssl-ruby1.8 \
+ libreadline-ruby1.8 libruby libruby1.8 libyaml-ruby libzlib-ruby
+
+gem install passenger --no-rdoc --no-ri
+passenger-install-apache2-module
+
+cat > /etc/apache2/mods-available/passenger.conf<<EOF
+PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-3.0.1
+PassengerRuby /usr/bin/ruby1.8
+EOF
+
+cat > /etc/apache2/mods-available/passenger.load<<EOF
+LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-3.0.1/ext/apache2/mod_passenger.so
+EOF
+
+cd /etc/apache2/sites-available/
+cp default default.orig
+vi default
+
+<VirtualHost *:80>
+   ServerName www.yourhost.com
+   DocumentRoot /home/cchou/demo/public
+   <Directory /home/cchou/demo/public>
+      AllowOverride all              
+      Options -MultiViews           
+   </Directory>
+</VirtualHost>
+
+a2enmod passenger
+/etc/init.d/apache2 restart
+
+^C on rails server
+
+http://cchoudesktop.cardiodx.com/say/hello
+
+
+
+
+
+

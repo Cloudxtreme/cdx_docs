@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StepTemplate" table="STEP_TEMPLATE" schema="DNALIMS">
+        <comment>Information about each step in a procedure.</comment>
+        <id name="stepTemplateId" type="big_decimal">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="functionalStep" class="com.cardiodx.db.waban.table.FunctionalStep" fetch="select">
+            <column name="FUNCTIONAL_STEP_ID" precision="22" scale="0">
+                <comment>The type of step identifier and foreign key to the FUNCTIONAL_STEP table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="procedureTemplate" class="com.cardiodx.db.waban.table.ProcedureTemplate" fetch="select">
+            <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>The procedure identifier and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Display order in list.</comment>
+            </column>
+        </property>
+        <property name="stepType" type="string">
+            <column name="STEP_TYPE" length="12">
+                <comment>The type of display (checkbox, text, etc.).</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="120">
+                <comment>The description of this step's function.</comment>
+            </column>
+        </property>
+        <property name="stepLevel" type="string">
+            <column name="STEP_LEVEL" length="1">
+                <comment>Flag for screen placement.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="pcrCleanups" table="PCR_CLEANUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrCleanup" />
+        </set>
+        <set name="traceQcs" table="TRACE_QC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Procedure step identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceQc" />
+        </set>
+        <set name="containerBatchs" table="CONTAINER_BATCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerBatch" />
+        </set>
+        <set name="measurements" table="MEASUREMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Foreign key to the STEP_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Measurement" />
+        </set>
+        <set name="stepTemplateWorkflowsForBranchStep" table="STEP_TEMPLATE_WORKFLOW" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="BRANCH_STEP" precision="22" scale="0" not-null="true">
+                    <comment>The procedure step identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateWorkflow" />
+        </set>
+        <set name="stepTemplateValues" table="STEP_TEMPLATE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>The procedure step identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateValue" />
+        </set>
+        <set name="cpRuns" table="CP_RUN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRun" />
+        </set>
+        <set name="concentrationAdjustments" table="CONCENTRATION_ADJUSTMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Step identifier and foreign key to the STEP_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConcentrationAdjustment" />
+        </set>
+        <set name="masterMixReagents" table="MASTER_MIX_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MasterMixReagent" />
+        </set>
+        <set name="caseRoiHistories" table="CASE_ROI_HISTORY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseRoiHistory" />
+        </set>
+        <set name="recordTimers" table="RECORD_TIMER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Reference key of the Step_Template table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RecordTimer" />
+        </set>
+        <set name="transfers" table="TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>The step identifier and foreign key to the STEP_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Transfer" />
+        </set>
+        <set name="seqSetups" table="SEQ_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SeqSetup" />
+        </set>
+        <set name="caseHistories" table="CASE_HISTORY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseHistory" />
+        </set>
+        <set name="assignInstruments" table="ASSIGN_INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Procedure step identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssignInstrument" />
+        </set>
+        <set name="assayResultLoads" table="ASSAY_RESULT_LOAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultLoad" />
+        </set>
+        <set name="stepTemplateParameters" table="STEP_TEMPLATE_PARAMETER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>The procedure step identifier. Part of the primary key and foreign key to the STEP_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateParameter" />
+        </set>
+        <set name="checklistReagents" table="CHECKLIST_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Step template identifier and foreign key to the STEP_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistReagent" />
+        </set>
+        <set name="plateTemplateContainers" table="PLATE_TEMPLATE_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Foreign key used to identify the procedure step used to make the plate.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateContainer" />
+        </set>
+        <set name="sampleInstrumentAssocs" table="SAMPLE_INSTRUMENT_ASSOC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Procedure step identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleInstrumentAssoc" />
+        </set>
+        <one-to-one name="stepTemplateWorkflowByStepTemplateId" class="com.cardiodx.db.waban.table.StepTemplateWorkflow"></one-to-one>
+    </class>
+</hibernate-mapping>

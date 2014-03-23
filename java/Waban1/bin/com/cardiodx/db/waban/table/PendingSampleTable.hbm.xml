@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PendingSampleTable" table="PENDING_SAMPLE_TABLE" schema="DNALIMS">
+        <comment>Autoaccession sponsor sample information.</comment>
+        <id name="pendingSampleId" type="big_decimal">
+            <column name="PENDING_SAMPLE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="autoaccessionLoad" class="com.cardiodx.db.waban.table.AutoaccessionLoad" fetch="select">
+            <column name="AUTOACCESSION_LOAD_ID" precision="22" scale="0">
+                <comment>Autoaccession load identifier and foreign key to the AUTOACCESSION_LOAD table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="accession" class="com.cardiodx.db.waban.table.Accession" fetch="select">
+            <column name="ACCESSION_ID" precision="22" scale="0">
+                <comment>Accession identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Study protocol identifier and foreign key to the STUDY_PROTOCOL table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0">
+                <comment>Sample identifier used by the lab and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="sponsorSampleTubeId" type="string">
+            <column name="SPONSOR_SAMPLE_TUBE_ID" length="24">
+                <comment>Sponsor's sample tube identifier.</comment>
+            </column>
+        </property>
+        <property name="sponsorAccessionId" type="string">
+            <column name="SPONSOR_ACCESSION_ID" length="24" not-null="true">
+                <comment>Sponsor's accession identifier.</comment>
+            </column>
+        </property>
+        <property name="pending" type="boolean">
+            <column name="PENDING" precision="1" scale="0" not-null="true">
+                <comment>Sample''s pending status, 0 = accessioned 1 = pending.</comment>
+            </column>
+        </property>
+        <property name="volume" type="big_decimal">
+            <column name="VOLUME" precision="22" scale="0">
+                <comment>Current sample amount.</comment>
+            </column>
+        </property>
+        <property name="concentration" type="big_decimal">
+            <column name="CONCENTRATION" precision="22" scale="0">
+                <comment>The current sample concentration.</comment>
+            </column>
+        </property>
+        <property name="finalStorageTube" type="java.lang.Boolean">
+            <column name="FINAL_STORAGE_TUBE" precision="1" scale="0">
+                <comment>Flag for whether or not the sample is ready for final disposition.</comment>
+            </column>
+        </property>
+        <property name="sourceType" type="string">
+            <column name="SOURCE_TYPE" length="30">
+                <comment>What type of sample material is being accessioned (cells, whole blood, etc.).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="accessionedBy" type="string">
+            <column name="ACCESSIONED_BY" length="30">
+                <comment>User who accessioned this sample.</comment>
+            </column>
+        </property>
+        <property name="dateAccessioned" type="date">
+            <column name="DATE_ACCESSIONED" length="7">
+                <comment>Date this sample was accessioned.</comment>
+            </column>
+        </property>
+        <set name="pendingSampleAttributeTables" table="PENDING_SAMPLE_ATTRIBUTE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PENDING_SAMPLE_ID" precision="22" scale="0">
+                    <comment>Pending sample identifier and foreign key to the PENDING_SAMPLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PendingSampleAttributeTable" />
+        </set>
+    </class>
+</hibernate-mapping>

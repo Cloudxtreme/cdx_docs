@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AssayAlleleResult" table="ASSAY_ALLELE_RESULT" schema="DNALIMS">
+        <comment>Results for a given assay/allele combination. A given assay result can be used in many allelic determinations.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.AssayAlleleResultId">
+            <key-property name="assayResultId" type="big_decimal">
+                <column name="ASSAY_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleResultId" type="big_decimal">
+                <column name="ALLELE_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="alleleResult" class="com.cardiodx.db.waban.table.AlleleResult" update="false" insert="false" fetch="select">
+            <column name="ALLELE_RESULT_ID" precision="22" scale="0" not-null="true">
+                <comment>Allele result identifier, part of the primary key, and foreign key to the ALLELE_RESULT table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="assayResult" class="com.cardiodx.db.waban.table.AssayResult" update="false" insert="false" fetch="select">
+            <column name="ASSAY_RESULT_ID" precision="22" scale="0" not-null="true">
+                <comment>Assay result identifier, part of the primary key, and foreign key to the ASSAY_RESULT table.</comment>
+            </column>
+        </many-to-one>
+        <property name="result" type="string">
+            <column name="RESULT" length="50">
+                <comment>The assay interpretation for this allele and assay (A, B, wild, etc.).</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="20">
+                <comment>The validity of the results. Either ACCEPTED, EXCLUDED, or REPEAT.</comment>
+            </column>
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="500">
+                <comment>Text comments about the assay allele results.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date that this record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

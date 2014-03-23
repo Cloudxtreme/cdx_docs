@@ -1,0 +1,42 @@
+iostat 
+
+# iostat -mx sde md1 30 
+
+
+dd if=foo/rdlims1.vdi bs=1G | pv > virtualbox/rdlims1.vdi
+10880107008 bytes (11 GB) copied, 110.205 s, 98.7 MB/s
+
+dd if=foo/rdlims2.vdi bs=1G | pv > virtualbox/rdlims2.vdi
+10074800640 bytes (10 GB) copied, 103.683 s, 97.2 MB/s
+
+dd if=foo/rdlims3.vdi bs=1G | pv > virtualbox/rdlims3.vdi
+10046489088 bytes (10 GB) copied, 100.847 s, 99.6 MB/s
+
+dd if=foo/winxp1.vdi bs=1G | pv > virtualbox/winxp1.vdi
+21237940736 bytes (21 GB) copied, 240.362 s, 88.4 MB/s
+
+dd if=foo/winxp5.vdi bs=1G | pv > virtualbox/winxp5.vdi
+20359234048 bytes (20 GB) copied, 228.874 s, 89.0 MB/s
+
+dd if=foo/acrobatpro.vdi bs=1G | pv > virtualbox/acrobatpro.vdi
+11542807040 bytes (12 GB) copied, 116.485 s, 99.1 MB/s
+
+dd if=foo/cclvm1.vdi bs=1G | pv > virtualbox/cclvm1.vdi
+8724234752 bytes (8.7 GB) copied, 96.7215 s, 90.2 MB/s
+
+
+dd if=foo/winxp2.vdi bs=2G | pv > virtualbox/winxp2.vdi
+20871987712 bytes (21 GB) copied, 262.843 s, 79.4 MB/s
+
+
+dd if=foo/winxp3.vdi bs=500M | pv > virtualbox/winxp3.vdi
+20359234048 bytes (20 GB) copied, 306.49 s, 66.4 MB/s
+
+dd if=foo/vpnclient.vdi bs=10M | pv > virtualbox/vpnclient.vdi
+11973771776 bytes (12 GB) copied, 193.033 s, 62.0 MB/s
+
+dd if=foo/minitab.vdi bs=10M | pv > virtualbox/minitab.vdi
+8821752320 bytes (8.8 GB) copied, 124.557 s, 70.8 MB/s
+
+
+

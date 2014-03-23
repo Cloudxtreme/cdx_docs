@@ -1,0 +1,55 @@
+
+Different languages on the CRFs.
+
+Registration Visit:
+  Physical Exam 
+		Basic Information: 2 columns
+
+  Eligibility
+    Inclusion: 2 column radio
+    Exclusion: 2 column radio
+  Verification of Informed Consent: 2 column
+     
+Initial Treatment:
+  Adverse Events: 
+  Concomitant Medications: table
+  Physical Exam: 
+     bmi calculation
+		 Q: Comments (Required if Abnormal): NOT required from the form!!!!
+  Agent Administration 
+     Q: Table not aligned with columns!!!!
+     3 column
+
+Diagnostic eventi (multiple events):
+  Concomitant Medications 
+  Adverse Events 
+  
+Dose
+  Concomitant Medications
+  Agent Administration 
+
+Visit 2
+  Physical Exam
+  Concomitant Medications 
+  Eligibility
+
+Follow-up Treatment
+  Physical Exam 
+  Agent Administration 
+  Concomitant Medications 
+  Adverse Events 
+
+Inicio
+  Adverse Events
+
+test
+  
+
+anagrafica
+
+nuevo
+
+
+
+
+

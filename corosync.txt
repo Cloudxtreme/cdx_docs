@@ -1,0 +1,20 @@
+https://wiki.ubuntu.com/ClusterStack/Natty#A.5Bboth.5D_Starting_Corosync
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install corosync pacemaker
+
+vi /etc/default/corosync
+
+corosync-keygen 
+		generate entropy
+			Download files form the internet
+      install/uninstall packages
+
+rsync authkey root@kvmsrv6:/etc/corosync
+
+vi corosync.conf
+                bindnetaddr: 10.10.32.0 <<<=== subnet
+
+service corosync restart
+
+crm_mon
+

@@ -1,0 +1,37 @@
+Not working!!!!
+
+ORA-10631: SHRINK clause should not be specified for this object
+
+SELECT dt.owner, dt.table_name,
+(CASE
+WHEN NVL(ind.cnt, 0) < 1 THEN 'Y'
+ELSE 'N'
+END) AS can_shrink
+FROM dba_tables dt,
+(SELECT table_name, COUNT(*) cnt
+FROM dba_indexes di
+WHERE index_type LIKE 'FUNCTION-BASED%' GROUP BY table_name) ind
+WHERE dt.table_name = ind.table_name(+)
+AND dt.table_name NOT LIKE 'AQ$%'
+AND dt.table_name NOT LIKE 'BIN$%'
+AND dt.owner = 'SCESCHEMA'
+ORDER BY 1, 2;
+
+
+SCESCHEMA  VERSIONEDDOCUMENT		  N
+
+
+select INDEX_NAME, table_name, INDEX_TYPE
+from dba_indexes
+where table_owner = 'SCESCHEMA' and
+table_name = 'VERSIONEDDOCUMENT';
+
+IDX_VDOC_LSHORT_FNAME	       VERSIONEDDOCUMENT	      FUNCTION-BASED NORMAL
+																											^^^^^^^^^^^^^^
+
+drop index IDX_VDOC_LSHORT_FNAME;
+
+
+alter table versioneddocument shrink space cascade;
+ORA-10631: SHRINK clause should not be specified for this object
+

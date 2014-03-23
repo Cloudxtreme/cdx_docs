@@ -1,0 +1,131 @@
+
+on lims.cardiodx.com
+pg_dump prodlims | gzip > prodlims.gz
+pg_dump sire | gzip > sire.gz
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+
+-- wajig
+deb http://mirrors.xmission.com/ubuntu/ hardy main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ hardy-updates main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu hardy-security main restricted universe multiverse
+
+-- basic packages
+wajig install subversion ruby1.8-dev sun-java6-jdk libxml-parser-ruby1.8 r-base-dev memcached apache2 apache2-prefork-dev
+wajig install sysv-rc-conf -y
+
+-- apache modules
+a2enmod headers
+a2enmod ssl
+/etc/init.d/apache2 restart
+
+
+-- R
+R
+install.packages('outliers')
+q()
+
+
+-- PostgreSQL
+wajig install postgresql -y
+vi /etc/postgresql/8.3/main/pg_hba.conf 
+#host    all         all         127.0.0.1/32          md5
+host    all         all         127.0.0.1/32          trust
+
+/etc/init.d/postgresql-8.3 restart
+
+
+-- Ruby & Rails
+  --wajig install rubygems libldap-ruby1.8 libpgsql-ruby irb
+  141  wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 libpgsql-ruby -y
+  142  wget http://rubyforge.org/frs/download.php/29548/rubygems-1.0.1.tgz
+  146  tar xzvf rubygems-1.0.1.tgz
+  147  cd rubygems-1.0.1
+  148  ruby setup.rb
+  149  ln -s /usr/bin/gem1.8 /usr/bin/gem
+
+export http_proxy=http://proxy.cardiodx.com
+
+gem update --system
+
+gem install rails -v 1.2.2 --no-ri --no-rdoc
+gem install ruby-net-ldap alib rubyzip --no-ri --no-rdoc
+gem install roo -v 0.5.4 --no-ri --no-rdoc
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+gem install rjb --no-ri --no-rdoc
+gem install daemons --no-ri --no-rdoc
+gem install rsruby -- --with-R-dir=/usr/lib/R --with-R-include=/usr/share/R/include
+gem install memcache-client -v 1.5.0 --no-ri --no-rdoc
+gem install cached_model slave passenger --no-ri --no-rdoc
+passenger-install-apache2-module 
+cat >> /etc/apache2/mods-available/passenger.load <<EOF
+LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-2.2.10/ext/apache2/mod_passenger.so
+PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-2.2.10
+PassengerRuby /usr/bin/ruby1.8
+EOF
+a2enmod passenger
+/etc/init.d/apache2 restart
+
+
+sudo su - postgres
+createuser -s rails
+
+sudo su - rails
+svn co svn://svn/lims/trunk lims
+
+cd /etc/apache2/sites-available
+vi apache_lims.site
+NameVirtualHost *:80
+<VirtualHost *:80>
+ServerName testlims.cardiodx.com
+Redirect / https://testlims.cardiodx.com/
+</VirtualHost>
+
+NameVirtualHost *:443
+<VirtualHost *:443>
+ServerName testlims.cardiodx.com
+RailsEnv production
+SSLEngine on
+SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+#RewriteEngine On
+RequestHeader set X_FORWARDED_PROTO 'https'
+DocumentRoot /home/rails/lims/web/public
+</VirtualHost>
+
+
+mkdir /etc/apache2/ssl
+
+# ls
+gd_bundle.crt  
+gd_cross_intermediate.crt  
+gd_intermediate_bundle.crt  
+gd_intermediate.crt  
+wildcard.cardiodx.com.crt  
+wildcard.cardiodx.com.key
+
+a2ensite apache_lims.site
+/etc/init.d/apache2 restart
+
+cp apache_lims /etc/init.d
+
+
+cd lims/web/config
+Ensure database.yml, 
+  username: rails
+  
+backgroundrb.yml 
+  :rails_env: production
+
+backgroundrb_schedules.yml 
+      :repeat_interval: 7200
+
+
+createdb prodlims
+gzip -dc prodlims.gz | psql -d prodlims
+createdb sire
+gzip -dc sire.gz | psql -d sire
+
+/etc/init.d/apache_lims start
+sysv-rc-conf
+

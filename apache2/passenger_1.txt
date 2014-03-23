@@ -1,0 +1,4 @@
+
+for more informaiton, you can view oracle/IQ_fastacc.txt
+
+for dashboard, I don't use the ruby_with_env, I put it in envirnment.rb directly

@@ -1,0 +1,59 @@
+ubuntu kvm virtual io virtio
+
+supprted - Ubuntu 804
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- network
+--
+
+http://wiki.libvirt.org/page/Virtio
+
+
+    <interface type='bridge'>
+      <mac address='08:00:27:5d:7a:0d'/>
+      <source bridge='br0'/>
+      <model type='virtio'/>
+
+root@cuteflow:~# lsmod | grep virt
+virtio_net             18432  0 
+virtio_pci             17668  0 
+virtio_ring            12928  1 virtio_pci
+virtio                 14336  2 virtio_net,virtio_pci
+
+
+-- for windows xp
+  http://www.linux-kvm.com/content/tip-how-setup-windows-guest-paravirtual-network-drivers
+
+Remove <model type='virtio'/>
+start kvm
+Copy g:/it/drivers/kvm/Windows XP over to desktop
+Add <model type='virtio'/> back to the xml file
+start kvm
+install the driver...
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- disk
+--
+
+http://www.linux-kvm.org/page/Boot_from_virtio_block_device
+
+    <disk type='file' device='disk'>
+      <source file='/dev/vg0/cuteflow'/>
+      <target dev='hda' bus='virtio'/>
+    </disk>
+
+/boot/grub/device.map
+(hd0) /dev/vda
+
+vi /etc/fstab
+
+
+root@cuteflow:~# lsmod | grep virt
+virtio_net             18432  0 
+virtio_blk             16392  3 
+virtio_pci             17668  0 
+virtio_ring            12928  1 virtio_pci
+virtio                 14336  3 virtio_net,virtio_blk,virtio_pci
+

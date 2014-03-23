@@ -1,0 +1,16 @@
+
+<%
+  @column_names = Admin::Field.display_columns
+  @url = Admin::Field.url
+	@parents = Admin::Field.my_parents
+
+#	logger.info Admin::Field.has_2way_association?('Admin::Collection')
+#	logger.info Admin::Field.is_lut?('Admin::Collection')
+
+	# Admin::Field.is_this_col_lut?('type_id')
+%>
+
+<h1><%= Admin::Field.base_class %></h1>
+
+<%= render :partial => "utils/datatable_static" %>
+

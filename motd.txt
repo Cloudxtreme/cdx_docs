@@ -1,0 +1,32 @@
+
+wajig purge landscape-common
+
+~~~~~~~~~~~~~~~~~~~~~~~~~``
+remove motd (message of the day)
+  or empty out motd.tails
+
+touch .hushlogin
+
+~~~~~~~~~~~~~~~~~~~~~~~~~``
+remove motd (message of the day)
+
+cd /etc/update-motd.d
+  00-header  
+  10-help-text  
+  20-cpu-checker  
+  90-updates-available  
+  91-release-upgrade  
+  98-reboot-required  
+  99-footer
+
+cat > 00-header <<EOF
+#!/bin/sh
+EOF
+
+cat > 10-help-text <<EOF
+#!/bin/sh
+EOF
+
+cat > 90-updates-available <<EOF
+#!/bin/sh
+EOF

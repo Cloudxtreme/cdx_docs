@@ -1,0 +1,43 @@
+
+http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+http://maven.apache.org/guides/getting-started/index.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mvn archetype:generate -DgroupId=com.cardiodx.proj1 \
+												-DartifactId=proj1 \
+												-DarchetypeArtifactId=maven-archetype-quickstart \
+												-DinteractiveMode=false
+
+cd proj1
+
+mvn package
+
+java -cp target/proj1-1.0-SNAPSHOT.jar com.cardiodx.proj1.App
+
+mvn site
+	--> target/site
+
+--
+-- eclipse
+--
+
+mvn eclipse:eclipse
+
+eclipse &
+  import project
+  File --> Import --> Existing Pronject to Workspace
+  Browse: /root/proj1
+    Projects: proj1
+  Finish
+
+
+Click Run --> Run
+  Java Application 
+    Project: proj1
+    Main class: com.cardiodx.proj1.App
+  Run
+
+File --> Open File:
+  root/proj1/src/main/java/com/cardiodx/proj1/App.java
+
+

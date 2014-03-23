@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AnonymizationLog" table="ANONYMIZATION_LOG" schema="DNALIMS">
+        <comment>Anonymization process activity database.</comment>
+        <id name="anonymizationLogId" type="big_decimal">
+            <column name="ANONYMIZATION_LOG_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="anonymizedBy" type="string">
+            <column name="ANONYMIZED_BY" length="30">
+                <comment>Anonymized by User</comment>
+            </column>
+        </property>
+        <property name="dateAnonymized" type="date">
+            <column name="DATE_ANONYMIZED" length="7">
+                <comment>Anonymization Date</comment>
+            </column>
+        </property>
+        <property name="anonymizationReason" type="string">
+            <column name="ANONYMIZATION_REASON" length="256">
+                <comment>Reason for anonymization</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30">
+                <comment>Description</comment>
+            </column>
+        </property>
+        <property name="anonymizationRequestId" type="big_decimal">
+            <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0">
+                <comment>Anonymization Request ID</comment>
+            </column>
+        </property>
+        <property name="signature" type="big_decimal">
+            <column name="SIGNATURE" precision="22" scale="0">
+                <comment>Digital Signature</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,31 @@
+
+wajig install git-core
+
+
+gem install wukong --source=http://gemcutter.org --no-rdoc --no-ri
+
+gem install addressable --no-rdoc --no-ri
+gem install htmlentities --no-rdoc --no-ri
+gem install extlib --no-rdoc --no-ri
+
+$ irb
+irb(main):001:0> require 'rubygems'
+irb(main):002:0> require 'wukong'
+
+
+--
+-- http://mrflip.github.com/wukong/usage.html
+--
+
+-- get the example file
+git clone git://github.com/mrflip/wukong
+
+-- local mode
+ruby/word_count.rb --run=local gutenberg/pg11.txt out2
+
+-- hadoop mode..... Not working!!!!!
+export HADOOP_HOME=/usr/local/hadoop
+./word_count.rb --run=hadoop gutenberg/pg11.txt out3
+
+
+

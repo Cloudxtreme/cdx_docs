@@ -1,0 +1,2 @@
+
+virt-clone --original limited_launch --name testccl --file testccl_01.img --file testccl_02.img

@@ -1,0 +1,4 @@
+
+show nat rules 
+show firewall 
+

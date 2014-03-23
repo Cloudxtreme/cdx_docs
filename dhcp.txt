@@ -1,0 +1,6 @@
+wajig install dhcp3-server 
+
+
+/etc/dhcp3
+
+

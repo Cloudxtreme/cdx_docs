@@ -1,0 +1,158 @@
+http://oriol.joor.net/blog/?itemid=1631
+http://www.hep.phys.soton.ac.uk/~jhe/documents/WPA-Authentication+RADIUS-HOWTO.html
+
+
+wajig install freeradius-ldap
+
+
+cd /etc/freeradius/
+
+vi users (add)
+"test" Auth-Type := Local, User-Password == "test"
+
+/etc/init.d# ./freeradius restart
+
+radtest test test localhost 0 testing123
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+config ldap as ldap/client-ldap.txt
+
+# vi clients.conf 
+client 10.10.32.0/21 {
+        secret          = cdxRAD2500
+        shortname       = 10.10.32.0@CDX
+}
+
+/etc/init.d# ./freeradius restart
+
+radtest test test radius 0 cdxRAD2500     # (radius is the name of the server)
+
+--vi radiusd.conf
+cd sites-available
+vi default
+under:
+authenticate {
+      pam
+#     unix
+
+vi users
+#DEFAULT      Auth-Type = System
+DEFAULT       Auth-Type = Pam
+
+
+-- linux account (through PAM)
+radtest cchou cchou1200 pdc 0 cdxRAD2500
+radtest cdxtest VerySecret! radius 0 cdxRAD2500	# (radius is the name of the server)
+
+freeradius -X
+*** glibc detected *** double free or corruption (fasttop): 0x800fa018 ***
+
+realm??????
+
+-- on cchoudesktop
+sudo wajig install freeradius-utils
+radtest cdxtest VerySecret! radius 0 cdxRAD2500
+
+vi radiusd.conf
+log {
+   destination = syslog
+
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Basically, we just need:
+cd /etc/freeradius 
+vi users
+DEFAULT       Auth-Type = Pam
+
+cd sites-available
+vi default
+authorize {
+	files 
+}
+authenticate {
+	pam
+}
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- not used below
+--
+
+create certificate:
+	
+	???
+	/usr/lib/ssl/misc/CA.sh
+	/usr/lib/ssl/misc/CA.pl
+	export PATH=$PATH:/usr/lib/ssl/misc
+
+/Desktop/Chialin/Chialin/postfix-montalvo/Self-Signed\ Certificate.txt
+
+eap.conf
+root@asdfgf:/etc/freeradius# diff eap.conf eap.conf.orig 
+123c123
+<               tls {
+---
+>               #tls {
+126d125
+<                       private_key_file = ${raddbdir}/certs/cardiodx.key
+133d131
+<                       certificate_file = ${raddbdir}/certs/cardiodx.crt
+181c179
+<               }
+---
+>               #}
+
+
+
+# find . -name *.so | grep tls
+./src/modules/rlm_eap/types/rlm_eap_tls/.libs/rlm_eap_tls-1.1.0.so
+./src/modules/rlm_eap/types/rlm_eap_tls/.libs/rlm_eap_tls.so
+./src/modules/rlm_eap/types/rlm_eap_ttls/.libs/rlm_eap_ttls-1.1.0.so
+./src/modules/rlm_eap/types/rlm_eap_ttls/.libs/rlm_eap_ttls.so
+
+copy the following over to pdc:/usr/lib/freeradius/ 
+./src/modules/rlm_eap/types/rlm_eap_tls/.libs/rlm_eap_tls-1.1.0.so
+
+ln -s rlm_eap_tls-1.1.0.so rlm_eap_tls.so
+
+
+generate ca (see ssl.txt)
+
+???./configure --disable-shared
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Got error: 
+radiusd.conf[1893] Unknown module "eap".
+
+Download freeradius-1.1.0 
+./configure and make (from asterisk)
+
+
+  277  wajig install checkinstall 
+  278  checkinstall make install
+
+dpkg -r freeradius (if need to remove it)
+
+install it on pdc
+
+root@asdfgf:/etc# ln -s /usr/local/etc/raddb .
+
+wajig install build-essential libssl-dev
+
+download freeradius-1.1.5.tar.gz to pdc
+
+configure and make
+
+/usr/lib# ln -s libperl.so.5.8.7 libperl.so
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://wiki.freeradius.org/Build#Building_Debian_packages
+
+
+
+

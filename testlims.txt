@@ -1,0 +1,62 @@
+
+Srikar's note
+~~~~~~~~~~~~~~~
+
+on lims.cardiodx.com
+pg_dump prodlims | gzip > prodlims.gz
+pg_dump sire | gzip > sire.gz
+
+
+on testlims.cardiodx.com:
+wajig install subversion ruby1.8-dev sun-java6-jdk libxml-parser-ruby1.8 r-base-dev memcached apache2 apache2-prefork-dev
+a2enmod headers
+a2enmod ssl
+/etc/init.d/apache2 restart
+R
+install.packages('outliers')
+q()
+
+wajig install postgresql 
+Ensure /etc/postgresql/8.3/main/pg_hba.conf has the line:
+host    all         all         127.0.0.1/32          trust
+/etc/init.d/postgresql-8.3 restart
+
+wajig install rubygems libldap-ruby1.8 libpgsql-ruby irb
+gem update --system
+ln -sf /usr/bin/gem1.8 /usr/bin/gem
+gem install rails -v 1.2.2 --no-ri --no-rdoc
+gem install ruby-net-ldap alib rubyzip --no-ri --no-rdoc
+gem install roo -v 0.5.4 --no-ri --no-rdoc
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+gem install rjb --no-ri --no-rdoc
+gem install rsruby -- --with-R-dir=/usr/lib/R --with-R-include=/usr/share/R/include
+gem install memcache-client -v 1.5.0 --no-ri --no-rdoc
+gem install cached_model slave passenger --no-ri --no-rdoc
+passenger-install-apache2-module 
+cat >> /etc/apache2/mods-available/passenger.load <<EOF
+LoadModule passenger_module /usr/lib/ruby/gems/1.8/gems/passenger-2.2.10/ext/apache2/mod_passenger.so
+PassengerRoot /usr/lib/ruby/gems/1.8/gems/passenger-2.2.10
+PassengerRuby /usr/bin/ruby1.8
+EOF
+a2enmod passenger
+/etc/init.d/apache2 restart
+
+
+sudo su - postgres
+createuser -s rails
+
+sudo su - rails
+svn co svn://svn/lims/trunk lims
+cd lims
+modify apache_lims.site and replace lims with testlims
+Ensure all ssl keys are copied correctly to /etc/apache2/ssl
+cp apache_lims to /etc/init.d/apache_lims
+cd lims/web/config
+Ensure database.yml, backgroundrb.yml & backgroundrb_schedules.yml match those on the production server
+
+createdb prodlims
+gzip -dc prodlims.gz | psql -d prodlims
+createdb sire
+gzip -dc sire.gz | psql -d sire
+
+/etc/init.d/apache_lims start

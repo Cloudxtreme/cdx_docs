@@ -1,0 +1,7 @@
+FROMADDR=cdxfax@cardiodx.com
+# Notifications of both successful & failed fax receipts are sent to this email address
+TOADDR=faxmaster@cardiodx.com
+# Faxes recd. are sent to this email address
+SENDTO=${CALLID4}@cardiodx.com
+SENDER="${CALLID2} <${CALLID1}>"
+FILETYPE=pdf

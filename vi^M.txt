@@ -1,0 +1,9 @@
+http://www.tech-recipes.com/unix_tips150.html
+
+
+How to remove ^M from vi
+
+1,$s/(Control V),(Control M)//g
+
+
+tr -d "\015" < Validation_Rule_MAKEPLATE.pks > 1.pks

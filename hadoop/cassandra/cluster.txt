@@ -1,0 +1,56 @@
+
+http://ronaldbradford.com/blog/configuring-a-cassandra-cluster-2010-02-24/
+http://posulliv.github.com/2009/09/07/building-a-small-cassandra-cluster-for-testing-and-development.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+java -version
+java version "1.6.0_20"
+
+su - hadoop
+wget http://mirror.cloudera.com/apache//cassandra/0.6.8/apache-cassandra-0.6.8-bin.tar.gz
+tar zxvf apache-cassandra-0.6.8-bin.tar.gz
+exit
+
+cd /usr/local
+mv /home/hadoop/apache-cassandra-0.6.8 .
+ln -s apache-cassandra-0.6.8 cassandra
+
+vi README.txt
+
+mkdir -p /var/log/cassandra
+chown -R hadoop /var/log/cassandra
+mkdir -p /var/lib/cassandra
+chown -R hadoop /var/lib/cassandra
+
+
+su - hadoop
+vi .bashrc
+export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.22/
+export HADOOP_HOME=/usr/local/hadoop
+export CASSANDRA_HOME=/usr/local/cassandra
+export PIG_HOME=/usr/local/pig
+export HIVE_HOME=/usr/local/hive
+export PATH=$HADOOP_HOME/bin:$CASSANDRA_HOME/bin:$PIG_HOME/bin:$HIVE_HOME/bin:$PATH
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Seeds:
+--   It's customary to pick a small number of relatively stable nodes to serve as your seeds
+--   Do make sure that each seed also knows of at least one other
+-- ListenAddress: reachable from the ListenAddress used on all other nodes
+-- ThriftAddress: accessible to clients.
+
+cd /usr/local/cassandra/conf
+vi storage-conf.xml 
+
+  <Seeds>
+      <Seed>cchoudesktop</Seed>
+  </Seeds>
+
+  <ListenAddress>10.10.35.77</ListenAddress>
+
+
+cassandra -f
+
+nodeprobe -host cchoudesktop ring
+
+

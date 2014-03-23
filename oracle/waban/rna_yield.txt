@@ -1,0 +1,226 @@
+
+select PROCEDURE_TEMPLATE_ID
+from procedure_template 
+where PROCEDURE_STATUS != 'OBSOLETE'
+and PROCEDURE_NAME = 'RNA Quantitation';
+
+select distinct s.CHECKLIST_ID, s.sample_id
+from checklist_sample s, checklist c, procedure_template p, step_template s
+where s.checklist_id = c.checklist_id
+   and c.procedure_template_id = p.procedure_template_id
+   and p.procedure_template_id = s.procedure_template_id
+and sample_id in
+ (select sample_id
+  from sample
+  where accession_id in
+    (select accession_id from accession where accession_number = 'TRF44797')
+ )
+and PROCEDURE_STATUS != 'OBSOLETE'
+and PROCEDURE_NAME = 'RNA Quantitation';
+
+
+--
+-- RNA yield values
+--
+select sample_id, CHECKLIST_COL, ENTERED_VALUE
+from checklist_content
+where CHECKLIST_ROW in (
+   -- find NUMBER_IN_SEQUENCE for "Replicate 1: Conc (ng/ul)/A260_280"
+   select NUMBER_IN_SEQUENCE
+   from STEP_TEMPLATE
+   where PROCEDURE_TEMPLATE_ID in
+     (select PROCEDURE_TEMPLATE_ID
+        from procedure_template
+        where PROCEDURE_STATUS != 'OBSOLETE'
+        and PROCEDURE_NAME = 'RNA Quantitation'
+     )
+   and (DESCRIPTION like 'Replicate%' or DESCRIPTION like '%Status')
+   )
+and sample_id in
+    -- return only samples related RNA Quant
+    (select distinct s.sample_id
+     from checklist_sample s, checklist c, procedure_template p, step_template s
+     where s.checklist_id = c.checklist_id
+      and c.procedure_template_id = p.procedure_template_id
+      and p.procedure_template_id = s.procedure_template_id
+      and sample_id in
+         -- return all samples related to this accession TRF
+         (select sample_id
+          from sample
+          where accession_id in
+                (select accession_id
+                  from accession
+                  where accession_number = 'TRF47571'
+                )
+         )
+      and PROCEDURE_STATUS != 'OBSOLETE'
+      and PROCEDURE_NAME = 'RNA Quantitation'
+     )
+;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set line 3000
+set pagesize 10000
+col ENTERED_VALUE for a30
+col status for a20
+
+--select distinct a.date_created, a.accession_number, s.sample_id, cc.CHECKLIST_COL, cc.ENTERED_VALUE
+select distinct a.date_created, a.accession_number, s.sample_id, cc.ENTERED_VALUE, cs.status
+from accession a, sample s, checklist_sample cs, checklist_content cc, checklist c, procedure_template pt, step_template st
+where a.accession_id = s.accession_id
+and s.sample_id = cs.sample_id
+and cs.checklist_id = c.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_template_id = st.procedure_template_id
+and pt.PROCEDURE_STATUS != 'OBSOLETE'
+and pt.PROCEDURE_NAME = 'RNA Quantitation'
+and cc.sample_id = s.sample_id
+and cc.CHECKLIST_ROW = st.NUMBER_IN_SEQUENCE
+and st.DESCRIPTION like 'Replicate%'
+--and a.accession_number = 'TRF44797'
+and a.date_created > '10-APR-11'
+order by a.date_created, a.accession_number
+;
+
+new: DATE_CREATED > '10-APR-11'
+old: DATE_CREATED between '10-JUN-10' and '10-APR-11'
+
+drop table rna_yield_temp;
+create table rna_yield_temp (
+  date_created date,
+  accession_number char(32),
+  sample_id				 integer,
+  yield						 float,
+  ratio						 float,
+  status					 char(64)
+);
+
+truncate table rna_yield_temp;
+
+more rna_yield_new.out | awk -F/ '{print $1, $2}' | awk '{print "insert into rna_yield_temp values (|"$1"|,|"$2"|,"$3","$4","$5",|"$6,$7,$8,$9"|);"}' > input_new.sql 
+more rna_yield_old.out | awk -F/ '{print $1, $2}' | awk '{print "insert into rna_yield_temp values (|"$1"|,|"$2"|,"$3","$4","$5",|"$6,$7,$8,$9"|);"}' > input_old.sql 
+
+  516  sed -ie "s/|/'/g" input_old.sql 
+  518  sed -ie "s/Passed   /Passed/g" input_old.sql 
+
+insert into rna_yield_temp values ('12-APR-11', 'TRF37947',	2048220, 19.55, 1.97,	'Passed');
+
+rlwrap sqlplus dnalims/srikar22dna @input_new.sql
+rlwrap sqlplus dnalims/srikar22dna @input_old.sql
+
+
+  524  grep ',,' input_old.sql
+
+insert into rna_yield_temp values ('15-SEP-10','IRP_CDL000956',1544777,1848,null,'   ');
+   :
+   :
+
+create index rna_yield_date_created on rna_yield_temp(date_created);
+create index rna_yield_accession_number on rna_yield_temp(accession_number);
+
+
+SQL> select count(*) from rna_yield_temp where DATE_CREATED > '10-APR-11';
+       513
+
+SQL> select count(*) from rna_yield_temp where DATE_CREATED between '10-JUN-10' and '10-APR-11';
+     11237
+
+
+~~~~~~~~~~~
+--
+-- ok, let's get some information
+--
+select * from rna_yield_temp where rownum < 100;
+
+Total TRF samples:
+select count(distinct ACCESSION_NUMBER) from rna_yield_temp where DATE_CREATED between '10-Jun-10' and '10-APR-11';
+			   3090
+select count(distinct ACCESSION_NUMBER) from rna_yield_temp where DATE_CREATED > '10-APR-11';
+			    162
+
+how about the yields?
+is triplicate necessary?
+  set line 1000
+	set pagesize 1000
+	select * from rna_yield_temp where status = 'Failed - Low Yield' and rownum < 100;
+
+   select ACCESSION_NUMBER, count(*)
+   from rna_yield_temp
+   where status = 'Failed - Low Yield'
+   group by ACCESSION_NUMBER;
+
+	176 rows selected.
+  	3: 118
+  	6:  57
+  	9:   1
+
+  only have 3s, 6s, 9s  ---> triplicate is NOT necessary  --> if fails once, it's going to fail all three.
+     
+OK, how many are 'Passed' after we change the low bound:
+  select distinct date_created, ACCESSION_NUMBER
+  from rna_yield_temp
+  where YIELD > 12.0 and YIELD <= 15
+    and STATUS = 'Passed'
+    order by date_created;
+
+
+  select *
+  from rna_yield_temp
+  where ACCESSION_NUMBER = 'TRF47571';
+
+
+select distinct a.date_created, a.accession_number, c.checklist_id, s.sample_id, cc.ENTERED_VALUE, cs.status
+from accession a, sample s, checklist_sample cs, checklist_content cc, checklist c, procedure_template pt, step_template st
+where a.accession_id = s.accession_id
+and s.sample_id = cs.sample_id
+and cs.checklist_id = c.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_template_id = st.procedure_template_id
+and pt.PROCEDURE_STATUS != 'OBSOLETE'
+and pt.PROCEDURE_NAME = 'RNA Quantitation'
+and cc.sample_id = s.sample_id
+and cc.CHECKLIST_ROW = st.NUMBER_IN_SEQUENCE
+and (st.DESCRIPTION like 'Replicate%' or DESCRIPTION like '%Status')
+--and a.accession_number = 'TRF47571'
+and a.date_created > '10-APR-11'
+order by a.date_created, a.accession_number, sample_id
+;
+
+
+select sample_id, CHECKLIST_COL, ENTERED_VALUE
+from checklist_content
+where CHECKLIST_ROW in (
+   -- find NUMBER_IN_SEQUENCE for "Replicate 1: Conc (ng/ul)/A260_280"
+   select NUMBER_IN_SEQUENCE
+   from STEP_TEMPLATE
+   where PROCEDURE_TEMPLATE_ID in
+     (select PROCEDURE_TEMPLATE_ID
+        from procedure_template
+        where PROCEDURE_STATUS != 'OBSOLETE'
+        and PROCEDURE_NAME = 'RNA Quantitation'
+     )
+   and (DESCRIPTION like 'Replicate%' or DESCRIPTION like '%Status')
+   )
+and sample_id in
+    -- return only samples related RNA Quant
+    (select distinct s.sample_id
+     from checklist_sample s, checklist c, procedure_template p, step_template s
+     where s.checklist_id = c.checklist_id
+      and c.procedure_template_id = p.procedure_template_id
+      and p.procedure_template_id = s.procedure_template_id
+      and sample_id in
+         -- return all samples related to this accession TRF
+         (select sample_id
+          from sample
+          where accession_id in
+                (select accession_id
+                  from accession
+                  where accession_number = 'TRF47571'
+                )
+         )
+      and PROCEDURE_STATUS != 'OBSOLETE'
+      and PROCEDURE_NAME = 'RNA Quantitation'
+     )
+;
+

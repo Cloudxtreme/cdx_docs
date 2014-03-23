@@ -1,0 +1,101 @@
+benchmark benchmarketing performance linux phoronix
+
+lmbench
+AIM Suite III
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.phoronix-test-suite.com/
+http://www.phoronix-test-suite.com/documentation/1.0/index.html
+report: http://global.phoronix-test-suite.com/
+
+wajig install php5-cli php5-gd
+wajig install build-essential apache2
+
+wajig isntall ./phoronix-test-suite_1.0.2_all.deb 
+							./phoronix-test-suite_2.4.0_all.deb
+mkdir -p /root/.phoronix-test-suite/installed-tests/
+
+phoronix-test-suite benchmark apache
+  Would you like to save these test results (Y/n)? y
+  Enter a name to save these results: apache_1
+
+cd /var/www/
+ln -s /data/phoronix-test-suite/test-results .
+
+-- other tests
+phoronix-test-suite install multicore
+phoronix-test-suite install disk
+
+phoronix-test-suite benchmark multicore
+phoronix-test-suite benchmark disk
+
+
+-- download cache
+phoronix-test-suite make-download-cache
+
+tar it, copy it over to the new machine, and untar to download-cache
+
+
+-- merge
+phoronix-test-suite merge-results multicore-1 multicore-2
+   merge-1147
+
+
+-- compared w/ others
+phoronix-test-suite benchmark grimsrud-12434-20694-16946
+  Enter a unique name for this test run: storage1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+phoronix-test-suite install-all
+phoronix-test-suite list-tests
+phoronix-test-suite list-suites
+
+phoronix-test-suite batch-setup
+
+/root/.phoronix-test-suite/installed-tests
+
+phoronix-test-suite list-installed-tests
+phoronix-test-suite list-suites
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://global.phoronix-test-suite.com/?k=results
+
+phoronix-test-suite benchmark build-apache
+phoronix-test-suite benchmark multicore
+phoronix-test-suite benchmark universe
+
+
+# phoronix-test-suite batch-benchmark build-apache
+   Enter a name to save these results: test_apache
+   Enter a unique identifier for distinguishing this series of tests: 2
+
+   Results Saved To: /root/.phoronix-test-suite/test-results/test_apache/composite.xml
+
+# MONITOR=all phoronix-test-suite benchmark encode-mp3
+
+
+-- batch run
+# phoronix-test-suite batch-setup multicore
+Save test results when in batch mode (Y/n)? 
+Open the web browser automatically when in batch mode (y/N)? 
+Auto upload the results to Phoronix Global (Y/n)? n
+Prompt for test identifier (Y/n)? n
+Prompt for test description (Y/n)? n
+Prompt for saved results file-name (Y/n)? n
+Run all test options (Y/n)? 
+
+# MONITOR=all phoronix-test-suite batch-benchmark multicore
+
+-- stress test
+# for i in `seq 0 19`;do  MONITOR=all phoronix-test-suite batch-benchmark multicore; sleep 60; done
+# date; for i in `seq 0 19`;do  MONITOR=all phoronix-test-suite batch-benchmark multicore; sleep 60; done; date
+
+
+~~~~~~~~~~~~~~~~~~~~~~~
+http://global.phoronix-test-suite.com/index.php?k=profile&u=michel-26280-28206-10114
+
+phoronix-test-suite list-results
+
+vi /usr/share/phoronix-test-suite/pts/distro-scripts/install-ubuntu-packages.sh 
+comment out everything and add
+/usr/bin/apt-get -y install $@
+

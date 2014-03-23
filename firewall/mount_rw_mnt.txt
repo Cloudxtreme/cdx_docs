@@ -1,0 +1,9 @@
+
+/etc/sysconf/includes
+
+
+/bin/mount /dev/root /mnt -o remount -w
+
+
+
+/bin/mount /dev/root /mnt -o remount -r

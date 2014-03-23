@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeMinorAlleleFreq" table="TRGE_MINOR_ALLELE_FREQ" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeMinorAlleleFreqId">
+            <key-property name="populationFreqId" type="big_decimal">
+                <column name="POPULATION_FREQ_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="frequency" type="big_decimal">
+                <column name="FREQUENCY" precision="22" scale="0" />
+            </key-property>
+            <key-property name="ethnicity" type="string">
+                <column name="ETHNICITY" length="100" />
+            </key-property>
+            <key-property name="variantId" type="big_decimal">
+                <column name="VARIANT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="populationName" type="string">
+                <column name="POPULATION_NAME" length="100" />
+            </key-property>
+            <key-property name="populationDesc" type="string">
+                <column name="POPULATION_DESC" length="2000" />
+            </key-property>
+            <key-property name="populationType" type="string">
+                <column name="POPULATION_TYPE" length="100" />
+            </key-property>
+            <key-property name="populationSource" type="string">
+                <column name="POPULATION_SOURCE" length="100" />
+            </key-property>
+            <key-property name="populationSize" type="big_decimal">
+                <column name="POPULATION_SIZE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

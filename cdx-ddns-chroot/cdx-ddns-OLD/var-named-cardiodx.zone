@@ -1,0 +1,26 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+cardiodx.com		IN SOA	pdc.cardiodx.com. (
+				2001042717 ; serial
+				86400      ; refresh (1 day)
+				21600      ; retry (6 hours)
+				3600000    ; expire (5 weeks 6 days 16 hours)
+				3600       ; minimum (1 hour)
+				)
+			NS	pdc.cardiodx.com.
+$ORIGIN cardiodx.com.
+pdc			A	10.10.37.21
+backup			A	10.10.37.22
+www			A	10.10.37.23
+
+$TTL 10800	; 3 hours
+blueberry		A	10.10.37.2100
+
+$TTL 86400	; 1 day
+cardiodx		A	216.71.116.162
+
+$TTL 10800	; 3 hours
+cchouxp			A	10.10.37.101
+
+$TTL 86400	; 1 day
+localhost		A	127.0.0.1

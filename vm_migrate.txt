@@ -1,0 +1,6 @@
+vm migration migrate checkpointing
+
+http://www.linux-lunatix.org/index.php/Howto/Cluster
+
+
+

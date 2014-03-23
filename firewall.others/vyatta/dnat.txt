@@ -1,0 +1,67 @@
+http://www.datafukked.com/content/port-forwarding-vyatta-vc5
+
+-- basic nat
+set service nat rule 1 description WAN_Outbound_Interface
+set service nat rule 1 outbound-interface eth0
+set service nat rule 1 source address 172.16.1.0/24
+set service nat rule 1 type masquerade
+
+-- Setting up Exchange Rules
+et service nat rule 200
+set service nat rule 200 description Exchange_SMTP
+set service nat rule 200 type destination
+set service nat rule 200 inbound-interface eth0
+set service nat rule 200 destination port smtp
+set service nat rule 200 inside-address address 172.16.1.20
+commit
+save
+
+
+set service nat rule 210
+set service nat rule 210 description Exchange_OWA_Outlook_Anywhere
+set service nat rule 210 type destination
+set service nat rule 210 inbound-interface eth0
+set service nat rule 210 destination port https
+set service nat rule 210 inside-address address 172.16.1.20
+commit
+save
+
+set service nat rule 220
+set service nat rule 220 description Exchange_Secure_IMAP
+set service nat rule 220 type destination
+set service nat rule 220 inbound-interface eth0
+set service nat rule 220 destination port 993
+set service nat rule 220 inside-address address 172.16.1.20
+commit
+save
+
+set service nat rule 230
+set service nat rule 230 description Exchange_Secure_POP3
+set service nat rule 230 type destination
+set service nat rule 230 inbound-interface eth0
+set service nat rule 230 destination port 995
+set service nat rule 230 inside-address address 172.16.1.20
+commit
+save
+
+-- Enabling Remote Desktop access to a management port
+set service nat rule 300
+set service nat rule 300 description Management_Box_RDP
+set service nat rule 300 type destination
+set service nat rule 300 inbound-interface eth0
+set service nat rule 300 destination port 3389
+set service nat rule 300 inside-address address 172.16.1.10
+commit
+save
+
+-- Exposing a Webserver over port 80
+set service nat rule 400
+set service nat rule 400 description Primary_WebServer
+set service nat rule 400 type destination
+set service nat rule 400 inbound-interface eth0
+set service nat rule 400 destination port http
+set service nat rule 400 inside-address address 172.16.1.20
+commit
+save
+
+

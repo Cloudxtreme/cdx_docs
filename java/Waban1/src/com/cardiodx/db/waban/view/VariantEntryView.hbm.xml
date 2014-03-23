@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.VariantEntryView" table="VARIANT_ENTRY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.VariantEntryViewId">
+            <key-property name="roiName" type="string">
+                <column name="ROI_NAME" length="30" />
+            </key-property>
+            <key-property name="gene" type="string">
+                <column name="GENE" length="100" />
+            </key-property>
+            <key-property name="geneRegion" type="string">
+                <column name="GENE_REGION" length="101" />
+            </key-property>
+            <key-property name="position" type="string">
+                <column name="POSITION" length="10" />
+            </key-property>
+            <key-property name="genotype" type="string">
+                <column name="GENOTYPE" length="50" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseId" type="string">
+                <column name="CASE_ID" length="50" />
+            </key-property>
+            <key-property name="roiId" type="big_decimal">
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="wildTypeSequence" type="string">
+                <column name="WILD_TYPE_SEQUENCE" length="4000" />
+            </key-property>
+            <key-property name="firstAllele" type="string">
+                <column name="FIRST_ALLELE" length="50" />
+            </key-property>
+            <key-property name="secondAllele" type="string">
+                <column name="SECOND_ALLELE" length="50" />
+            </key-property>
+            <key-property name="contextSequence" type="string">
+                <column name="CONTEXT_SEQUENCE" length="4000" />
+            </key-property>
+            <key-property name="geneRegionId" type="big_decimal">
+                <column name="GENE_REGION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

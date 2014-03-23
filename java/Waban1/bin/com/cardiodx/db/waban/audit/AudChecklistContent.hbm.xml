@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudChecklistContent" table="AUD_CHECKLIST_CONTENT" schema="DNALIMS">
+        <comment>Audit of results for each step of a procedure for each sample in a checklist.</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="accessionId" type="big_decimal">
+            <column name="ACCESSION_ID" precision="22" scale="0">
+                <comment>Accession identifier.</comment>
+            </column>
+        </property>
+        <property name="checklistId" type="big_decimal">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>Checklist identifier.</comment>
+            </column>
+        </property>
+        <property name="checklistContentId" type="big_decimal">
+            <column name="CHECKLIST_CONTENT_ID" precision="22" scale="0" not-null="true">
+                <comment>Result identifier.</comment>
+            </column>
+        </property>
+        <property name="sampleId" type="big_decimal">
+            <column name="SAMPLE_ID" precision="22" scale="0">
+                <comment>Sample identifier used by the lab.</comment>
+            </column>
+        </property>
+        <property name="checklistRow" type="big_decimal">
+            <column name="CHECKLIST_ROW" precision="22" scale="0" not-null="true">
+                <comment>The row or step in the procedure.</comment>
+            </column>
+        </property>
+        <property name="checklistCol" type="big_decimal">
+            <column name="CHECKLIST_COL" precision="22" scale="0" not-null="true">
+                <comment>The column location in the display grid for this sample.</comment>
+            </column>
+        </property>
+        <property name="enteredValue" type="string">
+            <column name="ENTERED_VALUE" length="256">
+                <comment>The outcome of the step.</comment>
+            </column>
+        </property>
+        <property name="commentsFlag" type="big_decimal">
+            <column name="COMMENTS_FLAG" precision="22" scale="0">
+                <comment>A flag to indicate whether or not comments exist (a 1 = yes) for this step sample result. Multiple comments per step are allowed.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who create the record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified the record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date the record was last modified.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

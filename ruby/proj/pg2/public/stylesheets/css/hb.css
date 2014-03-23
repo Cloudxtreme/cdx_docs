@@ -1,0 +1,330 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* CardioDx */
+
+/* Testing only */
+div {border:0px solid red;}
+/*#container div {border-left:1px solid red;border-right:1px solid red;}*/
+/*#hmain #content h2 {border:1px solid red;}
+#hmain #links {border:1px solid red;}
+#access {border:1px solid red;}*/
+
+
+/* Basic Layout */
+body {padding:0; margin:0; font-family:Arial, Helvetica, sans-serif; font-size:12px;}
+img {border:none;}
+.clear {clear:both; margin:0px; padding:0px; line-height:0px;}
+
+#container {width:965px; align:center; height: auto !important; margin:0 auto - 100px;}
+#theater {margin:0 auto; position:relative; top:-7px;/*margin-top:20px; border:1px solid red; padding:0px; width:965px; height:423px; background:red;*/}
+
+/* Search */
+#search {}
+/*#ticker {display:none;}*/
+#ticker {width:100%; height:20px; float:left; padding-top:2px;}
+a.Gloss {border-bottom: 1px double;line-height: 1.7em;}
+
+
+/* Additional Color Styles */
+h1 {color:#423132; text-transform:uppercase;margin-left:107px; /*font-weight:bold;*/}
+h2 {color:#c42032; font-size:12px;padding-bottom:15px;margin-top:0px;padding-top:0px;}
+h3 {color:#c42032; font-size:12px;margin-bottom:0px;padding-bottom:0px;/* margin-left:0px; padding-left:0px;*/}
+h4 {color:#423132; font-size:12px;margin-bottom:0px;padding-bottom:0px;}
+
+#hmain p {margin-top:0px;padding-top:3px; color:#423132; padding-bottom:8px; line-height:18px;}
+#hmain a {color:#9c5f0e; text-decoration:underline;}
+#footer p, #footer a {color:#423132; font-size:10px;}
+.nounderline { text-decoration:underline;}
+blockquote {color:#423132;}
+
+
+/* Theme */
+#main #headbanner {width:757px; float:left;padding:0 0 0 23px;}
+#main .company {background:url(/images/banner_sub_company.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .company h1 {font-size:17px; margin-top:22px;}
+#main .diagnostic-programs {background:url(/images/banner_sub_diagnostic.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .diagnostic-programs h1 {font-size:17px; margin-top:22px;}
+#main .for-patients {background:url(/images/banner_sub_patients.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .for-patients h1 {font-size:17px; margin-top:22px;}
+#main .clinical-studies {background:url(/images/banner_sub_clinical.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .clinical-studies h1 {font-size:17px; margin-top:22px;}
+#main .news-and-resources {background:url(/images/banner_sub_news.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .news-and-resources h1 {font-size:17px; margin-top:22px;}
+
+#main .corus-cad {background:url(/images/banner_sub_corus.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .corus-cad h1 {font-size:17px; margin-top:22px;}
+
+#main .else {background:url(/images/else.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .else h1 {font-size:17px; margin-top:22px;}
+#main .else-main {background:url(/images/banner_company.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .else-main h1 {font-size:2em; margin-top:40px;}
+
+/* Main Theme */
+#main .company-main {background:url(/images/banner_company.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .company-main h1 {font-size:2em; margin-top:40px;}
+#main .diagnostic-programs-main {background:url(/images/banner_diagnostic.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .diagnostic-programs-main h1 {font-size:2em; margin-top:40px;}
+#main .for-patients-main {background:url(/images/banner_patients.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .for-patients-main h1 {font-size:2em; margin-top:40px;}
+#main .clinical-studies-main {background:url(/images/banner_clinical.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .clinical-studies-main h1 {font-size:2em; margin-top:40px;}
+#main .news-and-resources-main {background:url(/images/banner_news.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .news-and-resources-main h1 {font-size:2em; margin-top:40px;}
+
+#main .corus-cad-main {background:url(/images/banner_corus.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .corus-cad-main h1 {font-size:2em; margin-top:40px;}
+
+
+/* Header Basic Layout */
+#header {height:109px; overflow:hidden;}
+#logo {float:left; width:130px; height:87px;padding-left:27px;}
+#logo a { outline:none;}
+
+#banner {position:relative;}
+#navigation {float:right; width:800px; height:45px; background:url(/images/nav_bg.jpg) no-repeat top right; margin-right:3px;}
+#header-right {float:right;}
+
+/* Buckets Styles */
+#buckets {width:inherit; min-height:120px;margin:0 auto;}
+#bkt1, #bkt2, #bkt3 {width:33%; float:left; padding-left:2px; min-height:120px; padding-bottom:10px;}
+#bkt1 img, #bkt2 img, #bkt3 img { padding-bottom:18px;border:none; margin-left:0px;}
+#bkt1 p, #bkt2 p, #bkt3 p {padding-left:3px; padding-bottom:13px; padding-top:0px; margin:0px; color:#423132; line-height:16px;}
+#bkt1 a, #bkt2 a, #bkt3 a {border:none; outline:none;}
+#bkt3 img {padding-bottom:21px;}
+
+/* Main Area Styles */
+/*#main {border:1px solid red;}
+#hbody {border:1px solid green;}*/
+#hmain {width:758px; float:left;/*border:1px solid orange;*/ padding-bottom:20px; padding-left:22px;}
+#hmain #content p {line-height:18px;color:#423132; padding-left:0px; margin-left:0px;}
+
+#hmain #minheight {height:100px; width:1px; float:right;}
+#hmain #content {float:left;width:565px; padding-left:2px; margin-top:5px; padding-right:28px; color:#423132;}
+#hmain #content_right {float:right;width:158px; margin-top:5px; padding-top:27px;}
+
+/*#hmain #title {width:575px; float:left; padding-top:0px; margin-top:0px;}
+#hmain #title h2 {margin:0px; padding:35px 0px 15px 0px; padding-left:2px;}*/
+h2 {padding-left:2px; padding-bottom:5px;}
+
+/* Footer Styles */
+#push {height: 100px;}
+#footer {background:url(/images/footer_line.gif) top left no-repeat; width:959px; color:#c42032; height: 100px; margin:0 auto;}
+#footer p {color:#c42032;}
+#footer #copyright {float:left; padding-top:0px; margin-top:0px;}
+#footer #copyright p {color:#423132; padding-top:0px; margin-top:0px;}
+#footer #footer_nav {float:right; padding-top:0px; margin-top:0px;}
+#footer #footer_nav p { padding-top:0px; margin-top:0px;}
+#footer #footer_nav a {text-decoration:none; padding-left:3px; padding-right:3px; padding-top:0px; margin-top:0px;}
+#footer #footer_nav a:hover {color:#c42032;}
+
+
+/* Sub Nav Styles */
+#noNav {width:182px; float:left;padding-left:0;margin-left:0;/*border:1px solid blue;*/ margin-bottom:50px;}
+#noNav #subnav_main {width:inherit; background:url(/images/subnav_top.jpg) top left no-repeat #d9e0d8; padding-top:24px; height:180px;}
+#noNav #subnav_bot {width:inherit;  background:url(/images/subnav_bot.jpg) bottom left no-repeat #d9e0d8; height:30px;}
+
+/* Registration Form CC Styles */
+#form_cc {width:182px; float:left;padding-left:0;margin-left:0;/*border:1px solid blue;*/ margin-bottom:50px;}
+#form_cc #subnav_main {width:inherit; background:url(/images/subnav_top_red.jpg) top left no-repeat #c11334; padding-top:12px; height:180px;}
+#form_cc #subnav_bot {width:inherit;  background:url(/images/subnav_bot_red.jpg) bottom left no-repeat #c11334; height:30px;}
+#form_cc #subnav_arrow { padding-left:40px; width:132px; color:#fff; background:url(/images/subnav_arrow_red.jpg) 8px 0px no-repeat;}
+
+#subnav {width:182px; float:left;padding-left:0;margin-left:0;/*border:1px solid blue;*/ height:300px;}
+#subnav a {outline:none;}
+#subnav_main {width:inherit; background:url(/images/subnav_top.jpg) top left no-repeat #d9e0d8; padding-top:24px;}
+#subnav_main ul {width:170px;padding:0px; margin:0px;}
+#subnav_main ul ul {display:none;}
+#subnav_main ul li {list-style-type:none;padding:0 0 0 7px;  margin-left:5px;border-top:1px solid #c1c9c0;}
+#subnav_main ul li a {text-decoration:none; color:#493b3b; display:block;  padding-top:6px; padding-bottom:6px; padding-left:30px; margin-left:5px;}
+#subnav_main ul li a:active, #subnav_main ul li a:hover  {
+   padding-left:30px; 
+   background:url(/images/subnav_arrow.gif) top left no-repeat; 
+   color:#c42032; 
+/* font-weight:bold; */
+}
+/*#subnav_main ul li.active-nav {adding-left:30px; background:url(../images/subnav_arrow.gif) top left no-repeat; color:#c42032; font-weight:bold;}*/
+#subnav_main li#parent-open a {padding-left:30px; background:url(/images/subnav_arrow.gif) top left no-repeat; color:#c42032; font-weight:bold;}
+#subnav_main li.active-nav ul {display:block;}
+#subnav_main li#parent-open ul {display:block;}
+#subnav_main li.active-nav ul ul {display:none;}
+#subnav_main li#parent-open ul ul {display:none;}
+#subnav_main li#team ul {display:none;}
+#subnav_main li#parent-open li a {color:#423132;width:114px;  padding-top:0px; padding-bottom:5px; padding-left:10px; background:none; font-weight:normal;}
+#subnav_main li#parent-open li:hover a {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:25px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; /*font-weight:bold; */}
+#subnav_main li#parent-open li.active-nav a {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:25px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; /* font-weight:bold; */}
+#subnav_main ul ul {padding:0 0 0 10px; margin:0; background-image:none; width:135px;}
+#subnav_main ul ul li {border:none;padding:0px;margin:0px;}
+#subnav_main ul ul li a {color:#423132;width:114px;  padding-top:0px; padding-bottom:5px; padding-left:10px;}
+#subnav_main ul ul li a:hover {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat;}
+#subnav_bot {width:inherit;  background:url(/images/subnav_bot.jpg) bottom left no-repeat #d9e0d8; height:30px;}
+/* Sub Nav Hover Styles */
+#subnav_main ul li.active-nav a {padding-left:30px; background:url(/images/subnav_arrow.gif) top left no-repeat; color:#c42032; /*font-weight:bold;*/}
+#subnav_main ul li ul li a {color:#423132;width:114px;  padding-top:0px; padding-bottom:5px;/* margin-left:10px;*/ padding-left:10px; margin-left:22px; background:none; font-weight:normal;}
+#subnav_main ul li ul li a:hover {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:22px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; /* font-weight:bold; */}
+#subnav_main ul li.active-nav ul li a {color:#423132;width:120px;  padding-top:0px; padding-bottom:5px; padding-left:10px; margin-left:22px; background:none; font-weight:normal;}
+#subnav_main ul li.active-nav ul li a:hover {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:22px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; /* font-weight:bold;*/}
+#subnav_main ul li ul li.active-nav a {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:22px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat;}
+
+
+/* Common Nav */
+#nav a {text-decoration:none;display:block; outline:none; cursor:pointer;}
+#nav li {float:left;padding:0px;list-style-type:none;}
+#nav ul {float:left;width:182px;position:absolute;left:-999em;margin:0px 0px 0px 6px;background:url(/images/mainnav_bot.gif) bottom left no-repeat transparent; padding-bottom:20px;padding-top:20px;padding-left:0px;}
+#nav ul li {width:170px;display:block;}
+#nav ul li:hover {width:170px;}
+#nav ul li a {display:block;}
+#nav ul ul {width:150px; display:none;}
+#nav li:hover ul, #nav li:hover ul ul, #nav li:hover ul ul ul, #nav li.sfhover ul ul, #nav li.sfhover ul ul ul {left:-999em;z-index:100000;}
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul, #nav li li li li.sfhover ul {left:auto;z-index:100000;}
+
+/* Unique Nav */
+#nav {font:bold 10px Arial, Helvetica, sans-serif; float:right; padding-top:1px; margin-top:0px;}
+#nav a {padding:0; margin-left:6px;font-size:11px;}
+#nav li#fir a {background:none;}
+#nav li#fir a#active {color:#c42032;background:transparent;}
+#nav a:hover {color:#c42032;}
+#nav a#active {color:#3366CC;background:transparent;}
+#nav #active-nav {font-weight:normal;}
+#nav #active-nav li a {font-weight:normal;color:#fff;}
+#nav #active-nav li a:hover {color:#000;}
+#nav li#fir ul {}
+#nav ul {font:10px Arial, Helvetica, sans-serif;text-transform:none;font-weight:normal; border-top:8px solid white;z-index:100000;}
+#nav ul li {border-top:1px solid #c1c9c0;}
+#nav ul li a {color:#423132;background:none;padding:5px 0px 5px 22px;margin:0px; padding-left:28px; margin-left:7px; padding-top:8px; padding-bottom:8px; cursor:pointer;}
+#nav ul li a:hover {background:url(/images/subnav_arrow_hover.gif) top left no-repeat; color:#c42032; font-weight:bold; padding-bottom:8px;}
+#nav ul ul li a:hover {color:#c42032;}
+#nav ul ul {background:#d9e0d8;border:0;margin:-22px 0px 0px 182px;}
+#nav li:hover, #nav li.sfhover {background:transparent;color:#c42032;}
+#nav li li:hover, #nav li li.sfhover {background:#d9e0d8;color:#c42032;}
+
+#nav .company {width:74px;height:38px;background: url(/images/nav1company_off.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .diagnostic-programs {width:161px;height:38px;background: url(/images/nav2diagnostic_off.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .for-patients {width:101px;height:38px;background: url(/images/nav3patients_off.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .clinical-studies {width:127px;height:38px;background: url(/images/nav4studies_off.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .news-and-resources {width:159px;height:38px;background: url(/images/nav5news_off.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .corus-cad {width:101px;height:38px;background: url(/images/nav6corus_off.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+
+#nav .company:hover, #nav li:hover a.company, #nav li.sfhover a.company {width:74px;height:38px; background: url(/images/nav1company_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .diagnostic-programs:hover, #nav li:hover a.diagnostic-programs, #nav li.sfhover a.diagnostic-programs {width:161px;height:38px; background: url(/images/nav2diagnostic_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .for-patients:hover, #nav li:hover a.for-patients, #nav li.sfhover a.for-patients {width:101px;height:38px; background: url(/images/nav3patients_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .clinical-studies:hover, #nav li:hover a.clinical-studies, #nav li.sfhover a.clinical-studies {width:127px;height:38px; background: url(/images/nav4studies_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .news-and-resources:hover, #nav li:hover a.news-and-resources, #nav li.sfhover a.news-and-resources {width:159px;height:38px; background: url(/images/nav5news_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .corus-cad:hover, #nav li:hover a.corus-cad, #nav li.sfhover a.corus-cad {width:101px;height:38px; background: url(/images/nav6corus_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+
+#nav .companyactive {width:74px;height:38px;background: url(/images/nav1company_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .diagnostic-programsactive {width:161px;height:38px;background: url(/images/nav2diagnostic_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .for-patientsactive {width:101px;height:38px;background: url(/images/nav3patients_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .clinical-studiesactive {width:127px;height:38px;background: url(/images/nav4studies_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .news-and-resourcesactive {width:159px;height:38px;background: url(/images/nav5news_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+#nav .corus-cadactive {width:101px;height:38px;background: url(/images/nav6corus_on.jpg) no-repeat top left transparent;text-indent:-999em;display:block;}
+
+#nav .news-and-resourcesli ul {margin-left:-14px;}
+
+/* Additional Styles for Nav */
+#subnav_main a.company ul {border:1px solid red;} /* Testing to close Management Sub Nav */
+
+/* Search Page */
+#global {float:right; width:200px; text-align:right; padding-top:0px; height:34px;}
+/*#global a { text-transform:uppercase; text-decoration:none; color:#423132; font-size:10px; background:url(../images/red-dot.gif) right no-repeat; padding-right:9px; line-height:16px;}*/
+#global a {outline:none;}
+#global a:hover {color:#c42032;}
+#searchArea {float:left;width:565px;}
+#hbpagestop {padding-bottom:0px; margin-bottom:0px;}
+#frmSearch {float:right;}
+/* Search Result */
+#hbSearch ul { list-style-type:none; padding:0px; margin:0px; padding-left:2px;}
+#hbSearch li {padding-bottom:15px; line-height:19px; }
+#search {float:right; /*width:174px;*/text-align:right; height:40px; padding-top:0px;}
+.searchPosition { vertical-align:top;/* background:url(../images/search-input.gif) no-repeat top left; width:113px;padding:5px 2px 3px 2px; */border:1px solid #aaa; width:110px; height:17px; margin-top:2px; padding-top:3px;}
+
+
+/*  ul Styles */
+#content ul {padding-left:0px; list-style-type:none; margin-top:10px;}
+#content ul li {padding-left:25px; background: url(/images/bullet_dot.gif) no-repeat left top; margin-bottom:7px; color:#423132;}
+
+/* Press */
+.listingWidth {float:left;width:550px; padding-left:2px; margin-top:5px;}
+#pressRow {width:550px; margin-top:5px;}
+.prTitle {padding-bottom:0px; font-size:15px; padding-top:4px;}
+.prSubTitle {font-style:italic;}
+a.back {}
+
+/* Listing Tool */
+#newsRow {width:565px; margin-top:5px; padding-right:28px; padding-left:2px; color:#423132;}
+#newRow p {padding:0px; margin:0px;}
+/* Publications */
+.publicationsId {font-style:italic;padding-top:10px; padding-bottom:10px;}
+.briefTitle {padding-top:10px; padding-bottom:10px;}
+.author {line-height:17px;}
+.txtAbstract p {margin-bottom:0px; padding-bottom:0px;}
+
+/* Glossary */
+#newsRow #cont p {}
+
+/* #hmain table {width:565px;} -- messes up legends on graphs*/
+#hmain table .glossary p {margin-bottom:0px; padding-bottom:1px;}
+
+#subnav_main li ul ul{ display:none;}
+#subnav_main li#parent-open ul li ul {display:none;}
+
+
+/* Access Styles */
+#access {height:16px; padding-top:5px; padding-bottom:6px; margin-top:0px;  margin-bottom:0px; width:100%; background:url(/images/access_bg.jpg) top right no-repeat; }
+#access a {color:#999; text-decoration:none; font-size:11px;}
+#access a:hover {color:#666;}
+#access ul {padding:0px; margin:0px; float:right; padding-right:1px; list-style-type:none;}
+#access ul li { list-style-type:none; float:left; margin-left:10px; padding-bottom:10px; list-style-type:none; background:transparent; float:left; padding-left:0px;}
+#access ul li img {margin-right:4px;}
+#access ul li #pri {background:left url(/images/print_icon.jpg) no-repeat transparent; width:16px; height:15px; display:block;}
+#access ul li #pri:hover {background:left url(/images/print_icon_hover.jpg) no-repeat transparent;}
+#access ul li #ema {background:left url(/images/email_icon.jpg) no-repeat transparent; width:17px; height:14px; display:block; }
+#access ul li #ema:hover {background:left url(/images/email_icon_hover.jpg) no-repeat transparent;}
+
+#publication { color:#423132; padding-top:8px;margin-bottom:33px; }
+#publication p {padding-left:5px; padding-top:13px; line-height:16px; padding-bottom:0px; margin-bottom:0px;}
+
+#links { color:#423132; padding-top:8px;margin-bottom:33px; }
+#links p {padding-left:5px; padding-top:13px; line-height:16px; padding-bottom:0px; margin-bottom:0px;}
+
+#events {color:#423132; margin-bottom:5px;}
+#events p {padding-left:5px; padding-top:7px;}
+
+
+/* Site Map */
+#oleft, #oright {width:200px; float:left; color:#423132;margin-right:15px;}
+#oleft a, #oright a { text-decoration:none;}
+#oleft a:hover, #oright a:hover { text-decoration:underline;}
+#oleft ul, #oright ul {padding-top:0px; margin-top:0px; margin-top:5px; margin-left:0px; padding-bottom:2px; margin-bottom:0px;/* border-bottom:5px solid #ccc;*/}
+/*#oleft ul ul, #oright ul ul {border-bottom:none;}*/
+#oleft ul li, #oright ul li { background:none; padding-left:0px;}
+#oleft ul li ul, #oright ul li ul {padding-top:5px; margin-top:0px;}
+#oleft ul li ul li, #oright ul li ul li {padding-bottom:0px;}
+#oleft ul li ul li ul, #oright ul li ul li ul{padding-top:10px;}
+
+/* Back to Top */
+.glossary a {outline:none;}
+.backtop {background:url(/images/toparrow.jpg) no-repeat left; width:100%; height:11px; display:block; outline:none;}
+
+/* References */
+h5 {padding-bottom:0px; margin-bottom:0px; font-size:11px;}
+#content hr {border:none; border-top:1px dotted #ccc; height:1px;}
+#content ol { padding-left:0px; margin-left:25px; color:#423132;}
+#content ol li { padding-left:5px; padding-bottom:5px; color:#423132;}
+
+.backtop {outline:none;}
+.glossarytop {color:#bbb;}
+.footnote {font-size:11px;}
+
+
+/* Team Module */
+.teamsection {width:565px; float:left;/*border:1px solid orange;*/padding:2px 0 0px 2px;}
+.teamsection span.title {color:#c42032; font-weight:bold; font-size:13px;}
+.teamsection span.job {color:#423132; font-weight:bold; border-left:1px solid #ccc; padding-left:5px; font-size:11px;}
+.teamsection p {color:#423132; font-size:12px; padding-bottom:0px; margin-bottom:0px;}
+.teamsection a {outline:none;}
+/*#teamtop ul { list-style-type:none;}
+#teamtop li {margin:0px; padding:0px; margin-bottom:6px; list-style-type:none;}*/
+#teamtop {width:100%; border-bottom:1px dotted #ccc; padding-bottom:2px; padding-top:22px;}
+#teamtop ul li {padding:0px; margin:0px; background:none; padding-bottom:5px;}
+#teamtop ul li a {outline:none;}

@@ -1,0 +1,62 @@
+on srikardesktop/
+(Ming Ham)
+
+boot from live cd 
+fdisk to setup hds (sata hd)
+untar
+
+mount /dev/sda1 /mnt/root
+chroot /mnt/root
+lilo
+/etc/lilo.conf
+write to master boot record
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+boot from rescue CD
+
+mdadm --examine /dev/sda1 (b1, a2, b2)
+
+mdadm -A /dev/md0 /dev/sda1 /dev/sdb1
+
+(may need to mknod /dev/md1 b 9 1)
+
+pvscan
+vgscan
+lvscan
+
+lvchange -a y /dev/vg0
+
+
+mount it with the "wrapper" path 
+
+mount /dev/wrapper/vg0-root /root/newroot
+
+
+
+-- remove a drive
+mdadm /dev/md0 -f /dev/sda1 -r /dev/sda1
+
+mdadm /dev/md0 -a /dev/sda1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mdadm -Cv /dev/md1 -l 1 -n 2 /dev/sda2 /dev/sdb2
+mdadm -Cv /dev/md2 -l 1 -n 2 /dev/sdc2 /dev/sdd2
+mdadm -Cv /dev/md3 -l 0 -n 2 /dev/md3 /dev/md4
+
+
+# Assemble devices back to raid
+mdadm -A /dev/md0 /dev/sda1 /dev/sdb1
+mdadm -A /dev/md1 /dev/sdc1 /dev/sdd1
+mdadm -A /dev/md2 /dev/md0 /dev/md1
+mdadm -A /dev/md3 /dev/sda2 /dev/sdb2
+mdadm -A /dev/md4 /dev/sdc2 /dev/sdd2
+
+mdadm /dev/md1 -f /dev/sdc1
+mdadm /dev/md1 -r /dev/sdc1
+
+
+mdadm -D /dev/md1
+

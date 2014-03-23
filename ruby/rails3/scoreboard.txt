@@ -1,0 +1,116 @@
+-- add user & group
+  300  groupadd -g 123 rails
+  301  useradd -g 123 -u 123 -d /home/rails -s /bin/bash rails
+  302  mkdir /home/rails
+  303  chown rails:rails /home/rails/
+passwd rails
+Enter new UNIX password: (use the root password)
+visudo
+
+-- install RVM
+  305  curl -L get.rvm.io | bash -s stable
+  306  vi /etc/group
+rvm:x:1001:rails
+  307  vi .bashrc
+
+su - rails
+rvm install 1.9.3
+rvm alias list
+
+rvm gemset list
+gem install rails --no-rdoc --no-ri
+
+rails new scoreboard
+
+cd scoreboard
+vi Gemfile
+gem 'execjs'
+gem 'therubyracer'
+bundle install
+
+rails server
+http://scoreboard.cardiodx.com:3000/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/cchou/gdrive/it/software/Oracle 10g/instantclient_10.204/x86_64
+
+scp * root@scoreboard:
+wajig install ./oracle-instantclient-basic_10.2.0.4-2_amd64.deb ./oracle-instantclient-devel_10.2.0.4-2_amd64.deb ./oracle-instantclient-sqlplus_10.2.0.4-2_amd64.deb
+
+
+   26  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/10.2.0.4/client64/lib
+   27  export TNS_ADMIN=.
+   28  export ORACLE_HOME=.
+   29  /usr/lib/oracle/10.2.0.4/client64/bin/sqlplus
+   31  vi tnsnames.ora
+CCLLIMS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+        (ADDRESS =
+          (COMMUNITY = tcp.world)
+          (PROTOCOL = TCP)
+          (Host = ccllims)
+          (Port = 1521)
+        )
+    )
+    (CONNECT_DATA = (SID = ORCL)
+    )
+  )
+
+/usr/lib/oracle/10.2.0.4/client64/bin/sqlplus warehouse/(password)@ccllims
+
+-- as root
+  325  cp .bashrc /home/rails/
+  326  cp .profile /home/rails/
+  327  cd /home/rails/
+  330  chown rails:rails .bashrc 
+  331  chown rails:rails .profile 
+
+-- as rails
+vi .bashrc
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/10.2.0.4/client64/lib
+export TNS_ADMIN=/home/rails
+export ORACLE_HOME=/home/rails
+
+
+gem list
+
+gem install ruby-oci8  --no-rdoc --no-ri
+	Successfully installed ruby-oci8-2.1.5
+gem install activerecord-oracle_enhanced-adapter --no-rdoc --no-ri
+	Successfully installed activerecord-oracle_enhanced-adapter-1.4.2
+
+vi Gemfile
+gem 'ruby-oci8'
+gem 'activerecord-oracle_enhanced-adapter'
+
+
+vi database.yml
+waban_db:
+   adapter: oracle_enhanced
+   database: ccllims
+   username: warehouse
+   password: dwhreader
+
+$ more waban.rb 
+class Waban < ActiveRecord::Base
+  self.abstract_class = true
+  self.pluralize_table_names = false
+  establish_connection :waban_db
+
+  class << self
+    alias :all_columns :columns
+    def columns
+      all_columns.reject {|c| c.name == 'destroyed'}  # destroyed is a reserved method in ActiveRecord
+    end
+  end
+end
+
+$ more accession.rb 
+class Accession < Waban
+end
+
+$ rails console
+a = Accession.first
+
+

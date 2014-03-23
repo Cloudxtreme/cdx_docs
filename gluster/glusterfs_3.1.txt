@@ -1,0 +1,95 @@
+
+wget http://download.gluster.com/pub/gluster/glusterfs/3.1/LATEST/Debian/glusterfs_3.1.1-1_amd64.deb
+
+servers:
+  jonathandesktop, randaldesktop1
+
+--wajig install libgssglue1 libnfsidmap2 librpcsecgss3 nfs-common portmap
+wajig install nfs-common
+wajig install ./glusterfs_3.1.1-1_amd64.deb
+
+--update-rc.d glusterd defaults
+
+
+****on all servers:
+/etc/init.d/glusterd start
+mkdir -p /export/gluster/store1
+
+
+****jonathandesktop
+gluster help
+
+-- create a trusted storage pool (storage servers)..... localhost not needed
+gluster peer probe randaldesktop1
+gluster peer status
+
+-- create the volume
+gluster volume create testvol1 \
+		replica 2 \
+		transport tcp \
+    jonathandesktop:/export/gluster \
+    randaldesktop1:/export/gluster
+
+gluster volume info
+		Volume Name: testvol1
+		Type: Replicate
+		Status: Started
+		Number of Bricks: 2
+		Transport-type: tcp
+		Bricks:
+		Brick1: jonathandesktop:/export/gluster
+		Brick2: randaldesktop1:/export/gluster
+
+
+-- start the volume
+gluster volume start testvol1
+
+-- directories
+/etc/glusterd
+
+-- stop/delete
+gluster volume stop testvol1
+gluster volume delete testvol1
+
+
+mount -t glusterfs jonathandesktop:/testvol1 glusterfs/
+umount /home/cchou/glusterfs
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+admin guide:
+	http://www.gluster.com/community/documentation/index.php/Gluster_3.1_Filesystem_Administration_Guide
+
+-- expand a volume (mayankdesktop, and phildesktop)
+--      Will need to add 2 at a time
+
+****mayankdesktop & phildesktop
+wajig install libgssglue1 libnfsidmap2 librpcsecgss3 nfs-common portmap
+wajig install ./glusterfs_3.1.1-1_amd64.deb
+
+/etc/init.d/glusterd start
+mkdir -p /export/gluster/store1
+
+
+****jonathandesktop
+gluster peer probe mayankdesktop
+gluster peer probe phildesktop
+
+gluster peer status
+
+gluster volume add-brick testvol1 \
+		mayankdesktop:/export/gluster \
+		phildesktop:/export/gluster
+
+gluster volume info
+		Volume Name: testvol1
+		Type: Distributed-Replicate
+		Status: Started
+		Number of Bricks: 2 x 2 = 4
+		Transport-type: tcp
+		Bricks:
+		Brick1: jonathandesktop:/export/gluster
+		Brick2: randaldesktop1:/export/gluster
+		Brick3: mayankdesktop:/export/gluster
+		Brick4: phildesktop:/export/gluster
+
+

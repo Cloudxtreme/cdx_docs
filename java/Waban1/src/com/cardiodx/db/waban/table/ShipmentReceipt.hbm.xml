@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ShipmentReceipt" table="SHIPMENT_RECEIPT" schema="DNALIMS">
+        <id name="shipmentId" type="big_decimal">
+            <column name="SHIPMENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="SHIPPER_ORG_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="autoaccessionLoad" class="com.cardiodx.db.waban.table.AutoaccessionLoad" fetch="select">
+            <column name="AUTOACCESSION_LOAD_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="shipmentNumber" type="string">
+            <column name="SHIPMENT_NUMBER" length="50" />
+        </property>
+        <property name="shipmentCondition" type="string">
+            <column name="SHIPMENT_CONDITION" length="100" />
+        </property>
+        <property name="storageStatus" type="string">
+            <column name="STORAGE_STATUS" length="100" />
+        </property>
+        <property name="shipmentComment" type="string">
+            <column name="SHIPMENT_COMMENT" length="100" />
+        </property>
+        <property name="shipmentStatus" type="string">
+            <column name="SHIPMENT_STATUS" length="100" />
+        </property>
+        <property name="exceptionComment" type="string">
+            <column name="EXCEPTION_COMMENT" length="100" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+        <set name="shipmentSamples" table="SHIPMENT_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SHIPMENT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ShipmentSample" />
+        </set>
+        <set name="shipmentAirbills" table="SHIPMENT_AIRBILL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SHIPMENT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ShipmentAirbill" />
+        </set>
+    </class>
+</hibernate-mapping>

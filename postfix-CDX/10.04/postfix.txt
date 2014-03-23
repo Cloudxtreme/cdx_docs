@@ -1,0 +1,42 @@
+
+wajig install postfix
+
+cchou@cchoudesktop:~/gdrive/it/Private/ssl/wildcard/08-14-2012/apache$ scp * root@10.10.43.99:/etc/postfix/ssl
+
+  274  rm lms.pfx 
+  275  chown postfix *
+  277  chmod 640 wildcard.cardiodx.com.key 
+
+# vi transport
+cardiodx.com   smtp:[webmail.cardiodx.com]
+
+# postmap transport 
+
+# vi virtual
+postmaster   postmaster@cardiodx.com
+abuse        abuse@cardiodx.com
+sampletest   sampletest@webmail.cardiodx.com
+
+# postmap virtual
+
+vi stopspoofing
+cardiodx.com REJECT
+.cardiodx.com REJECT
+
+# postmap stopspoofing 
+
+
+vi master.cf
+smtps     inet  n       -       -       -       -       smtpd
+  -o smtpd_tls_wrappermode=yes -o smtpd_sasl_auth_enable=yes
+
+proxymap  unix  -       -       n       -       -       proxymap
+proxywrite unix -       -       n       -       1       proxymap
+
+retry     unix  -       -       -       -       -       error
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+please read sasl.txt for sasl config
+

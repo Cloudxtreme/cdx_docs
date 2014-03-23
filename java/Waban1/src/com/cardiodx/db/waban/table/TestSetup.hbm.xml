@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.TestSetup" table="TEST_SETUP" schema="DNALIMS">
+        <comment>Information about test in a study</comment>
+        <id name="testSetupId" type="big_decimal">
+            <column name="TEST_SETUP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <version name="version" type="string">
+            <column name="VERSION" length="10">
+                <comment>Version of the test.</comment>
+            </column>
+        </version>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Subsidiary identifier.</comment>
+            </column>
+        </many-to-one>
+        <property name="testNumber" type="string">
+            <column name="TEST_NUMBER" length="30" not-null="true" unique="true">
+                <comment>Test identifier and unique key.</comment>
+            </column>
+        </property>
+        <property name="testName" type="string">
+            <column name="TEST_NAME" length="30" not-null="true">
+                <comment>Name of the test.</comment>
+            </column>
+        </property>
+        <property name="testType" type="string">
+            <column name="TEST_TYPE" length="30" not-null="true">
+                <comment>Type of the test</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30" not-null="true">
+                <comment>Status of the Test. Could be either Active, In-Process or Obsolete.</comment>
+            </column>
+        </property>
+        <property name="testSource" type="string">
+            <column name="TEST_SOURCE" length="10" />
+        </property>
+        <property name="testClass" type="string">
+            <column name="TEST_CLASS" length="30" not-null="true" />
+        </property>
+        <property name="testDescription" type="string">
+            <column name="TEST_DESCRIPTION" length="100">
+                <comment>Test description</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified</comment>
+            </column>
+        </property>
+        <set name="testVariableFlds" table="TEST_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TEST_SETUP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Test identifier and foreign key to TEST_SETUP table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestVariableFld" />
+        </set>
+        <set name="testAccessions" table="TEST_ACCESSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TEST_SETUP_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestAccession" />
+        </set>
+        <set name="roiSelections" table="ROI_SELECTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TEST_SETUP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Test identifier and foreign key to TEST_SETUP table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiSelection" />
+        </set>
+        <set name="protocolTests" table="PROTOCOL_TEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TEST_SETUP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Test identifier and foreign key to TEST_SETUP table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolTest" />
+        </set>
+    </class>
+</hibernate-mapping>

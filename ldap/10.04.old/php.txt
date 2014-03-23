@@ -1,0 +1,15 @@
+
+
+wajig install phpldapadmin
+
+
+ln -s /usr/share/phpldapadmin /var/www/phpldapadmin
+cd /etc/phpldapadmin/
+vi config.php 
+$servers->setValue('server','base',array('dc=cardiodx,dc=com'));
+
+/etc/init.d/apache2 restart
+
+http://ldaptest.cardiodx.com/phpldapadmin/
+  cn=admin,dc=cardiodx,dc=com
+  secret07

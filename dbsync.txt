@@ -1,0 +1,30 @@
+avankia dbsync credit card processing software
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install sun-java5-jre
+
+# adduser avankia
+# cp dbsync-apache-tomcat-6.0.13-1.40.zip /home/avankia/
+# su - avankia 
+$ unzip dbsync-apache-tomcat-6.0.13-1.40.zip 
+
+--SYNCH_HOME=/home/avankia/dbsync-apache-tomcat-6.0.13-1.4
+
+export JRE_HOME=/usr/lib/jvm/java-1.5.0-sun/jre
+cd dbsync-apache-tomcat-6.0.13-1.4/bin
+./catalina.sh run
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For Windows
+
+Install SQL Server express 2008 
+
+copy dbsync-apache-tomcat-6.0.13-1.4 to c:\dbsync-apache-tomcat-6.0.13
+open a cmd window
+cd c:\dbsync-apache-tomcat-6.0.13\dbscyn\script
+setenv.bat
+
+cd c:\dbsync-apache-tomcat-6.0.13\bin
+catalina.bat run
+
+http://avankia:8080/dbsync/installer.m

@@ -1,0 +1,57 @@
+https://github.com/rails/rails/tree/master/railties/test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+$ rails console
+Loading development environment (Rails 3.2.12)
+
+ENV["RAILS_ENV"] ||= "test"
+require 'bundler'
+Bundler.setup
+require 'stringio'
+require 'fileutils'
+require 'active_support'
+require 'action_controller'
+require 'rails/all'
+
+
+--
+-- basic tests
+--
+
+-- test_property_with_string
+Rails::Info.module_eval do
+	property 'Hello', 'World'
+end
+
+-- test_property_with_block
+Rails::Info.module_eval do
+  property('Goodbye') {'World'}
+end
+
+-- framework
+Rails::Info.frameworks.each do |framework|
+  dir = File.dirname(__FILE__) + "/../../" + framework.delete('_')
+end
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- generator
+--
+
+require 'rails/generators'
+require 'rails/generators/test_case'
+@path = File.expand_path("lib", Rails.root)
+$LOAD_PATH.unshift(@path)
+
+Rails::Generators.invoke("test_unit:model", ["Account"])
+Rails::Generators.invoke :model, ["Account"]
+
+Rails::Generators.invoke("active_record:model", ["foo", "--no-migration" ])
+
+require 'rails/generators/rails/controller/controller_generator'
+require 'active_record'
+require 'action_dispatch'
+
+
+
+

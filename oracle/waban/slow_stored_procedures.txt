@@ -1,0 +1,50 @@
+
+
+select svft.sample_id, v.variable_name, svft.value
+from protocol_defined_variable pdv, sample_variable_fld_tbl svft, variable v
+where pdv.protocol_defined_variable_id = svft.protocol_defined_variable_id
+and pdv.variable_id = v.variable_id
+and svft.sample_id in
+  (select sample_id from sample where ACCESSION_ID in
+    (select accession_id
+        from accession a
+        where accession_number = 'TRF50484'))
+order by svft.sample_id;
+
+   3014899 Remove Bubbles         No
+   3014899 Proceed Further        Yes
+   3014899 Tracking Number        39430360110000044942275914402214
+   3014899 Box Barcode            3851011032
+   3014899 Nanocool Barcode       T1061690
+   3014899 PAXGene Expiration Date    30-Sep-2012
+   3014899 PAXGene Lot Number         1074756
+   3014900 Tracking Number        39430360110000044942275914402214
+   3014900 Proceed Further        Yes
+   3014900 Nanocool Barcode       T1061690
+   3014900 PAXGene Expiration Date    30-Sep-2012
+   3014900 Box Barcode            3851011032
+   3014900 PAXGene Lot Number         1074756
+   3015120 Proceed Further        Yes
+
+explain plan for
+SELECT pdv.protocol_defined_variable_id, var.variable_type_id
+        FROM protocol_defined_variable pdv,
+                 VARIABLE var,
+                  sample_table sam,
+                  accession acc
+       WHERE sam.SAMPLE_ID = 3014899
+           and sam.ACCESSION_ID = acc.ACCESSION_ID
+            and acc.STUDY_PROTOCOL_ID = pdv.study_protocol_id
+         AND pdv.variable_id = var.variable_id
+         AND UPPER (var.variable_name) = UPPER ('Nanocool Barcode')
+        AND pdv.ATTRIBUTE_LEVEL_ID = 'T';
+
+select rtrim(lpad(' ',2*level)||
+            rtrim(operation)||' '||
+            rtrim(options)||' '||
+            object_name) query_plan
+from plan_table
+connect by prior id=parent_id
+start with id=0;
+
+

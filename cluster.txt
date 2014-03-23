@@ -1,0 +1,38 @@
+linux cluster gfs ocfs
+
+http://debianclusters.cs.uni.edu/index.php/Main_Page
+
+
+coraid
+http://linuxdevices.com/news/NS3189760067.html
+
+Oracle cluster: ocfs
+http://oss.oracle.com/projects/ocfs2/
+
+starfish
+
+GFS:
+http://opengfs.sourceforge.net/
+http://www.sistina.com/gfs/
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://linuxsutra.chakravaka.com/index.php?op=ViewArticle&articleId=7
+chkconfig --level 2345 gfs off
+chkconfig --level 2345 clvmd off
+chkconfig --level 2345 fenced off
+chkconfig --level 2345 lock_gulmd off
+chkconfig --level 2345 cman off
+chkconfig --level 2345 ccsd off
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+clusterFS:
+http://www.gluster.org/docs/index.php/GlusterFS
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://gfs.wikidev.net/Installation
+
+
+
+http://linuxsutra.chakravaka.com/index.php?op=ViewArticle&articleId=7

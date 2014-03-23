@@ -1,0 +1,200 @@
+# extended LDIF
+#
+# LDAPv3
+# base <dc=cardiodx,dc=com> with scope sub
+# filter: (ObjectClass=*)
+# requesting: ALL
+#
+
+# search result
+search: 2
+result: 32 No such object
+
+# numResponses: 1
+[root@pdc cchou]# ldapsearch -x -b "dc=cardiodx,dc=com" "(ObjectClass=*)"
+# extended LDIF
+#
+# LDAPv3
+# base <dc=cardiodx,dc=com> with scope sub
+# filter: (ObjectClass=*)
+# requesting: ALL
+#
+
+# cardiodx.com
+dn: dc=cardiodx,dc=com
+objectClass: dcObject
+objectClass: organization
+dc: cardiodx
+o: cardiodx
+
+# People, cardiodx.com
+dn: ou=People,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: People
+
+# Group, cardiodx.com
+dn: ou=Group,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Group
+
+# Hosts, cardiodx.com
+dn: ou=Hosts,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Hosts
+
+# Domain Admins, Group, cardiodx.com
+dn: cn=Domain Admins,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 512
+cn: Domain Admins
+memberUid: Administrator
+description: Netbios Domain Administrators
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-512
+sambaGroupType: 2
+displayName: Domain Admins
+
+# Domain Users, Group, cardiodx.com
+dn: cn=Domain Users,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 513
+cn: Domain Users
+description: Netbios Domain Users
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-513
+sambaGroupType: 2
+displayName: Domain Users
+memberUid: david
+
+# Domain Guests, Group, cardiodx.com
+dn: cn=Domain Guests,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 514
+cn: Domain Guests
+description: Netbios Domain Guests Users
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-514
+sambaGroupType: 2
+displayName: Domain Guests
+
+# Administrators, Group, cardiodx.com
+dn: cn=Administrators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 544
+cn: Administrators
+description: Netbios Domain Members can fully administer the computer/sambaDom
+ ainName
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-544
+sambaGroupType: 2
+displayName: Administrators
+
+# Users, Group, cardiodx.com
+dn: cn=Users,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 545
+cn: Users
+description: Netbios Domain Ordinary users
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-545
+sambaGroupType: 2
+displayName: users
+
+# Guests, Group, cardiodx.com
+dn: cn=Guests,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 546
+cn: Guests
+memberUid: nobody
+description: Netbios Domain Users granted guest access to the computer/sambaDo
+ mainName
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-546
+sambaGroupType: 2
+displayName: Guests
+
+# Power Users, Group, cardiodx.com
+dn: cn=Power Users,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 547
+cn: Power Users
+description: Netbios Domain Members can share directories and printers
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-547
+sambaGroupType: 2
+displayName: Power Users
+
+# Account Operators, Group, cardiodx.com
+dn: cn=Account Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 548
+cn: Account Operators
+description: Netbios Domain Users to manipulate users accounts
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-548
+sambaGroupType: 2
+displayName: Account Operators
+
+# Server Operators, Group, cardiodx.com
+dn: cn=Server Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 549
+cn: Server Operators
+description: Netbios Domain Server Operators
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-549
+sambaGroupType: 2
+displayName: Server Operators
+
+# Print Operators, Group, cardiodx.com
+dn: cn=Print Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 550
+cn: Print Operators
+description: Netbios Domain Print Operators
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-550
+sambaGroupType: 2
+displayName: Print Operators
+
+# Backup Operators, Group, cardiodx.com
+dn: cn=Backup Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 551
+cn: Backup Operators
+description: Netbios Domain Members can bypass file security to back up files
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-551
+sambaGroupType: 2
+displayName: Backup Operators
+
+# Replicator, Group, cardiodx.com
+dn: cn=Replicator,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 552
+cn: Replicator
+description: Netbios Domain Supports file replication in a sambaDomainName
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-552
+sambaGroupType: 2
+displayName: Replicator
+
+# Domain Computers, Group, cardiodx.com
+dn: cn=Domain Computers,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 553
+cn: Domain Computers
+description: Netbios Domain Computers accounts
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-553
+sambaGroupType: 2
+displayName: Domain Computers
+
+# CDX, cardiodx.com
+dn: sambaDomainName=CDX,dc=cardiodx,dc=com
+sambaDomainName: CDX
+sambaSID: S-1-5-21-1390416411-3536245871-2322303776
+sambaAlgorithmicRidBase: 1000
+objectClass: sambaDomain
+sambaNextUserRid: 41000
+sambaNextGroupRid: 41001

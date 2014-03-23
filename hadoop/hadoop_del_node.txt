@@ -1,0 +1,44 @@
+
+
+one: 
+  On a large cluster removing one or two data-nodes will not lead to any data loss, 
+  because name-node will replicate their blocks as long as it will detect that the nodes are dead. 
+
+master:
+  remove it from conf/slaves
+
+
+slave (check the logs): 
+  bin/hadoop-daemon.sh stop datanode
+  bin/hadoop-daemon.sh stop tasktracker
+
+  bin/hadoop dfsadmin -report
+   still showing the node?
+
+  run some fs commands....
+
+  bin/hadoop dfsadmin -report
+  Datanodes available: 3 (4 total, 1 dead)
+
+
+Many:
+  The nodes to be retired should be included into the exclude file, and the exclude file name should be specified as 
+  a configuration parameter dfs.hosts.exclude. This file should have been specified during namenode startup. 
+  It could be a zero length file. You must use the full hostname, ip or ip:port format in this file. Then the shell command
+
+
+<property>
+    <name>dfs.hosts.exclude</name>
+    <value>/home/hadoop/excludes</value>
+    <final>true</final>
+  </property>
+  <property>
+    <name>mapred.hosts.exclude</name>
+    <value>/home/hadoop/excludes</value>
+    <final>true</final>
+  </property>
+
+
+  bin/hadoop dfsadmin -refreshNodes
+
+

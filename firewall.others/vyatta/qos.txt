@@ -1,0 +1,40 @@
+
+- All traffic flows through a 1.5 Mbit link
+
+- 50% for the VoIP traffic, 
+	    - 45% of bandwidth is to be used for Real Time Protocol (RTP) media.
+				  RTP traffic is assigned a DSCP value of 46
+	    - 5% of bandwidth is to be used for control traffic (SIP signals for setting up calls).
+			    SIP traffic is assigned a DSCP value of 26 
+  35% to HQ
+  15% other traffic
+
+- All traffic flows will use available bandwidth beyond their minimum configured rates.
+
+- The head office traffic arrives from a single server at IP address 192.168.1.200.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set qos-policy traffic-shaper OFFICE
+
+set qos-policy traffic-shaper OFFICE bandwidth 1500kbit
+
+set qos-policy traffic-shaper OFFICE class 10 bandwidth 45%
+set qos-policy traffic-shaper OFFICE class 10 ceiling 100%
+set qos-policy traffic-shaper OFFICE class 10 match VOIP-RTP ip dscp 46
+
+set qos-policy traffic-shaper OFFICE class 20 bandwidth 5%
+set qos-policy traffic-shaper OFFICE class 20 ceiling 100%
+set qos-policy traffic-shaper OFFICE class 20 match VOIP-SIP ip dscp 26
+
+set qos-policy traffic-shaper OFFICE class 30 bandwidth 35%
+set qos-policy traffic-shaper OFFICE class 30 ceiling 100%
+set qos-policy traffic-shaper OFFICE class 30 match HO-TRAFFIC ip source address 192.168.1.200/24
+
+set qos-policy traffic-shaper OFFICE default bandwidth 15%
+set qos-policy traffic-shaper OFFICE default ceiling 100%
+
+commit
+
+set interfaces ethernet eth0 qos-policy out OFFICE
+

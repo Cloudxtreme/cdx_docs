@@ -1,0 +1,5 @@
+
+
+  194  wajig install gmetad ganglia-monitor
+  196  wajig install rrdtool librrds-perl php5-gd apache2
+

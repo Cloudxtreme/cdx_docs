@@ -1,0 +1,38 @@
+
+
+https://help.ubuntu.com/community/WindowsXPUnderQemuHowTo
+
+http://ajmf.wordpress.com/2009/08/05/running-windows-on-eucalyptus/
+
+
+copy iso over: 
+root@kvmsrv1:/home/cardiodx/iso# scp winxp32.iso root@ubuntu904:
+
+virt-install -n win32 -r 512 -f /dev/vg0/win32 -s 15 -c /root/winxp32.iso --accelerate --vnc 
+
+virt-install -n win32 -r 512 -f win32.img -s 15 -c winxp32.iso --accelerate --vnc --no-acpi &
+
+
+-- if you get APIC error, make sure you have --os-type=windows included
+virt-install -n statwin64 -r 2048 -f /dev/vg0/statwin64 -s 100 -c ./winxp64.iso --accelerate --vnc  --os-type=windows
+
+kvm -m 512 -cdrom ./winxp32.iso -boot d ./win32.img 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+ctrl-alt-del
+
+# ps -ef | grep kvm
+# vncviewer 127.0.0.1:7
+
+Press F8
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+smp: http://www.linux-kvm.com/content/running-windows-smp-guests
+GigE: http://www.linux-kvm.com/content/tip-how-setup-windows-guest-paravirtual-network-drivers
+
+
+

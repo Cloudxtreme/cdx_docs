@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ProcedureTemplateAllele" table="PROCEDURE_TEMPLATE_ALLELE" schema="DNALIMS">
+        <comment>A listing of the alleles related to a given procedure.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.ProcedureTemplateAlleleId">
+            <key-property name="procedureTemplateId" type="big_decimal">
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleId" type="big_decimal">
+                <column name="ALLELE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numberInSequence" type="big_decimal">
+                <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="procedureTemplate" class="com.cardiodx.db.waban.table.ProcedureTemplate" update="false" insert="false" fetch="select">
+            <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>Procedure identifier. Part of the primary key and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="allele" class="com.cardiodx.db.waban.table.Allele" update="false" insert="false" fetch="select">
+            <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                <comment>Allele identifier. Part of the primary key and foreign key to the ALLELE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="result" type="string">
+            <column name="RESULT" length="50">
+                <comment>Allelic result alias (wild, common, etc.).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

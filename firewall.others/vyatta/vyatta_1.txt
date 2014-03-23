@@ -1,0 +1,212 @@
+boot from install cd (vc 5.02)
+  login as vyatta/vyatta
+install-system
+  8192MB
+reboot
+
+vi /boot/grub/grub.cfg
+set default=1
+set timeout=3
+
+>>>> NOTE:
+  Can't use update-grup!!!
+  Take about 2 minutes to reboot.
+
+picocom -b 9600 /dev/ttyS0
+  ^a ^x (quit)
+
+
+eth0 --> eth1 ... internal 10.10.37.3/21
+eth1 --> eth8
+eth2 --> eth2 ... Comcast  173.13.158.185/28
+eth3 --> eth3
+
+eth4 --> eth4 ... dmz 192.168.17.1
+eth5 --> eth5
+eth6 --> eth6
+eth7 --> eth7
+
+
+root@vyatta:~# configure
+root@vyatta# set interfaces ethernet eth1 address 10.10.37.3/21
+root@vyatta# set service ssh
+root@vyatta# commit
+
+ccmac:~ cchou$ ssh vyatta@10.10.37.3
+
+
+configure
+set interfaces ethernet eth2 address 173.13.158.185/28
+set system host-name vyatta
+set system gateway-address 173.13.158.190
+set system domain-name cardiodx.com
+set system name-server 10.10.37.21
+set system ntp-server 91.189.94.4
+set system time-zone US/Pacific
+commit
+save
+   Saving configuration to '/opt/vyatta/etc/config/config.boot'...
+exit
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NOTE: 
+  1) As it is shipped the Vyatta System does not restrict traffic flow through it. 
+     That is, unless a firewall rule is applied to an interface it will allow all traffic through it. 
+  2) When applying a firewall rule set, keep in mind that after the final user-defined rule, 
+     an implicit rule of deny all takes effect. 
+
+-- nat and default firewall
+set service nat rule 5100
+set service nat rule 5100 outbound-interface eth2
+set service nat rule 5100 source address 10.10.32.0/21
+set service nat rule 5100 type masquerade
+
+-- Only allow established traffice from eth2 (Comcast) interface
+set firewall name from_internet
+set firewall name from_internet rule 10
+set firewall name from_internet rule 10 action accept
+set firewall name from_internet rule 10 state established enable
+
+set firewall name from_internet
+set firewall name from_internet rule 20
+set firewall name from_internet rule 20 action accept
+set firewall name from_internet rule 20 protocol icmp
+set firewall name from_internet rule 20 limit rate 2/second
+set firewall name from_internet rule 20 limit burst 5
+
+set interfaces ethernet eth2 firewall in name from_internet
+set interfaces ethernet eth2 firewall local name from_internet
+
+-- from internal
+set firewall name from_cdx
+set firewall name from_cdx rule 10
+set firewall name from_cdx rule 10 action accept
+set firewall name from_cdx rule 10 log disable
+set firewall name from_cdx rule 10 source address 10.10.32.0/21
+set firewall name from_cdx rule 10 destination address 0.0.0.0/0
+
+set interfaces ethernet eth1 firewall in name from_cdx
+
+commit
+save
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- test on PAT (port 80 on cchoudesktop)
+--
+set service nat rule 1510
+set service nat rule 1510 type destination
+set service nat rule 1510 protocol tcp
+set service nat rule 1510 inbound-interface eth2
+set service nat rule 1510 destination address 173.13.158.185
+set service nat rule 1510 destination port 80
+set service nat rule 1510 inside-address address 10.10.35.30
+
+
+-- add a new firewall rule
+set firewall name from_internet rule 5010
+set firewall name from_internet rule 5010 protocol tcp
+set firewall name from_internet rule 5010 action accept
+set firewall name from_internet rule 5010 log disable
+set firewall name from_internet rule 5010 source address 0.0.0.0/0
+set firewall name from_internet rule 5010 destination address 10.10.35.30
+set firewall name from_internet rule 5010 destination port 80
+
+commit
+
+exit
+
+$ show nat rules
+$ show firewall
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- DMZ
+--
+set interfaces ethernet eth4 address 192.168.17.1/24
+set interfaces ethernet eth2 address 173.13.158.184/28
+
+set service nat rule 3110 type source
+set service nat rule 3110 protocol all
+set service nat rule 3110 source address 192.168.17.2
+set service nat rule 3110 destination address 0.0.0.0/0
+set service nat rule 3110 outbound-interface eth2
+set service nat rule 3110 outside-address address 173.13.158.184
+
+set service nat rule 1310 type destination
+set service nat rule 1310 protocol all
+set service nat rule 1310 source address 0.0.0.0/0
+set service nat rule 1310 inbound-interface eth2
+set service nat rule 1310 destination address 173.13.158.184
+set service nat rule 1310 inside-address address 192.168.17.2
+
+set firewall name from_internet
+set firewall name from_internet rule 3010
+set firewall name from_internet rule 3010 protocol tcp
+set firewall name from_internet rule 3010 action accept
+set firewall name from_internet rule 3010 log disable
+set firewall name from_internet rule 3010 source address 0.0.0.0/0
+set firewall name from_internet rule 3010 destination address 192.168.17.2
+set firewall name from_internet rule 3010 destination port 80
+
+-- dmz_out (basics)
+set firewall name from_dmz
+set firewall name from_dmz rule 10
+set firewall name from_dmz rule 10 action accept
+set firewall name from_dmz rule 10 state established enable
+
+set firewall name from_dmz
+set firewall name from_dmz rule 20 
+set firewall name from_dmz rule 20 action accept
+set firewall name from_dmz rule 20 protocol icmp
+set firewall name from_dmz rule 20 limit rate 2/second
+set firewall name from_dmz rule 20 limit burst 5
+
+set firewall name from_dmz
+set firewall name from_dmz rule 1010 action accept
+set firewall name from_dmz rule 1010 protocol tcp
+set firewall name from_dmz rule 1010 destination port 25,80
+set firewall name from_dmz rule 1010 source address 192.168.17.0/24
+set firewall name from_dmz rule 1010 destination address 0.0.0.0/0
+set firewall name from_dmz rule 1010 log disable 
+
+set firewall name from_dmz
+set firewall name from_dmz rule 1030 action accept
+set firewall name from_dmz rule 1030 protocol udp 
+set firewall name from_dmz rule 1030 destination port 53,123
+set firewall name from_dmz rule 1030 source address 192.168.17.0/24
+set firewall name from_dmz rule 1030 destination address 0.0.0.0/0
+set firewall name from_dmz rule 1030 log disable
+
+-dmz_in (basics)
+set firewall name from_dmz
+set firewall name from_dmz rule 5010 action accept
+set firewall name from_dmz rule 5010 protocol tcp 
+set firewall name from_dmz rule 5010 destination port 389
+set firewall name from_dmz rule 5010 source address 192.168.17.0/24
+set firewall name from_dmz rule 5010 destination address 10.10.37.21
+set firewall name from_dmz rule 5010 log disable
+
+set firewall name from_dmz
+set firewall name from_dmz rule 5020 action accept
+set firewall name from_dmz rule 5020 protocol udp 
+set firewall name from_dmz rule 5020 destination port 53,514
+set firewall name from_dmz rule 5020 source address 192.168.17.0/24
+set firewall name from_dmz rule 5020 destination address 10.10.37.21
+set firewall name from_dmz rule 5020 log disable
+
+set firewall name from_dmz
+set firewall name from_dmz rule 5030 action accept
+set firewall name from_dmz rule 5030 protocol udp 
+set firewall name from_dmz rule 5030 destination port 514
+set firewall name from_dmz rule 5030 source address 192.168.17.0/24
+set firewall name from_dmz rule 5030 destination address 10.10.37.25
+set firewall name from_dmz rule 5030 log disable
+
+set interfaces ethernet eth4 firewall in name from_dmz
+
+Problems:
+  all dmz machines can connect to internal machines through port 80, 25, 123, 53!!!!
+
+

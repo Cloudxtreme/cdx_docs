@@ -1,0 +1,14 @@
+select ATTRIBUTE_NAME,ATTRIBUTE_VALUE 
+from discrete_attribute_table 
+where ATTRIBUTE_NAME='CDX_REPORT_DIR_CLIENT';
+
+ATTRIBUTE_NAME                       ATTRIBUTE_VALUE
+------------------------------ --------------------------------------------------
+CDX_REPORT_DIR_CLIENT               \\pdc\clims\data\patient_report
+
+
+update discrete_attribute_table 
+set ATTRIBUTE_VALUE= '\\pdc\clims_dev\data\patient_report' 
+where ATTRIBUTE_NAME='CDX_REPORT_DIR_CLIENT';
+
+

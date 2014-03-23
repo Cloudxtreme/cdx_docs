@@ -1,0 +1,5 @@
+
+psql portaldb
+
+\l :list databases
+\d :show tables

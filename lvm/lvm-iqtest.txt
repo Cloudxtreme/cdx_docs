@@ -1,0 +1,21 @@
+
+
+problem:
+ubuntu804 only has 5GB
+
+virt-clone --original ubuntu804 --name iqtest --file /dev/vg0/iqtest 
+
+qtest only 5GB, too.  Too small to install oracle.
+
+
+lvextend -L+10G /dev/vg0/iqtest
+
+start iqtest
+
+run fdisk 
+create the 3rd partition of 10G 
+extend lvm on top of it.
+
+
+
+

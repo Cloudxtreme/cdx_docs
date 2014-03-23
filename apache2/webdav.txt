@@ -1,0 +1,85 @@
+apache webdav pam ldap
+
+http://www.howtoforge.com/how-to-set-up-webdav-with-apache2-on-ubuntu-8.10
+http://samiux.wordpress.com/2009/06/27/howto-webdav-on-ubuntu-9-04-server/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install apache2
+
+a2enmod dav_fs
+a2enmod dav
+
+/etc/init.d/apache2 restart
+
+  424  mkdir -p /var/www/web1/web
+  425  chown www-data /var/www/web1/web
+  426  cd /etc/apache2/sites-available/
+
+  429  cp default default.sav
+  430  vi default
+
+        DocumentRoot /var/www/web1/web
+
+        <Directory /var/www/web1/web>
+
+# cd /etc/apache2/sites-available
+# vi default
+
+        Alias /webdav /var/www/web1/web
+
+        <Location /webdav>
+           DAV On
+           AuthType Basic
+           AuthName "webdav"
+           AuthUserFile /var/www/web1/passwd.dav
+           Require valid-user
+       </Location>
+
+
+cd /var/www/web1/web
+# htpasswd -c /var/www/web1/passwd.dav test
+	cdxTest123!
+  438  chown root:www-data /var/www/web1/passwd.dav
+  439  chmod 640 /var/www/web1/passwd.dav
+
+/etc/init.d/apache2 restart
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- text based client (on ubuntu)
+--
+
+# wajig install cadaver
+
+root@webdav:~# cadaver http://localhost/webdav/
+Authentication required for webdav on server `localhost':
+Username: test
+Password: 
+
+-- 
+-- open a browser
+--
+http://webdav.cardiodx.com/webdav/
+
+	fix for cbshub (8.04):
+		If you see this error: Directory index forbidden by Options directive: /var/www/web1/web/
+			Add the following line to <Location /webdav>
+	           Options Indexes FollowSymLinks MultiViews
+
+--
+-- client (on windows)
+--
+Click "My Computer" --> My Network Places --> Add a network place
+   --> Choose another network location 
+   --> http://webdav.cardiodx.com/webdav
+
+   http://karmic64.cardiodx.com:80/webdav/
+
+
+--
+-- client (on linux)
+--
+http://www.howtoforge.com/how-to-set-up-webdav-with-apache2-on-ubuntu-8.10-p3
+
+

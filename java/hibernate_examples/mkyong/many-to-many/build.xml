@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<project name="springapp" basedir="." default="usage">
+    <property file="build.properties"/>
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="bin"/>
+    <property name="name" value="springapp"/>
+
+    <path id="lib">
+        <fileset dir="../../../lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+    </path>
+
+    <target name="usage">
+        <echo message=""/>
+        <echo message="${name} build file"/>
+        <echo message="-----------------------------------"/>
+        <echo message=""/>
+        <echo message="Available targets are:"/>
+        <echo message=""/>
+        <echo message="build     --> Build the application"/>
+        <echo message=""/>
+    </target>
+
+    <target name="build" description="Compile main source tree java files">
+        <mkdir dir="${build.dir}"/>
+        <javac destdir="${build.dir}" source="1.5" target="1.5" debug="false"
+               deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+            <classpath refid="lib"/>
+        </javac>
+    </target>
+
+<target name="codegen">
+<taskdef name="hibernatetool" 
+      classname="org.hibernate.tool.ant.HibernateToolTask" 
+      classpathref="lib" />
+
+    <hibernatetool destdir="${build.dir}">
+      <configuration configurationfile="${build.dir}/hibernate.cfg.xml">
+   <fileset dir="${src.dir}">
+     <include name="**/*.hbm.xml"/>
+   </fileset>
+      </configuration>
+      <hbm2java/>
+    </hibernatetool>
+</target>
+
+
+	<target name="clean">
+		<delete dir="${build.dir}/com">
+			<include name="**/*.class" />
+		</delete>
+    </target>
+
+</project>

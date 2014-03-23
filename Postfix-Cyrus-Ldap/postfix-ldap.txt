@@ -1,0 +1,59 @@
+http://www.postfix.org/LDAP_README.html
+
+http://www.postfix.org/ldap_table.5.html
+
+
+postfix-ldap
+openldap-client
+
+
+vi main.cf
+alias_maps = hash:/etc/aliases, ldap:/etc/postfix/ldap-aliases.cf
+
+
+vi /etc/postfix/ldap-aliases.cf 
+server_host = ldap.my.com
+search_base = dc=my, dc=com
+
+start_tls = yes
+
+
+ldapsearch 
+postmap -v -q cardiodx.com ldap:/etc/postfix/ldap-aliases.cf
+
+
+
+--> port 389 to ldap server
+bind anonymously
+
+vi salpd.conf
+access control??
+
+
+
+??mailacceptinggeneralid attribute is "ldapuser", read the "maildrop" attributes of those found
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+testsaslauthd -u igor -p secret
+0: OK "Success."
+	auth.* syslog <<<<====================
+		
+
+
+
+LDAP_SASLAUTHD 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+just tell postfix to use it. you can define for instance: 
+
+ldap_aliases_query_filter = (&(cn=%s)(objectClass=nisMailAlias)) 
+ldap_aliases_result_attribute = rfc822MailMember 
+
+
+this would use the nis.schema to search for cn=postmaster. it would find 
+the entry cn=postmaster and use the attribute rfc822MailMember as a 
+forwarding address

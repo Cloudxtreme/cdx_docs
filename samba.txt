@@ -1,0 +1,107 @@
+samba password poliy
+
+http://searchenterpriselinux.techtarget.com/tip/0,289483,sid39_gci1152805,00.html
+
+1. min password length = 8 characters
+2. password history = save last 4 passwords
+3. maximum password age = 90 days
+4. minimum password age = 7 days
+5. lockout after 10 attempts
+6. lockout duration = forever, account must be manually reenabled
+
+# pdbedit -P "min password length" -C 8
+# pdbedit -P "password history" -C 4
+# pdbedit -P "maximum password age" -C 7776000
+# pdbedit -P "minimum password age" -C 604800
+# pdbedit -P "bad lockout attempt" -C 10
+# pdbedit -P "lockout duration" -C -1
+
+reset count minutes
+disconnect time
+user must logon to change password
+
+
+pededit -P ?
+
+pdbedit -P "user must logon to change password" -C 2
+pdbedit -a test01
+
+pdbedit -Lv 
+pdbedit -Lw
+pdbedit -Lv -u test01
+
+pdbedit -u test01 --pwd-must-change-time 0
+
+pdbedit --pwd-must-change-time="2008-07-21" --time-format="%Y-%m-%d" test01 
+pdbedit --debuglevel=10 --pwd-must-change-time="2010-01-01" --time-format="%Y-%m-%d" test01 
+
+pdbedit -h\\\\CCSMB\\test01 test01
+
+
+
+pdbedit -P "maximum password age" -C 3888000
+pdbedit -P "maximum password age"
+pdbedit -P "bad lockout attempt" -C 3
+pdbedit -P "bad lockout attempt" 
+
+
+pdbedit -r -c "[DLX]" jht
+pdbedit -r -c "[]" jht
+
+
+
+D	Account is disabled.
+H	A home directory is required.
+I	An inter-domain trust account.
+L	Account has been auto-locked.
+M	An MNS (Microsoft network service) logon account.
+N	Password not required.
+S	A server trust account.
+T	Temporary duplicate account entry.
+U	A normal user account.
+W	A workstation trust account.
+X	Password does not expire.
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+???
+Where an LDAP password back end is used, the policy settings must be exported to the LDAP directory. This can be done by executing:
+root #> pdbedit -y -i tdbsam -e ldapsam 
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+??check password script
+
+>> There are a set of ways to accomplish such task.
+>> Some I use is:
+>> 1) Set obey pam restrictions = yes in the smb.conf file.
+>> 2) Set check password script = /usr/sbin/crackcheck -d  /usr/lib/cracklib_dict
+>> This check the user password against a dictionary. Crackcheck can be downloaded from samba
+	>> (http://people.samba.org/bzr/mwxia/samba-soc/examples/auth/crackcheck/).
+	>> The cracklib package must be installed for the dictionary to work.
+>> 3) Use pam pam_cracklib to set your password rules for lower/upper characters, numbers, special characters, etc:
+	>> password    requisite     /lib/security/$ISA/pam_cracklib.so retry=3
+	>> minlen=8 difok=3 dcredit=-1 lcredit=-1
+>> Or pam_passwdqc for the same thing:
+>> password    requisite    /lib/security/$ISA/pam_passwdqc.so
+>> min=disable,8,8,8,8 max=25 passphrase=0 match=6 similar=deny random=64
+>> enforce=users retry=3
+>> See the man pages for correct options values.
+>> 4) You can block users after X retries using pam pam_tally.so, but I
+>> haven't tried this yet.
+>>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pam ????
+
+vi smb.conf
+pam password change = yes
+
+vi /etc/pam.d/samba
+password   required     /lib/security/pam_cracklib.so retry=3 minlen=x dcredit=y  ucredit=z
+
+

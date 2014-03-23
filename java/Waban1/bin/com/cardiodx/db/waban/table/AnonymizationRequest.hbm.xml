@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AnonymizationRequest" table="ANONYMIZATION_REQUEST" schema="DNALIMS">
+        <comment>Anonymization Request Received Table</comment>
+        <id name="anonymizationRequestId" type="big_decimal">
+            <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="requestType" type="string">
+            <column name="REQUEST_TYPE" length="20">
+                <comment>Request Originated from</comment>
+            </column>
+        </property>
+        <property name="requestCompletionStatus" type="string">
+            <column name="REQUEST_COMPLETION_STATUS" length="20">
+                <comment>Request status</comment>
+            </column>
+        </property>
+        <property name="requestMessage" type="string">
+            <column name="REQUEST_MESSAGE" length="2000">
+                <comment>Request Message</comment>
+            </column>
+        </property>
+        <property name="anonymizationStudySetupId" type="big_decimal">
+            <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" not-null="true">
+                <comment>Anonymization Study Setup ID</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date Created</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>created by user</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date modified</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>modified by user</comment>
+            </column>
+        </property>
+        <set name="sampleIdentificationKeies" table="SAMPLE_IDENTIFICATION_KEY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0">
+                    <comment>Anonymization Request ID and Primary Key</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleIdentificationKey" />
+        </set>
+    </class>
+</hibernate-mapping>

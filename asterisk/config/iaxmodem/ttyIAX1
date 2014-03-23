@@ -1,0 +1,11 @@
+device		/dev/ttyIAX1
+owner		uucp:uucp
+mode		660
+port		4571
+refresh		60
+server		127.0.0.1
+peername	iaxmodem1
+secret		cdxsecret
+cidname		CardioDx, Inc.
+cidnumber	6504752799
+codec		ulaw

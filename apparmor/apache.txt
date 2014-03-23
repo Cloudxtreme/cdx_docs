@@ -1,0 +1,63 @@
+# more usr.sbin.apache2
+# Last Modified: Mon Dec 14 18:49:09 2009
+#include <tunables/global>
+/usr/sbin/apache2 {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  capability chown,
+  capability kill,
+  capability setgid,
+  capability setuid,
+
+  /etc/apache2/apache2.conf r,
+  /etc/apache2/conf.d/ r,
+  /etc/apache2/conf.d/charset r,
+  /etc/apache2/httpd.conf r,
+  /etc/apache2/mods-available/alias.conf r,
+  /etc/apache2/mods-available/alias.load r,
+  /etc/apache2/mods-available/auth_basic.load r,
+  /etc/apache2/mods-available/authn_file.load r,
+  /etc/apache2/mods-available/authz_default.load r,
+  /etc/apache2/mods-available/authz_groupfile.load r,
+  /etc/apache2/mods-available/authz_host.load r,
+  /etc/apache2/mods-available/authz_user.load r,
+  /etc/apache2/mods-available/autoindex.conf r,
+  /etc/apache2/mods-available/autoindex.load r,
+  /etc/apache2/mods-available/cgid.conf r,
+  /etc/apache2/mods-available/cgid.load r,
+  /etc/apache2/mods-available/dir.conf r,
+  /etc/apache2/mods-available/dir.load r,
+  /etc/apache2/mods-available/env.load r,
+  /etc/apache2/mods-available/mime.conf r,
+  /etc/apache2/mods-available/mime.load r,
+  /etc/apache2/mods-available/negotiation.conf r,
+  /etc/apache2/mods-available/negotiation.load r,
+  /etc/apache2/mods-available/setenvif.conf r,
+  /etc/apache2/mods-available/setenvif.load r,
+  /etc/apache2/mods-available/status.conf r,
+  /etc/apache2/mods-available/status.load r,
+  /etc/apache2/mods-enabled/ r,
+  /etc/apache2/ports.conf r,
+  /etc/apache2/sites-available/default r,
+  /etc/apache2/sites-enabled/ r,
+  /etc/mime.types r,
+  /usr/lib/** mr,
+  /usr/sbin/apache2 mr,
+  /var/log/apache2/access.log w,
+  /var/log/apache2/error.log w,
+  /var/run/apache2.pid rw,
+  /var/run/apache2/cgisock.7342 w,
+  /var/run/apache2/cgisock.7533 w,
+  /var/run/apache2/cgisock.7615 w,
+  /var/run/apache2/cgisock.7719 w,
+  /var/www/ r,
+  /var/www/index.html r,
+}
+
+  /usr/sbin/apache2//DEFAULT_URI {
+  }
+
+  /usr/sbin/apache2//HANDLING_UNTRUSTED_INPUT {
+  }
+

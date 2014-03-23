@@ -1,0 +1,23 @@
+
+ruote densha
+
+
+grant all privileges on densha.* to 'densha'@'localhost' identified by 'densha';
+
+
+vi database.yml
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+cchou@cchoudesktop:~$ route 
+root@cchoudesktop:/data/cchou# route delete default
+root@cchoudesktop:/data/cchou# route add default gw 10.10.37.2 eth1
+
+
+
+
+ip rule 
+ip route list table local
+ip route list table main

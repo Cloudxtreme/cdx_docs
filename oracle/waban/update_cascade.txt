@@ -1,0 +1,51 @@
+
+
+create table t1(c1 number primary key, name varchar2(64));
+create table t2(c2 number , name varchar2(64), c1 references t1(c1));
+
+insert into t1 values(1, 'p1');
+
+insert into t2 values(1, 'c1', 1);
+insert into t2 values(2, 'c1', 1);
+
+SQL> select * from t1;
+
+	C1 NAME
+---------- ----------------------------------------------------------------
+	 1 p1
+
+SQL> select * from t2;
+
+	C2 NAME 								    C1
+---------- ---------------------------------------------------------------- ----------
+	 1 c1									     1
+	 2 c1									     1
+
+update t1 set c1 = 2 where c1 = 1;
+  ORA-02292: integrity constraint (DNALIMS.SYS_C0037887) violated - child record found
+
+create or replace trigger cascade_update
+after update of c1 on t1
+for each row
+begin
+   update t2
+   set c1 = :new.c1
+   where c1 = :old.c1;
+end;
+/
+
+update t1 set c1 = 2 where c1 = 1;
+
+SQL> select * from t1;
+
+	C1 NAME
+---------- ----------------------------------------------------------------
+	 2 p1
+
+SQL> select * from t2;
+
+	C2 NAME 								    C1
+---------- ---------------------------------------------------------------- ----------
+	 1 c1									     2
+	 2 c1									     2
+

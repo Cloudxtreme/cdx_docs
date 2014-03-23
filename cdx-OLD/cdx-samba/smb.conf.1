@@ -1,0 +1,102 @@
+# Global parameters
+[global]
+        unix charset = LOCALE
+        workgroup = CDX
+        netbios name = PDC
+#        interfaces = eth1, lo
+        bind interfaces only = Yes
+        passdb backend = ldapsam:ldap://127.0.0.1
+        username map = /etc/samba/smbusers
+        #log level = 1
+        log level = 2
+        syslog = 0
+        log file = /var/log/samba/%m
+        max log size = 50
+        smb ports = 139 445
+#        name resolve order = wins bcast hosts
+        time server = Yes
+        show add printer wizard = No
+        add user script = /opt/IDEALX/sbin/smbldap-useradd -m "%u"
+        delete user script = /opt/IDEALX/sbin/smbldap-userdel "%u"
+        add group script = /opt/IDEALX/sbin/smbldap-groupadd -p "%g"
+        delete group script = /opt/IDEALX/sbin/smbldap-groupdel "%g"
+        add user to group script = /opt/IDEALX/sbin/smbldap-groupmod -m "%u" "%g"
+        delete user from group script = /opt/IDEALX/sbin/smbldap-groupmod -x "%u" "%g"
+        set primary group script = /opt/IDEALX/sbin/smbldap-usermod -g "%g" "%u"
+        add machine script = /opt/IDEALX/sbin/smbldap-useradd -w "%u"
+        logon script = scripts\logon.bat
+        logon path = \\%L\profiles\%U
+        logon drive = X:
+        domain logons = Yes
+        preferred master = Yes
+#        wins support = Yes
+        ldap admin dn = cn=Manager,dc=cardiodx,dc=com
+        ldap group suffix = ou=Groups
+        ldap idmap suffix = ou=Idmap
+        ldap machine suffix = ou=People
+        ldap suffix = dc=cardiodx,dc=com
+        ldap user suffix = ou=People
+        idmap backend = ldap:ldap://127.0.0.1
+        idmap uid = 10000-20000
+        idmap gid = 10000-20000
+        printer admin = root, chrisr
+        map acl inherit = Yes
+
+[accounts]
+        comment = Accounting Files
+        path = /data/accounts
+        read only = No
+
+[service]
+        comment = Financial Services Files
+        path = /data/service
+        read only = No
+
+[pidata]
+        comment = Property Insurance Files
+        path = /data/pidata
+        read only = No
+
+[homes]
+        comment = Home Directories
+        valid users = %S
+        read only = No
+        browseable = No
+
+[printers]
+        comment = SMB Print Spool
+        path = /var/spool/samba
+        guest ok = Yes
+        printable = Yes
+        browseable = No
+
+[apps]
+        comment = Application Files
+        path = /apps
+        admin users = bjordan
+        read only = No
+
+[netlogon]
+        comment = Network Logon Service
+        path = /var/lib/samba/netlogon
+        guest ok = Yes
+        locking = No
+
+[profiles]
+        comment = Profile Share
+        path = /var/lib/samba/profiles
+        read only = No
+        profile acls = Yes
+
+[profdata]
+        comment = Profile Data Share
+        path = /var/lib/samba/profdata
+        read only = No
+        profile acls = Yes
+
+[print$]
+        comment = Printer Drivers
+        path = /var/lib/samba/drivers
+        write list = root, chrisr
+
+

@@ -1,0 +1,18 @@
+
+--
+-- on kvmsrv4
+--
+# iscsiadm -m node -T storage1.lucid64 -l
+# iscsiadm -m session
+tcp: [7] 10.10.35.58:3260,1 storage1.lucid64
+
+-- 
+-- on cchoudesktop
+--
+# iscsiadm -m session
+tcp: [1] 10.10.35.58:3260,1 storage1.lucid64
+
+migrate --live lucid64 qemu+ssh://kvmsrv4/system
+
+
+

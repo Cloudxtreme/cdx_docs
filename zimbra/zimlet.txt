@@ -1,0 +1,24 @@
+  504  zmzimletctl listZimlets
+  505  zmzimletctl undeploy com_zimbra_contactcleaner
+  507  zmzimletctl deploy com_zimbra_contactcleaner.zip
+
+refresh the browser (or logout and log back in)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+zip ../com_zimbra_asterisk.zip *
+scp com_zimbra_asterisk.zip root@webmail:/tmp
+
+--
+-- on webmail:
+--
+zmzimletctl deploy com_zimbra_asterisk.zip 
+
+tail -20f /opt/zimbra/log/mailbox.log
+2010-12-22 14:45:48,164 INFO  [Thread-797464] [] zimlet - Deploying Zimlet com_zimbra_asterisk in LDAP.
+2010-12-22 14:45:48,328 INFO  [Thread-797464] [] zimlet - Installing Zimlet com_zimbra_asterisk on this host.
+2010-12-22 14:45:48,346 INFO  [Thread-797464] [] zimlet - Upgrading Zimlet com_zimbra_asterisk to 1.0
+2010-12-22 14:45:48,468 INFO  [Thread-797464] [] zimlet - Installing Zimlet config for com_zimbra_asterisk
+2010-12-22 14:45:48,545 INFO  [Thread-797464] [] zimlet - Adding Zimlet com_zimbra_asterisk to COS default
+2010-12-22 14:45:48,637 INFO  [Thread-797464] [] zimlet - Enabling Zimlet com_zimbra_asterisk
+
+

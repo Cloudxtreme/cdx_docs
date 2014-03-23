@@ -1,0 +1,14 @@
+rename vg0 to vg1
+
+currently have:
+  /dev/vg0/root
+  /dev/vg0/swap
+
+mount it to another image
+
+disable lvs:
+lvchange -an /dev/vg0/root
+lvchange -an /dev/vg0/swap
+
+rename vg:
+vgrename vg0 vg1

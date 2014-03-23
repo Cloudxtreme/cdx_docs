@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.VendProjForecastedView" table="VEND_PROJ_FORECASTED_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.VendProjForecastedViewId">
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="mtp" type="string">
+                <column name="MTP" length="9" />
+            </key-property>
+            <key-property name="totalSampleNo" type="big_decimal">
+                <column name="TOTAL_SAMPLE_NO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneName" type="string">
+                <column name="GENE_NAME" length="100" />
+            </key-property>
+            <key-property name="alleles" type="string">
+                <column name="ALLELES" length="4000" />
+            </key-property>
+            <key-property name="assayNo" type="big_decimal">
+                <column name="ASSAY_NO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="fgid" type="string">
+                <column name="FGID" length="4000" />
+            </key-property>
+            <key-property name="fpi" type="string">
+                <column name="FPI" length="4000" />
+            </key-property>
+            <key-property name="lpi" type="string">
+                <column name="LPI" length="4000" />
+            </key-property>
+            <key-property name="lpo" type="string">
+                <column name="LPO" length="4000" />
+            </key-property>
+            <key-property name="dbl" type="string">
+                <column name="DBL" length="4000" />
+            </key-property>
+            <key-property name="samplePreparation" type="string">
+                <column name="SAMPLE_PREPARATION" length="9" />
+            </key-property>
+            <key-property name="genotypingReport" type="string">
+                <column name="GENOTYPING_REPORT" length="9" />
+            </key-property>
+            <key-property name="businessUnit" type="string">
+                <column name="BUSINESS_UNIT" length="4000" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,13 @@
+wajig install vsftpd
+  openssl openssl-blacklist ssl-cert vsftpd
+
+# diff /etc/vsftpd.conf vsftpd.conf  | grep '>'
+> anonymous_enable=NO
+> local_enable=YES
+> write_enable=YES
+> xferlog_file=/var/log/vsftpd.log
+> ftpd_banner=Welcome to brscan FTP service.
+> chroot_local_user=YES
+
+# /etc/init.d/vsftpd restart
+

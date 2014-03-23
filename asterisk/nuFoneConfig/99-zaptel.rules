@@ -1,0 +1,6 @@
+# zaptel devices with ownership/permissions for running as non-root
+KERNEL=="zapctl",       NAME="zap/ctl"          OWNER="asterisk",       GROUP="asterisk",       MODE="0660"
+KERNEL=="zaptimer",     NAME="zap/timer"        OWNER="asterisk",       GROUP="asterisk",       MODE="0660"
+KERNEL=="zapchannel",   NAME="zap/channel"      OWNER="asterisk",       GROUP="asterisk",       MODE="0660"
+KERNEL=="zappseudo",    NAME="zap/pseudo"       OWNER="asterisk",       GROUP="asterisk",       MODE="0660"
+KERNEL=="zap[0-9]*",    NAME="zap/%n"           OWNER="asterisk",       GROUP="asterisk",       MODE="0660"

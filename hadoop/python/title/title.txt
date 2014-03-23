@@ -1,0 +1,61 @@
+--
+-- will run but not a very useful example
+--
+
+vi mapper.py 
+#!/usr/bin/env python
+
+import sys, urllib, re
+
+title_re = re.compile("<title>(.*?)</title>",
+                      re.MULTILINE | re.DOTALL | re.IGNORECASE)
+
+for line in sys.stdin:
+    url = line.strip()
+    match = title_re.search(urllib.urlopen(url).read())
+    if match:
+        print url, "\t", match.group(1).strip()
+
+
+vi reducer.py 
+#!/usr/bin/env python
+
+from operator import itemgetter
+import sys
+
+for line in sys.stdin:
+    line = line.strip()
+    print line
+
+
+vi urls.txt 
+http://www.google.com
+http://www.yahoo.com
+
+chmod 755 *.py
+cat urls.txt | ./mapper.py 
+cat urls.txt | ./mapper.py | sort | ./reducer.py 
+
+~~~~~~~~~~~~~~~~~~~~
+cd urls
+$ more urls/url1
+http://www.yahoo.com/
+http://www.google.com/
+http://www.amazon.com/
+
+$ more urls/url2
+http://www.cnn.com/
+http://www.ebay.com/
+http://www.download.com/
+
+hadoop dfs -put urls urls
+hadoop dfs -rmr titles
+
+hadoop jar $HADOOP_HOME/contrib/streaming/hadoop-*streaming.jar \
+  -file ./mapper.py -mapper  ./mapper.py \
+  -file ./reducer.py -reducer ./reducer.py \
+  -input   urls/* \
+  -output  titles
+
+hadoop dfs -cat titles/part-00000
+

@@ -1,0 +1,9 @@
+
+
+cd ~/gdrive/it/software/Oraclesqldeveloper
+wajig install ./sqldeveloper_1.5.54.40-2_all.deb 
+
+sqldeveloper
+Type the full pathname of a J2SE installation (or Ctrl-C to quit), the path will be stored in ~/.sqldeveloper/jdk
+/usr/lib/jvm/java-1.6.0-openjdk 
+

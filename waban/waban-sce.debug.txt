@@ -1,0 +1,15 @@
+
+sceschema
+
+sce_server
+
+
+desc sce_queue_item;
+
+select queue_id, status from sce_queue_item;
+
+
+select * from sce_server_session_log;
+
+select QUEUE_SERVER_ID, HOST_NAME, IP_ADDRESS,END_TIMESTAMP from sce_server_session_log;
+

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeGeneRegion" table="TRGE_GENE_REGION" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeGeneRegionId">
+            <key-property name="geneRegionId" type="big_decimal">
+                <column name="GENE_REGION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="regionName" type="string">
+                <column name="REGION_NAME" length="100" />
+            </key-property>
+            <key-property name="regionType" type="string">
+                <column name="REGION_TYPE" length="100" />
+            </key-property>
+            <key-property name="regionNumber" type="big_decimal">
+                <column name="REGION_NUMBER" precision="22" scale="0" />
+            </key-property>
+            <key-property name="startPos" type="big_decimal">
+                <column name="START_POS" precision="22" scale="0" />
+            </key-property>
+            <key-property name="length" type="big_decimal">
+                <column name="LENGTH" precision="22" scale="0" />
+            </key-property>
+            <key-property name="isComplement" type="java.lang.Boolean">
+                <column name="IS_COMPLEMENT" precision="1" scale="0" />
+            </key-property>
+            <key-property name="geneId" type="big_decimal">
+                <column name="GENE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneName" type="string">
+                <column name="GENE_NAME" length="100" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

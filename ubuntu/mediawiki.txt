@@ -1,0 +1,46 @@
+
+http://www.mediawiki.org/wiki/Manual:Running_MediaWiki_on_Ubuntu
+https://help.ubuntu.com/community/MediaWiki
+
+install ubuntu as lamp
+fix locale
+
+wajig install libapache2-mod-php5 
+
+mods-enabled# ln -s ../mods-available/php5.* .
+
+http://10.10.37.193/wiki/config/
+
+wiki# mv config/LocalSettings.php .
+
+Have a file under site-enabled called wiki
+change the config to uave DocumentRoot as /var/www/wiki
+and Directory as /var/www/wiki
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install mediawiki1.7 imagemagick mediawiki1.7-math 
+/etc/init.d/apache2 restart
+
+cd /usr/share/mediawiki1.7/config
+mv LocalSettings.php  ..
+
+chmod 600 /etc/mediawiki/LocalSettings.php
+rm -Rf /var/lib/mediawiki/config
+cp my_new_logo.png /usr/share/mediawiki1.7/skins/common/images/wiki.png
+
+http://10.10.37.193/mediawiki
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mediawiki + ldap 
+http://caldergroup.com/configure/wikildapauthentication.html
+http://www.codex.org/2006/06/01/mediawiki-ldap-authentication/
+
+wajig install php-net-ldap
+
+restart apache
+
+for debugging:
+vi LocalSettings.php (at the beginning)
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+

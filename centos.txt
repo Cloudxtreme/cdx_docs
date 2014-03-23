@@ -1,0 +1,5 @@
+??? not working???
+ virt-install -n centos52 -r 512 -f /kvm/images/centos52.img -s 5 -c ./CentOS-5.2-x86_64-bin-DVD.iso --accelerate --vnc --noautoconsole
+
+Install on a Dell 755 desktop
+linux text

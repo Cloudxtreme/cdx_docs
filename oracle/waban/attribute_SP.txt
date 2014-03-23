@@ -1,0 +1,8 @@
+
+select LIMS_ATTR_UTIL.GET_STUDY_ATTR(117, 'Skip Pos Control', 'STUDY') from dual;
+ 
+
+SELECT attribute_value 
+FROM discrete_attribute_table
+WHERE attribute_name = 'CDX_NEGC_ACC_PREFIX';
+

@@ -1,0 +1,108 @@
+set line 3000
+set pagesize 1000
+
+--
+-- find the RNA Extractions for the day
+--
+col checklist_name for a10
+select distinct c.checklist_id, c.checklist_name,
+		to_char(c.date_created, 'HH24:MI:SS') created,
+		to_char(c.date_completed, 'HH24:MI:SS') completed
+from checklist_sample cs, checklist c, procedure_template p
+where cs.checklist_id = c.checklist_id 
+  and c.procedure_template_id = p.procedure_template_id
+  and p.PROCEDURE_NAME = 'RNA Extraction'
+  and to_char(c.date_created) = '19-APR-11'
+order by created;
+
+we have 3 batches
+------------
+       19270
+       19284
+       19286
+
+--------------------------------------
+-- ok, let's work on checklist 19286
+--------------------------------------
+--
+-- print the sample location map:
+--
+col location for a10
+select substr(limspackage.container_position(s1.sample_id),9) location, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2, accession a1, accession a2
+where s1.Sample_ID = cs.Sample_ID
+and s1.accession_id = a1.accession_id
+and s2.Sample_ID = cs.orig_Sample_ID
+and s2.accession_id = a2.accession_id
+and checklist_ID = 19286 
+order by location;
+
+(seme result!!)
+select substr(limspackage.container_position(s1.sample_id),9) location, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2
+where s1.Sample_ID = cs.Sample_ID
+and s2.Sample_ID = cs.orig_Sample_ID
+and checklist_ID = 19286
+order by location;
+
+--------------------------------------
+-- POS CONTROL
+--------------------------------------
+-- find the PC tube id (should be same as B1 above)
+select s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2,accession a1,accession a2
+where s1.Sample_ID=cs.Sample_ID
+and s1.accession_id=a1.accession_id
+and s2.Sample_ID=cs.orig_Sample_ID
+and s2.accession_id=a2.accession_id
+and substr(limspackage.container_position(s1.sample_id),9) = '(B1)'
+and checklist_ID=19286;
+
+-- OK, let's find the status of PC incubation.......
+col status for a20
+select distinct c.checklist_id, to_char(c.date_completed, 'HH24:MI:SS') date_completed, cs.status
+from checklist_sample cs, checklist c, procedure_template p
+where cs.checklist_id = c.checklist_id
+   and c.procedure_template_id = p.procedure_template_id
+   and c.checklist_id in (
+		select checklist_id from checklist_sample where sample_id in (
+			select sample_id from sample where sample_tube_id = 'T1043233'
+		)
+	)
+and p.PROCEDURE_NAME = 'Positive Control Incubation'
+and p.procedure_status = 'APPROVED';
+
+--------------------------------------------------------------
+-- OK, let's find the status of the sample incubation......
+-- checklist_id for sample incubation...
+--------------------------------------------------------------
+select distinct cs.checklist_id, to_char(c.date_completed, 'HH24:MI:SS') date_completed
+from checklist c, procedure_template pt, checklist_sample cs
+where c.procedure_template_id = pt.procedure_template_id
+and c.checklist_id = cs.checklist_id
+and procedure_name = 'Sample Incubation'
+and procedure_status = 'APPROVED'
+and to_char(c.date_completed) between '19-APR-10' and '19-APR-11'
+and sample_id in (
+		-- find all blood tube samples
+    select id_from from transfer where id_to in (
+		  -- find all RNAE samples
+      select sample_id from checklist_sample where checklist_id = 19286)
+  )
+order by cs.checklist_id;
+
+
+
+select distinct procedure_name
+from procedure_template pt
+where procedure_status = 'APPROVED'
+and procedure_name like 'RNA Extraction Reagents%'
+order by procedure_name;
+
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbGenotype" table="MDB_GENOTYPE" schema="DNALIMS">
+        <id name="genotypeId" type="big_decimal">
+            <column name="GENOTYPE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mdbVariantByAllele2VariantId" class="com.cardiodx.db.waban.table.MdbVariant" fetch="select">
+            <column name="ALLELE_2_VARIANT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="roi" class="com.cardiodx.db.waban.table.Roi" fetch="select">
+            <column name="ROI_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="mdbVariantByVariantId" class="com.cardiodx.db.waban.table.MdbVariant" fetch="select">
+            <column name="VARIANT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="mdbClassification" class="com.cardiodx.db.waban.table.MdbClassification" fetch="select">
+            <column name="CLASSIFICATION_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="testAccession" class="com.cardiodx.db.waban.table.TestAccession" fetch="select">
+            <column name="CASE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="zygosity" type="string">
+            <column name="ZYGOSITY" length="20" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,20 @@
+
+
+Use 
+./cdxvm.sh create lucid64 portal 
+
+vi /etc/network
+more interfaces
+auto eth0
+iface eth0 inet static
+  address 10.10.43.3
+  netmask 255.255.255.0
+  gateway 10.10.43.1
+
+
+more /etc/resolv.conf 
+nameserver 8.8.8.8
+
+vi /etc/apt/apt.conf
+cquire::http::Proxy "http://proxy.cardiodx.com/";
+

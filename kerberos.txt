@@ -1,0 +1,5 @@
+kerberos
+
+http://chrisp.de/en/rsrc/kerberos.html
+http://www.alittletooquiet.net/text/kerberos-on-ubuntu/
+

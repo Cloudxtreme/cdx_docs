@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PendingSampleView" table="PENDING_SAMPLE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PendingSampleViewId">
+            <key-property name="pendingSampleId" type="big_decimal">
+                <column name="PENDING_SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="autoaccessionLoadId" type="big_decimal">
+                <column name="AUTOACCESSION_LOAD_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sponsorSampleTubeId" type="string">
+                <column name="SPONSOR_SAMPLE_TUBE_ID" length="4000" />
+            </key-property>
+            <key-property name="sponsorAccessionId" type="string">
+                <column name="SPONSOR_ACCESSION_ID" length="24" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="pending" type="boolean">
+                <column name="PENDING" precision="1" scale="0" />
+            </key-property>
+            <key-property name="volume" type="big_decimal">
+                <column name="VOLUME" precision="22" scale="0" />
+            </key-property>
+            <key-property name="concentration" type="big_decimal">
+                <column name="CONCENTRATION" precision="22" scale="0" />
+            </key-property>
+            <key-property name="finalStorageTube" type="java.lang.Boolean">
+                <column name="FINAL_STORAGE_TUBE" precision="1" scale="0" />
+            </key-property>
+            <key-property name="sourceType" type="string">
+                <column name="SOURCE_TYPE" length="30" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="accessionedBy" type="string">
+                <column name="ACCESSIONED_BY" length="30" />
+            </key-property>
+            <key-property name="dateAccessioned" type="date">
+                <column name="DATE_ACCESSIONED" length="7" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

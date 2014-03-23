@@ -1,0 +1,49 @@
+<%= form_for(@object) do |f| %>
+  <% if @object.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@object.errors.count, "error") %> prohibited this object from being saved:</h2>
+
+      <ul>
+      <% @object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% Service::Timecard.display_columns.each do |column_name| %>
+    <div class="field">
+      <% if Service::Timecard.is_lut_column?(column_name) %>
+        <%= f.label column_name %><br />
+        <%= f.select(column_name, Service::Timecard.selection_data(column_name)) %>
+      <% elsif Service::Timecard.is_foreign_key?(column_name) %>
+        <!-- skip foreign keys -->
+      <% else %>
+        <%= f.label column_name %><br />
+        <%= f.text_field column_name %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Foreign key(s) -->
+  <% Service::Timecard.foreign_keys.each do |foreign_key| %>
+    <% if params[foreign_key] %>
+      <!-- <%= f.hidden_field foreign_key, :value => params[foreign_key] %><br /> -->
+      <%= f.label foreign_key %><br />
+      <%= f.select(foreign_key, Service::Timecard.selection_data(foreign_key), :selected => params[foreign_key]) %><br />
+    <% elsif @object[foreign_key] %>
+      <!-- <%= f.hidden_field foreign_key, :value => @object[foreign_key] %><br /> -->
+      <%= f.label foreign_key %><br />
+      <%= f.select(foreign_key, Service::Timecard.selection_data(foreign_key), :selected => @object[foreign_key]) %><br />
+    <% else %>
+      <%= f.label foreign_key %><br />
+      <%= f.select(foreign_key, Service::Timecard.selection_data(foreign_key)) %><br />
+    <% end %>
+  <% end %>
+  <br />
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+

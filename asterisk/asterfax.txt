@@ -1,0 +1,126 @@
+http://downloads.sourceforge.net/asterfax/AsterFax-1.0-free.zip?modtime=1156238775&big_mirror=0
+
+make sure asterisk is installed
+
+wajig install unzip
+wajig install sun-java6-bin 
+wajig install gs-gpl 
+wajig install xvfb
+wajig install alien
+--alien --to-deb asterfax-1.0-free.i386.rpm 
+--wajig install ./asterfax_1.0-1_i386.deb 
+alien --to-deb --scripts asterfax-1.0-free.i386.rpm 
+wajig install ./asterfax_1.0-1_i386.deb 
+wajig install openoffice.org
+
+cp /usr/lib/asterfax/bin/AsterFax.xba /usr/lib/openoffice/share/basic/Tools
+
+vi script.xlb (/usr/lib/openoffice/share/basic/Tools/script.xlb)
+<library:element library:name="AsterFax"/> 
+
+vi /etc/asterisk/manager.conf 
+[general]
+enabled = yes
+
+[admin]secret = 3183deny=0.0.0.0/0.0.0.0permit=127.0.0.1/255.255.255.0read = system,call,log,verbose,command,agent,userwrite = system,call,log,verbose,command,agent,user 
+
+??? chmod 600 manager.conf
+
+~~~~~~~~~~~~~
+cd /usr/lib/asterfax/config/
+vi AsterFax.xml 
+root@zxcvbv:/usr/lib/asterfax/config# diff AsterFax.xml /mnt/sdb1/usr/lib/asterfax/config/AsterFax.xml | grep "> "
+>               <CompanyName>cc: CardioDX, Inc.</CompanyName>
+>               <FaxHeader>cc: Put Header Here</FaxHeader>
+>               <FaxFooter>cc: Put Footer Here</FaxFooter>
+> 
+>               <PageSize>cc: Page size?</PageSize>
+>               <Outbox>/var/spool/asterfax/fax</Outbox>
+>                       <Name>au.com.noojee.asterfax.outbound.submitter.DefaultSubmitter</Name>
+>                               <Host>127.0.0.1</Host>
+>                               <Port>25</Port>
+> 
+> 
+> 
+>                       <From>asterfax@cardiodx.com</From>
+>               <Username>admin</Username>
+>               <Password>3183</Password>
+>                       <MaxRetries>2</MaxRetries>
+>                       <RetryTime>20</RetryTime>
+> 
+>                               <Name>Zap/g1</Name>
+
+
+vi log4j.xml (INFO-->DEBUG)
+root@zxcvbv:/usr/lib/asterfax/config# diff log4j.xml /mnt/sdb1/usr/lib/asterfax/config/log4j.xml
+>               <param name="File" value="/var/log/asterfax/asterfax.log" />
+>               <level value="DEBUG" />
+
+
+mdkir /var/spool/asterfax/tmp
+
+Patch asterisk (http://forums.asteriskit.com.au/index.php?topic=62.0):
+cd /usr/lib/asterfax/modules
+--vi install.sh
+
+cd ~/asterisk/asterisk-1.2.15/apps
+cp app_txfax.c app_txfax.c.sav
+cp /usr/lib/asterfax/modules/spandsp_t30/app_txfax.c .
+
+make clean
+make
+make install
+
+--mkdir /usr/lib/asterfax/modules/backup
+--mv /usr/lib/asterisk/modules/app_txfax.so /usr/lib/asterfax/modules/backup/app_txfax.so
+--cp ~/asterisk/asterisk-1.2.15/apps/app_txfax.so /usr/lib/asterisk/modules/app_txfax.so
+
+
+Start asterfax.....
+/usr/lib/asterfax/asterfax.sh
+
+Test:
+/usr/lib/asterfax/test/test.sh cchou@cardiodx.com 16505658202@localhost
+
+in /etc/ssmtp/ssmtp.conf
+mailhub=localhost
+
+# mime-construct --debug --to 15634053624 --subject "Test 10:11 test.pdf" --string "Test 10:11 test.pdf" --attachment test.pdf --type image/pdf --file test.pdf
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fax:
+
+vi /usr/local/sbin/mailfax
+
+tiff2ps -2eaz -w 8.5 -h 11 $FAXFILE |   ps2pdf - |  mime-construct --to $RECIPIENT --subject "Fax from $FAXSENDER" \    --attachment fax.pdf --type application/pdf --file - 
+
+vi extensions.conf
+[macro-faxreceive]
+exten => s,1,SetVar(FAXFILE=/var/spool/asterisk-fax/${UNIQUEID}.tif)
+exten => s,2,DBGet(EMAILADDR=extensionemail/${MACRO_EXTEN})
+exten => s,3,rxfax(${FAXFILE})
+exten => s,103,SetVar(EMAILADDR=cchou@cardiodx.com)
+exten => s,104,Goto(3)
+
+
+[fax]
+exten => 2201,1,Macro(faxreceive)
+exten => 2202,1,Macro(faxreceive)
+exten => 2203,1,Macro(faxreceive)
+
+exten => h,1,system(/usr/local/sbin/mailfax ${FAXFILE} ${EMAILADDR} "${CALLERIDNUM} ${CALLERIDNAME}")
+
+
+[outside]
+exten => 2125551212,1,Goto(fax,5555,1)
+exten => fax,1,Goto(fax,2201,1)
+
+
+add fax to default
+include => fax
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install xvfb

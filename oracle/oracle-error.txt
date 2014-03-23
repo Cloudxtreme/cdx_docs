@@ -1,0 +1,5 @@
+
+ORA-16038,19809, 00312:
+RMAN> connect target sys/*******
+RMAN> delete archivelog all;
+RMAN> crosscheck archivelog all;

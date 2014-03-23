@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  dstr: MyString
+  dtxt: MyText
+  dint: 1
+  dflt: 1.5
+  ddec: 9.99
+  ddt: 2013-05-10 09:59:23
+  dtime: 2013-05-10 09:59:23
+  ddate: 2013-05-10
+  dbin: 
+  bbl: false
+
+two:
+  dstr: MyString
+  dtxt: MyText
+  dint: 1
+  dflt: 1.5
+  ddec: 9.99
+  ddt: 2013-05-10 09:59:23
+  dtime: 2013-05-10 09:59:23
+  ddate: 2013-05-10
+  dbin: 
+  bbl: false

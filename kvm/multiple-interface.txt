@@ -1,0 +1,15 @@
+
+
+    <interface type='bridge'>
+      <mac address='08:00:27:c6:62:83'/>
+      <source bridge='br0'/>
+      <model type='virtio'/>
+    </interface>
+    <interface type='bridge'>
+      <mac address='08:00:27:c6:62:84'/>
+      <source bridge='br0'/>
+      <model type='virtio'/>
+    </interface>
+
+
+

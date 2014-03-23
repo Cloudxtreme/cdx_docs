@@ -1,0 +1,52 @@
+
+
+-- client/server w/ tls
+set interfaces openvpn vtun0
+set interfaces openvpn vtun0 mode server
+set interfaces openvpn vtun0 server subnet 192.168.1.0/24
+set interfaces openvpn vtun0 tls ca-cert-file /root/ca.crt
+set interfaces openvpn vtun0 tls cert-file /root/V1.crt
+set interfaces openvpn vtun0 tls crl-file /root/crl.pem
+set interfaces openvpn vtun0 tls dh-file /root/dh1024.pem
+set interfaces openvpn vtun0 tls key-file /root/V1.key
+commit
+
+show interfaces openvpn vtun0
+
+
+set interfaces openvpn vtun0
+set interfaces openvpn vtun0 firewall in name rules-in
+commit
+
+show interfaces openvpn vtun0
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set interfaces openvpn vtun0
+set interfaces openvpn vtun0 server
+set interfaces openvpn vtun0 server client V2
+set interfaces openvpn vtun0 server client V2 subnet 192.168.100.0/24
+set interfaces openvpn vtun0 server client V2 ip 192.168.1.100
+set protocols static interface-route 192.168.100.0/24 next-hop-interface vtun0
+commit
+
+show interfaces openvpn vtun0
+
+
+-- site to site w/ tls
+set interfaces openvpn vtun0
+set interfaces openvpn vtun0 local-address 192.168.1.1
+set interfaces openvpn vtun0 mode site-to-site
+set interfaces openvpn vtun0 remote-address 192.168.1.2
+set interfaces openvpn vtun0 remote-host 87.65.43.21
+set interfaces openvpn vtun0 tls role passive
+set interfaces openvpn vtun0 tls ca-cert-file /root/ca.crt
+set interfaces openvpn vtun0 tls cert-file /root/V1.crt
+set interfaces openvpn vtun0 tls crl-file /root/crl.pem
+set interfaces openvpn vtun0 tls dh-file /root/dh1024.pem
+set interfaces openvpn vtun0 tls key-file /root/V1.key
+commit
+
+show interfaces openvpn vtun0
+
+
+

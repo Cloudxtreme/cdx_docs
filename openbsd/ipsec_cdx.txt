@@ -1,0 +1,142 @@
+http://www.kernel-panic.it/openbsd/vpn/vpn3.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- host 1
+--
+# more hostname.bge1 
+inet 10.10.37.1 255.255.248.0
+# more hostname.em1 
+inet 67.95.201.194 255.255.255.224
+
+# more mygate 
+67.95.201.193
+
+# more rc.local 
+sysctl net.inet.ip.forwarding=1
+sysctl net.inet.ip.multipath=1
+
+sysctl net.inet.esp.enable=1
+sysctl net.inet.ah.enable=1
+
+isakmpd -K
+ipsecctl -f /etc/ipsec.conf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more pf.conf
+
+xo = "em1"
+internal = "bge1"
+local = "lo0"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+
+pass in on $internal
+#pass in on $xo proto icmp to any 
+pass quick on $xo from 67.95.201.201    # Test
+pass quick on $xo from 12.149.54.90     # eRT-2
+pass quick on $xo from 66.18.99.68      # clinix
+set skip on enc0
+
+
+# more isakmp.conf 
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+# DPD-check-interval=30
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more ipsec.conf
+# Test
+ike esp from 10.10.32.0/21 to 192.168.10.0/24 peer 67.95.201.201 \
+ main auth hmac-sha1 enc 3des group modp1024 \
+ quick auth hmac-sha1 enc 3des group modp1024 \
+ psk cdxTest123
+
+# eRT-2
+ike esp from 10.10.32.0/21 to 12.3.153.0/24 peer 12.149.54.90 \
+ main auth hmac-sha1 enc 3des group modp1024 \
+ quick auth hmac-sha1 enc 3des group modp1024 \
+ psk CDX2eResearch
+
+# clinix
+ike esp from 10.10.32.0/21 to 66.18.106.160/27 peer 66.18.99.68 \
+  main auth hmac-md5 enc 3des group modp1024 \
+  quick auth hmac-md5 enc 3des group none \
+  psk cadx6795201194
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# isakmpd -Kvd
+# ipsecctl -nvf /etc/ipsec.conf
+# ipsecctl -f /etc/ipsec.conf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ipsecctl -s all
+FLOWS:
+flow esp in from 66.18.106.160/27 to 10.10.32.0/21 peer 66.18.99.68 srcid 67.95.201.194/32 dstid 66.18.99.68/32 type use
+flow esp out from 10.10.32.0/21 to 66.18.106.160/27 peer 66.18.99.68 srcid 67.95.201.194/32 dstid 66.18.99.68/32 type require
+flow esp in from 12.3.153.0/24 to 10.10.32.0/21 peer 12.149.54.90 srcid 67.95.201.194/32 dstid 12.149.54.90/32 type use
+flow esp out from 10.10.32.0/21 to 12.3.153.0/24 peer 12.149.54.90 srcid 67.95.201.194/32 dstid 12.149.54.90/32 type require
+
+SAD:
+esp tunnel from 66.18.99.68 to 67.95.201.194 spi 0x17342308 auth hmac-md5 enc 3des-cbc
+esp tunnel from 67.95.201.194 to 66.18.99.68 spi 0x4008f05c auth hmac-md5 enc 3des-cbc
+esp tunnel from 12.149.54.90 to 67.95.201.194 spi 0xba3a7775 auth hmac-sha1 enc 3des-cbc
+esp tunnel from 67.95.201.194 to 12.149.54.90 spi 0xd350c0fa auth hmac-sha1 enc 3des-cbc
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- host 2
+--
+# more hostname.bge0 
+inet 67.95.201.201 255.255.255.224
+
+
+# more hostname.em0  
+inet 192.168.10.1 255.255.255.0
+
+# more mygate 
+67.95.201.193
+
+# more pf.conf
+
+xo = "bge0"
+internal = "em0"
+local = "lo0"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+
+pass in on $xo proto tcp from 67.95.201.192/27 to any port 22
+
+pass in on $internal
+
+pass in quick on $xo proto udp from 67.95.201.194 to 67.95.201.201 port isakmp
+pass in quick on $xo proto esp from 67.95.201.194 to 67.95.201.201
+
+pass in quick on enc0 proto icmp 
+pass in quick on enc0 proto ipencap all
+pass in quick on enc0 proto tcp from 10.10.32.0/21 to 192.168.10.2/32 port 3389
+
+
+# more isakmpd.conf
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+
+# more ipsec.conf
+ike esp from 192.168.10.0/24 to 10.10.32.0/21 peer 67.95.201.198 \
+  main auth hmac-sha1 enc 3des group modp1024 \
+  quick auth hmac-sha1 enc 3des group modp1024 \
+  psk cdxTest123
+
+
+

@@ -1,0 +1,4 @@
+
+Have pdns isntalled (make sure to have local-address=10.10.37.89)
+wajig install libidn11 curl fetchmail libpcre3 libgmp3c2 libexpat1 libxml2 libstdc++5 libltdl3
+

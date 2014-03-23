@@ -1,0 +1,52 @@
+cd app/views/layouts
+vi application.html
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+    <title>CardioDx&reg; <%= @title%></title>														
+    <meta name="navID" content="124" /> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />								
+    <link rel="stylesheet" type="text/css" href="/stylesheets/cdx/connect.css" /> <!-- last --> 
+    <LINK REL="SHORTCUT ICON" HREF="/favicon.ico" type="image/ico" /> 
+</head> 
+ 
+<body> 
+<div id="container"> 
+   <div id="logo"> 
+       <a href="http://www.cardiodx.com" class="external_link">
+	<img alt="Logo_registered" src="/images/logo_registered.gif?1289499195" /></a>
+   </div> 
+   <div class="clear"></div> 
+    
+        
+  <div id="main"> 
+    
+    <div id="subnav_spacer"></div> 
+    <div id="headbanner" class="company-main"> 
+	<h1><%= @title%></h1> 
+    </div> 
+
+    <div id="hmain"> 
+      <div class="clear"></div>
+      <!-- ------------------------------------------------- -->
+	<%= @content_for_layout %>
+      <!-- ------------------------------------------------- -->
+    </div>
+                
+    <div class="clear"></div> 
+    <div id="footer"> 
+      <div id="copyright"> <p>&copy; 2011 CardioDx, Inc. All rights reserved.</p> </div> 
+    </div> 
+  </div> 
+</div>
+                
+</body> 
+</html> 
+
+
+copy public.tar.gz over and untar it
+
+(I did a restart)
+
+http://dashboard.cardiodx.com:3000/say/hello
+
+

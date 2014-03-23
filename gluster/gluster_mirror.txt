@@ -1,0 +1,66 @@
+gluster mirror
+
+http://www.gluster.org/docs/index.php/Automatic_File_Replication_(Mirror)_across_Two_Storage_Servers
+
+--
+-- server
+--
+volume posix
+  type storage/posix
+  option directory /home/mirror
+end-volume
+
+volume locks
+  type features/locks
+  subvolumes posix
+end-volume
+
+volume brick
+  type performance/io-threads
+  option thread-count 8
+  subvolumes locks
+end-volume
+
+volume server
+  type protocol/server
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  subvolumes brick
+end-volume
+
+
+--
+-- client
+--
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume mirror0
+  type cluster/afr
+  subvolumes remote1 remote2
+end-volume
+
+volume wb
+  type performance/write-behind
+  option aggregate-size 128KB
+  option window-size 1MB
+  subvolumes mirror0
+end-volume
+
+volume ioc
+  type performance/io-cache
+  option cache-size 512MB
+  subvolumes wb
+end-volume
+ 

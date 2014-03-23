@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeVariant" table="TRGE_VARIANT" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeVariantId">
+            <key-property name="variantId" type="big_decimal">
+                <column name="VARIANT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variantType" type="string">
+                <column name="VARIANT_TYPE" length="100" />
+            </key-property>
+            <key-property name="variantName" type="string">
+                <column name="VARIANT_NAME" length="100" />
+            </key-property>
+            <key-property name="variantPosition" type="big_decimal">
+                <column name="VARIANT_POSITION" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variantLength" type="big_decimal">
+                <column name="VARIANT_LENGTH" precision="22" scale="0" />
+            </key-property>
+            <key-property name="isSynonymous" type="java.lang.Boolean">
+                <column name="IS_SYNONYMOUS" precision="1" scale="0" />
+            </key-property>
+            <key-property name="wildTypeSequence" type="string">
+                <column name="WILD_TYPE_SEQUENCE" length="4000" />
+            </key-property>
+            <key-property name="variantSequence" type="string">
+                <column name="VARIANT_SEQUENCE" length="4000" />
+            </key-property>
+            <key-property name="geneName" type="string">
+                <column name="GENE_NAME" length="100" />
+            </key-property>
+            <key-property name="geneRegionName" type="string">
+                <column name="GENE_REGION_NAME" length="100" />
+            </key-property>
+            <key-property name="geneRegionType" type="string">
+                <column name="GENE_REGION_TYPE" length="100" />
+            </key-property>
+            <key-property name="spliceDistance" type="big_decimal">
+                <column name="SPLICE_DISTANCE" precision="22" scale="0" />
+            </key-property>
+            <key-property name="proteinRegionName" type="string">
+                <column name="PROTEIN_REGION_NAME" length="100" />
+            </key-property>
+            <key-property name="proteinRegionType" type="string">
+                <column name="PROTEIN_REGION_TYPE" length="100" />
+            </key-property>
+            <key-property name="isComplement" type="java.lang.Boolean">
+                <column name="IS_COMPLEMENT" precision="1" scale="0" />
+            </key-property>
+            <key-property name="defaultClassification" type="string">
+                <column name="DEFAULT_CLASSIFICATION" length="100" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

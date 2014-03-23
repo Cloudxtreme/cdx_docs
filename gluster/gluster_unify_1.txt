@@ -1,0 +1,86 @@
+gluster unify w/ clinet config
+
+--
+-- storage server w/ nameserver
+-- 
+volume brick
+  type storage/posix
+  option directory /home/export
+end-volume
+
+volume brick-ns
+  type storage/posix
+  option directory /home/export-ns
+end-volume
+
+volume server
+  type protocol/server
+  option client-volume-filename /root/glusterfs/glusterfs-client_unify.vol
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  option auth.addr.brick-ns.allow *
+  subvolumes brick brick-ns
+end-volume
+
+
+--
+-- storage server w/o nameserver
+--
+volume brick
+  type storage/posix
+  option directory /home/export
+end-volume
+
+volume server
+  type protocol/server
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  subvolumes brick
+end-volume
+
+
+
+--
+-- client
+--
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume remote3
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster3
+  option remote-subvolume brick
+end-volume
+
+volume remote-ns
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick-ns
+end-volume
+
+volume unify0
+  type cluster/unify
+  option scheduler rr # round robin
+  option namespace remote-ns
+  subvolumes remote1 remote2 remote3
+end-volume
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+glusterfs --volfile-server gluster1 /mnt/glusterfs/
+
+
+

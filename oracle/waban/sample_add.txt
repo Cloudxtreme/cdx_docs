@@ -1,0 +1,34 @@
+
+
+select distinct rnax.date_completed "Extraction Date", 
+				rnax.checklist_id "Extraction Checklist ID", 
+ 				sa.checklist_id "Sample Add Checklist ID",
+				blood2rna.checklist_id cid1,
+				rna2pool.checklist_id cid2,
+ 				pool2rt.checklist_id cid3,
+				rt2dw.checklist_id cid4,
+				dw2cdna.checklist_id cid5,
+				cdna2ap.checklist_id cid6
+from accession ap_acc, sample_table ap, checklist sa, transfer cdna2ap,    
+				               sample_table cdna, transfer dw2cdna, transfer rt2dw, 
+					transfer pool2rt, transfer rna2pool, transfer blood2rna, checklist rnax  
+where ap.container_id like 'AR%'    
+and ap.accession_id = ap_acc.accession_id    
+and cdna2ap.checklist_id = sa.checklist_id    
+and cdna2ap.id_to = ap.sample_id    
+and cdna2ap.id_from = cdna.sample_id    
+and cdna.container_id like 'AP%'    
+and dw2cdna.id_to = cdna.sample_id    
+and rt2dw.id_to = dw2cdna.id_from    
+and pool2rt.id_to = rt2dw.id_from    
+and rna2pool.id_to = pool2rt.id_from    
+and blood2rna.id_to = rna2pool.id_from    
+and blood2rna.checklist_id = rnax.checklist_id    
+and rnax.date_created > (sysdate - 30)  
+order by rnax.checklist_id;
+
+
+select p.procedure_name
+from checklist c, procedure_template p
+where c.procedure_template_id = p.procedure_template_id
+and c.checklist_id = 19866;

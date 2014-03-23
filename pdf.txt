@@ -1,0 +1,16 @@
+pdf convert word open office linux
+
+
+  509  sudo wajig install unoconv
+  518  export JAVA_HOME=/usr/lib/jvm/java-6-sun
+  519  unoconv cardio_08202009.doc
+  520  evince cardio_08202009.pdf
+
+
+print to pdf:
+
+wajig install cups-pdf 
+
+File -->
+  Name --> PDF
+  x Print to file

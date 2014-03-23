@@ -1,0 +1,4 @@
+
+wajig install debian-goodies -y
+
+checkrestart

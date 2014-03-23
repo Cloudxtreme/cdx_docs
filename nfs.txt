@@ -1,0 +1,42 @@
+
+
+-- 
+-- on webmail (6.06)
+--
+wajig install nfs-kernel-server
+  libevent1 libnfsidmap1 nfs-common nfs-kernel-server portmap
+
+vi /etc/exports
+/opt/zimbra/backup       zimbra6devel(rw,no_root_squash,sync)
+
+
+/etc/init.d/nfs-kernel-server restart
+
+
+--
+-- on zimbra6devel
+--
+wajig install nfs-common
+  libevent1 libgssglue1 libnfsidmap2 librpcsecgss3 nfs-common portmap
+
+mount webmail:/opt/zimbra/backup /mnt/webmail/
+
+
+
+groupmod -g 1018 zimbra
+usermod -u 1185 -g 1018 zimbra
+
+find . -gid 1001 -exec chgrp zimbra {} \;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install nfs-kernel-server
+vi /etc/exports 
+/backup webmail(ro,no_root_squash)
+/etc/init.d/nfs-kernel-server restart
+exportfs
+
+wajig install nfs-common 
+mount bksrv:/backup bksrv
+
+

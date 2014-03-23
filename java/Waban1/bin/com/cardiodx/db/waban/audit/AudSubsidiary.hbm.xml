@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudSubsidiary" table="AUD_SUBSIDIARY" schema="DNALIMS">
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="100" />
+        </property>
+        <property name="contactId" type="big_decimal">
+            <column name="CONTACT_ID" precision="22" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30" />
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7" />
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3" />
+        </property>
+    </class>
+</hibernate-mapping>

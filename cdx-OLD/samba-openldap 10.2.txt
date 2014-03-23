@@ -1,0 +1,105 @@
+
+*********************
+populate smbldap base
+
+   mandrake 10.2
+   samba 3.0.11
+*********************
+
+
+cd /usr/share/doc/samba-doc-3.0.11/examples/LDAP/smbldap-tools-0.8.6
+vi INSTALL
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /usr/local/sbin/
+cp /usr/share/doc/samba-doc-3.0.11/examples/LDAP/smbldap-tools-0.8.6/smbldap* .
+cp /usr/share/doc/samba-doc-3.0.11/examples/LDAP/smbldap-tools-0.8.6/configure.pl .
+rm *.conf
+rm *.pm
+chmod 755 * 
+
+
+mkdir /etc/smbldap-tools
+
+cp smbldap_bind.conf /etc/smbldap-tools
+cp smbldap.conf /etc/smbldap-tools
+
+
+*change
+	root 		--> Manager
+	example 	--> cardiodx
+	secret		--> cdxSecret
+
+vi /etc/smbldap-tools/smbldap_bind.conf
+vi /etc/smbldap-tools/smbldap.conf
+
+chmod 644 /etc/smbldap-tools/smbldap.conf
+chmod 600 /etc/smbldap-tools/smbldap_bind.conf
+
+
+vi /usr/local/sbin/smbldap_tools.pm
+
+my $smbldap_conf="/etc/smbldap-tools/smbldap.conf";
+my $smbldap_bind_conf="/etc/smbldap-tools/smbldap_bind.conf";
+
+
+	. if upgrading, add these lines in smbldap.conf configuration file:
+	  > # Allows not tu use slappasswd (if with_slappasswd == 0 in smbldap_conf.pm)
+	  > # but prefer Crypt:: libraries
+	  > with_slappasswd="0"
+	  > slappasswd="/usr/sbin/slappasswd"
+	  If 'with_slappasswd' is set to 0, password will be hashed with appropriate perl module
+	  (to not use anymore external programm)
+
+
+cd /usr/local/sbin
+./smbldap-populate
+
+
+smbpasswd -w cdxSecret
+
+
+cd /usr/share/doc/samba-doc-3.0.11/examples/LDAP/smbldap-tools-0.8.6
+
+echmod 755 configure.pl
+./configure.pl
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /usr/share/openldap/schema/sudo.schema
+remove first 4~5 lines
+
+
+/usr/sbin/slapd -d -128 -u ldap &
+
+
+
+/usr/local/sbin/smbldap-useradd -m -u 1001 -a david
+/usr/local/sbin/smbldap-passwd david
+ldapsearch -x -b 'uid=david,ou=People,dc=cardiodx,dc=com' 
+pdbedit -Lv david
+smbclient //pdc/accounts -d 3 -U david
+
+**
+smbldap-userdel david
+pdbedit -Lv david
+net use * /d /y
+
+
+/usr/local/sbin/smbldap-useradd -m -a -u 1004 tom
+/usr/local/sbin/smbldap-passwd tom
+ldapsearch -x -b 'uid=tom,ou=People,dc=cardiodx,dc=com' 
+smbclient //pdc/homes -U tom
+
+/usr/local/sbin/smbldap-useradd -m -a -u 1002 ian
+/usr/local/sbin/smbldap-passwd ian
+ldapsearch -x -b 'uid=ian,ou=People,dc=cardiodx,dc=com' 
+
+??ssh -l ian pdc
+
+??/usr/bin/smbpasswd -a cchou
+
+
+
+

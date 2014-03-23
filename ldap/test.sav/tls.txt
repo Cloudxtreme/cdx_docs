@@ -1,0 +1,55 @@
+
+  223  wajig install gnutls-bin
+
+  224  sh -c "certtool --generate-privkey > /etc/ssl/private/cakey.pem"
+
+  225  vi /etc/ssl/ca.info
+cn = CardioDx, Inc.
+ca
+cert_signing_key
+
+  227  certtool --generate-self-signed --load-privkey /etc/ssl/private/cakey.pem --template  /etc/ssl/ca.info --outfile /etc/ssl/certs/cacert.pem
+  228  sh -c "certtool --generate-privkey > /etc/ssl/private/ldap01_slapd_key.pem"
+
+  229  vi /etc/ssl/ldap01.info
+organization = CardioDx, Inc.
+cn = ldaptest.cardiodx.com
+tls_www_server
+encryption_key
+signing_key
+
+
+  235  certtool --generate-certificate --load-privkey /etc/ssl/private/ldap01_slapd_key.pem --load-ca-certificate /etc/ssl/certs/cacert.pem --load-ca-privkey /etc/ssl/private/cakey.pem --template /etc/ssl/ldap01.info --outfile /etc/ssl/certs/x01-test_slapd_cert.pem
+
+
+ldapmodify -Y EXTERNAL -H ldapi:///
+
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ssl/certs/cacert.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/x01-test_slapd_cert.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/ldap01_slapd_key.pem
+
+
+vi /etc/default/slapd
+SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"
+
+
+  247  adduser openldap ssl-cert
+  248  chgrp ssl-cert /etc/ssl/private/ldap01_slapd_key.pem
+  249  chmod g+r /etc/ssl/private/ldap01_slapd_key.pem
+  250  /etc/init.d/slapd restart
+  251  cd /etc/ssl/
+
+NOTE: need to fix!!!!!!!
+  254  chmod 755 private/
+  255  /etc/init.d/slapd restart
+
+
+
+
+

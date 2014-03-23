@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.CompoundReportView" table="COMPOUND_REPORT_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.CompoundReportViewId">
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="compound" type="string">
+                <column name="COMPOUND" length="4000" />
+            </key-property>
+            <key-property name="franchise" type="string">
+                <column name="FRANCHISE" length="100" />
+            </key-property>
+            <key-property name="cimsTrialCode" type="string">
+                <column name="CIMS_TRIAL_CODE" length="20" />
+            </key-property>
+            <key-property name="numberOfPatients" type="big_decimal">
+                <column name="NUMBER_OF_PATIENTS" precision="22" scale="0" />
+            </key-property>
+            <key-property name="consentStorage" type="big_decimal">
+                <column name="CONSENT_STORAGE" precision="22" scale="0" />
+            </key-property>
+            <key-property name="consentDna" type="big_decimal">
+                <column name="CONSENT_DNA" precision="22" scale="0" />
+            </key-property>
+            <key-property name="assayDetails" type="string">
+                <column name="ASSAY_DETAILS" length="4000" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

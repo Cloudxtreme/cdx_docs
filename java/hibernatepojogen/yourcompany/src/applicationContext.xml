@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"    
+    xmlns:jee="http://www.springframework.org/schema/jee"
+
+    xmlns:jms="http://www.springframework.org/schema/jms"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+              http://www.springframework.org/schema/aop
+              http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+              http://www.springframework.org/schema/context
+              http://www.springframework.org/schema/context/spring-context-2.5.xsd
+              http://www.springframework.org/schema/jee
+              http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+
+              http://www.springframework.org/schema/jms
+
+              http://www.springframework.org/schema/jms/spring-jms-2.5.xsd
+              http://www.springframework.org/schema/lang
+              http://www.springframework.org/schema/lang/spring-lang-2.5.xsd
+              http://www.springframework.org/schema/tx
+              http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+              http://www.springframework.org/schema/util
+              http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+     <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" autowire="autodetect" />
+     <bean id="persistenceManager" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    <bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+	   <property name="ignoreResourceNotFound"><value>true</value></property>
+   <!--  In the properties file, override the items you need in this format:
+   sessionFactory.hibernateProperties[hibernate.connection.username]=root
+   sessionFactory.hibernateProperties[hibernate.connection.password]=abcdefgh
+    -->
+   		<property name="location">
+   			<!--  You may use file:d:/temp/db.properties etc here -->
+    		<value>classpath:demo.db.properties</value>
+    	</property>
+	</bean>
+    <!-- Hibernate SessionFactory -->
+	<bean id="sessionFactory" class="com.demo.persistence.impl.ScanningAnnotationSessionFactoryBean" autowire="autodetect">
+ 		<property name="annotatedPackages">
+			<list>
+				<value>com.demo</value>
+			</list>
+		</property>
+			 
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+				<prop key="hibernate.connection.url">jdbc:mysql://localhost/demo</prop>
+				<prop key="hibernate.connection.username">root</prop>
+				<prop key="hibernate.connection.password">abcdefgh</prop>
+
+				<prop key="hibernate.c3p0.acquire_increment">1</prop>
+				<prop key="hibernate.c3p0.idle_test_period">100</prop>
+				<prop key="hibernate.c3p0.max_size">50</prop>
+				<prop key="hibernate.c3p0.max_statements">0</prop>
+				<prop key="hibernate.c3p0.min_size">10</prop>
+				<prop key="hibernate.c3p0.timeout">100</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.SingletonEhCacheProvider</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Switch on transactions -->
+	<tx:annotation-driven />
+
+	<context:component-scan base-package="com.demo"/>
+	<context:component-scan base-package="test.com.demo"/>
+
+<!-- Add your pointcuts to provide transactions/session management here. Alternately, use the @Transaction annotation in your service layer -->
+<!--   
+	 <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>         
+            <tx:method name="*" read-only="false"/>
+        </tx:attributes>
+    </tx:advice>
+    
+     <aop:config>
+        <aop:pointcut id="testOperation" expression="execution(* test.com.demo.DAOTest.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="testOperation"/>
+    </aop:config>
+-->
+   
+ </beans>

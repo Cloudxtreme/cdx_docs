@@ -1,0 +1,12 @@
+
+https://github.com/pycassa/pycassa
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install python-setuptools
+easy_install pycassa
+
+wajig install python-all-dev
+easy_install thrift05
+
+
+

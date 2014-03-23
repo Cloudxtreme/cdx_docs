@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ParentMenu" table="PARENT_MENU" schema="DNALIMS">
+        <comment>Information about dynamic parent menus used in the LIMS application</comment>
+        <id name="parentMenuId" type="big_decimal">
+            <column name="PARENT_MENU_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ocxLoad" class="com.cardiodx.db.waban.table.OcxLoad" fetch="select">
+            <column name="OCX_LOAD_ID" precision="22" scale="0">
+                <comment>Foreign key to OCX load information</comment>
+            </column>
+        </many-to-one>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0" not-null="true">
+                <comment>Used for ordering each menu item</comment>
+            </column>
+        </property>
+        <property name="caption" type="string">
+            <column name="CAPTION" length="30" not-null="true">
+                <comment>Text of the menu item to appear in the menu</comment>
+            </column>
+        </property>
+        <property name="ocxName" type="string">
+            <column name="OCX_NAME" length="100">
+                <comment>Name of the external Active-X control that will be loaded when the menu is selected.</comment>
+            </column>
+        </property>
+        <property name="urlName" type="string">
+            <column name="URL_NAME" length="100">
+                <comment>Name of URL used when menu is selected</comment>
+            </column>
+        </property>
+        <property name="screenName" type="string">
+            <column name="SCREEN_NAME" length="100">
+                <comment>Name of screen displayed when menu is selected</comment>
+            </column>
+        </property>
+        <set name="menuItems" table="MENU_ITEM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PARENT_MENU_ID" precision="22" scale="0" not-null="true">
+                    <comment>Name of the parent menu that this menu item will appear. Values can be File, Lab Setup, Study Setup, Sample, Container, Results, or Tools.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MenuItem" />
+        </set>
+    </class>
+</hibernate-mapping>

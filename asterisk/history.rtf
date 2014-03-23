@@ -1,0 +1,300 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf420
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww14540\viewh14680\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0     1  ls\
+    2  vi sources.list\
+    3  apt-get update\
+    4  apt-get upgrade\
+    5  apt-get install wajig\
+    6  pwd\
+    7  ls\
+    8  wajig install kernel-image\
+    9  uname -a\
+   10  uname\
+   11  uname -a\
+   12  wajig toupgrade\
+   13  wajig install linux-image-server\
+   14  wajig install openssl-server\
+   15  wajig install openssh-server\
+   16  reboot; exit\
+   17  ll\
+   18  ls -l\
+   19  ll zapata.conf \
+   20  vi zapata.conf \
+   21  vi asterisk.conf \
+   22  cp iax.conf iax.conf.orig\
+   23  vi iax.conf\
+   24  cp extensions.conf extensions.conf.orig\
+   25  vi extensions.conf\
+   26  vi /etc/default/asterisk \
+   27  /etc/init.d/asterisk start\
+   28  asterisk -rvvvvvv\
+   29  /etc/init.d/asterisk stop\
+   30  vi extensions.\
+   31  vi extensions.conf\
+   32  /etc/init.d/asterisk start\
+   33  asterisk -rvvvvv\
+   34  vi extensions.conf\
+   35  /etc/init.d/asterisk stop\
+   36  /etc/init.d/asterisk start\
+   37  asterisk -rvvvvv\
+   38  vi extensions.conf\
+   39  /etc/init.d/asterisk restart \
+   40  asterisk -rvvvvv\
+   41  vi extensions.conf\
+   42  /etc/init.d/asterisk restart \
+   43  asterisk -rvvvvv\
+   44  vi iax.conf\
+   45  /etc/init.d/asterisk restart \
+   46  asterisk -rvvvvv\
+   47  vi iax.conf\
+   48  asterisk -rvvvvv\
+   49  vi iax.conf\
+   50  asterisk -rvvvvv\
+   51  /etc/init.d/asterisk restart \
+   52  asterisk -rvvvvv\
+   53  vi iax.conf\
+   54  /etc/init.d/asterisk restart \
+   55  asterisk -rvvvvv\
+   56  vi zapata.conf \
+   57  cp zapata.conf zapata.conf.orig\
+   58  vi zapata.conf\
+   59  cd ..\
+   60  ll\
+   61  wajig install zaptel\
+   62  wajig list-files zaptel\
+   63  man genzaptelconf \
+   64  wajig list-files zaptel\
+   65  wajig install zaptel-source \
+   66  wajig describe zaptel-source \
+   67  wajig install zaptel-source \
+   68  wajig installs zaptel-source \
+   69  wajig installr zaptel-source \
+   70  wajig help installr\
+   71  wajig help \
+   72  wajig list-commands \
+   73  wajig install zaptel-source \
+   74  wajig list-files zaptel-source \
+   75  bzcat /usr/src/zaptel.tar.bz2 | tar tf -\
+   76  bzcat /usr/src/zaptel.tar.bz2 | tar tf - | grep r1t1\
+   77  ll\
+   78  man module-assistant \
+   79  module-assistant zaptel\
+   80  module-assistant li\
+   81  module-assistant update\
+   82  module-assistant li\
+   83  module-assistant la\
+   84  module-assistant build zaptel\
+   85  module-assistant prepare\
+   86  uname -a\
+   87  module-assistant prepare\
+   88  module-assistant build zaptel\
+   89  wajig list-files /usr/src/zaptel-modules-2.6.15-28-server_1.2.5-1+2.6.15-28.51_i386.deb\
+   90  wajig list-commands\
+   91  cd /usr/src/modules/zaptel/debian/\
+   92  ll\
+   93  ls -l\
+   94  cd ..\
+   95  ll\
+   96  alias ll='ls -l'\
+   97  ll\
+   98  pwd\
+   99  vi Makefile \
+  100  scp srikar@srikardesktop:smb4k/PDC/groups/it/drivers/rhino/R1T1/Drivers/r1t1.c .\
+  101  ll\
+  102  cd\
+  103  rm /usr/src/zaptel-modules-2.6.15-28-server_1.2.5-1+2.6.15-28.51_i386.deb \
+  104  module-assistant build zaptel\
+  105  ll\
+  106  pwf\
+  107  cd\
+  108  ll\
+  109  pwd\
+  110  wajig install /usr/src/zaptel-modules-2.6.15-28-server_1.2.5-1+2.6.15-28.51_i386.deb\
+  111  wajig list-files  zaptel-modules-2.6.15-28-server \
+  112  wajig list-files  zaptel-modules\
+  113  wajig list-files  zaptel-modules-2.6.15-28-server \
+  114  module-assistant --help\
+  115  module-assistant -t build zaptel\
+  116  rm /usr/src/zaptel-modules-2.6.15-28-server_1.2.5-1+2.6.15-28.51_i386.deb\
+  117  module-assistant -t build zaptel\
+  118  less /usr/src/modules/zaptel/Makefile \
+  119  cd /usr/src/modules/\
+  120  cd ..\
+  121  ll\
+  122  cd \
+  123  ll\
+  124  pwd\
+  125  bzcat /usr/src/zaptel.tar.bz2 | tar tf -\
+  126  bzcat /usr/src/zaptel.tar.bz2 | tar xvf -\
+  127  cd modules/zaptel/\
+  128  vi Makefile \
+  129  cp /usr/src/modules/zaptel/r1t1.c .\
+  130  ll *.c\
+  131  chmod a-x r1t1.c \
+  132  ll\
+  133  cd ..\
+  134  ll\
+  135  tar cvf zaptel.tar modules\
+  136  ll\
+  137  bzip zaptel.tar \
+  138  bzip2 zaptel.tar \
+  139  ll\
+  140  cd /usr/src/\
+  141  ll\
+  142  cp /home/cchou/zaptel.tar.bz2 .\
+  143  ll\
+  144  module-assistant -t build zaptel\
+  145  rm /usr/src/zaptel-modules-2.6.15-28-server_1.2.5-1+2.6.15-28.51_i386.deb\
+  146  module-assistant -t build zaptel\
+  147  ll /usr/src/\
+  148  wajig install /usr/src/zaptel-modules-2.6.15-28-server_1.2.5-1+2.6.15-28.51_i386.deb\
+  149  wajig list-files zaptel-modules-2.6.15-28-server \
+  150  LL\
+  151  ll\
+  152  man genzaptelconf \
+  153  genzaptelconf -d -v\
+  154  /etc/init.d/asterisk stop\
+  155  genzaptelconf -d -v\
+  156  modprobe r1t1\
+  157  lsmod | less\
+  158  genzaptelconf -d -v\
+  159  less /etc/zaptel.conf\
+  160  ztcfg \
+  161  less /etc/zaptel.conf\
+  162  less /etc/modules\
+  163  less /etc/modprobe.d/aliases \
+  164  ll\
+  165  cd\
+  166  ll\
+  167  zttool \
+  168  vi /etc/zaptel.conf\
+  169  ztcfg \
+  170  /etc/init.d/asterisk start\
+  171  asterisk -rvvvvv\
+  172  /etc/init.d/asterisk stop\
+  173  vi /etc/zaptel.conf\
+  174  rmmod r1t1\
+  175  dmesg\
+  176  rmmod zaptel\
+  177  rmmod ztdynamic \
+  178  ll\
+  179  reboot\
+  180  exit\
+  181  asterisk -rvvvv\
+  182  lsmod | less\
+  183  ztcfg \
+  184  ll /dev/zapctl \
+  185  ls -l /dev/zapctl \
+  186  ztcfg --help\
+  187  ztcfg -vvvvv\
+  188  ztcfg -vvvvv -d 5\
+  189  zttool\
+  190  man zttool \
+  191  ztmonitor \
+  192  ls -l /dev/zapctl \
+  193  ls -l /dev/zaptimer \
+  194  wajig list-files zaptel\
+  195  less /usr/share/doc/zaptel/examples/zaptel.conf.sample.gz\
+  196  man zaptel.conf\
+  197  /etc/init.d/asterisk start\
+  198  asterisk -rvvvvvv\
+  199  asterisk -cvvvvv\
+  200  depmod -a\
+  201  modprobe r1t1\
+  202  ztcfg -vvvvv\
+  203  cd /etc/udev/\
+  204  ll\
+  205  ls -l\
+  206  less udev.conf \
+  207  cd rules.d/\
+  208  ls -l\
+  209  less 90-modprobe.rules \
+  210  grep zaptel *\
+  211  pwd\
+  212  ll\
+  213  ls -l\
+  214  cat > 99-zaptel.rules\
+  215  reboot\
+  216  exit\
+  217  asterisk -rvvvvv\
+  218  ztcfg \
+  219  zttool\
+  220  /etc/init.d/asterisk start \
+  221  asterisk -rvvvvv\
+  222  asterisk -cvvvvvvv\
+  223  /etc/init.d/asterisk start \
+  224  asterisk -rvvvvv\
+  225  ps aux | grep aster\
+  226  vi /etc/init.d/asterisk \
+  227  vi /etc/default/asterisk \
+  228  vi /etc/init.d/asterisk \
+  229  less /var/log/asterisk/messages \
+  230  less /etc/passwd\
+  231  cd /etc/udev/rules.d/\
+  232  ll\
+  233  ls -l\
+  234  cat > 99-zaptel.rules \
+  235  sudo reboot \
+  236  exit\
+  237  cd /etc/asterisk/\
+  238  vi extensions.\
+  239  vi extensions.conf\
+  240  asterisk -rvvvvv\
+  241  vi /etc/asterisk/extensions.conf\
+  242  asterisk -rvvvvv\
+  243  vi /etc/asterisk/extensions.conf\
+  244  asterisk -rvvvvv\
+  245  vi /etc/asterisk/extensions.conf\
+  246  asterisk -rvvvvv\
+  247  vi /etc/asterisk/extensions.conf\
+  248  asterisk -rvvvvv\
+  249  exit\
+  250  asterisk -rvvvvv\
+  251  less /etc/zaptel.conf\
+  252  asterisk -rvvvvv\
+  253  vi /etc/asterisk/extensions.conf\
+  254  asterisk -rvvvvv\
+  255  wajig install mpg123\
+  256  asterisk -rvvvvv\
+  257  cd /etc/asterisk/\
+  258  vi musiconhold.conf \
+  259  mpg123\
+  260  vi musiconhold.conf \
+  261  asterisk -rvvv\
+  262  vi musiconhold.conf \
+  263  less /usr/share/asterisk/mohmp3/\
+  264  ll /usr/share/asterisk/mohmp3/\
+  265  ls -l /usr/share/asterisk/mohmp3/\
+  266  wajig install asterisk-sounds\
+  267  wajig install asterisk-sounds-main \
+  268  wajig list-files asterisk-sounds-main \
+  269  wajig install asterisk-sounds-extra \
+  270  wajig list-files asterisk-sounds-extra \
+  271  wajig list-files asterisk-sounds-extra | grep moh\
+  272  ll\
+  273  ls -l\
+  274  less musiconhold.conf \
+  275  ll /tmp/\
+  276  ls -l /tmp/\
+  277  wajig install asterisk-app-fax \
+  278  ll /tmp/\
+  279  ls -l /tmp/\
+  280  ls -l /tmp/fax.tif\
+  281  cd /tmp/\
+  282  ll\
+  283  ls -l\
+  284  ls -al\
+  285  cd ..\
+  286  ls -l /var/spool/asterisk/\
+  287  ls -l\
+  288  ls -l /var/spool/asterisk/\
+  289  quit\
+  290  exit\
+  291  passwd \
+  292  history\
+  293  history 1000\
+}

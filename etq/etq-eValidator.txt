@@ -1,0 +1,37 @@
+cd /usr/tomcat/webapps/reliance_test/WEB-INF
+cp -rp props/ props.032509
+
+Chnage loginJSP to /common/layouts/Login.jsp
+
+
+disableUploadApplet=1
+disableDownloadApplet=1
+disableFilesAutoUploadOnSave=1
+unlockSettings=1
+
+before 03/23/08
+< systemEmail=admin@cardiodx.com
+< maxLoginFailures=10
+< ldapUnavailable=1
+< ldapSynchronize=0
+< ldapVerboseLogging=1
+< enableAutomatedAcceptanceTestingSupport=1
+
+SET_RELIANCE_URL.act
+OPEN_HOME_PAGE.act
+Use port 8080
+
+
+add users: c:\>MyTest\EtQTestUsers
+
+
+
+C:> e_validator\system\classes\compositiecommand\url_commands
+  set_reliance_url.act
+  open_home_page.act
+
+password commands
+  set_etqadministrator_password.act
+
+
+scripts under

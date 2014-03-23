@@ -1,0 +1,34 @@
+cuteflow cute workflow engine
+
+http://www.cuteflow.org
+
+wajig install php5
+wajig install mysql-server
+
+wajig install libapache2-mod-auth-mysql 
+wajig install php5-mysql
+
+wajig install php5-ldap php-net-ldap
+
+
+/etc/init.d/apache2 restart
+
+cd /var/www/
+vi index.php
+<?php
+echo("<h1>Yay! PHP and Apache Work!</h1>");
+?>
+
+
+http://cuteflow/index.php
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://www.cuteflow.org/downloads.html
+
+
+unzip cuteflow_bin_2103.zip
+mv CuteFlow/ /var/www/
+chown -R www-data CuteFlow/
+
+http://cuteflow/CuteFlow/install/install_cuteflow.php

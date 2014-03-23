@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Checklist" table="CHECKLIST" schema="DNALIMS">
+        <comment>Information about a procedure that is being performed on one or more samples.</comment>
+        <id name="checklistId" type="big_decimal">
+            <column name="CHECKLIST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="procedureTemplate" class="com.cardiodx.db.waban.table.ProcedureTemplate" fetch="select">
+            <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>Procedure identifier and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="assignedTo" type="string">
+            <column name="ASSIGNED_TO" length="30">
+                <comment>Lab analyst the worklist has been assigned to.</comment>
+            </column>
+        </property>
+        <property name="completed" type="java.lang.Boolean">
+            <column name="COMPLETED" precision="1" scale="0">
+                <comment>Flag that indicates whether or not all steps for all samples have been completed.</comment>
+            </column>
+        </property>
+        <property name="dateCompleted" type="date">
+            <column name="DATE_COMPLETED" length="7">
+                <comment>Date checklist completed</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="lockedBy" type="string">
+            <column name="LOCKED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateLocked" type="date">
+            <column name="DATE_LOCKED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <property name="isAnalytical" type="java.lang.Boolean">
+            <column name="IS_ANALYTICAL" precision="1" scale="0" />
+        </property>
+        <property name="checklistName" type="string">
+            <column name="CHECKLIST_NAME" length="50" />
+        </property>
+        <property name="sessionId" type="big_decimal">
+            <column name="SESSION_ID" precision="22" scale="0" />
+        </property>
+        <property name="assignedToRole" type="string">
+            <column name="ASSIGNED_TO_ROLE" length="30" />
+        </property>
+        <set name="wordreports" table="WORDREPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to the CHECKLIST_ID for change in CHECKLIST table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Wordreport" />
+        </set>
+        <set name="checklistContents" table="CHECKLIST_CONTENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistContent" />
+        </set>
+        <set name="transfers" table="TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Transfer" />
+        </set>
+        <set name="sampleInstrumentAssocs" table="SAMPLE_INSTRUMENT_ASSOC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleInstrumentAssoc" />
+        </set>
+        <set name="approvals" table="APPROVAL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist Identifier and Foreign key to checklist table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Approval" />
+        </set>
+        <set name="recordTimers" table="RECORD_TIMER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Reference key of the Checklis table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RecordTimer" />
+        </set>
+        <set name="traceQcs" table="TRACE_QC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceQc" />
+        </set>
+        <set name="mtpSamples" table="MTP_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MtpSample" />
+        </set>
+        <set name="seqSetups" table="SEQ_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SeqSetup" />
+        </set>
+        <set name="checklistSamples" table="CHECKLIST_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist identifier. Part of the primary key and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistSample" />
+        </set>
+        <set name="deadlines" table="DEADLINE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>FK FROM CHECKLIST TABLE(CHECKLIST_ID PK)</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Deadline" />
+        </set>
+        <set name="cpRuns" table="CP_RUN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRun" />
+        </set>
+        <set name="concentrationAdjustments" table="CONCENTRATION_ADJUSTMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConcentrationAdjustment" />
+        </set>
+        <set name="dnaDestructionVendors" table="DNA_DESTRUCTION_VENDOR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist Identifier and Foreign Key to Checklist Table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionVendor" />
+        </set>
+        <set name="reviews" table="REVIEW" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist Identifier and Foreign key to checklist table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Review" />
+        </set>
+        <set name="plateTemplateContainers" table="PLATE_TEMPLATE_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Foreign key used to identify the checklist used to make the plate.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateContainer" />
+        </set>
+        <set name="checklistReagents" table="CHECKLIST_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistReagent" />
+        </set>
+        <set name="assignInstruments" table="ASSIGN_INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssignInstrument" />
+        </set>
+        <set name="staarAnonymizationRequests" table="STAAR_ANONYMIZATION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist Id</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StaarAnonymizationRequest" />
+        </set>
+        <set name="anonymizationQueries" table="ANONYMIZATION_QUERY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationQuery" />
+        </set>
+        <set name="assayResultLoads" table="ASSAY_RESULT_LOAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultLoad" />
+        </set>
+        <set name="masterMixReagents" table="MASTER_MIX_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MasterMixReagent" />
+        </set>
+        <set name="pcrSetups" table="PCR_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrSetup" />
+        </set>
+        <set name="containerBatchs" table="CONTAINER_BATCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerBatch" />
+        </set>
+        <set name="cdxChlistFileValues" table="CDX_CHLIST_FILE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CdxChlistFileValue" />
+        </set>
+        <set name="outboundRequests" table="OUTBOUND_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist Identifier and Foreign key to checklist table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OutboundRequest" />
+        </set>
+        <set name="sampleReceptions" table="SAMPLE_RECEPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK FROM CHECKLIST TABLE (CHECKLIST_ID PK)</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleReception" />
+        </set>
+        <set name="measurements" table="MEASUREMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Measurement" />
+        </set>
+        <set name="assayResults" table="ASSAY_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResult" />
+        </set>
+        <set name="pcrCleanups" table="PCR_CLEANUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0">
+                    <comment>Checklist Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrCleanup" />
+        </set>
+        <set name="caseRoiHistories" table="CASE_ROI_HISTORY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseRoiHistory" />
+        </set>
+        <set name="dnaDestructionRequests" table="DNA_DESTRUCTION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Checklist Identifier and Foreign Key to Checklist Table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionRequest" />
+        </set>
+        <set name="workflowProcChecklists" table="WORKFLOW_PROC_CHECKLIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to Checklist table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorkflowProcChecklist" />
+        </set>
+    </class>
+</hibernate-mapping>

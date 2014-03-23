@@ -1,0 +1,218 @@
+
+running config w/
+  1. nat
+  2. firewall
+  3. dmz
+  4. load balancing
+  5. working route for dmz machines
+
+
+vyatta@vyatta# show
+ firewall {
+     broadcast-ping disable
+     name from_internet {
+         rule 1 {
+             action accept
+             state {
+                 established enable
+                 invalid disable
+                 new disable
+                 related enable
+             }
+         }
+         rule 10 {
+             action accept
+             destination {
+                 address 10.10.36.190
+                 port 80
+             }
+             log disable
+             protocol tcp
+             source {
+                 address 0.0.0.0/0
+             }
+         }
+         rule 11 {
+             action accept
+             destination {
+                 address 10.10.43.2
+                 port 3389
+             }
+             log disable
+             protocol tcp
+             source {
+                 address 0.0.0.0/0
+             }
+         }
+     }
+ }
+ interfaces {
+     ethernet eth0 {
+         address 173.13.158.180/28
+         firewall {
+             in {
+                 name from_internet
+             }
+         }
+         hw-id 00:15:17:be:ee:76
+     }
+     ethernet eth1 {
+         address 67.95.201.198/27
+         address 67.95.201.200/27
+         firewall {
+             in {
+                 name from_internet
+             }
+         }
+         hw-id 00:15:17:be:ee:77
+     }
+     ethernet eth2 {
+         duplex auto
+         hw-id 00:13:72:87:03:89
+     }
+     ethernet eth3 {
+         address 10.10.37.2/21
+         hw-id 00:10:18:53:6b:f6
+     }
+     ethernet eth4 {
+         address 10.10.43.1/24
+         hw-id 00:22:3f:ef:c9:97
+     }
+     ethernet eth5 {
+         duplex auto
+         hw-id 00:22:3f:ef:c2:f2
+     }
+     loopback lo {
+     }
+ }
+ load-balancing {
+     wan {
+         interface-health eth0 {
+             failure-count 5
+             nexthop 173.13.158.190
+             ping 74.125.19.104
+         }
+         interface-health eth1 {
+             failure-count 5
+             nexthop 67.95.201.193
+             ping 74.125.19.104
+         }
+         rule 10 {
+             inbound-interface eth3
+             interface eth0 {
+                 weight 5
+             }
+             interface eth1 {
+                 weight 1
+             }
+             source {
+                 address 10.10.32.0/21
+             }
+         }
+         rule 20 {
+             inbound-interface eth4
+             interface eth1 {
+                 weight 1
+             }
+             source {
+                 address 10.10.43.0/24
+             }
+         }
+     }
+ }
+ protocols {
+     static {
+         route 0.0.0.0/0 {
+             next-hop 67.95.201.193 {
+                 distance 1
+             }
+             next-hop 173.13.158.190 {
+                 distance 1
+             }
+         }
+     }
+ }
+ service {
+     nat {
+         rule 1 {
+             outbound-interface eth1
+             source {
+                 address 10.10.32.0/21
+             }
+             type masquerade
+         }
+         rule 10 {
+             destination {
+                 address 67.95.201.198
+                 port 80
+             }
+             inbound-interface eth1
+             inside-address {
+                 address 10.10.36.190
+             }
+             protocol tcp
+             type destination
+         }
+         rule 50 {
+             destination {
+                 address 0.0.0.0/0
+             }
+             outbound-interface eth1
+             outside-address {
+                 address 67.95.201.200
+             }
+             protocol all
+             source {
+                 address 10.10.43.2
+             }
+             type source
+         }
+         rule 51 {
+             destination {
+                 address 67.95.201.200
+             }
+             inbound-interface eth1
+             inside-address {
+                 address 10.10.43.2
+             }
+             protocol all
+             source {
+                 address 0.0.0.0/0
+             }
+             type destination
+         }
+     }
+     ssh {
+         allow-root false
+     }
+ }
+ system {
+     domain-name cardiodx.com
+     gateway-address 67.95.201.193
+     host-name vyatta
+     login {
+         user root {
+             authentication {
+                 encrypted-password $1$qbfMPFRR$e5puWTQKICARgbzEzqx1V/
+             }
+         }
+         user vyatta {
+             authentication {
+                 encrypted-password $1$DiuCabmg$YH2rmnURMo2.J6i8Z5zWk1
+             }
+         }
+     }
+     name-server 10.10.37.21
+     ntp-server 69.59.150.135
+     package {
+         auto-sync 1
+         repository community {
+             components main
+             distribution stable
+             url http://packages.vyatta.com/vyatta
+         }
+     }
+     time-zone US/Pacific
+ }
+[edit]
+

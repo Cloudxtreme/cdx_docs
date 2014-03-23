@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PlateTemplate" table="PLATE_TEMPLATE" schema="DNALIMS">
+        <comment>Information about the template used to create plates.</comment>
+        <id name="plateTemplateId" type="big_decimal">
+            <column name="PLATE_TEMPLATE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="containerMap" class="com.cardiodx.db.waban.table.ContainerMap" fetch="select">
+            <column name="CONTAINER_MAP_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign key to the container_map record used to create this template.</comment>
+            </column>
+        </many-to-one>
+        <property name="templateName" type="string">
+            <column name="TEMPLATE_NAME" length="30" not-null="true" unique="true">
+                <comment>Unique upper cased name used to identify the template.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION">
+                <comment>Description of the plate template displayed in GTLIMS.</comment>
+            </column>
+        </property>
+        <property name="rowFirst" type="java.lang.Boolean">
+            <column name="ROW_FIRST" precision="1" scale="0">
+                <comment>Indicator that specifies the order in which samples are loaded on the plate.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>Username of the user that created each record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date that each record is created.</comment>
+            </column>
+        </property>
+        <property name="templateType" type="string">
+            <column name="TEMPLATE_TYPE" length="20" />
+        </property>
+        <set name="plateTemplateWells" table="PLATE_TEMPLATE_WELL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLATE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key used to identify the plate_template record.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateWell" />
+        </set>
+        <set name="containerBatchs" table="CONTAINER_BATCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLATE_TEMPLATE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerBatch" />
+        </set>
+        <set name="oligoPlateTemplateDesigns" table="OLIGO_PLATE_TEMPLATE_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLATE_TEMPLATE_ID" precision="22" scale="0">
+                    <comment>Primary key used as foreign key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoPlateTemplateDesign" />
+        </set>
+        <set name="plateTemplateContainers" table="PLATE_TEMPLATE_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLATE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key used to identify the plate_template record.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateContainer" />
+        </set>
+    </class>
+</hibernate-mapping>

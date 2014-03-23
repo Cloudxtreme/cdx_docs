@@ -1,0 +1,4 @@
+
+http://books.google.com/books?id=H3mvcxPeUfwC&pg=PA121&lpg=PA121&dq=hadoop+remove+datanode&source=bl&ots=pWyIrcYJsc&sig=2fw9V14djIT3cV_6HlYD7LVmE9k&hl=en&ei=Ue_2TI6RAdqS4gbW7tSIBw&sa=X&oi=book_result&ct=result&resnum=9&sqi=2&ved=0CFcQ6AEwCA#v=onepage&q=hadoop%20remove%20datanode&f=false
+
+http://books.google.com/books?id=bKPEwR-Pt6EC&printsec=frontcover&source=gbs_ge_summary_r&cad=0#v=onepage&q&f=false

@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @admin_type.name %>
+</p>
+
+<p>
+  <b>Created by:</b>
+  <%= @admin_type.created_by %>
+</p>
+
+<p>
+  <b>Modified by:</b>
+  <%= @admin_type.modified_by %>
+</p>
+
+<p>
+  <b>Created at:</b>
+  <%= @admin_type.created_at %>
+</p>
+
+<p>
+  <b>Modified at:</b>
+  <%= @admin_type.modified_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_type_path(@admin_type) %> |
+<%= link_to 'Back', admin_types_path %>

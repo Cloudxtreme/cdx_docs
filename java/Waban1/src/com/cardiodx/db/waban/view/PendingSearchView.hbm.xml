@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PendingSearchView" table="PENDING_SEARCH_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PendingSearchViewId">
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="sampleTubeId" type="string">
+                <column name="SAMPLE_TUBE_ID" length="4000" />
+            </key-property>
+            <key-property name="pgxId" type="string">
+                <column name="PGX_ID" length="4000" />
+            </key-property>
+            <key-property name="crfId" type="string">
+                <column name="CRF_ID" length="4000" />
+            </key-property>
+            <key-property name="sourceType" type="string">
+                <column name="SOURCE_TYPE" length="30" />
+            </key-property>
+            <key-property name="sponsorAccessionId" type="string">
+                <column name="SPONSOR_ACCESSION_ID" length="24" />
+            </key-property>
+            <key-property name="consentDna" type="string">
+                <column name="CONSENT_DNA" length="4000" />
+            </key-property>
+            <key-property name="consentStorage" type="string">
+                <column name="CONSENT_STORAGE" length="4000" />
+            </key-property>
+            <key-property name="location" type="java.lang.Character">
+                <column name="LOCATION" length="1" />
+            </key-property>
+            <key-property name="centralLab" type="string">
+                <column name="CENTRAL_LAB" length="4000" />
+            </key-property>
+            <key-property name="dateCollected" type="string">
+                <column name="DATE_COLLECTED" length="4000" />
+            </key-property>
+            <key-property name="volume" type="big_decimal">
+                <column name="VOLUME" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleStatus" type="string">
+                <column name="SAMPLE_STATUS" length="7" />
+            </key-property>
+            <key-property name="sampleCondition" type="java.lang.Character">
+                <column name="SAMPLE_CONDITION" length="1" />
+            </key-property>
+            <key-property name="finalStorageTube" type="java.lang.Boolean">
+                <column name="FINAL_STORAGE_TUBE" precision="1" scale="0" />
+            </key-property>
+            <key-property name="concentration" type="big_decimal">
+                <column name="CONCENTRATION" precision="22" scale="0" />
+            </key-property>
+            <key-property name="datePurified" type="date">
+                <column name="DATE_PURIFIED" length="8" />
+            </key-property>
+            <key-property name="sponsorSampleTubeId" type="string">
+                <column name="SPONSOR_SAMPLE_TUBE_ID" length="4000" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="lastCol" type="string">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="0" />
+            </key-property>
+            <key-property name="pendingSampleId" type="big_decimal">
+                <column name="PENDING_SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="destroyed" type="string">
+                <column name="DESTROYED" length="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

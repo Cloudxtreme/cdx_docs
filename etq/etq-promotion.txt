@@ -1,0 +1,91 @@
+shutdown tomcat
+kill -9 12176
+
+clear cache:
+cd /usr/tomcat/work/Catalina/localhost 
+rm -rf *
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+--shutdown mysql
+--su - mysql
+--???./bin/mysqladmin -u root -S /tmp/mysqltest.sock -p shutdown
+
+start test db
+root@etqdevel:/usr/mysql# ./bin/mysqld_safe --defaults-file=/usr/mysql/my3308.cnf &
+root@etqdevel:/usr/mysql# ./bin/mysql -u root -S /tmp/mysqltest.sock -p
+(podhe9e)
+
+de-compress the dump file:
+# gzip -d etqdevel.dump.gz
+
+vi etqdevel.dump
+(add the following two lines at the beginning and end of the dump file.)
+
+    SET FOREIGN_KEY_CHECKS = 0;
+			:
+			: (all other sql statements)
+			:
+    SET FOREIGN_KEY_CHECKS = 1;
+  
+import devel dump to test db:
+# ./bin/mysql -u root -S /tmp/mysqltest.sock -p -A < /usr/backup/etqdevel.dump
+# ./bin/mysql -u root -S /tmp/mysqltest.sock -p
+mysql> select * from ENGINE.USER_SETTINGS where user_name = 'cchou';
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tomcat:
+-- copy dev to test
+cd /usr/tomcat/webapps
+cp -rp reliance_dev reliance_test
+
+cd /usr/tomcat/webapps/reliance_test/WEB-INF/props
+vi config.properties
+indexRoot=/usr/index/reliance_test
+attachmentRoot=/usr/files/reliance_test
+
+vi pdfGenerator_config.properties
+EasyPDFFolderLocalPath = /mnt/easyPDF/test/
+EasyPDFSharedFolderName = test
+
+vi log4j.properties
+log4j.appender.FILE.File=/usr/tomcat/logs/reliance_test.log
+
+
+cd /usr/index 
+mv reliance_test/ reliance_test.orig
+cp -rp reliance_dev/ reliance_test
+
+cd /usr/files 
+mv reliance_test/ reliance_test.orig
+cp -rp reliance_dev/ reliance_test
+
+vi database.properties
+change port 3307 to 3308
+
+cd /usr/tomcat/webapps/reliance_test/wsdl
+vi CommandManager.wsdl
+CommandManager.wsdl:         <wsdlsoap:address location="http://10.10.37.32:80/reliance_test/services/CommandManager"/>
+
+
+start tomcat
+cd /usr/tomcat/bin
+./startup.sh
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--clean the dev data
+login to test as etqadministrator
+go to 'document control' application
+click 'delete' (the trash can)
+select all
+click ok
+
+(and delete all documents under 'Document Control' tree
+(and delete all documents under 'Document Control Archive' tree
+
+
+
+
+
+
+

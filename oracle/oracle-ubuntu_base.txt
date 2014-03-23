@@ -1,0 +1,22 @@
+
+put in to cd
+boot
+
+english
+install ubuntu server
+
+
+passwd root
+install openssh-server
+copy /etc/apt/sources.list 
+copy /etc/apt/apt.conf 
+vi dhclient.conf
+
+apt-get install wajig
+wajig upgrade
+
+vi /etc/bash.bashrc
+
+wajig install linux-image-2.6.24-23-server 
+
+

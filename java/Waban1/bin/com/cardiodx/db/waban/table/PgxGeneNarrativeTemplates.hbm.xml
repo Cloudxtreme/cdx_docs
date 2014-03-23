@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PgxGeneNarrativeTemplates" table="PGX_GENE_NARRATIVE_TEMPLATES" schema="DNALIMS">
+        <comment>PGx Gene Narrative Templates</comment>
+        <id name="pgxGeneId" type="big_decimal">
+            <column name="PGX_GENE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                <comment>FK GENE ID FROM GENE TABLE</comment>
+            </column>
+        </many-to-one>
+        <property name="fileBlob" type="blob">
+            <column name="FILE_BLOB">
+                <comment>Template File Storage</comment>
+            </column>
+        </property>
+        <property name="fileName" type="string">
+            <column name="FILE_NAME">
+                <comment>FILE NAME OF THE TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>CREATED BY</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>CREATED DATE</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>MODIFIED BY</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>MODIFIED DATE</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

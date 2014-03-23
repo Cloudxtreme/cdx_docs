@@ -1,0 +1,179 @@
+-- same as home:chap3
+	+ public folders
+	+ logon script
+
+cd /etc/samba
+mv smb.conf smb.conf.2
+
+vi smb.conf
+
+# Global parameters 
+ 
+[global] 
+workgroup = BILLMORE 
+passwd chat = *New*Password* \ 
+%n\n*Re-enter*new*password* %n\n *Password*changed* 
+username map = /etc/samba/smbusers 
+syslog = 0 
+name resolve order = wins bcast hosts 
+printcap name = CUPS 
+show add printer wizard = No 
+add user script = /usr/sbin/useradd -m '%u' 
+delete user script = /usr/sbin/userdel -r '%u' 
+add group script = /usr/sbin/groupadd '%g' 
+delete group script = /usr/sbin/groupdel '%g' 
+add user to group script = /usr/sbin/usermod -G '%g' '%u' 
+add machine script = /usr/sbin/useradd \ 
+-s /bin/false -d /var/lib/nobody '%u' 
+logon script = scripts\login.bat 
+logon path =  
+logon drive = X: 
+domain logons = Yes 
+preferred master = Yes 
+wins support = Yes 
+printing = CUPS 
+
+[homes] 
+comment = Home Directories 
+valid users = %S 
+read only = No 
+browseable = No 
+ 
+[printers] 
+comment = SMB Print Spool 
+path = /var/spool/samba 
+printable = Yes 
+guest ok = Yes 
+use client driver = Yes 
+browseable = No 
+ 
+[netlogon]
+comment = NetLogon ShARE
+path = /home/samba/netlogon
+#guest account =
+ 
+[accounts] 
+comment = Accounting Files 
+path = /data/accounts 
+valid users = %G 
+read only = No 
+ 
+[finsvcs] 
+comment = Financial Service Files 
+path = /data/finsvcs 
+valid users = %G 
+read only = No 
+
+[public]
+comment = Public Folder
+path = /data/public
+guest ok = Yes
+read only = No
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- validate
+testparm -s
+
+
+smbpasswd -a root
+
+vi /etc/samba/smbusers 
+root = administrator admin
+nobody = guest pcguest smbguest
+
+
+vi /etc/samba/initGrps.sh
+	#!/bin/bash
+	#
+	# initGrps.sh
+	#
+
+	# Create UNIX groups
+	groupadd acctsdep
+	groupadd finsrvcs
+
+	# Map Windows Domain Groups to UNIX groups
+	net groupmap modify ntgroup="Domain Admins"  unixgroup=root
+	net groupmap modify ntgroup="Domain Users"   unixgroup=users
+	net groupmap modify ntgroup="Domain Guests"  unixgroup=nobody
+
+	# Add Functional Domain Groups
+	net groupmap add ntgroup="Accounts Dept"  unixgroup=acctsdep type=d
+	net groupmap add ntgroup="Financial Services" unixgroup=finsrvcs type=d
+
+
+cd /etc/samba 
+chmod 755 initGrps.sh
+./initGrps.sh
+
+cd /etc/samba 
+net groupmap list | sort
+
+
+
+useradd alanm
+passwd alanm
+smbpasswd -a alanm
+groupadd accounts
+groupadd finsvcs
+
+
+mkdir -p /data/{accounts,finsvcs}
+chown -R root:root /data
+chown -R alanm:accounts /data/accounts
+chown -R alanm:finsvcs /data/finsvcs
+chmod -R ug+rwx,o+rx-w /data
+
+
+mkdir -p /data/public
+chmod 777 /data/public
+
+/etc/rc.d/init.d/smb restart
+
+smbclient -L localhost -U%
+smbclient //server/accounts -U alanm
+
+
+*** new user ***
+useradd cchou
+passwd cchou
+smbpasswd -a cchou
+/etc/rc.d/init.d/smb reload
+
+*** new user ***
+useradd grace
+passwd grace
+smbpasswd -a grace
+
+vi /etc/group
+	accounts:x:514:grace
+	finsvcs:x:515:grace
+
+
+/etc/rc.d/init.d/smb reload
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+***?????grant permission on group on windows
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://ldp.rtin.bz/HOWTO/Samba-Authenticated-Gateway-HOWTO-3.html
+
+mkdir /home/samba/netlogon
+
+vi netlogon.bat
+net use x: \\192.168.100.56\accounts
+net use p: \\192.168.100.56\public
+net use f: \\192.168.100.56\finsvcs
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+

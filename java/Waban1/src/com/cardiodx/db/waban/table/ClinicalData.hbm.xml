@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ClinicalData" table="CLINICAL_DATA" schema="DNALIMS">
+        <comment>Clinical Data</comment>
+        <id name="clinicalDataId" type="big_decimal">
+            <column name="CLINICAL_DATA_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="studyNumber" type="string">
+            <column name="STUDY_NUMBER" length="20" not-null="true">
+                <comment>Study Number</comment>
+            </column>
+        </property>
+        <property name="accessionNumber" type="string">
+            <column name="ACCESSION_NUMBER" length="25">
+                <comment>Accession Number</comment>
+            </column>
+        </property>
+        <property name="crfId" type="big_decimal">
+            <column name="CRF_ID" precision="22" scale="0">
+                <comment>Randomized CRF_ID</comment>
+            </column>
+        </property>
+        <property name="columnName" type="string">
+            <column name="COLUMN_NAME" length="4000" not-null="true">
+                <comment>Column Name</comment>
+            </column>
+        </property>
+        <property name="columnValue" type="string">
+            <column name="COLUMN_VALUE" length="4000">
+                <comment>Column Value</comment>
+            </column>
+        </property>
+        <property name="cardinality" type="string">
+            <column name="CARDINALITY" length="1" not-null="true">
+                <comment>Cardinality</comment>
+            </column>
+        </property>
+        <property name="columnDataType" type="string">
+            <column name="COLUMN_DATA_TYPE" length="7" not-null="true">
+                <comment>Column Data Type</comment>
+            </column>
+        </property>
+        <property name="anonymizedAccNo" type="big_decimal">
+            <column name="ANONYMIZED_ACC_NO" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

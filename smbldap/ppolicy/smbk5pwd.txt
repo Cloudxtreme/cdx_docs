@@ -1,0 +1,174 @@
+smbk5pwd samba ldap password sync (build debian package ubuntu)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.debian.org/doc/FAQ/ch-pkg_basics.en.html
+http://www.togaware.com/linux/survivor/Building_Packages0.html
+
+vi /etc/apt/sources.list
+wajig update
+wajig upgrade
+
+wajig install subversion build-essential quilt autotools-dev -y
+wajig install dpkg-dev -y
+
+wajig source slapd
+wajig build-depend slapd
+
+cd openldap2.3-2.4.9
+
+debian/rules binary
+debian/rules clean
+
+--
+-- fix the bug!!!
+--    (http://www.openldap.org/its/index.cgi/Software%20Bugs?id=5569;page=2)
+--
+-- Result: Insufficient access (50)
+-- Additional info: Operations are restricted to
+-- bind/unbind/abandon/StartTLS/modify password
+
+vi ppolicy.patch 
+--- ppolicy.c	12 Jun 2008 19:12:35 -0000	1.115
++++ ppolicy.c	8 Jul 2008 09:55:17 -0000
+@@ -1401,7 +1401,7 @@
+ 	Attribute		*pa, *ha, at;
+ 	const char		*txt;
+ 	pw_hist			*tl = NULL, *p;
+-	int			zapReset, send_ctrl = 0;
++	int			zapReset, send_ctrl = 0, pwexop = 0;
+ 	Entry			*e;
+ 	struct berval		newpw = BER_BVNULL, oldpw = BER_BVNULL,
+ 				*bv, cr[2];
+@@ -1526,6 +1526,7 @@
+ 				req_pwdexop_s *qpw = sc->sc_private;
+ 				newpw = qpw->rs_new;
+ 				oldpw = qpw->rs_old;
++				pwexop = 1;
+ 			   	break;
+ 			}
+ 		}
+@@ -1581,7 +1582,7 @@
+ 				}
+ 			}
+ 
+-		} else if ( !is_at_operational( ml->sml_desc->ad_type ) ) {
++		} else if ( !pwexop && !is_at_operational( ml->sml_desc->ad_type ) ) {
+ 			mod_pw_only = 0;
+ 			/* modifying something other than password */
+ 		}
+
+
+cp ~/tmp/openldap2.3-2.4.9/servers/slapd/overlays/ppolicy.c .
+patch ppolicy.c ppolicy.patch
+cp ppolicy.c ~/tmp/openldap2.3-2.4.9/servers/slapd/overlays/ppolicy.c
+
+cd contrib/slapd-modules/smbk5pwd
+copy smbk5pwd.c to ~/tmp/openldap2.3-2.4.9/servers/slapd/overlays
+cd ~/tmp/openldap2.3-2.4.9/servers/slapd/overlays
+vi smbk5pwd.c
+#define DO_SAMBA
+
+
+cd servers/slapd/overlay
+vi Makefile.in
+	smbk5pwd.c \
+
+SMBK5PWD_LIBS = -lcrypto -lldap_r -llber
+
+smbk5pwd.la : smbk5pwd.lo
+	$(LTLINK_MOD) -module -o $@ smbk5pwd.lo version.lo $(LINK_LIBS) $(MODULES_LIBS) $(SMBK5PWD_LIBS)
+
+
+vi configure.in
+SLAPD_DYNAMIC_OVERLAYS=smbk5pwd.la
+
+
+debian/rules binary
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  below shall NOT be used!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+root@smb01:~/tmp/openldap2.3-2.4.9/contrib/slapd-modules# 
+
+./contrib/slapd-modules/smbk5pwd
+./contrib/slapd-modules/smbk5pwd/smbk5pwd.c
+
+http://www.yellowpigs.net/computers/openldap
+http://www.openldap.org/faq/data/cache/362.html
+
+
+-- ??????
+wajig install libssl096-dev
+
+vi Makefile 
+< #LIBTOOL=../../../debian/build/libtool
+< LIBTOOL=libtool
+< DEFS=-DDO_SAMBA
+< HEIMDAL_INC=
+< LDAP_INC=-I../../../debian/build/include -I../../../include -I../../../servers/slapd
+< HEIMDAL_LIB=
+< #LDAP_LIB=-lldap_r -llber
+< LDAP_LIB=-L../../../debian/install/usr/lib -lldap_r -llber
+< 
+< clean:	
+< 	rm -rf *.lo *.o *.so *.la .libs
+
+
+cd ../../../debian/install/usr/lib/
+cp liblber.a /usr/lib
+cp liblber.la /usr/lib
+
+cp libldap_r.la /usr/lib
+cp libldap_r.a /usr/lib
+
+cd /usr/lib
+ln -s liblber-2.4.so.2.0.5 liblber.so
+ln -s libldap_r-2.4.so.2.0.5 libldap_r.so
+
+
+make clean
+make
+
+cd .libs
+cp smbk5pwd.so.1.0.0 /usr/lib/ldap/
+cd ..
+cp smbk5pwd.la /usr/lib/ldap/
+cd /usr/lib/ldap/
+ln -s smbk5pwd.so.1.0.0 smbk5pwd.so
+ln -s smbk5pwd.so.1.0.0 smbk5pwd.so.1
+
+
+moduleload smbk5pwd.la
+overlay smbk5pwd
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--dch -l local 'Blah blah blah'
+debuild -us -uc
+sudo dpkg -i ../*.deb
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+app-crypt/heimdal
+
+if libtool: link: `threads.lo' is not a valid libtool object
+--> change cpu count to 1??? (problem on paralell make??)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Errors changing password:
+LDAP password information update failed: Insufficient access
+Operations are restricted to bind/unbind/abandon/StartTLS/modify password
+
+
+http://www.openldap.org/its/index.cgi/Software%20Bugs?id=5569;page=2
+
+ldappasswd -H ldap://localhost -x -D uid=cchou,ou=Users,dc=cardiodx,dc=com -W -S
+
+
+ldapsearch -b "dc=cardiodx,dc=com" -D "uid=cchou,ou=Users,dc=cardiodx,dc=com" "cn=cchou" userPassword -x -w foobar
+
+
+
+

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StudyVariableRole" table="STUDY_VARIABLE_ROLE" schema="DNALIMS">
+        <comment>This table identifies the role for a study variable.Possible roles are NON IDENTIFYING, PID etc.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.StudyVariableRoleId">
+            <key-property name="anonymizationStudySetupId" type="big_decimal">
+                <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variableId" type="big_decimal">
+                <column name="VARIABLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variableRole" type="string">
+                <column name="VARIABLE_ROLE" length="35" />
+            </key-property>
+            <key-property name="protocolDefinedVariableId" type="big_decimal">
+                <column name="PROTOCOL_DEFINED_VARIABLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="anonymizationStudySetup" class="com.cardiodx.db.waban.table.AnonymizationStudySetup" update="false" insert="false" fetch="select">
+            <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0">
+                <comment>Anonymization Study Setup ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="protocolDefinedVariable" class="com.cardiodx.db.waban.table.ProtocolDefinedVariable" update="false" insert="false" fetch="select">
+            <column name="PROTOCOL_DEFINED_VARIABLE_ID" precision="22" scale="0">
+                <comment>Protocol Defined Variable Id</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" update="false" insert="false" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="variable" class="com.cardiodx.db.waban.table.Variable" update="false" insert="false" fetch="select">
+            <column name="VARIABLE_ID" precision="22" scale="0">
+                <comment>Variable identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

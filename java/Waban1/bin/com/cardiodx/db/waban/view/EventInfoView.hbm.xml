@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.EventInfoView" table="EVENT_INFO_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.EventInfoViewId">
+            <key-property name="eventName" type="string">
+                <column name="EVENT_NAME" length="30" />
+            </key-property>
+            <key-property name="eventDescription" type="string">
+                <column name="EVENT_DESCRIPTION" length="200" />
+            </key-property>
+            <key-property name="objectType" type="string">
+                <column name="OBJECT_TYPE" length="30" />
+            </key-property>
+            <key-property name="isWarning" type="java.lang.Boolean">
+                <column name="IS_WARNING" precision="1" scale="0" />
+            </key-property>
+            <key-property name="dateProcessed" type="date">
+                <column name="DATE_PROCESSED" length="7" />
+            </key-property>
+            <key-property name="processedBy" type="string">
+                <column name="PROCESSED_BY" length="30" />
+            </key-property>
+            <key-property name="message" type="string">
+                <column name="MESSAGE" length="4000" />
+            </key-property>
+            <key-property name="storedProcedure" type="string">
+                <column name="STORED_PROCEDURE" length="100" />
+            </key-property>
+            <key-property name="procDescription" type="string">
+                <column name="PROC_DESCRIPTION" length="200" />
+            </key-property>
+            <key-property name="objectId" type="string">
+                <column name="OBJECT_ID" length="30" />
+            </key-property>
+            <key-property name="eventId" type="big_decimal">
+                <column name="EVENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="eventHandlerId" type="big_decimal">
+                <column name="EVENT_HANDLER_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="eventSubscriptionId" type="big_decimal">
+                <column name="EVENT_SUBSCRIPTION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="eventProcessId" type="big_decimal">
+                <column name="EVENT_PROCESS_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="dateProcessedTrunc" type="date">
+                <column name="DATE_PROCESSED_TRUNC" length="8" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

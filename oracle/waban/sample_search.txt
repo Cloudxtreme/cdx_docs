@@ -1,0 +1,117 @@
+
+select var.VARIABLE_ID, var.VARIABLE_NAME, var.VARIABLE_TYPE_ID, 
+   pdv.ATTRIBUTE_LEVEL_ID, da.NUMBER_IN_SEQUENCE, count(vv.VARIABLE_VALUE_ID) list_count 
+from discrete_attribute da, variable var, variable_value vv, 
+    (select distinct ATTRIBUTE_LEVEL_ID, VARIABLE_ID 
+     from protocol_defined_variable) pdv 
+where da.ATTRIBUTE_NAME = 'SAMPLE_SEARCH' 
+  and da.ATTRIBUTE_VALUE = var.VARIABLE_NAME 
+  and var.VARIABLE_ID = pdv.VARIABLE_ID 
+  and var.VARIABLE_ID = vv.VARIABLE_ID (+) 
+group by var.VARIABLE_ID, var.VARIABLE_NAME, var.VARIABLE_TYPE_ID, pdv.ATTRIBUTE_LEVEL_ID, da.NUMBER_IN_SEQUENCE 
+Having Count(Var.VARIABLE_ID) = 1 
+order by da.NUMBER_IN_SEQUENCE
+
+No rows returned??????
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SELECT distinct s.* 
+FROM sample_search_view s,( 
+		select s.accession_id, s.sample_id 
+		from sample s 
+		WHERE s.final_storage_tube = 1) ssv 
+WHERE s.sample_id=ssv.sample_id
+
+
+SELECT
+sam.sample_tube_id,
+acc.accession_number,
+sam.source_type,
+sp.study_number,
+limspackage.container_position (sam.sample_id),
+f.freezer_number,
+sam.volume,
+sam.concentration,
+sam.sample_status,
+sam.sample_condition,
+nvl(svv1.VALUE, ''),
+nvl(svv2.VALUE, ''),
+'',
+'',
+'',
+'',
+nvl(avv4.VALUE, ''),
+sam.final_storage_tube,
+sam.date_purified,
+limspackage.start_sponsor_tube (sam.sample_id),
+sam.date_created,
+acc.destroyed,
+sam.sample_id,
+acc.accession_id,
+sp.study_protocol_id,
+sam.container_id
+  FROM SAMPLE sam,
+       accession acc,
+       study_protocol sp,
+       accession_variable_view avv4,
+       sample_variable_view svv1,
+       sample_variable_view svv2,
+       container con,
+       freezer f
+ WHERE sam.accession_id = acc.accession_id
+   AND acc.study_protocol_id = sp.study_protocol_id
+   AND acc.accession_id = avv4.accession_id(+)
+   AND avv4.variable_name(+) = 'COLLECTION DATE'
+   AND sam.sample_id = svv1.sample_id(+)
+   AND svv1.variable_name(+) = 'Proceed Further'
+   AND sam.sample_id = svv2.sample_id(+)
+   AND svv2.variable_name(+) = 'Proceed Further Details'
+   AND sam.container_id = con.container_id
+   AND con.freezer_id = f.freezer_id (+)
+
+
+  SELECT
+   AVF.ACCESSION_ID,
+   PDV.STUDY_PROTOCOL_ID,
+   AVF.ACCESSION_VARIABLE_FLD_ID,
+   PDV.PROTOCOL_DEFINED_VARIABLE_ID,
+   VAR.VARIABLE_ID,
+   AVF.VALUE,
+   PDV.VARIABLE_LABEL,
+   PDV.NUMBER_IN_SEQUENCE,
+   VAR.VARIABLE_NAME,
+   VAR.MIN_VALUE,
+   VAR.MAX_VALUE,
+   AVF.CONTACT_ID,
+   AVF.ORGANIZATION_ID,
+   AVF.PATIENT_ID,
+   pat.DISPLAY_ID
+FROM
+   ACCESSION_VARIABLE_FLD AVF,
+   PROTOCOL_DEFINED_VARIABLE PDV,
+   VARIABLE VAR,
+   PATIENT pat
+WHERE
+   AVF.PROTOCOL_DEFINED_VARIABLE_ID = PDV.PROTOCOL_DEFINED_VARIABLE_ID
+   AND PDV.VARIABLE_ID = VAR.VARIABLE_ID AND avf.PATIENT_ID = pat.PATIENT_ID(+)
+
+select mvf."SAMPLE_VARIABLE_FLD_ID", pdv.STUDY_PROTOCOL_ID, mvf."PROTOCOL_DEFINED_VARIABLE_ID",
+  mvf."SAMPLE_ID",mvf."ORGANIZATION_ID",mvf."CONTACT_ID",
+  mvf."VALUE",mvf."CREATED_BY",mvf."DATE_CREATED",mvf."MODIFIED_BY",
+  mvf."DATE_MODIFIED",mvf."SUBSIDIARY_ID", var.VARIABLE_ID, VAR.VARIABLE_NAME, PDV.VARIABLE_LABEL, 
+  PDV.NUMBER_IN_SEQUENCE, VAR.MIN_VALUE, VAR.MAX_VALUE
+from SAMPLE_VARIABLE_FLD mvf, protocol_defined_variable pdv, variable var
+where mvf.PROTOCOL_DEFINED_VARIABLE_ID = pdv.PROTOCOL_DEFINED_VARIABLE_ID
+and pdv.VARIABLE_ID = var.VARIABLE_ID
+
+
+
+sample
+accession
+study_protocol
+container
+freezer
+
+
+
+

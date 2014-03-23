@@ -1,0 +1,40 @@
+
+
+/usr/mysql/bin/mysqldump  -uroot -S/tmp/mysqldev.sock --password=podhe9e  --databases ENGINE --no-data > engine.sql
+
+use ENGINE;
+
+USER_ADDITIONAL_FILTER
+USER_PASSWORDS    
+USER_SETTINGS         
+
+
+
+
+
+./bin/mysql -uroot -S/tmp/mysqltest.sock -p
+
+
+use DELEGATION
+delete from DELEGATION_DOCUMENT;
+
+use ENGINE;
+
+select ETQ$USER_ID from ETQ$USER_SETTINGS_CH;
+delete from ETQ$USER_SETTINGS_CH where ETQ$USER_ID > 0;
+
+select MEMBER_USER_ID from GROUP_MEMBERS;
+delete from GROUP_MEMBERS where MEMBER_USER_ID > 0;
+
+select ETQ$LAST_EDITOR from CALIB.EQUIPMENT_PROFILE;
+delete from CALIB.EQUIPMENT_PROFILE;
+
+select USER_ID from TRAINING.PERSON_PROFILE;
+delete from TRAINING.PERSON_PROFILE;
+
+select ETQ$ASSIGNED_ORIGINAL from DATACENTER.ETQ$MASTER_KEYWORD_LIST_ASNO;
+delete from DATACENTER.ETQ$MASTER_KEYWORD_LIST_ASNO where ETQ$ASSIGNED_ORIGINAL;
+
+delete from DATACENTER.ETQ$MASTER_KEYWORD_LIST_ASN;
+delete from USER_SETTINGS where REPORTS_TO_ID is null;
+delete from USER_SETTINGS where email like '%cardiodx.com';

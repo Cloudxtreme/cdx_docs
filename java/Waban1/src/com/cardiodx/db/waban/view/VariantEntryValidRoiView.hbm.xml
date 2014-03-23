@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.VariantEntryValidRoiView" table="VARIANT_ENTRY_VALID_ROI_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.VariantEntryValidRoiViewId">
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseId" type="string">
+                <column name="CASE_ID" length="50" />
+            </key-property>
+            <key-property name="roiName" type="string">
+                <column name="ROI_NAME" length="30" />
+            </key-property>
+            <key-property name="variantId" type="big_decimal">
+                <column name="VARIANT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="analyst" type="string">
+                <column name="ANALYST" length="30" />
+            </key-property>
+            <key-property name="caseRoiId" type="string">
+                <column name="CASE_ROI_ID" length="50" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

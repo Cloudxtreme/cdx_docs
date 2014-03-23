@@ -1,0 +1,50 @@
+#
+# first boot
+#
+lsmod | grep e1000
+if [ $? != 0 ]; then
+  modprobe r8169
+  modprobe e1000
+  echo '8086:105e e1000' >> /etc/sysconf/niclist
+  echo '10ec:8169 r8169' >> /etc/sysconf/niclist
+  echo '2 comcast' >> /etc/iproute2/rt_tables
+  echo '3 xo' >> /etc/iproute2/rt_tables
+
+  ip addr add 173.13.158.180/28 brd 173.13.158.191 scope global dev eth4
+  ip link set eth4 up
+
+  ip addr add 67.95.201.198/27 brd 67.95.201.223 scope global dev eth5
+  ip addr add 67.95.201.199/27 brd 67.95.201.223 scope global dev eth5
+  ip link set eth5 up
+
+  iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth4 -d 0/0 -j MASQUERADE
+  iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth5 -d 0/0 -j MASQUERADE
+  iptables -A FORWARD -o eth4 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+  iptables -A FORWARD -o eth5 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+  iptables -A FORWARD -i eth4 -m state --state ESTABLISHED,RELATED -j ACCEPT
+  iptables -A FORWARD -i eth5 -m state --state ESTABLISHED,RELATED -j ACCEPT
+fi
+
+
+#
+# bound Comcast and XO as default route
+#
+ip route add 173.13.158.176/28 dev eth4 src 173.13.158.180 table comcast
+ip route add default via 173.13.158.190 table comcast
+ip route add 67.95.201.192/27 dev eth5 src 67.95.201.198 table xo
+ip route add default via 67.95.201.193 table xo
+ip rule add from 173.13.158.180 table comcast
+ip rule add from 173.13.158.181 table comcast
+ip rule add from 67.95.201.198 table xo
+ip rule add from 67.95.201.199 table xo
+
+# Both Comcast and XO are up and running:
+ip route add default scope global nexthop via 173.13.158.190 dev eth4 weight 5 nexthop via 67.95.201.193 dev eth5 weight 1
+
+# If Comcast goes down:
+# ip route replace default scope global via 67.95.201.193 dev eth5
+
+# If XO goes down:
+# ip route replace default scope global via 173.13.158.190 dev eth4
+
+

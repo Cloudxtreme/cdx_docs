@@ -1,0 +1,60 @@
+
+http://gentoo-wiki.com/Subversion/Basics
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install xinetd
+
+cd /etc/xinetd.d
+vi svn
+# default: on
+# Subversion server
+
+service svn
+{
+        socket_type     = stream
+        protocol        = tcp
+        user            = www-data
+        wait            = no
+        disable         = no
+        server          = /usr/bin/svnserve
+        server_args     = -i -r /var/lib/svn
+        port            = 3690
+}
+
+
+cd /var/lib/svn/it/conf
+vi svnserve.conf
+
+mkdir svn
+cd svn
+svn co svn://trac/it
+
+svn list svn+ssh://trac/var/lib/svn/it
+svn co svn+ssh://trac/var/lib/svn/it
+svn info
+
+cd it
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+login as root
+mkdir -p svn/it/trac/etc
+cd svn/it/trac/etc
+cp -rp /etc/* .
+
+svn import . file:///var/lib/svn/it/ -m "initial revision"
+svn ls --verbose file:///var/lib/svn/it/trac/etc
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+login as cchou
+mkdir svn
+cd svn
+svn co file:///var/lib/svn/it/
+
+cd ~/svn/it/trac/etc
+vi hosts
+svn diff
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /var/lib/svn 
+chown -R www-data *

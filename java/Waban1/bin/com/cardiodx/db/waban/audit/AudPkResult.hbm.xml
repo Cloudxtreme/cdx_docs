@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudPkResult" table="AUD_PK_RESULT" schema="DNALIMS">
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="pkResultId" type="big_decimal">
+            <column name="PK_RESULT_ID" precision="22" scale="0">
+                <comment>Primary key of result record</comment>
+            </column>
+        </property>
+        <property name="pkSubstanceId" type="big_decimal">
+            <column name="PK_SUBSTANCE_ID" precision="22" scale="0">
+                <comment>FK to PK substance</comment>
+            </column>
+        </property>
+        <property name="accessionId" type="big_decimal">
+            <column name="ACCESSION_ID" precision="22" scale="0">
+                <comment>FK to accession used in PK assay</comment>
+            </column>
+        </property>
+        <property name="interval1Value" type="string">
+            <column name="INTERVAL1_VALUE" length="100">
+                <comment>Attribute value for first time interval attribute</comment>
+            </column>
+        </property>
+        <property name="interval2Value" type="string">
+            <column name="INTERVAL2_VALUE" length="100">
+                <comment>Attribute value for second time interval attribute</comment>
+            </column>
+        </property>
+        <property name="interval3Value" type="string">
+            <column name="INTERVAL3_VALUE" length="100">
+                <comment>Attribute value for third time interval attribute</comment>
+            </column>
+        </property>
+        <property name="finalValue" type="string">
+            <column name="FINAL_VALUE" length="60">
+                <comment>Result value to represent consensus</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="60">
+                <comment>Status to be decided as consensus</comment>
+            </column>
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="1000">
+                <comment>Free-form text comment</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User that created the record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User that last modified the record</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date record was last modified</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

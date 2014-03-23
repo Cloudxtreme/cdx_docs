@@ -1,0 +1,108 @@
+ruby workflow
+
+http://www.openwfe.org/manual/index.html
+http://openwferu.rubyforge.org/quickstart.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 -y
+
+wget http://rubyforge.org/frs/download.php/29548/rubygems-1.0.1.tgz
+tar xzvf rubygems-1.0.1.tgz
+cd rubygems-1.0.1
+ruby setup.rb
+ln -s /usr/bin/gem1.8 /usr/bin/gem
+gem update --system
+
+
+gem sources -l 
+gem sources -a http://gemsrv.cardiodx.com/
+gem sources -r http://gems.rubyforge.org/
+gem sources -a http://gems.rubyforge.org/
+
+
+gem install rails -v 1.2.2 --no-rdoc --no-ri
+gem install atom --no-rdoc --no-ri
+gem install atom-tools --no-rdoc --no-ri
+gem install ruote --no-rdoc --no-ri
+gem install ruote-extras --no-rdoc --no-ri
+
+gem install activeresource --no-rdoc --no-ri
+gem install json_pure --no-rdoc --no-ri
+gem install rufus-decision --no-rdoc --no-ri
+gem install rufus-eval --no-rdoc --no-ri
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://openwferu.rubyforge.org/rquickstart.html
+http://github.com/jmettraux/ruote-web/tree/master
+
+wajig install mysql-server mysql-client mysql-common -y
+wajig install libmysqlclient15-dev -y
+wajig install git-core -y
+
+Make sure you have rails 2.1.0 installed
+
+git clone git://github.com/jmettraux/ruote-web.git
+
+cd ruote-web
+vi config/database.yml
+  socket: /var/run/mysqld/mysqld.sock
+
+rake install_workflow_engine
+
+rake bootstrap_dev_db
+rake rails:update
+
+rake populate_dev_db
+
+--gem install mysql -- --with-mysql-config=/usr/bin/mysql_config
+
+ruby script/server
+
+http://localhost:3000 
+  (then login as admin/admin or bob/bob)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- not working below...
+--
+http://openwferu.rubyforge.org/quickstart.html
+http://openwferu.rubyforge.org/ttt/p2.html
+wget http://rubyforge.org/frs/download.php/37864/ruote-web-0.9.19pre0.zip
+
+wajig install mysql-server-5.0 mysql-client-5.0 
+pwrd: cardiodx
+
+--./bin/mysqladmin -u root password 'cardiodx'
+
+
+mysql -u root -p
+create database ttt_development;
+grant all on ttt_development.* to 'ttt'@'localhost' identified by 'ttt';
+
+vi database.yaml
+  database: ttt_development
+  username: ttt
+  password: ttt
+  socket: /var/run/mysqld/mysqld.sock
+
+cd ttt
+rake db:migrate
+
+
+cd lib/tasks#
+vi bootstrap_dev_db.rake 
+  db = "ttt_development"
+
+
+rake bootstrap_dev_db
+rake populate_dev_db
+
+
+mysql -u ttt -p
+
+
+

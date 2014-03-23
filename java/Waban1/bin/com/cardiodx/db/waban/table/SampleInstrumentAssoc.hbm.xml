@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.SampleInstrumentAssoc" table="SAMPLE_INSTRUMENT_ASSOC" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.table.SampleInstrumentAssocId">
+            <key-property name="instrumentId" type="big_decimal">
+                <column name="INSTRUMENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="stepTemplateId" type="big_decimal">
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="templateWizardId" type="big_decimal">
+                <column name="TEMPLATE_WIZARD_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" update="false" insert="false" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0">
+                <comment>Procedure step identifier.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" update="false" insert="false" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist identifier.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" update="false" insert="false" fetch="select">
+            <column name="CONTAINER_ID" length="20">
+                <comment>Container identifier.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="instrument" class="com.cardiodx.db.waban.table.Instrument" update="false" insert="false" fetch="select">
+            <column name="INSTRUMENT_ID" precision="22" scale="0">
+                <comment>Instrument identifier.</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

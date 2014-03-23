@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbClassification" table="MDB_CLASSIFICATION" schema="DNALIMS">
+        <id name="classificationId" type="big_decimal">
+            <column name="CLASSIFICATION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="100" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="2000" />
+        </property>
+        <property name="testClass" type="string">
+            <column name="TEST_CLASS" length="30" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbVariants" table="MDB_VARIANT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DEFAULT_CLASSIFICATION_ID" precision="22" scale="0">
+                    <comment>This is the default classification for the variant.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariant" />
+        </set>
+        <set name="mdbGenotypes" table="MDB_GENOTYPE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CLASSIFICATION_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbGenotype" />
+        </set>
+    </class>
+</hibernate-mapping>

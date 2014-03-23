@@ -1,0 +1,6 @@
+
+
+http://www.lucasmanual.com/mywiki/FaxServer#A4portsserialcard.2Cmorethen4modemsupport
+
+by default, kernel only support 4 ttyS
+

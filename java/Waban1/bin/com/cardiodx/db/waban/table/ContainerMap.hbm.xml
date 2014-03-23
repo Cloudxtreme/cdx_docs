@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ContainerMap" table="CONTAINER_MAP" schema="DNALIMS">
+        <comment>Information about the layout of a container.</comment>
+        <id name="containerMapId" type="big_decimal">
+            <column name="CONTAINER_MAP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="type" type="string">
+            <column name="TYPE" length="20">
+                <comment>Type of container (box, gel, etc.).</comment>
+            </column>
+        </property>
+        <property name="containerRows" type="big_decimal">
+            <column name="CONTAINER_ROWS" precision="22" scale="0">
+                <comment>Number of rows in the container.</comment>
+            </column>
+        </property>
+        <property name="containerColumns" type="big_decimal">
+            <column name="CONTAINER_COLUMNS" precision="22" scale="0">
+                <comment>Number of columns in the container.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="containers" table="CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_MAP_ID" precision="22" scale="0">
+                    <comment>Map identifier and foreign key to the CONTAINER_MAP table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Container" />
+        </set>
+        <set name="plateTemplates" table="PLATE_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_MAP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to the container_map record used to create this template.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplate" />
+        </set>
+    </class>
+</hibernate-mapping>

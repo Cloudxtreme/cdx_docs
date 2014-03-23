@@ -1,0 +1,6 @@
+tcp performance benchmarketing
+
+
+server: nttcp -i
+client: nttcp -T kvmsrv4 
+

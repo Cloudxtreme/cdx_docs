@@ -1,0 +1,208 @@
+set line 3000
+set pagesize 1000
+
+-- on development, find checklists on 03/26/11
+--  find 'Bubble Removal/Volume Check' checklists -- 18100. 18101
+--  OK, we choose 18100
+
+-- verity there are 61 samples:
+select st.sample_tube_id
+from checklist_sample sc, sample_table st, accession a
+where sc.sample_id = st.sample_id
+and a.accession_id = st.accession_id
+and sc.checklist_id = 18100;
+
+------------------------------------------------------------------------------
+-- on production: there are 4 checklists (18135,18137,181454,18153) related to RNA yield
+--   Make sure all samples are accessioned before 03/27
+-- OK, we choose 18135 (18153 has some samples created on 03/28!!)
+
+-- on production, find all TRFs for this checklist:
+select checklist_col, s.sample_tube_id, s.date_created
+from checklist_content cc, sample s, container c
+where cc.sample_id = s.sample_id 
+and s.container_id = c.container_id
+and checklist_id = 18135
+and checklist_row = 1
+order by s.date_created;
+--order by checklist_col, checklist_row, s.date_created;
+
+-- OK, let's get the correct order (for placing the samples)
+select substr(limspackage.container_position(s1.sample_id),9) location, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2,accession a1,accession a2
+where s1.Sample_ID=cs.Sample_ID
+and s1.accession_id=a1.accession_id
+and s2.Sample_ID=cs.orig_Sample_ID
+and s2.accession_id=a2.accession_id
+and checklist_ID=18135
+order by location;
+
+(A1)			       T1041974
+(A2)			       TRF50393A
+(A3)			       TRF50398A
+(A4)			       TRF50368A
+(A5)			       TRF45139A
+(B1)			       T1043279
+(B2)			       TRF50387A
+(B3)			       TRF50379A
+(B4)			       TRF50369B
+(B5)			       TRF34876A
+(C1)			       TRF45406C
+(C2)			       TRF31787B
+(C3)			       TRF50370B
+(C4)			       TRF50374A
+(C5)			       TRF44910B
+(D1)			       TRF45366B
+(D2)			       TRF45208B
+(D3)			       TRF50378A
+(D4)			       TRF50371A
+(D5)			       TRF42055B
+(E1)			       TRF45365C
+(E2)			       TRF50148A
+(E3)			       TRF50372A
+(E4)			       TRF42056B
+(E5)			       TRF42226B
+(F1)			       TRF45367C
+(F2)			       TRF50399A
+(F3)			       TRF39140B
+(F4)			       TRF42054C
+(F5)			       TRF42225A
+(G1)			       TRF50397C
+(G2)			       TRF50367B
+(G3)			       TRF50391B
+(G4)			       TRF41184C
+(G5)			       TRF38118B
+(H1)			       TRF50396B
+(H2)			       TRF50394A
+(H3)			       TRF41756B
+(H4)			       TRF44478B
+(H6)			       TRF50395B
+
+
+-- on cchoudesktop:
+------------------------------------------------------------------------------
+vi 2.txt
+  insert the output from above
+
+cat 2.txt | awk '{print $1,$2": <img src=\"http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data="$2"&dpi=96&imagetype=gif&rotation=0\" /> </br>"}'
+
+(A1) T1041974: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=T1041974&dpi=96&imagetype=gif&rotation=0" /> </br>
+(A2) TRF50393A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50393A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(A3) TRF50398A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50398A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(A4) TRF50368A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50368A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(A5) TRF45139A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF45139A&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(B1) T1043279: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=T1043279&dpi=96&imagetype=gif&rotation=0" /> </br>
+(B2) TRF50387A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50387A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(B3) TRF50379A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50379A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(B4) TRF50369B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50369B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(B5) TRF34876A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF34876A&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(C1) TRF45406C: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF45406C&dpi=96&imagetype=gif&rotation=0" /> </br>
+(C2) TRF31787B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF31787B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(C3) TRF50370B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50370B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(C4) TRF50374A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50374A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(C5) TRF44910B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF44910B&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(D1) TRF45366B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF45366B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(D2) TRF45208B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF45208B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(D3) TRF50378A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50378A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(D4) TRF50371A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50371A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(D5) TRF42055B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF42055B&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(E1) TRF45365C: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF45365C&dpi=96&imagetype=gif&rotation=0" /> </br>
+(E2) TRF50148A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50148A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(E3) TRF50372A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50372A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(E4) TRF42056B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF42056B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(E5) TRF42226B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF42226B&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(F1) TRF45367C: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF45367C&dpi=96&imagetype=gif&rotation=0" /> </br>
+(F2) TRF50399A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50399A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(F3) TRF39140B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF39140B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(F4) TRF42054C: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF42054C&dpi=96&imagetype=gif&rotation=0" /> </br>
+(F5) TRF42225A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF42225A&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(G1) TRF50397C: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50397C&dpi=96&imagetype=gif&rotation=0" /> </br>
+(G2) TRF50367B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50367B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(G3) TRF50391B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50391B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(G4) TRF41184C: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF41184C&dpi=96&imagetype=gif&rotation=0" /> </br>
+(G5) TRF38118B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF38118B&dpi=96&imagetype=gif&rotation=0" /> </br>
+<hr>(H1) TRF50396B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50396B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(H2) TRF50394A: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50394A&dpi=96&imagetype=gif&rotation=0" /> </br>
+(H3) TRF41756B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF41756B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(H4) TRF44478B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF44478B&dpi=96&imagetype=gif&rotation=0" /> </br>
+(H6) TRF50395B: <img src="http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data=TRF50395B&dpi=96&imagetype=gif&rotation=0" /> </br>
+
+
+cd ~/demo/public$ 
+vi index.html
+  insert the output from above
+
+
+-- refresh http://cchoudesktop.cardiodx.com/
+
+-- ok, scan TRFs to the rack you just created
+
+Create a new checklist.
+  Enter all information related to production checklist 18135 (RNA Extraction)
+
+  When checkin blood sample box, use the BC above (again).
+
+  Hamilton output file: /clims/data/rna/extraction/T1041974_RNAOutput.txt
+    Retrieve from production - SCE - All Workbooks - public - files - 2011-03 - 28
+                                  - RNA_EXTRACTION_18135
+																	- T1041974_RNAxOutput.txt, 1
+
+
+
+-- on development, the new checklist id is 18114
+--    this should return us something
+select substr(limspackage.container_position(s1.sample_id),9) location, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2,accession a1,accession a2
+where s1.Sample_ID=cs.Sample_ID
+and s1.accession_id=a1.accession_id
+and s2.Sample_ID=cs.orig_Sample_ID
+and s2.accession_id=a2.accession_id
+and checklist_ID=18114
+order by location;
+
+-- RNA Quant
+--    Get the Spec Plate BC (AP007530) from the RNAE hamilton output file
+--    In theory, the CLS will scan the Spec plate BC into RNA Quant.
+
+Spec Plate ID/#: AP007530
+Samples: Neg Control: 1053730489-SPEC
+         TRF50393: 1053729452-SPEC
+
+When verifying samples, it'll read TRFs from the database.
+
+
+-- create a new checklist RNA Quant 
+Spec Plate BC: AP007530
+
+  CEID 00120
+  A0890973A
+DEPC water reagent_id T1024659
+
+SCE - All Workbooks - public - files - 2011-03 - 28
+      - RNA_QUANTATION_18160
+      - AP007530.txt,1
+
+cp AP007530.txt /clims/data/rna/quantitation/
+
+Change F1 sample ID to 123456789
+
+
+-- RNA Norm
+--    Get the Matrix Rack BC (T1051812) from the RNAE hamilton output file
+--    In theory, the CLS will scan the Spec plate BC into RNA Quant.
+Find the bad sample first:
+  OK, AP007530(H3) failed low 260/280
+  Sample ID: 1053730505 (1053730505-SPEC)
+
+Place Sample: 
+  Container ID: T1051812
+	Right click H3, then click 'Clear'
+  
+  Normally, CCL will:
+		1) bring a new 'bad sample' rack 
+	  2) beep in the bad sample
+    3) the sample will be delted from this rack
+
+
+
+

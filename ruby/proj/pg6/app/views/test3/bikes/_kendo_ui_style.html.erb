@@ -1,0 +1,62 @@
+
+<script>
+
+$(document).ready(function() {
+
+	$(function() {
+    $("#test3_bike_date_test1").kendoDatePicker({
+				format: "yyyy-MM-dd"
+		});
+  });
+
+		var validator = $("#new_test3_bike").kendoValidator().data("kendoValidator"),
+		status = $(".status");
+
+		/////////////////
+		$("#numeric").kendoNumericTextBox( {format: "n2" });
+		$("#currency").kendoNumericTextBox({ format: "c" });
+		$("#percentage").kendoNumericTextBox({ format: "p", decimals: 5 });
+		$("#exp").kendoNumericTextBox({ format: "e" });
+		$("#monthpicker").kendoDatePicker({ start: "year", depth: "year", format: "MMMM yyyy" });
+		$("#datetimepicker").kendoDateTimePicker({ value:new Date() });
+		$("#datepicker").kendoDatePicker({format: "yyyy-MM-dd"});
+		$("#timepicker").kendoTimePicker();
+		$("#editor").kendoEditor();
+		$("#custom").kendoNumericTextBox({ format: "#.00 kg" });
+		$("#size").kendoComboBox();
+
+     var required = $("#multiselect").kendoMultiSelect().data("kendoMultiSelect");
+
+
+
+		// for sliders
+                function sliderOnSlide(e) { }
+                function sliderOnChange(e) { }
+                function rangeSliderOnSlide(e) { }
+                function rangeSliderOnChange(e) { }
+
+                $(document).ready(function() {
+                    $("#slider").kendoSlider({
+                        change: sliderOnChange,
+                        slide: sliderOnSlide,
+                        min: 0,
+                        max: 30,
+                        smallStep: 1,
+                        largeStep: 10,
+                        value: 18
+                    });
+
+                    $("#rangeslider").kendoRangeSlider({
+                        change: rangeSliderOnChange,
+                        slide: rangeSliderOnSlide,
+                        min: 0,
+                        max: 10,
+                        smallStep: 1,
+                        largeStep: 2,
+                        tickPlacement: "both"
+                    });
+                });
+
+});
+
+</script>

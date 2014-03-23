@@ -1,0 +1,13 @@
+   65  mv extensions.conf extensions.conf.orig
+   66  vi extensions.conf
+   67  mv iax.conf iax.conf.orig
+   69  vi iax.conf
+
+   76  mv zapata.conf zapata.conf.orig
+   77  vi zapata.conf
+
+   78  cd ..
+   80  vi zaptel.conf
+
+   81  asterisk -rvvvvv
+

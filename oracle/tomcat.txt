@@ -1,0 +1,142 @@
+cardiodx java tomcat 5.5
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- configure tomcat
+--
+
+wajig install tomcat5.5 tomcat5.5-admin
+
+cd /etc/default
+more tomcat5.5
+#TOMCAT5_SECURITY=yes
+
+--cd /usr/share/tomcat5.5/conf
+--cd /etc/tomcat5.5
+--vi catalina.policy
+
+cd /etc/tomcat5.5/policy.d
+vi 50user.policy
+grant codeBase "file:${catalina.base}/webapps/FaxServer/WEB-INF/-" {
+  permission java.security.AllPermission;
+  permission java.net.SocketPermission "localhost:1521", "connect";
+};
+
+--JAVA_HOME=/usr/lib/jvm/java-6-sun
+
+su - oracle
+$ sqlplus dnalims/dnalims
+GRANT SELECT ON dnalims.cdx_current_report_view TO lims_user; 
+exit
+
+
+-- cd /u01/app/oracle/product/10.2.0/db_1/jdbc/lib
+-- cp ojdbc14.jar /usr/share/tomcat5.5/webapps/FaxServer/WEB-INF/lib
+-- chown tomcat55:nogroup ojdbc14.jar
+-- chmod 644 ojdbc14.jar
+
+cd /home/oracle/cdx/jar
+cp FaxServer.war /usr/share/tomcat5.5/webapps
+
+--export JAVA_HOME=/usr/lib/jvm/java-6-sun
+--/usr/share/tomcat5.5/bin/startup.sh
+
+
+/etc/init.d/tomcat5.5 restart
+
+tail -20f /var/log/daemon.log &
+tail -20f /usr/share/tomcat5.5/catalina.out &  
+tail -200f localhost.2009-05-26.log & 
+
+http://chialin25423:8180/FaxServer/login.jsp
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- use apache to support ssl
+--
+
+wajig install apache2
+
+cd /etc/apache2
+mkdir ssl
+cd ssl
+
+copy certificates, keys, etc.
+  - wildcard.cardiodx.com.crt
+  - wildcard.cardiodx.com.key
+  - gd_intermediate_bundle.crt 
+  from pdc:/data/samba/groups/it/Private/ssl/wildcard to ssl dir
+
+scp wildcard.cardiodx.com.* root@chialin25423:/etc/apache2/ssl
+scp gd_intermediate_bundle.crt root@chialin25423:/etc/apache2/ssl
+
+
+chown www-data *
+chmod 660 *
+
+~~~~~~~~~~~~~~~~~~~~~
+--
+-- configure proxy
+--
+
+cd /etc/apache2/sites-available
+
+vi faxserver
+NameVirtualHost chialin25423.cardiodx.com:80
+<VirtualHost chialin25423.cardiodx.com:80>
+  ServerName chialin25423.cardiodx.com
+  Redirect permanent / https://chialin25423.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost chialin25423.cardiodx.com:443>
+  ServerName chialin25423.cardiodx.com
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+  SSLCertificateChainFile /etc/apache2/ssl/gd_intermediate_bundle.crt
+
+  ProxyPass / http://chialin25423.cardiodx.com:8180/
+  ProxyPassReverse / http://chialin25423.cardiodx.com:8180/
+  ProxyPreserveHost On
+  RequestHeader set X_FORWARDED_PROTO 'https'
+
+  ErrorLog "|/usr/bin/logger -p local0.err"
+  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+  CustomLog "|/usr/bin/logger -p local1.info" privacy_format 
+  LogLevel warn
+</VirtualHost>
+
+--
+-- allow proxy on this apache server
+--
+cd mods-available
+vi proxy.conf
+  #Deny from all
+  Allow from .cardiodx.com
+
+~~~~~~~~~~~~~~~~~~~~~
+a2enmod ssl
+a2enmod rewrite
+a2enmod proxy_http
+  --a2enmod proxy
+a2enmod headers
+
+a2dissite default
+a2ensite faxserver
+
+vi ports.conf
+Listen 80
+Listen 443
+-- restart apache
+/etc/init.d/apache2 force-reload
+
+
+--
+-- test
+--
+https://chialin25423.cardiodx.com/FaxServer/login.jsp
+
+
+
+
+

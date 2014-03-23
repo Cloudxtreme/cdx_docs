@@ -1,0 +1,64 @@
+http://www.michael-noll.com/tutorials/writing-an-hadoop-mapreduce-program-in-python/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- create mapper and reducer
+--
+vi mapper.py
+vi reducer.py
+chmod 755 *.py
+
+--
+-- test the code
+--
+echo "foo foo quux labs foo bar quux" | ./mapper.py 
+echo "foo foo quux labs foo bar quux" | ./mapper.py | sort | ./reducer.py 
+
+-- verify process (of the mapper/reducer programs)
+
+echo "foo foo quux labs foo bar quux foo" | ./mapper.py | sort | ./reducer.py 
+cat test.txt | ./mapper.py | sort | ./reducer.py 
+
+hadoop fs -mkdir test
+hadoop dfs -copyFromLocal test.txt test
+
+hadoop jar $HADOOP_HOME/contrib/streaming/hadoop-*streaming.jar \
+  -file ./mapper.py -mapper ./mapper.py \
+  -file ./reducer.py -reducer ./reducer.py \
+  -input test/test.txt  -output out4
+
+hadoop fs -rmr out4/_logs
+hadoop fs -getmerge out4 out4.text
+more out4.text 
+
+
+--
+-- ok, let's try gutenberg
+--
+cat ../gutenberg/pg11.txt | ./mapper.py | sort | ./reducer.py | more
+
+export HADOOP_HOME=/usr/local/hadoop
+hadoop jar $HADOOP_HOME/contrib/streaming/hadoop-*streaming.jar \
+	-file ./mapper.py -mapper ./mapper.py \
+	-file ./reducer.py -reducer ./reducer.py \
+	-input gutenberg/* \
+	-output out3
+
+hadoop fs -rmr out3/_logs
+hadoop dfs -getmerge out3 out3.txt
+more out3.txt 
+
+
+--
+-- more advanced (using yield)
+--
+hadoop jar $HADOOP_HOME/contrib/streaming/hadoop-*streaming.jar \
+  -file ./mapper1.py -mapper ./mapper1.py \
+  -file ./reducer1.py -reducer ./reducer1.py \
+  -input gutenberg/* \
+  -output out4
+
+hadoop fs -rmr out4/_logs
+hadoop dfs -getmerge out4 out4.txt
+more out4.txt
+
+

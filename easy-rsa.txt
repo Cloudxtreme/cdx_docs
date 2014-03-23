@@ -1,0 +1,73 @@
+
+# cat vars
+export D=`pwd`
+export KEY_CONFIG=$D/openssl.cnf
+export KEY_DIR=$D/keys
+echo NOTE: when you run ./clean-all, I will be doing a rm -rf on $KEY_DIR
+export KEY_SIZE=2048
+export KEY_COUNTRY=US
+export KEY_PROVINCE=CA
+export KEY_CITY="Palo Alto"
+export KEY_ORG="CardioDx"
+export KEY_OU="IT"
+export KEY_EMAIL="info@cardiodx.com"
+
+vi vi openssl.cnf
+organizationalUnitName_default  = $ENV::KEY_OU
+commonName_default              = $ENV::KEY_CN
+
+
+export KEY_CN=bugs.cardiodx.com
+./build-key $KEY_CN
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+reovke certificate for openvpn server
+
+http://openvpn.net/index.php/documentation/howto.html#revoke
+
+root@srikardesktop:/home/srikar/ca/easy-rsa# ./revoke-full revoke
+Using configuration from /home/srikar/ca/easy-rsa/openssl.cnf
+Revoking Certificate 4D.
+Data Base Updated
+Using configuration from /home/srikar/ca/easy-rsa/openssl.cnf
+revoke.crt: /C=US/ST=CA/O=CardioDx/OU=IT/CN=revoke/emailAddress=root@cardiodx.com
+error 23 at 0 depth lookup:certificate revoked
+
+
+# http://www.openssl.org/docs/apps/crl.html
+openssl crl -in crl.pem -text -noout
+openssl x509 -in 4E.pem -noout -text
+openssl x509 -in 4D.pem -noout -serial -subject
+
+for i in *.pem; do openssl x509 -in $i -noout -serial -subject; done
+
+cd /etc/openvpn
+vi server.conf
+crl-verify crl.pem
+kill -SIGHUP 4085
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+for i in *.key; do openssl-vulnkey $i; done | sort 
+
+
+COMPROMISED: 0aadc6de5059bb8977a7a468a6da83d055a59db4 dwilliams.key
+COMPROMISED: 1179bc944fa4498cdf86a999ec6b75ee3cbc3282 melashoff.key
+COMPROMISED: 1a2b8d189f197c25d4ba42f08918d87193c14673 epadilla.key
+COMPROMISED: 250180cadf1dc825ac4895ef2cf9d632cccd5b2c cchou.key
+COMPROMISED: 295ba5ed74941c79d8cf48d504fefe794853d3fd htao.key
+COMPROMISED: 35e62949bb98684fe45817aa60cc2b40b0b13226 lsheldon.key
+COMPROMISED: 49cf838122552bbafcd9e2316de68d1377b6aa44 rwalker.key
+COMPROMISED: 4abd1906d1e1ee914fb78e3016ce872ec4296892 myau.key
+COMPROMISED: 514fcf067233fee02ca5104a5e428e2705f0a794 amy-tmp.key
+COMPROMISED: 668d8a4575c206bb34ff14035cb58deba718868e lmilon.key
+COMPROMISED: 6fb3e441f4600f59a89041a93fcc0ca7d6ebda71 acaptain.key
+COMPROMISED: 8307ea2af05a02632ad97054fa5d3e06d4da2bb1 rachel.key
+COMPROMISED: 9c4623af070519914aa70f1b8587f15a647ee872 melinda.key
+COMPROMISED: 9ea8929e390bd53bf85ccaea4cb9086b8b4b97ae psager.key
+COMPROMISED: d9fb06d14840f6587fdab5cd018412d871ef2d20 hnguyen.key
+COMPROMISED: ec39e58a2d3a86a07aba1ae606c7f5a92798ab7a jmarlowe.key
+COMPROMISED: fa6cc7d5de2c31c8256dbc5bc243d3d62997fcaf kkrall.key
+

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AssayResultLoad" table="ASSAY_RESULT_LOAD" schema="DNALIMS">
+        <id name="assayResultLoadId" type="big_decimal">
+            <column name="ASSAY_RESULT_LOAD_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="filenameByResultFilenameId" class="com.cardiodx.db.waban.table.Filename" fetch="select">
+            <column name="RESULT_FILENAME_ID" precision="22" scale="0" not-null="true">
+                <comment>Result File ID - Foreign Key to FILENAME.FILENAME_ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="stepTemplate" class="com.cardiodx.db.waban.table.StepTemplate" fetch="select">
+            <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="filenameByCsvFilenameId" class="com.cardiodx.db.waban.table.Filename" fetch="select">
+            <column name="CSV_FILENAME_ID" precision="22" scale="0">
+                <comment>CSV File ID - Foreign Key to FILENAME.FILENAME_ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="instrument" class="com.cardiodx.db.waban.table.Instrument" fetch="select">
+            <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign Key to Instrument ID</comment>
+            </column>
+        </many-to-one>
+        <property name="importCount" type="big_decimal">
+            <column name="IMPORT_COUNT" precision="22" scale="0">
+                <comment>Count of records imported</comment>
+            </column>
+        </property>
+        <property name="rawDataLabel" type="string">
+            <column name="RAW_DATA_LABEL" length="60" />
+        </property>
+        <property name="resultLabel" type="string">
+            <column name="RESULT_LABEL" length="60" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>Created By Username</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Created on Date and Time.</comment>
+            </column>
+        </property>
+        <set name="assayResultInfos" table="ASSAY_RESULT_INFO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ASSAY_RESULT_LOAD_ID" precision="22" scale="0">
+                    <comment>Foreign key to the corresponding ASSAY_RESULT_LOAD record.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultInfo" />
+        </set>
+        <set name="assayResults" table="ASSAY_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ASSAY_RESULT_LOAD_ID" precision="22" scale="0">
+                    <comment>Foreign key to be appended to existing table for the corresponding ASSAY_RESULT_LOAD record.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResult" />
+        </set>
+    </class>
+</hibernate-mapping>

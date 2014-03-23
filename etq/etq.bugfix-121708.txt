@@ -1,0 +1,28 @@
+Mail sent by: HIrshaid  
+Subject: Fixes for all pending issues
+
+
+1:
+Install new Reliance-EasyPDFWindowsServer.war 
+
+2:
+  inflating: WebContent/common/localization/core/standard_text.properties  
+  inflating: WebContent/WEB-INF/classes/com/etq/reliance/business/Phase.class  
+
+
+root@etqdevel:~/CardioChanges# unzip CardioChanges.zip 
+  509  cd /usr/tomcat/webapps/reliance_dev/common/localization/core/
+  511  mv standard_text.properties standard_text.properties.121708
+  513  cp /root/CardioChanges/WebContent/common/localization/core/standard_text.properties .
+
+  517  cd /usr/tomcat/webapps/reliance_dev/WEB-INF/classes/com/etq/reliance/business/
+  520  mv Phase.class Phase.class.121708
+  521  cp /root/CardioChanges/WebContent/WEB-INF/classes/com/etq/reliance/business/Phase.class .
+
+  524  ps -ef | grep java
+  525  kill -9 4246
+
+  528  cd /usr/tomcat/bin/
+  530  ./startup.sh 
+  531  tail -20f ../logs/catalina.out 
+

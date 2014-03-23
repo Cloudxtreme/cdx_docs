@@ -1,0 +1,9 @@
+
+Use cfdisk instead!!!!
+
+
+
+wajig install gdisk
+gdisk /dev/sda
+
+

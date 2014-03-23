@@ -1,0 +1,8 @@
+
+
+http://www.mailinglistarchive.com/html/lfs-support@linuxfromscratch.org/2010-01/msg00144.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+root:~# INTERFACE=/sys/class/net/eth0 udevadm test --action=add /sys/class/net/eth0
+
+ 

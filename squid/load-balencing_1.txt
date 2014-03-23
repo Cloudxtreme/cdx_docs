@@ -1,0 +1,80 @@
+ubuntu load balancer
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi interfaces
+auto eth4
+iface eth4 inet static
+  address 173.13.158.180
+  netmask 255.255.255.240
+
+vi /etc/iproute2/rt_tables
+1 comcast
+2 xo
+
+vi /etc/rc.local
+cc_if=eth4
+cc_net=173.13.158.176/28
+cc_ip=173.13.158.180
+cc_gw=173.13.158.190
+
+xo_if=eth5
+xo_net=67.95.201.192/27
+xo_ip=67.95.201.198
+xo_gw=67.95.201.193
+
+ip route add $cc_net dev $cc_if src $cc_ip table comcast
+ip route add default via $cc_gw table comcast
+
+ip route add $xo_net dev $xo_if src $xo_ip table xo
+ip route add default via $xo_gw table xo
+
+ip rule add from $cc_ip table comcast
+ip rule add from $xo_ip table xo
+
+ip rule add fwmark 4 table comcast
+ip rule add fwmark 5 table xo
+
+ip route add default scope global nexthop via $cc_gw dev $cc_if weight 12 nexthop via $xo_gw dev $xo_if weight 1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- fail over
+--
+# fail over to Comcast
+# ip route replace default scope global via 173.13.158.190 dev eth4
+
+# fail over to XO
+# ip route replace default scope global via 67.95.201.193 dev eth5
+
+# load balancing
+# ip route replace default scope global nexthop via 173.13.158.190 dev eth4 weight 12 nexthop via 67.95.201.193 dev eth5 weight 1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ip route add 173.13.158.176/28 dev eth4 src 173.13.158.180 table comcast
+ip route add default via 173.13.158.190 table comcast
+ip route add 67.95.201.192/27 dev eth5 src 67.95.201.198 table xo
+ip route add default via 67.95.201.193 table xo
+ip rule add from 173.13.158.180 table comcast
+ip rule add from 67.95.201.198 table xo
+ip route add default scope global nexthop via 173.13.158.190 dev eth4 weight 12 nexthop via 67.95.201.193 dev eth5 weight 1
+
+# ip route show
+173.13.158.176/28 dev eth4  proto kernel  scope link  src 173.13.158.180 
+67.95.201.192/27 dev eth5  proto kernel  scope link  src 67.95.201.198 
+10.10.43.0/24 dev eth3  proto kernel  scope link  src 10.10.43.1 
+192.168.10.0/24 via 67.95.201.193 dev eth5 
+10.10.32.0/21 dev eth0  proto kernel  scope link  src 10.10.37.2 
+default 
+	nexthop via 173.13.158.190  dev eth4 weight 5
+	nexthop via 67.95.201.193  dev eth5 weight 1
+default via 67.95.201.193 dev eth5  metric 100 
+
+
+vi /etc/resolv.conf
+search cardiodx.com
+nameserver 10.10.37.21
+
+ping -W 10 -I 173.13.158.180 -c 1 www.google.com
+ping -W 10 -I 67.95.201.198 -c 1 www.google.com
+
+

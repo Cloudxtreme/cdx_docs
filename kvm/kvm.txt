@@ -1,0 +1,299 @@
+kvm 
+
+https://help.ubuntu.com/community/KVM
+http://doc.ubuntu.com/ubuntu/serverguide/C/libvirt.html#virsh
+http://doc.ubuntu.com/ubuntu/serverguide/C/ubuntu-vm-builder.html
+http://fedoraproject.org/wiki/Docs/Fedora8VirtQuickStart#head-4719f3d9bcb5697d28df06eb674235c0fcea2fd1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install kvm libvirt-bin ubuntu-vm-builder -y
+wajig install python-virtinst virt-viewer xterm xauth -y
+wajig install ca-certificates -y
+
+adduser `id -un` libvirtd
+adduser `id -un` kvm
+
+virsh -c qemu:///system list
+
+
+vi /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        #bridge_fd 9
+        #bridge_hello 2
+        #bridge_maxage 12
+        bridge_stp off
+        bridge_maxwait 0
+
+
+
+~~~~~~~ for jumbo frame::::
+auto eth0
+iface eth0 inet dhcp 
+	mtu 9000
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_fd 9
+        bridge_hello 2
+        bridge_maxage 12
+        bridge_stp off
+~~~~~~~
+
+cd /usr/share/ubuntu-vm-builder/templates
+#vi libvirt.tmpl
+#    <interface type='bridge'>
+#      <mac address='%MAC%'/>
+#      <source bridge='br0'/>
+#    </interface>
+
+
+cd /etc/libvirt/qemu/networks 
+cp default.xml bridge.xml
+vi bridge.xml
+  <name>bridge</name>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# use ubuntu-vm-builder to create an image
+#
+(????)
+ubuntu-vm-builder kvm hardy \
+		--verbose \
+                  --domain hardy1 \
+                  --dest hardy1 \
+                  --arch amd64 \
+                  --hostname hardy1 \
+                  --mem 256 \
+                  --user cardiodx \
+                  --pass cdx \
+                  --mirror http://mirror.anl.gov/ubuntu/ \
+                  --components main,universe \
+                  --addpkg vim \
+                  --libvirt qemu:///system ;
+
+route
+
+ubuntu-vm-builder kvm lucid --domain lucid64 --arch amd64 \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --libvirt qemu:///system \
+    --hostname lucid64 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx;
+
+dpkg-reconfigure tzdata
+
+~~~~~~~~~~~~~~~~
+
+ubuntu-vm-builder kvm hardy --domain hardy32 --arch i386 \
+		--mirror http://mirror.anl.gov/ubuntu \
+		--libvirt qemu:///system \
+		--hostname hardy32 \
+		--addpkg vim \
+		--user cardiodx --pass cdx; 
+
+ubuntu-vm-builder kvm karmic --domain karmic64 --arch amd64 \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --libvirt qemu:///system \
+    --hostname karmic64 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx;
+
+ubuntu-vm-builder kvm hardy --domain hardy64 --arch amd64 \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --libvirt qemu:///system \
+    --hostname hardy64 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx;
+
+ubuntu-vm-builder kvm dapper --domain dapper64 --arch amd64 \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --libvirt qemu:///system \
+    --hostname dapper64 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx;
+
+
+
+cd /etc/libvirt/qemu
+vi hardy32.xml
+    <interface type='bridge'>
+      <source bridge='br0'/>
+    </interface>
+move ubuntu-vm-hardy-i386/root.qcow2  to images/hardy32.qcow2
+
+virsh # define /etc/libvirt/qemu/hardy1.xml
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# use virt-install to create an image
+#
+
+wajig install python-virtinst virt-viewer xterm xauth -y 
+
+virt-install -n hardy -r 512 -f hardy.img -s 5 -c ./ubuntu-8.04-server-amd64.iso --accelerate --vnc --noautoconsole 
+Would you like to enable graphics support? (yes or no) yes
+
+virt-install -n winxp -r 512 -f winxp.img -s 20 -c ~/winxp32.iso --accelerate
+Would you like to enable graphics support? (yes or no) yes
+
+virt-install -n stat904 -r 2048 -f /dev/vg0/stat904 -s 100 -c ./ubuntu-9.04-server-amd64.iso --accelerate --vnc 
+
+virt-install -n win32 -r 512 -f win32.img -s 20 -c winxp32.iso --accelerate --vnc --noacpi --os-type=windows
+
+from gutsydesktop:
+ssh -X cardiodx@10.10.36.223
+sudo virsh -c qemu:///system list
+sudo virt-viewer -c qemu:///system hardy
+
+virsh # define /etc/libvirt/qemu/hardy1.xml
+virsh # start hardy1
+
+./libvirt-bin
+
+for installing windows xp:
+cd /etc/libvirt/qemu
+sudo more winxp32.xml
+    <disk type='file' device='cdrom'>
+      <source file='/home/cardiodx/winxp32.iso'/>
+      <target dev='hdc' bus='ide'/>
+      <readonly/>
+    </disk>
+
+
+ virt-install -n oracle -r 512 -f /dev/vg0/oracle -s 5 -c ./iso/ubuntu-8.04-server-amd64.iso --accelerate --vnc
+
+
+virt-install -n statwin64 -r 2048 -f /dev/vg0/statwin64 -s 100 -c /root/iso --accelerate --vnc  --os-type=windows
+ERROR:  The cdrom path must be a file or a device, not a directory
+What is the virtual CD image, CD device or install location? /dev/cdrom
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Clone an image
+#
+virt-clone --original hardy1 --name randal804 --file /home/cardiodx/images/randal804.img
+vi /etc/udev/rules.d/70-persistent-net.rules
+comment eth0 and change eth1 to eth0 (since it'll use the old Mac address)
+/etc/init.d/udev restart
+/etc/init.d/networking restart
+
+rename hostname
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+# Change cpu count
+#
+cd /etc/libvirt/qemu
+vi randal804.xml
+virsh
+define /etc/libvirt/qemu/randal804.xml
+start randal804
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+virsh -c qemu+ssh://10.10.36.223/system list
+virsh -c qemu+ssh://kvmsrv1/system list
+
+http://fabrice.bellard.free.fr/qemu/qemu-doc.html
+
+virsh # shutdown vista32
+virsh # undefine vista32
+
+
+save winxp32 winxp32.052208
+restore winxp32.052208
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /etc/init.d
+cat kvmsrv
+
+#! /bin/sh
+# Provides:          CardioDX, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: KVM VM script
+# Description:       KVM VM startup script
+
+SERVERS="ganglia"
+
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+	log_daemon_msg "Starting KVM servers " $SERVERS
+	for srv in $SERVERS
+	do 
+	  virsh start $srv
+	done
+    ;;
+  stop)
+	log_daemon_msg "Starting KVM servers " $SERVERS
+	for srv in $SERVERS
+	do 
+	  virsh shutdown $srv
+	done
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/atd {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
+
+
+
+
+Network performance;
+https://help.ubuntu.com/community/KVM/Managing
+
+<domain type='kvm'>
+  ...
+    <interface type='network'>
+      ...
+      <model type='e1000'/>
+    </interface>
+  ...
+</domain>
+
+MACADDR="52:54:$(dd if=/dev/urandom count=1 2>/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\).*$/\1:\2:\3:\4/')"; echo $MACADDR
+
+
+
+
+ubuntu-vm-builder kvm hardy \
+    --verbose \
+                  --domain hardy2 \
+                  --dest hardy2 \
+                  --arch amd64 \
+                  --hostname hardy2 \
+                  --mem 256 \
+                  --user cardiodx \
+                  --pass cdx \
+                  --mirror http://mirror.anl.gov/ubuntu/ \
+                  --components main,universe \
+                  --addpkg vim \
+                  --libvirt qemu:///system ;
+

@@ -1,0 +1,32 @@
+postfix queue flush delete
+
+# display the queue
+postqueue -p
+
+# flush the queue
+postqueue -f	
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# delete mails from the queue
+postsuper -d DFE38FE004F
+postsuper -d ALL
+
+
+vi main.cf
+debug_peer_list=127.0.0.1postqueue -q
+postqueue -f
+
+postsuper -d DFE38FE004F
+postsuper -d ALL
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--Zimbra mail double-bounce problem
+
+/opt/zimbra/postfix/sbin/postqueue -p
+
+/opt/zimbra/postfix/sbin/postqueue -p | grep double-bounce | awk -F"*" '{print "/opt/zimbra/postfix/sbin/postsuper -d", $1}' > /tmp/delmail 
+chmod 755 /tmp/delmail 
+/tmp/delmail 
+
+/opt/zimbra/postfix/sbin/postqueue -p
+

@@ -1,0 +1,59 @@
+http://net.tutsplus.com/tutorials/javascript-ajax/using-unobtrusive-javascript-and-ajax-with-rails-3/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    2  rails generate scaffold Post name:string title:string content:text  
+    3  rake db:migrate  
+
+   ActiveRecord::Migration.create_table :posts do |t|
+      t.string :name
+      t.string :title
+      t.text :content
+
+      t.timestamps
+    end
+
+
+
+http://cchoudesktop:3000/posts/
+http://cchoudesktop:3000/posts/new
+
+vi _form.html.erb
+<%= form_for(@post, :remote => true) do |f| %>
+
+
+vi new.html.erb
+<%= render 'test' %>
+
+vi _test.html.erb
+<div id="promo_types">
+</div>
+
+
+vi posts_controller.rb
+
+  def create
+
+    respond_to do |format|
+      if @post.save
+        format.html { redirect_to @post, notice: 'Post was successfully created.' }
+        format.json { render json: @post, status: :created, location: @post }
+        format.js
+      else
+        format.html { render action: "new" }
+        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.js
+      end
+    end
+
+
+vi create.js.erb
+alert("Hello ,1");
+
+or....
+	$("#promo_types").append('<b><%=@post.name%></b>');
+	$("#promo_types").html('<b><%=@post.name%></b>');
+
+
+
+
+

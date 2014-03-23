@@ -1,0 +1,81 @@
+
+set pagesize 1000
+set linesize 350
+
+select accession_id, accession_number
+from accession
+where to_char(date_received) = '23-AUG-11';
+
+select distinct a.accession_number
+from sample_table s, accession a
+where a.accession_id = s.accession_id
+and to_char(a.date_received) = '23-AUG-11'
+and source_type = 'Blood'
+and study_protocol_id in 
+   (select study_protocol_id
+    from study_protocol
+    where study_title = 'Commercial');
+
+select distinct a.accession_number, s.sample_tube_id, sample_id
+from sample_table s, accession a
+where a.accession_id = s.accession_id
+and to_char(a.date_received) = '23-AUG-11'
+and source_type = 'Blood'
+and study_protocol_id in 
+   (select study_protocol_id
+    from study_protocol
+    where study_title = 'Commercial')
+order by a.accession_number;
+
+
+select sample_id, s.value
+from protocol_defined_variable pdv, sample_variable_fld_tbl s, variable v
+where pdv.protocol_defined_variable_id = s.protocol_defined_variable_id
+and pdv.variable_id = v.variable_id
+and variable_name = 'Nanocool Barcode'
+and s.sample_id in (2870965, 2870967)
+order by sample_id, variable_name;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+col nanocool for a10
+--select distinct sv.value nanocool, a.accession_number, s.sample_tube_id, s.sample_id
+select sv.value nanocool, a.accession_number
+from sample_table s, accession a,
+	protocol_defined_variable pdv, sample_variable_fld_tbl sv, variable v
+where a.accession_id = s.accession_id
+   and pdv.protocol_defined_variable_id = sv.protocol_defined_variable_id
+   and pdv.variable_id = v.variable_id
+   and sv.sample_id = s.sample_id
+and to_char(a.date_received) = '23-AUG-11'
+and source_type = 'Blood'
+and a.study_protocol_id in
+   (select study_protocol_id
+    from study_protocol
+    where study_title = 'Commercial')
+and variable_name = 'Nanocool Barcode'
+order by a.accession_number;
+
+
+--
+-- multi pack
+--
+select sv.value "Nanocool", count(distinct a.accession_number) count
+from sample_table s, accession a,
+  protocol_defined_variable pdv, sample_variable_fld_tbl sv, variable v
+where a.accession_id = s.accession_id
+   and pdv.protocol_defined_variable_id = sv.protocol_defined_variable_id
+   and pdv.variable_id = v.variable_id
+   and sv.sample_id = s.sample_id
+and to_char(a.date_received) = '23-AUG-11'
+and source_type = 'Blood'
+and a.study_protocol_id in
+   (select study_protocol_id
+    from study_protocol
+    where study_title = 'Commercial')
+and variable_name = 'Nanocool Barcode'
+group by value
+having count(distinct a.accession_number) > 1
+order by count desc;
+
+
+

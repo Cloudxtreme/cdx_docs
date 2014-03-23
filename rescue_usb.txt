@@ -1,0 +1,22 @@
+http://www.sysresccd.org/Sysresccd-manual-en_How_to_install_SystemRescueCd_on_an_USB-stick
+rescue cd on usb thumb drive
+
+# df -Th
+/dev/sdd1     vfat    3.8G  4.0K  3.8G   1% /media/KINGSTON
+
+
+dd if=/usr/lib/syslinux/mbr.bin of=/dev/sdd
+sync
+
+mkdir foo
+mount -o loop systemrescuecd-x86-1.3.4.iso foo
+
+cp -af foo/* /media/KINGSTON
+
+/media/KINGSTON/isolinux# mv isolinux.cfg syslinux.cfg
+
+
+# mv isolinux/ syslinux
+
+
+Not bootable!!!!

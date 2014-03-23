@@ -1,0 +1,11 @@
+http://burakdd.wordpress.com/2009/08/31/spring-ide-installation-with-eclipse-galileo/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+url: http://springide.org/updatesite
+I choosed:
+  Core/Spring IDE
+  --Integrations/Spring IDE
+  --Resources/Spring IDE
+
+
+

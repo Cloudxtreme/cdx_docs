@@ -1,0 +1,26 @@
+
+
+
+To disable:
+  - Type: $ vi /etc/modprobe.d/blacklist
+  - append the line: blacklist ipv6
+  - save the file and restart your machine!
+
+# ip a | grep inet6
+
+not working!!!
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cat /proc/sys/net/ipv6/conf/all/disable_ipv6
+echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+
+vi /boot/grub/menu.lst
+  ipv6.disable=1
+
+
+
+vi /etc/sysctl.conf
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1

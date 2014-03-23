@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudVendorProjectAssay" table="AUD_VENDOR_PROJECT_ASSAY" schema="DNALIMS">
+        <comment>Aud Genotyping Vendor Project</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Reason for change.</comment>
+            </column>
+        </property>
+        <property name="genotypingVendorAssayId" type="big_decimal">
+            <column name="GENOTYPING_VENDOR_ASSAY_ID" precision="22" scale="0">
+                <comment>Primary Key</comment>
+            </column>
+        </property>
+        <property name="projectId" type="big_decimal">
+            <column name="PROJECT_ID" precision="22" scale="0" not-null="true">
+                <comment>Project Identifier</comment>
+            </column>
+        </property>
+        <property name="studyProtocolId" type="big_decimal">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>Foriegn key refrencing Study table</comment>
+            </column>
+        </property>
+        <property name="assayId" type="big_decimal">
+            <column name="ASSAY_ID" precision="22" scale="0" not-null="true">
+                <comment>Foriegn key refrencing Assay table</comment>
+            </column>
+        </property>
+        <property name="tested" type="java.lang.Boolean">
+            <column name="TESTED" precision="1" scale="0">
+                <comment>Assay selected for testing</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified the record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date that the record was last modified.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who last modified the record.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date that the record was last modified.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Modification or deletion.</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

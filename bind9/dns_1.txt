@@ -1,0 +1,138 @@
+
+
+wajig install bind9
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/network/interfaces
+
+#iface eth0 inet dhcp
+iface eth0 inet static
+        address 10.10.37.124
+        netmask 255.255.248.0
+        network 10.10.32.0
+        broadcast 10.10.39.255
+        gateway 10.10.37.1
+        dns-nameservers 10.10.37.124
+        dns-search cardiodx.com
+
+more /etc/resolv.conf 
+nameserver 10.10.37.124
+domain cardiodx.com
+search cardiodx.com
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /etc/bind/
+
+
+vi named.conf.options
+	forwarders {
+	  8.8.8.8;
+	};
+
+dig google.com
+dig -x 
+
+~~~~~~~~~~~~~~~~~~~~~
+vi named.conf.local
+zone "37.10.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.10.10.37";
+};
+
+zone "cardiodx.com" {
+        type master;
+        file "/etc/bind/db.cardiodx.com";
+};
+
+
+~~~~~~~~~~~~~~~~~~~~~
+cp db.local db.cardiodx.com
+vi db.cardiodx.com 
+
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     ns.cardiodx.com. root.cardiodx.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      ns.cardiodx.com.
+@       IN      A       127.0.0.1
+@       IN      AAAA    ::1
+
+ns              IN      A       10.10.37.124
+
+~~~~~~~~~~~~~~~~~~~~~
+cp db.127 db.10.10.37
+vi db.10.10.37
+
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	ns.cardiodx.com. root.cardiodx.com. (
+			      1		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	ns.
+124	IN	PTR	ns.cardiodx.com.
+
+~~~~~~~~~~~~~~~~~~~~~
+
+named-checkzone cardiodx.com /etc/bind/db.cardiodx.com 
+named-checkzone cardiodx.com /etc/bind/db.10.10.37 
+
+dig cardiodx.com axfr
+dig 37.10.10.in-addr.arpa. axfr
+
+
+~~~~~~~~~~~~~~~~~~~~~
+-- logging
+--   http://docstore.mik.ua/orelly/networking_2ndEd/dns/ch07_05.htm
+
+vi named.conf.local
+
+logging {
+    channel query.log {
+        file "/var/log/named/query.log";
+        //severity debug 3;
+        //severity dynamic;
+    };
+
+    category queries { query.log; };
+};
+
+
+cd /var/log
+mkdir named
+chown bind named/
+
+/etc/init.d/bind9 restart
+dig google.com
+
+
+-- 
+-- log to syslog 
+--
+logging {
+    channel query.log {
+        //file "/var/log/named/query.log";
+        //syslog daemon;
+        syslog local0;
+        severity debug 3;
+    };
+
+    category queries { query.log; };
+};
+
+
+
+

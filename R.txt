@@ -1,0 +1,17 @@
+wajig build-depend r-base
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  bison debhelper gettext html2text intltool-debian lesstif2 libice-dev libpthread-stubs0 libpthread-stubs0-dev libsm-dev libt1-5 libx11-dev libxau-dev
+  libxcb-xlib0-dev libxcb1-dev libxdmcp-dev libxt-dev m4 po-debconf preview-latex-style tcl8.4-dev tetex-bin tetex-extra tex-common texi2html texinfo texlive
+  texlive-base texlive-base-bin texlive-bibtex-extra texlive-common texlive-doc-base texlive-font-utils texlive-fonts-extra texlive-fonts-recommended
+  texlive-generic-recommended texlive-lang-croatian texlive-lang-cyrillic texlive-lang-czechslovak texlive-lang-danish texlive-lang-dutch texlive-lang-finnish
+  texlive-lang-french texlive-lang-german texlive-lang-greek texlive-lang-hungarian texlive-lang-italian texlive-lang-latin texlive-lang-mongolian
+  texlive-lang-norwegian texlive-lang-other texlive-lang-polish texlive-lang-portuguese texlive-lang-spanish texlive-lang-swedish texlive-lang-vietnamese
+  texlive-latex-base texlive-latex-extra texlive-latex-recommended texlive-math-extra texlive-pictures texlive-pstricks texlive-publishers tk8.4-dev x-dev
+  x11proto-core-dev x11proto-input-dev x11proto-kb-dev xpdf-common xpdf-reader xtrans-dev
+0 upgraded, 71 newly installed, 0 to remove and 4 not upgraded.
+Need to get 116MB of archives.
+After this operation, 349MB of additional disk space will be used.
+

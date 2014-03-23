@@ -1,0 +1,153 @@
+https://help.ubuntu.com/community/Drupal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+install apache2
+wajig install apache2
+
+wajig install php5 libapache2-mod-php5
+wajig isntall php5-gd
+wajig install php5-mysql
+
+
+/etc/init.d/apache2 restart
+
+
+cd /var/www/
+
+vi index.php
+
+<html>
+<head>
+  <title>PHP Test</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+</head>
+<body>
+  <h1>PHP Test</h1>
+  <p>
+  <b>An Example of PHP in Action</b><br />
+    <?php echo "The Current Date and Time is: <br>";
+      echo date("g:i A l, F j Y.");?>
+  </p>
+
+  <h2>PHP Information</h2>
+  <p>
+    <?php phpinfo(); ?>
+  </p>
+</body>
+</html>
+
+/etc/init.d/apache2 restart
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wget http://ftp.drupal.org/files/projects/drupal-7.23.tar.gz
+cd /var/www
+tar zxvf drupal-7.23.tar.gz
+
+chown -R www-data:www-data drupal-7.23
+
+root@nppes:~# addgroup drupal
+root@nppes:~# adduser --ingroup drupal drupal
+
+   41  wajig install mysql-server
+
+# mysql -u root -p
+Enter password: 
+
+mysqladmin -u root -p create drupal
+Enter password: (secret07)
+
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'YBTdpl1601';
+\q
+
+  667  cd drupal-7.23/
+  670  cd sites/default/
+  672  cp default.settings.php settings.php
+   55  chown www-data:www-data settings.php 
+
+
+chmod 666 settings.php 
+
+??chmod 644 settings.php
+chmod 755 ../default
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://nppes.cardiodx.com/drupal-7.23/
+http://nppes.cardiodx.com/drupal-7.23/install.php
+
+choose profile: standard
+choose language: English
+verify requirements:
+	? dir doesn't exist???
+  621  mkdir files
+  622  chmod 777 files/
+
+	DB Name: drupal
+	Username: drupal
+	pwrd: YBTdpl1601
+	[Advanced installation]
+  Proceed....
+
+
+	The installer will attempt to automatically set up a number of directories, 
+			but this may fail due to permission settings. 
+			In this case you will find the missing directories listed.
+		sites/default/files
+		sites/default/private
+		sites/default/private/files
+	These directories should be set to the following permissions chmod o+w sites/default/files OR chmod 777 sites/default/files
+
+	proceed w/ the installation (????)
+
+	Site name: 192.241.198.7
+	Site e-mail address: chialin668@gmail.com
+	Username: ybtadmin
+  chialin668@gmail.com
+	pwrd: ybtPA2500
+	Default Country: US
+	Default timezone: LA
+
+Enable check for update automatically
+disable receive email notification
+	
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install drush
+
+
+/var/www/drupal-7.23/modules
+drush dl ctools
+drush en ctools -y
+
+for m in auto_nodetitle \
+colorbox colorbox_node content_access context ctools custom_search \
+date delta devel email_registration empty_page entity entityreference \
+eva fboauth features field_group invite libraries link location \
+menu_block module_filter nodereference_count nodereference_url \
+rate references relation rules smtp special_menu_items \
+strongarm talk token user_field_privacy \
+user_relationships \
+views votingapi wysiwyg Libraries ckeditor colorbox 
+
+do 
+	#echo drush dl $m -y 
+	echo drush en $m -y 
+done
+
+
+drush en date -y
+The Date API requires that you set up the site timezone and first day of week settings and the date format settings to function correctly.                                                       [warning]
+
+Module colorbox cannot be enabled because it depends on libraries  (2.x) but 7.x-2.1 is available                                                                                                [error]
+Module colorbox cannot be enabled because it depends on libraries  (2.x) but 7.x-2.1 is available                                                                                                [error]
+Module colorbox_node cannot be enabled because it depends on libraries  (2.x) but 7.x-2.1 is available                                                                                           [error]
+
+exec(): Unable to fork [svn export http://firephp.googlecode.com/svn/branches/Library-FirePHPCore-0.3 /var/www/drupal-7.23/sites/all/modules/devel/FirePHPCore 2>&1] drush.inc:1335              [warning]
+Drush was unable to export FirePHP to /var/www/drupal-7.23/sites/all/modules/devel/FirePHPCore.                                                                                                  [warning]
+
+Rebuild permissions:
+CKEditor	Not found
+CKEditor was not found in ./sites/all/modules/ckeditor/ckeditor.
+
+
+

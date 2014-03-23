@@ -1,0 +1,51 @@
+
+me:   67.95.201.198, 10.10.37.23.0/21
+peer: 67.95.201.201, 192.168.10/24
+
+
+dumped from and reorganized:
+# ipsecctl -nvf /etc/ipsec.conf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+
+[Phase 1]
+67.95.201.201=ISAKMP_cdx-test
+
+[ISAKMP_cdx-test]
+Phase=1 
+Address=67.95.201.201 
+Authentication=cdxTest123 
+Configuration=isakmp-config
+
+[isakmp-config]
+EXCHANGE_TYPE=ID_PROT 
+Transforms=AES-SHA 
+
+
+[Phase 2]
+Connections=IPSec_cdx-test
+
+[IPSec_cdx-test]
+Phase=2 
+ISAKMP-peer=ISAKMP_cdx-test
+Configuration=ipsec-config
+Local-ID=cdx-net
+Remote-ID=test-net
+
+[ipsec-config]
+EXCHANGE_TYPE=QUICK_MODE 
+Suites=QM-ESP-AES-SHA2-256-PFS-SUITE 
+
+[cdx-net]
+ID-type=IPV4_ADDR_SUBNET 
+Network=10.10.32.0 
+Netmask=255.255.248.0 
+
+[test-net]
+ID-type=IPV4_ADDR_SUBNET 
+Network=192.168.10.0 
+Netmask=255.255.255.0 
+

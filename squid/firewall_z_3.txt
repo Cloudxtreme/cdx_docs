@@ -1,0 +1,169 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Firewall services
+### END INIT INFO
+
+# from interface to ip address
+ifip() {
+  echo `ifconfig $1 | grep 'inet addr' | awk '{print $2}' | awk -F: '{print $2}'`
+}
+
+# from hostname to ip address
+name2ip() {
+  echo `nslookup $1 | grep 'Address' | grep -v '#53' | awk '{print $2}'`
+}
+
+
+case "$1" in
+    start)
+        echo "Starting Firewall... "
+
+        lo_if=lo
+        in_if=eth0
+	cc_if=eth4
+        xo_if=eth5
+        dmz_if=eth3
+
+        lo_ip=$(ifip lo)
+        in_ip=$(ifip eth0)
+        cc_ip=$(ifip eth4)
+        xo_ip=$(ifip eth5)
+        dmz_ip=$(ifip eth3)
+
+        cdx_net=10.10.32.0/21
+        dmz_net=10.10.43.0/24
+
+        # for natting
+        modprobe iptable_nat
+        echo 1 > /proc/sys/net/ipv4/ip_forward		# allow ip forward
+	      echo 1 > /proc/sys/net/ipv4/tcp_syncookies      # prevent sync flood
+
+	      # default policy
+        iptables -P INPUT DROP
+        iptables -P FORWARD DROP
+        iptables -P OUTPUT ACCEPT
+
+	      # flush all rules
+        iptables -F INPUT
+        iptables -F FORWARD
+        iptables -F OUTPUT
+        iptables -F -t nat
+
+ 
+        ##########################
+        # To Firewall
+        ##########################
+        iptables -A INPUT -i $in_if -s $cdx_net -d 0/0 -j ACCEPT
+        iptables -A INPUT -i $lo_if -s 0/0 -d 0/0 -j ACCEPT
+        iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+
+        ##########################
+        # Natting
+        ##########################
+
+	      # default nat (outgoing traffic)
+        iptables -A POSTROUTING -t nat -s $cdx_net -o $cc_if -d 0/0 -j MASQUERADE
+        iptables -A POSTROUTING -t nat -s $cdx_net -o $xo_if -d 0/0 -j MASQUERADE
+
+        # config for squid
+        iptables -t nat -A PREROUTING -i $in_if -p tcp --dport 80 -j DNAT --to $in_ip:3128
+        iptables -t nat -A PREROUTING -i $cc_if -p tcp --dport 80 -j REDIRECT --to-port 3128
+        iptables -t nat -A PREROUTING -i $xo_if -p tcp --dport 80 -j REDIRECT --to-port 3128
+
+        # port forwarding
+        iptables -t nat -A PREROUTING -i $xo_if -d $xo_ip -p tcp --dport   80 -j DNAT --to $(name2ip cchoudesktop):80
+        iptables -t nat -A PREROUTING -i $xo_if -d $xo_ip -p tcp --dport  443 -j DNAT --to $(name2ip webmail):443
+        iptables -t nat -A PREROUTING -i $xo_if -d $xo_ip -p tcp --dport  993 -j DNAT --to $(name2ip webmail):993
+        iptables -t nat -A PREROUTING -i $xo_if -d $xo_ip -p udp --dport 1194 -j DNAT --to $(name2ip vpn):1194
+        # 67.95.201.197:3389 for infuse (add here!!)
+
+        # static nat 1:1 (for dmz)
+        iptables -t nat -A PREROUTING -i $xo_if -d 67.95.201.199 -j DNAT --to-destination 10.10.43.2
+        iptables -t nat -A POSTROUTING -o $xo_if -s 10.10.43.2 -j SNAT --to-source 67.95.201.199
+
+
+        #################################
+        # Mangle for DMZs (4: cc, 5:xo)
+        #################################
+	      iptables -t mangle -A PREROUTING -s $dmz_net -d ! $cdx_net -j MARK --set-mark 5
+  
+
+        ##########################
+        # Access Control
+        ##########################
+
+        # allow all icmp packets 
+        iptables -A INPUT   -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
+        iptables -A FORWARD -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
+        iptables -A FORWARD -p icmp --icmp-type echo-reply   -m limit --limit 1/s -j ACCEPT
+
+	      # allow all established connections
+        iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+        # allow all connection from internal(cdx_net)
+        iptables -A FORWARD -i $in_if -s $cdx_net -d 0/0 -j ACCEPT
+
+        # out-in
+        iptables -A FORWARD -i $xo_if -o $in_if -p tcp -d $(name2ip cchoudesktop) -m multiport --dports 80 -j ACCEPT
+        iptables -A FORWARD -i $xo_if -o $in_if -p tcp -d $(name2ip webmail) -m multiport --dports 443,993 -j ACCEPT
+        iptables -A FORWARD -i $xo_if -o $in_if -p udp -d $(name2ip vpn) -m multiport --dports 1194 -j ACCEPT
+        iptables -A FORWARD -i $xo_if -o $in_if -p tcp -d $(name2ip lms) -m multiport --dports 443 -j ACCEPT
+
+        # out-dmz
+        iptables -A FORWARD -i $xo_if -o $dmz_if -p tcp -d 10.10.43.2 --dport 80 -j ACCEPT
+
+        # dmz-out
+        iptables -A FORWARD -i $dmz_if -o $xo_if -p tcp -d 0/0 -m multiport --dports 25,80 -j ACCEPT
+        iptables -A FORWARD -i $dmz_if -o $xo_if -p udp -d 0/0 -m multiport --dports 53,123 -j ACCEPT
+
+        # dmz-in
+        #iptables -A FORWARD -i $dmz_if -o $in_if -p udp -d 10.10.37.21 -m multiport --dports 53,514 -j ACCEPT
+        iptables -A FORWARD -i $dmz_if -o $in_if -p tcp -d $(name2ip ldap) -m multiport --dports 389 -j ACCEPT
+        iptables -A FORWARD -i $dmz_if -o $in_if -p udp -d $(name2ip dns) -m multiport --dports 53 -j ACCEPT
+        iptables -A FORWARD -i $dmz_if -o $in_if -p udp -d $(name2ip syslog) -m multiport --dports 514 -j ACCEPT
+
+
+        ##########################
+        # IPSec VPN
+        ##########################
+        iptables -t nat -N ipsec-cdx
+
+        iptables -t nat -I POSTROUTING 1 -d 192.168.10.0/24 -j ipsec-cdx
+
+        iptables -t nat -A ipsec-cdx -s 10.10.32.0/21 -d 192.168.10.0/24 -j ACCEPT
+        iptables -t nat -A ipsec-cdx -s 192.168.10.0/24 -d 10.10.32.0/21 -m state --state ESTABLISHED,RELATED -j ACCEPT
+        iptables -t nat -A ipsec-cdx -j DROP
+        ;;
+
+    stop)
+        echo "Shutdown down Firewall... "
+        iptables -t nat -F
+        iptables -F
+        iptables -P INPUT ACCEPT
+        iptables -P FORWARD ACCEPT
+        iptables -P OUTPUT ACCEPT
+
+	      # for IPSec
+	      iptables -t nat -X ipsec-cdx
+        ;;
+
+    reload|restart)
+        $0 stop
+        $0 start
+        ;;
+
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+

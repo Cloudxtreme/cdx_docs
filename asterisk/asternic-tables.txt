@@ -1,0 +1,93 @@
+mysql> show tables;
++------------------+
+| Tables_in_qstats |
++------------------+
+| cdr              | 
+| qagent           | 
+| qevent           | 
+| qmember          | 
+| qname            | 
+| queue_stats      | 
++------------------+
+6 rows in set (0.00 sec)
+
+mysql> desc cdr;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| id          | int(11)     | NO   | PRI | NULL    | auto_increment | 
+| created_at  | datetime    | YES  |     | NULL    |                | 
+| accountcode | varchar(80) | YES  |     | NULL    |                | 
+| src         | varchar(80) | YES  | MUL | NULL    |                | 
+| dst         | varchar(80) | YES  |     | NULL    |                | 
+| dcontext    | varchar(80) | YES  |     | NULL    |                | 
+| clid        | varchar(80) | YES  |     | NULL    |                | 
+| channel     | varchar(80) | YES  |     | NULL    |                | 
+| dstchannel  | varchar(80) | YES  |     | NULL    |                | 
+| lastapp     | varchar(80) | YES  |     | NULL    |                | 
+| lastdata    | varchar(80) | YES  |     | NULL    |                | 
+| start       | datetime    | YES  | MUL | NULL    |                | 
+| answer      | datetime    | YES  |     | NULL    |                | 
+| end         | datetime    | YES  | MUL | NULL    |                | 
+| duration    | int(11)     | YES  |     | NULL    |                | 
+| billsec     | int(11)     | YES  |     | NULL    |                | 
+| disposition | char(16)    | YES  |     | NULL    |                | 
+| amaflags    | char(16)    | YES  |     | NULL    |                | 
++-------------+-------------+------+-----+---------+----------------+
+18 rows in set (0.11 sec)
+
+mysql> desc qagent
+    -> ;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| agent_id | int(6)      | NO   | PRI | NULL    | auto_increment | 
+| agent    | varchar(40) | NO   | MUL |         |                | 
++----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc qevent
+    -> ;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| event_id | int(2)      | NO   | PRI | 0       |       | 
+| event    | varchar(40) | YES  | MUL | NULL    |       | 
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc qmember;
++--------+---------+------+-----+---------+-------+
+| Field  | Type    | Null | Key | Default | Extra |
++--------+---------+------+-----+---------+-------+
+| queue  | int(11) | YES  |     | NULL    |       | 
+| member | int(11) | YES  |     | NULL    |       | 
++--------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc qname;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| qname_id | int(6)      | NO   | PRI | NULL    | auto_increment | 
+| queue    | varchar(40) | NO   |     |         |                | 
++----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc queue_stats;
++----------------+-------------+------+-----+---------------------+----------------+
+| Field          | Type        | Null | Key | Default             | Extra          |
++----------------+-------------+------+-----+---------------------+----------------+
+| queue_stats_id | int(12)     | NO   | PRI | NULL                | auto_increment | 
+| uniqueid       | varchar(40) | YES  |     | NULL                |                | 
+| datetime       | datetime    | NO   | MUL | 0000-00-00 00:00:00 |                | 
+| qname          | int(6)      | YES  | MUL | NULL                |                | 
+| qagent         | int(6)      | YES  | MUL | NULL                |                | 
+| qevent         | int(2)      | YES  | MUL | NULL                |                | 
+| info1          | varchar(40) | YES  |     | NULL                |                | 
+| info2          | varchar(40) | YES  |     | NULL                |                | 
+| info3          | varchar(40) | YES  |     | NULL                |                | 
++----------------+-------------+------+-----+---------------------+----------------+
+9 rows in set (0.00 sec)
+
+

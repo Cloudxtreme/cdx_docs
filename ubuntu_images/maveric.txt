@@ -1,0 +1,15 @@
+
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+cat > sources.list <<EOF
+deb http://mirrors.xmission.com/ubuntu/ maveric main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ maveric-updates main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu maveric-security main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ maveric-backports main restricted universe multiverse
+deb http://archive.canonical.com/ maveric partner
+EOF
+
+

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudIdentifiedSample" table="AUD_IDENTIFIED_SAMPLE" schema="DNALIMS">
+        <comment>Identified Sample is a sample record that contains sponsor supplied sample identifiers. These identifiers are always retained within the LIMS</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="identifiedSampleId" type="big_decimal">
+            <column name="IDENTIFIED_SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>Pending sample identifier and primary key.</comment>
+            </column>
+        </property>
+        <property name="sponsorSampleTubeId" type="string">
+            <column name="SPONSOR_SAMPLE_TUBE_ID" length="25">
+                <comment>Sponsor's sample tube identifier.</comment>
+            </column>
+        </property>
+        <property name="sponsorAccessionId" type="string">
+            <column name="SPONSOR_ACCESSION_ID" length="25">
+                <comment>Sponsor's accession identifier.</comment>
+            </column>
+        </property>
+        <property name="pending" type="boolean">
+            <column name="PENDING" precision="1" scale="0" not-null="true">
+                <comment>Sample''s pending status, 0 = accessioned 1 = pending.</comment>
+            </column>
+        </property>
+        <property name="sourceType" type="string">
+            <column name="SOURCE_TYPE" length="30">
+                <comment>What type of sample material is being accessioned (cells, whole blood, etc.).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="accessionedBy" type="string">
+            <column name="ACCESSIONED_BY" length="30">
+                <comment>User who accessioned this sample.</comment>
+            </column>
+        </property>
+        <property name="dateAccessioned" type="date">
+            <column name="DATE_ACCESSIONED" length="7">
+                <comment>Date this sample was accessioned.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Change Reason Id</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

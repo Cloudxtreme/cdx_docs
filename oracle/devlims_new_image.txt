@@ -1,0 +1,32 @@
+
+
+root@bksrv:/backup/daily.0/ccllims/u01/app/oracle/dbdump# rsync db_files.tar.gz root@devlims:/u01/app/oracle/dbdump
+
+
+read oracle_rename1.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cds.sh stop /dev/vg0/pdlims3
+
+ dd if=/dev/vg0/pdlims3 of=/dev/vg0/hyield1 bs=100M
+
+		on storage1:/root/xml
+		  root@storage1:~/xml# vi hyield1.local.xml 
+		  change:
+				name: hyield1
+			  uuid: uuidgen
+			  mac: ./genmac.py
+			  source: /dev/vg0/hyield1
+		rename machine
+
+
+  waban/oracle client	
+		modify tnsnames.ora
+			HYIELD
+				HOST = hyield
+				SERVICE_NAME = hyield
+
+		modify odbc
+
+

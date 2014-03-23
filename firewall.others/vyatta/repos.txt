@@ -1,0 +1,30 @@
+-- 
+-- Add the Debian 6.0 (Lenny) repository
+--
+set system package repository lenny 
+set system package repository lenny components "main contrib non-free"
+set system package repository lenny distribution lenny                
+set system package repository lenny url http://http.us.debian.org/debian 
+
+set system package repository lenny-security
+set system package repository lenny-security components "main contrib non-free"
+set system package repository lenny-security distribution stable/updates       
+set system package repository lenny-security url http://security.debian.org 
+
+show system package 
+
+commit
+save
+
+apt-get update
+apt-get install dialog
+
+apt-get install wajig
+wajig update
+wajig upgrade
+
+reboot
+
+
+
+

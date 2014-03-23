@@ -1,0 +1,15 @@
+Here's what I figured out from the CUPS documentation:
+- There is an existing queue for the barcode printers
+- Cups seems to be waiting for the barcode printer to finisha job before submitting another (the printer seems to take about 1 - 1.5 seconds)
+
+Using a semaphore, we should be able to ensure that barcode print jobs from different users are sequentially ordered and not mixed up
+Let's make sure that the semaphore works across multiple threads(in the mongrel scenario) and across multiple processes (Passenger/Fusion scenario)
+
+Log in to lims server and as the rails user run the commands
+lpstat -v (to get a list of printers)
+lpstat -W all (to get a list of all jobs)
+lpstat -W completed (to get a list of completed jobs)
+lpstat (to get a list of pending jobs)
+
+Thanks
+Srikar

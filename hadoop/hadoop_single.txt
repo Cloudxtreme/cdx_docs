@@ -1,0 +1,178 @@
+vi sources.list
+deb http://archive.canonical.com/ lucid partner
+
+apt-get update -o Acquire::http::No-Cache=True
+wajig update
+wajig install sun-java6-jdk -y
+java -version
+  java version "1.6.0_22"
+
+addgroup hadoop
+adduser --ingroup hadoop hadoop
+
+
+su - hadoop
+ssh-keygen -t rsa -P ""
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub localhost
+-- cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys2
+ssh localhost
+exit
+
+
+wget http://apache.inetbridge.net/hadoop/core/hadoop-0.20.2/hadoop-0.20.2.tar.gz
+cd /usr/local
+tar zxvf ~/hadoop-0.20.2.tar.gz 
+ln -s hadoop-0.20.2/ hadoop
+chown -R hadoop:hadoop hadoop*
+
+
+su - hadoop
+cd /usr/local/hadoop
+cd conf/
+vi hadoop-env.sh 
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+export HADOOP_OPTS=-Djava.net.preferIPv4Stack=true
+
+cp core-site.xml core-site.xml.orig
+cp mapred-site.xml mapred-site.xml.orig
+cp hdfs-site.xml hdfs-site.xml.orig 
+
+
+$ vi core-site.xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<property>
+  <name>hadoop.tmp.dir</name>
+  <value>/usr/local/hadoop-datastore/hadoop-${user.name}</value>
+  <description>A base for other temporary directories.</description>
+</property>
+ 
+<property>
+  <name>fs.default.name</name>
+  <value>hdfs://localhost:54310</value>
+  <description>The name of the default file system.  A URI whose
+  scheme and authority determine the FileSystem implementation.  The
+  uri's scheme determines the config property (fs.SCHEME.impl) naming
+  the FileSystem implementation class.  The uri's authority is used to
+  determine the host, port, etc. for a filesystem.</description>
+</property>
+
+</configuration>
+
+
+$ vi mapred-site.xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<property>
+  <name>mapred.job.tracker</name>
+  <value>localhost:54311</value>
+  <description>The host and port that the MapReduce job tracker runs
+  at.  If "local", then jobs are run in-process as a single map
+  and reduce task.
+  </description>
+</property>
+</configuration>
+
+
+$ vi hdfs-site.xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+  <description>Default block replication.
+  The actual number of replications can be specified when the file is created.
+  The default is used if replication is not specified in create time.
+  </description>
+</property>
+</configuration>
+
+
+exit
+
+
+mkdir -p /usr/local/hadoop-datastore/hadoop-hadoop
+chown -R hadoop:hadoop /usr/local/hadoop-datastore
+chmod -R 750 /usr/local/hadoop-datastore
+
+
+su - hadoop
+cd /usr/local/hadoop
+bin/hadoop namenode -format
+./bin/start-all.sh 
+jps
+netstat -plten | grep java
+bin/hadoop dfsadmin -report
+
+
+--
+-- map-reduce
+--
+su - hadoop
+
+bin/hadoop jar hadoop-0.20.2-examples.jar pi 2 100000
+
+cd
+mkdir gutenberg
+cd gutenberg
+wget http://www.gutenberg.org/files/20417/20417-8.txt
+wget http://www.gutenberg.org/cache/epub/5000/pg5000.txt
+wget http://www.gutenberg.org/files/4300/4300-8.txt
+
+cd /usr/local/hadoop
+bin/hadoop dfs -copyFromLocal ~/gutenberg/* gutenberg
+-- bin/hadoop dfs -rmr gutenberg
+bin/hadoop dfs -ls
+bin/hadoop dfs -ls gutenberg
+
+bin/hadoop jar hadoop-0.20.2-examples.jar wordcount gutenberg gutenberg-output
+bin/hadoop dfs -ls gutenberg-output
+bin/hadoop dfs -cat gutenberg-output/part-r-00000 | awk '{print $2,$1}' | sort -rn | more
+bin/hadoop dfs -getmerge gutenberg-output /tmp/gutenberg-output
+cat /tmp/gutenberg-output | awk '{print $2,$1}' | sort -rn | more
+
+bin/hadoop job -list
+
+-- increase the number of Reduce tasks:
+bin/hadoop jar hadoop-0.20.2-examples.jar wordcount -D mapred.reduce.tasks=16 gutenberg gutenberg-ou
+
+bin/hadoop jar hadoop-0.20.2-examples.jar pi 2 100000
+
+Web interface:
+  http://hadoop1:50030/ - web UI for MapReduce job tracker(s)
+  http://hadoop1:50060/ - web UI for task tracker(s)
+  http://hadoop1:50070/ - web UI for HDFS name node(s)
+
+~~~~~~~~~~~~~~~
+change localhost ---> master
+
+  masters
+  slaves
+  core.site.xml
+  mapred-site.xml
+
+   58  bin/stop-all.sh 
+
+   60  cd conf
+   62  vi masters 
+   63  vi slaves 
+   65  vi core-site.xml
+   66  vi mapred-site.xml
+   67  cd ..
+
+   69  ./bin/start-all.sh 
+
+
+

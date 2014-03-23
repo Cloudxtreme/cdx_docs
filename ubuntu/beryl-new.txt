@@ -1,0 +1,16 @@
+http://ubuntuforums.org/showthread.php?p=2302013
+http://ubuntuforums.org/showthread.php?t=341149&highlight=beryl+ati+200
+
+glxinfo | grep direct
+Xlib:  extension "XFree86-DRI" missing on display ":0.0".
+direct rendering: No
+OpenGL renderer string: Mesa GLX Indirect
+
+
+http://ati.amd.com/support/drivers/linux/linux-radeon.html
+
+
+ii  xorg                                                    7.2-0ubuntu8                           X.Org X Window System
+
+???X_VERSION=x710 ./ati-driver-installer-8.34.8-x86.x86_64.run 
+

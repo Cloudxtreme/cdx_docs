@@ -1,0 +1,39 @@
+
+fakeroot
+
+
+http://www.linuxfromscratch.org/hints/downloads/files/fakeroot.txt
+
+
+cd /root
+mkdir fakeroot
+export FAKEROOT=/root/kvm/fakeroot/
+cd kvm-86/
+make DESTDIR=$FAKEROOT install
+cd ..
+cd fakeroot/
+ls
+  lib  usr
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  *) Unpack the source and apply patches if required.
+       tar -xvf $pkg-$ver.tar.bz2
+  *) Compile.
+       cd $pkg-$ver
+       ./configure --prefix=/usr
+       make
+  *) Optionally test the package.
+       make -k check
+  *) Install into fakeroot. Adjust the FAKEROOT envar to suit your system.
+       FAKEROOT=/usr/fakeroot/$pkg-$ver
+       make DESTDIR=$FAKEROOT install
+  *) Perform whatever maintainence you need on the installed files.
+  *) If upgrading the packaqge, perform post removal config steps for the
+     previously installed version.
+  *) Relocate the package to the final destination.
+       cd $FAKEROOT
+       tar cf - . | (cd / ; tar xf - )
+  *) Perform post install configuration.
+  *) If upgrading a package, remove files left over by the previous version.
+

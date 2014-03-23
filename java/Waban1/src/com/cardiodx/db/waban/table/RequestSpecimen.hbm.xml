@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.RequestSpecimen" table="REQUEST_SPECIMEN" schema="DNALIMS">
+        <id name="requestSpecimenId" type="big_decimal">
+            <column name="REQUEST_SPECIMEN_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="specimenRequest" class="com.cardiodx.db.waban.table.SpecimenRequest" fetch="select">
+            <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

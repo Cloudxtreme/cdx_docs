@@ -1,0 +1,7 @@
+
+# mount -o bind /proc /mount/point/proc
+# mount -o bind /dev /mount/point/dev
+# mount -o bind /dev/pts /mount/point/dev/pts
+# mount -o bind /sys /mount/point/sys
+
+# cp /etc/resolv.conf /mount/point/etc/resolv.conf

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CpRunReport" table="CP_RUN_REPORT" schema="DNALIMS">
+        <id name="cpRunReportId" type="big_decimal">
+            <column name="CP_RUN_REPORT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="cpRun" class="com.cardiodx.db.waban.table.CpRun" fetch="select">
+            <column name="CP_RUN_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="accession" class="com.cardiodx.db.waban.table.Accession" fetch="select">
+            <column name="ACCESSION_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="versionedDocumentId" type="big_decimal">
+            <column name="VERSIONED_DOCUMENT_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

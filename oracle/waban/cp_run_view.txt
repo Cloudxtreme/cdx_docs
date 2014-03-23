@@ -1,0 +1,59 @@
+
+SELECT cpr.cp_run_id, 
+				cpr.container_id, 
+				sam.sample_tube_id, cpr.status,
+       cpq.run_qc_status "Overall QC",
+      -- cpq.pbmc_status "PBMC QC",
+       cpq.negcontrol_status "Neg Control QC",
+       cpq.genomic_status "Genomic DNA",
+       cpq.cp_status "CP Range",
+      -- cpq.sd_status "CP Std Dev",
+      -- cpq.exp_profile_status "Exp Profile",
+      -- '' last_col, cpr.sample_id parent_sample_id, cpr.checklist_id,
+       cpr.step_template_id, sam.accession_id, inst.instrument_id
+FROM cp_run cpr, sample_table sam, cdx_cp_run_qc cpq, instrument inst
+WHERE cpr.sample_id = sam.sample_id
+AND cpr.cp_run_id = cpq.cp_run_id(+)
+AND cpr.instrument_id = inst.instrument_id
+and cpr.container_id in ('AR011539', 'AR011632', 'AR011529');
+
+598 - good
+
+select  
+ 'Assay Name'			|| ',' ||	   
+ 'Normalized CP'		|| ',' ||	
+ 'Date Calculated'	|| ',' ||
+ LAST_COL				|| ',' ||
+ PARENT_SAMPLE_ID	|| ',' ||
+ CHECKLIST_ID		|| ',' ||
+ STEP_TEMPLATE_ID|| ',' ||
+ CP_RUN_ID				
+from ncp_view where cp_run_id in 
+(SELECT cpr.cp_run_id
+FROM cp_run cpr, sample_table sam, cdx_cp_run_qc cpq, instrument inst
+WHERE cpr.sample_id = sam.sample_id
+AND cpr.cp_run_id = cpq.cp_run_id(+)
+AND cpr.instrument_id = inst.instrument_id
+and cpr.container_id in ('AR011598')
+);
+
+
+select  
+ CP					  || ',' ||
+ LAST_COL					  || ',' ||
+ PARENT_SAMPLE_ID	|| ',' ||
+ CHILD_SAMPLE		|| ',' ||
+ CHECKLIST_ID				 || ',' ||
+ STEP_TEMPLATE_ID		|| ',' ||
+ CP_RUN_ID				 
+from cp_sample_view where cp_run_id in 
+(SELECT cpr.cp_run_id
+FROM cp_run cpr, sample_table sam, cdx_cp_run_qc cpq, instrument inst
+WHERE cpr.sample_id = sam.sample_id
+AND cpr.cp_run_id = cpq.cp_run_id(+)
+AND cpr.instrument_id = inst.instrument_id
+--and cpr.container_id in ('AR011529', 'AR011598')
+and cpr.container_id in ('AR011598')
+);
+
+

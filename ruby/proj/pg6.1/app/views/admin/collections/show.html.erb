@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @admin_collection.name %>
+</p>
+
+<p>
+  <b>Label:</b>
+  <%= @admin_collection.label %>
+</p>
+
+<p>
+  <b>Data type:</b>
+  <%= @admin_collection.data_type %>
+</p>
+
+<p>
+  <b>Created by:</b>
+  <%= @admin_collection.created_by %>
+</p>
+
+<p>
+  <b>Modified by:</b>
+  <%= @admin_collection.modified_by %>
+</p>
+
+<p>
+  <b>Created at:</b>
+  <%= @admin_collection.created_at %>
+</p>
+
+<p>
+  <b>Modified at:</b>
+  <%= @admin_collection.modified_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_collection_path(@admin_collection) %> |
+<%= link_to 'Back', admin_collections_path %> |
+<%= link_to 'New Field', new_admin_field_path(:collection_id => @admin_collection.id)%>
+
+<% @obj = @admin_collection %>
+<%= render :partial => "utils/datatable" %>
+

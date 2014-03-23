@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="src/|test/unit/|src/|src/|src/|src/|src/|src/" kind="src" path=""/>
+	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="COTS/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="COTS/asm.jar"/>
+	<classpathentry kind="lib" path="COTS/aspectjweaver.jar"/>
+	<classpathentry kind="lib" path="COTS/c3p0-0.9.1.2.jar"/>
+	<classpathentry kind="lib" path="COTS/cglib-2.1.3.jar"/>
+	<classpathentry kind="lib" path="COTS/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="COTS/commons-configuration-1.5.jar"/>
+	<classpathentry kind="lib" path="COTS/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="COTS/commons-logging.jar"/>
+	<classpathentry kind="lib" path="COTS/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="COTS/ehcache-1.2.3.jar"/>
+	<classpathentry kind="lib" path="COTS/ejb3-persistence.jar"/>
+	<classpathentry kind="lib" path="COTS/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="COTS/hibernate-commons-annotations.jar"/>
+	<classpathentry kind="lib" path="COTS/hibernate-validator.jar"/>
+	<classpathentry kind="lib" path="COTS/jta.jar"/>
+	<classpathentry kind="lib" path="COTS/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="COTS/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="COTS/mysql-connector-java-5.1.5-bin.jar"/>
+	<classpathentry kind="lib" path="COTS/spring.jar"/>
+	<classpathentry kind="lib" path="COTS/spring-test.jar"/>
+	<classpathentry kind="lib" path="COTS/hibernate3-custom.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

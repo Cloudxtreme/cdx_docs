@@ -1,0 +1,7 @@
+Self signed certificate:
+
+# mkdir self_signed
+# cd self_signed/
+# openssl genrsa -out cardiodx.key 1024
+# openssl req -new -key cardiodx.key -x509 -out cardiodx.crt
+

@@ -1,0 +1,25 @@
+
+
+# vi isakmp.conf 
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+# DPD-check-interval=30
+
+
+# isakmpd -Kvd
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# more ipsec.conf
+ike esp from 10.10.32.0/21 to 192.168.10.0/24 peer 67.95.201.201 \
+ main auth hmac-sha1 enc 3des group modp1024 \
+ quick auth hmac-sha1 enc 3des group modp1024 \
+ psk cdxTest123
+
+# ipsecctl -nvf /etc/ipsec.conf
+# ipsecctl -f /etc/ipsec.conf
+# ipsecctl -s all
+
+tcpdump -nq -i enc0
+

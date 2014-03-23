@@ -1,0 +1,5 @@
+asterisk reboot polycom handset
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+asterisk -rx "sip notify polycom-check-cfg 2721"
+

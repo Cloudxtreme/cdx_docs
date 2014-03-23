@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.OutboundRequest" table="OUTBOUND_REQUEST" schema="DNALIMS">
+        <comment>To store the outbound sample request</comment>
+        <id name="outboundRequestId" type="big_decimal">
+            <column name="OUTBOUND_REQUEST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="ORGANIZATION_ID" precision="22" scale="0" not-null="true">
+                <comment>Organization asked for outbound request</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="genotypingVendorProject" class="com.cardiodx.db.waban.table.GenotypingVendorProject" fetch="select">
+            <column name="PROJECT_ID" precision="22" scale="0" not-null="true">
+                <comment>Project Identifier and Foreign key to GENOTYPING_VENDOR_PROJECT</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>Checklist Identifier and Foreign key to checklist table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>Study Identifier and Foreign key to Study_Protocol</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <property name="shippmentDate" type="date">
+            <column name="SHIPPMENT_DATE" length="7">
+                <comment>The date of sample shippment</comment>
+            </column>
+        </property>
+        <property name="mtpChecklistId" type="big_decimal">
+            <column name="MTP_CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist that makes MTP</comment>
+            </column>
+        </property>
+        <set name="outboundAssaies" table="OUTBOUND_ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OUTBOUND_REQUEST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Primary key of OUTBOUND_REQUEST table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OutboundAssay" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Worklist" table="WORKLIST" schema="DNALIMS">
+        <comment>Information about a worklist (which tracks samples that have been assigned to a lab analyst).</comment>
+        <id name="worklistId" type="big_decimal">
+            <column name="WORKLIST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="worklistName" type="string">
+            <column name="WORKLIST_NAME" length="30">
+                <comment>Name of the worklist.</comment>
+            </column>
+        </property>
+        <property name="assignedTo" type="string">
+            <column name="ASSIGNED_TO" length="30">
+                <comment>Lab analyst the worklist has been assigned to.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="worklistSamples" table="WORKLIST_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WORKLIST_ID" precision="22" scale="0" not-null="true">
+                    <comment>Worklist identifier. Part of the primary key and foreign key to the WORKLIST table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorklistSample" />
+        </set>
+    </class>
+</hibernate-mapping>

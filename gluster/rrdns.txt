@@ -1,0 +1,4 @@
+
+round robin DNS (rrdns)
+
+http://europe.gluster.org/community/documentation/index.php/High-availability_storage_using_server-side_AFR#AFR

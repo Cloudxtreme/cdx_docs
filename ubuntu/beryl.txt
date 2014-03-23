@@ -1,0 +1,55 @@
+http://ubuntuforums.org/showthread.php?t=341149&highlight=beryl+ati+200
+
+glxinfo | grep direct
+
+  106  wget http://www.beerorkid.com/compiz/quinn.key.asc 
+  109  more quinn.key.asc 
+  110  apt-key add quinn.key.asc 
+
+  111  KEY=81836EBF
+  112  gpg --keyserver subkeys.pgp.net --recv $KEY
+  114  gpg --export --armor $KEY > key1
+  115  sudo apt-key add key1 
+
+
+gpg --keyserver subkeys.pgp.net --recv 3FF0DB166A7476EA
+
+wajig update
+W: GPG error: http://ubuntu.beryl-project.org edgy Release: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 3FF0DB166A7476EA
+W: You may want to run apt-get update to correct these problems
+
+wget http://ubuntu.beryl-project.org/root@lupine.me.uk.gpg -O- | sudo apt-key add -
+
+  173  wajig update
+  175  ??wajig install xserver-xgl libgl1-mesa xserver-xorg libglitz-glx1 beryl emerald-themes
+  wajig install xserver-xgl xserver-xorg libglitz-glx1 beryl emerald-themes
+
+(do we need this???)dpkg-divert --package xserver-xorg-core --divert /usr/share/man/man1/Xserver.1x.gz.xgl --rename /usr/share/man/man1/Xserver.1x.gz
+
+
+   sudo gedit /usr/bin/startxgl.sh
+Xgl -fullscreen :1 -ac -accel glx:pbuffer -accel xv:pbuffer & 
+   sleep 2 && DISPLAY=:1 exec gnome-session
+
+   sudo chmod 755 /usr/bin/startxgl.sh
+
+   sudo gedit /usr/share/xsessions/xgl.desktop
+
+root@cchoumac:/etc/init.d# xmodmap /usr/share/xmodmap/xmodmap.us
+root@cchoumac:/etc/init.d# gnome-settings-daemon
+You can only run one xsettings manager at a time; exiting
+root@cchoumac:/etc/init.d# beryl-manager
+root@cchoumac:/etc/init.d# **************************************************************
+* Beryl system compatiblity check                            *
+**************************************************************
+
+Detected xserver                                : AIGLX
+
+Checking Display :0.0 ...
+
+Checking for XComposite extension               : failed
+
+No composite extension
+beryl: No composite extension
+
+

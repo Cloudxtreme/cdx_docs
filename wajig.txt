@@ -1,0 +1,49 @@
+
+apt-get update -o Acquire::http::No-Cache=True
+
+~~~~~~~~~~~~~~~~~~~~
+vi /etc/cron.daily/cardiodx-apt 
+#!/bin/bash
+# http://www.mattiaswikstrom.net/linux/bin/cron_apt-update
+
+if [[ `apt-get update 2>&1 | grep Get` ]]; then
+  if [[ `apt-get --simulate dist-upgrade 2>&1 | grep Inst` ]]; then
+    apt-get --simulate dist-upgrade
+  fi
+fi
+
+chmod 755 /etc/cron.daily/cardiodx-apt
+
+~~~~~~~~~~~~~~~~~~~~~
+wajig install apt-show-versions
+
+
+~~~~~~~~~~~~~~~~~~~~~
+vi validate-rsync 
+#!/bin/sh
+
+case "$SSH_ORIGINAL_COMMAND" in
+        *\&*)
+                echo "Rejected"
+                ;;
+        *\;*)
+                echo "Rejected"
+                ;;
+        rsync\ --server*)
+                $SSH_ORIGINAL_COMMAND
+                ;;
+	wajig\ *)
+                $SSH_ORIGINAL_COMMAND
+                ;;
+        *)
+                echo "Rejected"
+                ;;
+esac
+
+
+~~~~~~~~~~~~~~~~~~~~~
+vi authorized_keys2 
+from="backup.cardiodx.com",command="/root/validate-rsync" ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAIEA2OfY5+zxMxGq8Uzua29htQ6hLf
+lcKxVVdOl1WrWTApAMNJACdne/zoQsUzV+nNbDJan3MbHjMNI0vZEv9K4Xt8nSzc8plvEql5SvYvsJORKkIEL9iVOibni1Z48pMNCj+hrtHrw6lMDVOxpmrD
+O89JB1FSboisU0vwia/JE1LzE= root@backup.cardiodx.com
+

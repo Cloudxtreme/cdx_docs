@@ -1,0 +1,60 @@
+-- 
+-- How to add a new CS agent (Brian Kanter)
+--
+
+Brian Kanter:
+  Extension: 2767
+  Agent #: 004
+
+
+Login to asterisk
+
+
+For asterisk:
+~~~~~~~~~~~~
+  add to agents.conf
+  add to queues.conf
+  reload
+
+
+For asternic:
+~~~~~~~~~~~~
+
+$ mysql -u root -p
+(enter the local admin pwrd)
+
+mysql> use qstats;
+mysql> select max(agent_id) from qagent;
++---------------+
+| max(agent_id) |
++---------------+
+|            44 | 
++---------------+
+
+Now we'll use 45 for queue member id:
+  mysql> insert into qagent values (45, 'SIP/2767');
+  mysql> insert into qmember values (4, 45);
+
+
+Now we'll use 46 for agent id:
+  mysql> insert into qagent values (46, 'Agent/004');
+
+
+mysql>  quit;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for Tracy (she now has Brian's old agent ID -- 004)
+
+mysql> select * from qagent where agent = 'SIP/2767';
++----------+----------+
+| agent_id | agent    |
++----------+----------+
+|       11 | SIP/2767 |
+|       42 | SIP/2767 |
++----------+----------+
+
+mysql> update qagent set agent = 'SIP/2736' where agent = 'SIP/2767';
+
+
+
+

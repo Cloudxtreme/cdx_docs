@@ -1,0 +1,77 @@
+
+
+production:
+su $ORA_OWNR -c "$ORACLE_HOME/bin/exp userid=system/waban123@ORCL file=$DBDUMP/oracle.dmp statistics=none full=y log=$DBDUMP/oracle.log"
+imp system/waban123 file=oracle.dmp full=y ignore=y log=recover.log
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+export oracle dnalims
+
+exp userid=dnalims/dnalims file=dnalims.dmp statistics=none
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+exp full=y userid=system file=orabuntu_full.dmp statistics=none
+
+GTMETA, SCESCHEMA and DNALIMS
+
+drop user gtmeta cascade;
+drop user sceschema cascade;
+drop user dnalims cascade;
+
+create user sceschema identified by sceschema;
+grant connect, resource to sceschema;
+
+create user gtmeta identified by gtmeta;
+grant connect, resource to gtmeta;
+
+create user dnalims identified by dnalims;
+grant connect, resource to dnalims;
+
+--Not working!!!!
+imp userid=system fromuser=sceschema touser=sceschema file=orabuntu_full.dmp
+imp userid=system fromuser=gtmeta touser=gtmeta file=orabuntu_full.dmp
+imp userid=system fromuser=dnalims touser=dnalims file=orabuntu_full.dmp
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+exp full=y userid=system file=orabuntu_full.dmp statistics=none
+
+CREATE TABLESPACE "SCE_CONTENT" LOGGING
+DATAFILE '/u01/app/oracle/oradata/MACK/sec_content_01.dbf' SIZE 100M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT
+SPACE MANAGEMENT  AUTO;
+
+
+CREATE TABLESPACE "SCE_DATA" LOGGING
+DATAFILE '/u01/app/oracle/oradata/MACK/sec_data_01.dbf' SIZE 100M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT
+SPACE MANAGEMENT  AUTO;
+
+
+CREATE TABLESPACE "INDX" LOGGING
+DATAFILE '/u01/app/oracle/oradata/MACK/indx01.dbf' SIZE 100M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT
+SPACE MANAGEMENT  AUTO;
+
+
+--alter system set audit_trail='DB' SCOPE=BOTH;
+alter system set max_enabled_roles=150 SCOPE=BOTH;
+alter system set open_cursors=600 SCOPE=BOTH;
+
+
+imp userid=system/waban123 file=ming_full.dmp full=y ignore=Y
+
+
+
+SQL> create user gtmeta identified by gtmeta default tablespace SCE_DATA temporary
+  2  tablespace TEMP profile DEFAULT;
+

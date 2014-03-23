@@ -1,0 +1,287 @@
+dn: dc=cardiodx,dc=com
+objectClass: dcObject
+objectClass: organization
+dc: cardiodx
+o: cardiodx
+structuralObjectClass: organization
+entryUUID: e5cb89dc-2567-1029-9dac-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042328Z
+entryCSN: 2005031004:23:28Z#0x0001#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042328Z
+
+dn: ou=People,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: People
+structuralObjectClass: organizationalUnit
+entryUUID: e5eb6d24-2567-1029-9dad-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042328Z
+entryCSN: 2005031004:23:28Z#0x0002#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042328Z
+
+dn: ou=Group,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Group
+structuralObjectClass: organizationalUnit
+entryUUID: e5f1ca84-2567-1029-9dae-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042328Z
+entryCSN: 2005031004:23:28Z#0x0003#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042328Z
+
+dn: ou=Hosts,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Hosts
+structuralObjectClass: organizationalUnit
+entryUUID: e5f74748-2567-1029-9daf-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0001#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Domain Admins,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 512
+cn: Domain Admins
+memberUid: Administrator
+description: Netbios Domain Administrators
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-512
+sambaGroupType: 2
+displayName: Domain Admins
+structuralObjectClass: posixGroup
+entryUUID: e6003eac-2567-1029-9db0-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0002#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Domain Users,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 513
+cn: Domain Users
+description: Netbios Domain Users
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-513
+sambaGroupType: 2
+displayName: Domain Users
+structuralObjectClass: posixGroup
+entryUUID: e6486d80-2567-1029-9db1-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+memberUid: david
+entryCSN: 2005031005:14:08Z#0x0002#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310051408Z
+
+dn: cn=Domain Guests,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 514
+cn: Domain Guests
+description: Netbios Domain Guests Users
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-514
+sambaGroupType: 2
+displayName: Domain Guests
+structuralObjectClass: posixGroup
+entryUUID: e64de792-2567-1029-9db2-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0004#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Administrators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 544
+cn: Administrators
+description: Netbios Domain Members can fully administer the computer/sambaDom
+ ainName
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-544
+sambaGroupType: 2
+displayName: Administrators
+structuralObjectClass: posixGroup
+entryUUID: e65368ac-2567-1029-9db3-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0005#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Users,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 545
+cn: Users
+description: Netbios Domain Ordinary users
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-545
+sambaGroupType: 2
+displayName: users
+structuralObjectClass: posixGroup
+entryUUID: e657fc1e-2567-1029-9db4-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0006#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Guests,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 546
+cn: Guests
+memberUid: nobody
+description: Netbios Domain Users granted guest access to the computer/sambaDo
+ mainName
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-546
+sambaGroupType: 2
+displayName: Guests
+structuralObjectClass: posixGroup
+entryUUID: e65d8148-2567-1029-9db5-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0007#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Power Users,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 547
+cn: Power Users
+description: Netbios Domain Members can share directories and printers
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-547
+sambaGroupType: 2
+displayName: Power Users
+structuralObjectClass: posixGroup
+entryUUID: e662fb28-2567-1029-9db6-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0008#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Account Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 548
+cn: Account Operators
+description: Netbios Domain Users to manipulate users accounts
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-548
+sambaGroupType: 2
+displayName: Account Operators
+structuralObjectClass: posixGroup
+entryUUID: e6687c10-2567-1029-9db7-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x0009#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Server Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 549
+cn: Server Operators
+description: Netbios Domain Server Operators
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-549
+sambaGroupType: 2
+displayName: Server Operators
+structuralObjectClass: posixGroup
+entryUUID: e66df320-2567-1029-9db8-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x000a#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Print Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 550
+cn: Print Operators
+description: Netbios Domain Print Operators
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-550
+sambaGroupType: 2
+displayName: Print Operators
+structuralObjectClass: posixGroup
+entryUUID: e673761a-2567-1029-9db9-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x000b#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Backup Operators,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 551
+cn: Backup Operators
+description: Netbios Domain Members can bypass file security to back up files
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-551
+sambaGroupType: 2
+displayName: Backup Operators
+structuralObjectClass: posixGroup
+entryUUID: e678f400-2567-1029-9dba-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x000c#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Replicator,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 552
+cn: Replicator
+description: Netbios Domain Supports file replication in a sambaDomainName
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-552
+sambaGroupType: 2
+displayName: Replicator
+structuralObjectClass: posixGroup
+entryUUID: e67e7420-2567-1029-9dbb-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x000d#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: cn=Domain Computers,ou=Group,dc=cardiodx,dc=com
+objectClass: posixGroup
+objectClass: sambaGroupMapping
+gidNumber: 553
+cn: Domain Computers
+description: Netbios Domain Computers accounts
+sambaSID: S-1-5-21-3516781642-1962875130-3438800523-553
+sambaGroupType: 2
+displayName: Domain Computers
+structuralObjectClass: posixGroup
+entryUUID: e683f4f4-2567-1029-9dbc-8a67e1c51a43
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310042329Z
+entryCSN: 2005031004:23:29Z#0x000e#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310042329Z
+
+dn: sambaDomainName=CDX,dc=cardiodx,dc=com
+sambaDomainName: CDX
+sambaSID: S-1-5-21-1390416411-3536245871-2322303776
+sambaAlgorithmicRidBase: 1000
+objectClass: sambaDomain
+sambaNextUserRid: 41000
+sambaNextGroupRid: 41001
+structuralObjectClass: sambaDomain
+entryUUID: 8bce6b14-2569-1029-9f80-e575a16df0b7
+creatorsName: cn=Manager,dc=cardiodx,dc=com
+createTimestamp: 20050310043516Z
+entryCSN: 2005031004:35:16Z#0x0001#0#0000
+modifiersName: cn=Manager,dc=cardiodx,dc=com
+modifyTimestamp: 20050310043516Z
+

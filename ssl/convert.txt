@@ -1,0 +1,14 @@
+
+openssl x509 -in gd_bundle.crt -outform DER -out out.der
+openssl x509 -in out.der -inform DER -out gdbundle_crt.pem -outform PEM
+openssl x509 -in gdbundle_crt.pem -text
+
+openssl x509 -in wildcard.cardiodx.com.crt -outform DER -out out.der
+openssl x509 -in out.der -inform DER -out wildcard_crt.pem -outform PEM
+openssl x509 -in wildcard_crt.pem -text
+
+openssl rsa -in wildcard.cardiodx.com.key -outform DER -out out.der
+openssl rsa -in out.der -inform DER -out wildcard_key.pem -outform PEM
+openssl rsa -in wildcard_key.pem -text
+
+

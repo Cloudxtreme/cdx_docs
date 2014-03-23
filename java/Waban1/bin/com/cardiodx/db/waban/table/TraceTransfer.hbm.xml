@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.TraceTransfer" table="TRACE_TRANSFER" schema="DNALIMS">
+        <id name="traceTransferId" type="big_decimal">
+            <column name="TRACE_TRANSFER_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="plateSummary" class="com.cardiodx.db.waban.table.PlateSummary" fetch="select">
+            <column name="PLATE_SUMMARY_ID" precision="22" scale="0">
+                <comment>To store plate summary id from plate_summary table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="testAccession" class="com.cardiodx.db.waban.table.TestAccession" fetch="select">
+            <column name="TEST_ACCESSION_ID" precision="22" scale="0">
+                <comment>TEST_ACCESSION_ID from TEST_ACCESSION table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Subsidiary Identifier</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="plateId" type="string">
+            <column name="PLATE_ID" length="20" not-null="true">
+                <comment>Container Identifier. foreign key to container table</comment>
+            </column>
+        </property>
+        <property name="containerRow" type="big_decimal">
+            <column name="CONTAINER_ROW" precision="22" scale="0">
+                <comment>Well Row</comment>
+            </column>
+        </property>
+        <property name="containerColumn" type="big_decimal">
+            <column name="CONTAINER_COLUMN" precision="22" scale="0">
+                <comment>Well Column</comment>
+            </column>
+        </property>
+        <property name="instrumentName" type="string">
+            <column name="INSTRUMENT_NAME" length="225">
+                <comment>Name Of Instrument.Tag name used in trace file MCHN</comment>
+            </column>
+        </property>
+        <property name="instrumentModel" type="string">
+            <column name="INSTRUMENT_MODEL" length="225">
+                <comment>Instrument Model.Tag name used in trace file MODL</comment>
+            </column>
+        </property>
+        <property name="qualityStatus" type="string">
+            <column name="QUALITY_STATUS" length="100">
+                <comment>Status whether traces PASSED/FAILED</comment>
+            </column>
+        </property>
+        <property name="sequenceCalled" type="clob">
+            <column name="SEQUENCE_CALLED">
+                <comment>Tag name used in trace file PBAS</comment>
+            </column>
+        </property>
+        <property name="targetMatchLength" type="big_decimal">
+            <column name="TARGET_MATCH_LENGTH" precision="22" scale="0">
+                <comment>Target match length of sequence</comment>
+            </column>
+        </property>
+        <property name="totalTargetMatch" type="big_decimal">
+            <column name="TOTAL_TARGET_MATCH" precision="22" scale="0">
+                <comment>Total number target match of sequence</comment>
+            </column>
+        </property>
+        <property name="roiId" type="big_decimal">
+            <column name="ROI_ID" precision="22" scale="0">
+                <comment>ROI Identifier</comment>
+            </column>
+        </property>
+        <property name="caseId" type="string">
+            <column name="CASE_ID" length="50">
+                <comment>CASE Identifier</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="versionedDocumentId" type="big_decimal">
+            <column name="VERSIONED_DOCUMENT_ID" precision="22" scale="0">
+                <comment>Identifier for checked in or added document</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was modified.</comment>
+            </column>
+        </property>
+        <property name="targetPercentage" type="big_decimal">
+            <column name="TARGET_PERCENTAGE" precision="22" scale="0" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="2000" />
+        </property>
+        <property name="maxTargetMatch" type="big_decimal">
+            <column name="MAX_TARGET_MATCH" precision="22" scale="0">
+                <comment>To store the length of the largest target match section.</comment>
+            </column>
+        </property>
+        <property name="averageQualityScore" type="big_decimal">
+            <column name="AVERAGE_QUALITY_SCORE" precision="22" scale="0" />
+        </property>
+        <property name="traceTransferred" type="big_decimal">
+            <column name="TRACE_TRANSFERRED" precision="22" scale="0" />
+        </property>
+        <set name="traceTransferAttributes" table="TRACE_TRANSFER_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TRACE_TRANSFER_ID" precision="22" scale="0">
+                    <comment>Foreign Key to trace transfer table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceTransferAttribute" />
+        </set>
+    </class>
+</hibernate-mapping>

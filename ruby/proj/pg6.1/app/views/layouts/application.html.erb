@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>My Title</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+
+	<style type="text/css" title="currentStyle">
+    @import "/DataTables-1.9.4/media/css/demo_page.css";
+    @import "/DataTables-1.9.4/media/css/demo_table.css";
+	</style>
+  <script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.js"></script>
+  <script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.dataTables.js"></script>
+</head>
+
+<body id="dt_example" topmargin="0" leftmargin="0" rightmargin="0" bottommargin="0" marginheight="0" marginwidth="0" style="background-color:white;">
+  <table border="0" width="100%" cellspacing="0" cellpadding="8" bgcolor="#ffffcc">
+    <tr>
+      <td width="100%"><font face="Arial Black" size="6" color="#000000">CardioDx, Inc.</font></td>
+    </tr>
+  </table>
+
+	<table border="0" width="100%" bgcolor="#000000" cellspacing="0" cellpadding="0">
+  	<tr>
+    	<td width="90%">
+      	<font color="#FFFFFF" face="Arial" size="2"><b>WWW.CARDIODX.COM</b></font>
+    	</td>
+    	<td>
+      	<font color="#FFFFFF" face="Arial" size="2">Setup | Login | Logout </font>
+    	</td>
+  	</tr>
+	</table>
+	
+	<table border="0" width="100%" cellspacing="0" cellpadding="5">
+  <tr>
+    <td width="8%" bgcolor="#ffffee" valign="top">&nbsp;
+      <p style="margin-left: 10">
+        <b><font face="Arial" size="2" color="#000000">
+          <a href='http://www.google.com'>LINK 1</a><br>
+          LINK Hello World<br>
+          LINK 4<br>
+          LINK 5<br>
+          LINK 6
+        </font></b>
+      </p>
+    </td>
+    <td width="61%" valign="top">
+      <blockquote>
+
+				<% if flash[:error] %>
+					<div id="error_explanation">
+					<h3>Error</h3>
+					<ul>
+						<% flash.each do |key,value| %>
+							<li><%=key %>: <%=value%>
+						<% end %>
+						</ul>
+					</div>
+				<% end %>
+
+        <%= yield %>
+
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </blockquote>
+  </tr>
+	</table>
+
+	<table border="0" width="100%" bgcolor="#000000" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="100%"><font size="1">&nbsp;</font></td>
+  </tr>
+	</table>
+
+	<p align="center"><font face="Arial" size="1">© COPYRIGHT 2001 ALL RIGHTS RESERVED CARDIODX.COM</font></td>
+</body>
+
+</html>
+

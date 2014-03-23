@@ -1,0 +1,26 @@
+
+
+grep comcast /etc/iproute2/rt_tables
+if [ $? != 0 ]; then
+  echo '2 comcast' >> /etc/iproute2/rt_tables
+  echo '3 xo' >> /etc/iproute2/rt_tables
+fi
+
+ip route add default via 173.13.158.190 table comcast
+ip route add default via 67.95.201.193 table xo
+
+ip rule add to 12.3.153.0/24 table xo   # ERT-2
+ip rule add to 12.149.54.90/32 table xo
+ip rule add to 66.18.106.160/27 table xo   # Clinix
+ip rule add to 66.18.99.68/32 table xo
+
+# If both Comcast and XO are up and running:
+ip route add default scope global nexthop via 173.13.158.190 dev eth4 weight 5 nexthop via 67.95.201.193 dev eth5 weight 1
+
+# If Comcast goes:
+# ip route replace default scope global via 67.95.201.193 dev eth5
+
+# If XO goes down:
+# ip route replace default scope global via 173.13.158.190 dev eth4
+
+

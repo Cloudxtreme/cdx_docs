@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AttributeLevel" table="ATTRIBUTE_LEVEL" schema="DNALIMS">
+        <comment>Used to indicate how an attribute is used for each study</comment>
+        <id name="attributeLevelId" type="string">
+            <column name="ATTRIBUTE_LEVEL_ID" length="1" />
+            <generator class="assigned" />
+        </id>
+        <property name="attributeName" type="string">
+            <column name="ATTRIBUTE_NAME" length="25" not-null="true">
+                <comment>Description of the attribute level</comment>
+            </column>
+        </property>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Used to order the records at display time</comment>
+            </column>
+        </property>
+        <set name="protocolDefinedVariables" table="PROTOCOL_DEFINED_VARIABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ATTRIBUTE_LEVEL_ID" length="1">
+                    <comment>Character used as a foreign key to restrict the levels of attributes in a study</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolDefinedVariable" />
+        </set>
+    </class>
+</hibernate-mapping>

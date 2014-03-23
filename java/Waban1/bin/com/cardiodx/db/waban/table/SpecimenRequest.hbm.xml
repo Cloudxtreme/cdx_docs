@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.SpecimenRequest" table="SPECIMEN_REQUEST" schema="DNALIMS">
+        <id name="specimenRequestId" type="big_decimal">
+            <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="requestId" type="string">
+            <column name="REQUEST_ID" length="50" not-null="true" unique="true" />
+        </property>
+        <property name="requestor" type="string">
+            <column name="REQUESTOR" length="30" not-null="true" />
+        </property>
+        <property name="requestDate" type="date">
+            <column name="REQUEST_DATE" length="7" not-null="true" />
+        </property>
+        <property name="dueDate" type="date">
+            <column name="DUE_DATE" length="7" not-null="true" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30" not-null="true" />
+        </property>
+        <property name="referenceRequestNumber" type="string">
+            <column name="REFERENCE_REQUEST_NUMBER" length="50" />
+        </property>
+        <property name="otherPurpose" type="string">
+            <column name="OTHER_PURPOSE" length="100" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <set name="requestSpecimens" table="REQUEST_SPECIMEN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RequestSpecimen" />
+        </set>
+        <set name="requestPurposes" table="REQUEST_PURPOSE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RequestPurpose" />
+        </set>
+        <set name="requestApprovals" table="REQUEST_APPROVAL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RequestApproval" />
+        </set>
+        <set name="specimenShipments" table="SPECIMEN_SHIPMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SpecimenShipment" />
+        </set>
+    </class>
+</hibernate-mapping>

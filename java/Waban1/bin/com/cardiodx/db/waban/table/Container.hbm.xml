@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Container" table="CONTAINER" schema="DNALIMS">
+        <comment>Information about containers used to hold samples.</comment>
+        <id name="containerId" type="string">
+            <column name="CONTAINER_ID" length="20" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="freezer" class="com.cardiodx.db.waban.table.Freezer" fetch="select">
+            <column name="FREEZER_ID" precision="22" scale="0">
+                <comment>Freezer identifier and foreign key to the FREEZER table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="containerMap" class="com.cardiodx.db.waban.table.ContainerMap" fetch="select">
+            <column name="CONTAINER_MAP_ID" precision="22" scale="0">
+                <comment>Map identifier and foreign key to the CONTAINER_MAP table.</comment>
+            </column>
+        </many-to-one>
+        <property name="compartment" type="string">
+            <column name="COMPARTMENT" length="20">
+                <comment>Compartment location.</comment>
+            </column>
+        </property>
+        <property name="shelf" type="string">
+            <column name="SHELF" length="20">
+                <comment>Shelf location.</comment>
+            </column>
+        </property>
+        <property name="rack" type="string">
+            <column name="RACK" length="20">
+                <comment>Rack location.</comment>
+            </column>
+        </property>
+        <property name="location" type="string">
+            <column name="LOCATION" length="50">
+                <comment>Specific location within a shelf.</comment>
+            </column>
+        </property>
+        <property name="purpose" type="string">
+            <column name="PURPOSE" length="40">
+                <comment>The use for this container.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="50">
+                <comment>A description of the container.</comment>
+            </column>
+        </property>
+        <property name="checkoutBy" type="string">
+            <column name="CHECKOUT_BY" length="30">
+                <comment>The user who checked out the container.</comment>
+            </column>
+        </property>
+        <property name="dateCheckout" type="date">
+            <column name="DATE_CHECKOUT" length="7">
+                <comment>The date the container was checked out.</comment>
+            </column>
+        </property>
+        <property name="discarded" type="java.lang.Boolean">
+            <column name="DISCARDED" precision="1" scale="0">
+                <comment>Flag indicating this container has been discarded.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <property name="containerCondition" type="string">
+            <column name="CONTAINER_CONDITION" length="50" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="50" />
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="4000" />
+        </property>
+        <set name="specimenShipmentPackagesForContainerIdTo" table="SPECIMEN_SHIPMENT_PACKAGE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID_TO" length="20" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SpecimenShipmentPackage" />
+        </set>
+        <set name="mtpSamples" table="MTP_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MtpSample" />
+        </set>
+        <set name="containerFilenames" table="CONTAINER_FILENAME" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true">
+                    <comment>Container identifier. Part of the primary key and foreign key to the CONTAINER table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerFilename" />
+        </set>
+        <set name="traceQcs" table="TRACE_QC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20">
+                    <comment>Container identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceQc" />
+        </set>
+        <set name="containerReagents" table="CONTAINER_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerReagent" />
+        </set>
+        <set name="pcrCleanupContainersForFilterContainerId" table="PCR_CLEANUP_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FILTER_CONTAINER_ID" length="20">
+                    <comment>Container Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrCleanupContainer" />
+        </set>
+        <set name="seqSetupContainersForRevContainerId" table="SEQ_SETUP_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REV_CONTAINER_ID" length="20">
+                    <comment>Container Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SeqSetupContainer" />
+        </set>
+        <set name="pcrSetupContainers" table="PCR_SETUP_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true">
+                    <comment>Container Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrSetupContainer" />
+        </set>
+        <set name="gelMarkers" table="GEL_MARKER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true">
+                    <comment>Container (gel) identifier. Part of the primary key and foreign key to the CONTAINER table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GelMarker" />
+        </set>
+        <set name="specimenShipmentPackagesForContainerIdFrom" table="SPECIMEN_SHIPMENT_PACKAGE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID_FROM" length="20" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SpecimenShipmentPackage" />
+        </set>
+        <set name="pcrCleanupContainersForElutionContainerId" table="PCR_CLEANUP_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ELUTION_CONTAINER_ID" length="20">
+                    <comment>Container Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrCleanupContainer" />
+        </set>
+        <set name="sampleTables" table="SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20">
+                    <comment>The container identifier for the container that holds the sample. A foreign key to the CONTAINER table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleTable" />
+        </set>
+        <set name="cpRuns" table="CP_RUN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRun" />
+        </set>
+        <set name="assignInstruments" table="ASSIGN_INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true">
+                    <comment>Container identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssignInstrument" />
+        </set>
+        <set name="oligoAssayDesigns" table="OLIGO_ASSAY_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20">
+                    <comment>Container identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoAssayDesign" />
+        </set>
+        <set name="plateTemplateContainers" table="PLATE_TEMPLATE_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20" not-null="true" unique="true">
+                    <comment>Foreign key used to identify the container record.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateContainer" />
+        </set>
+        <set name="pcrSetupOligos" table="PCR_SETUP_OLIGO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_PLATE_ID" length="20">
+                    <comment>Oligo Plate Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrSetupOligo" />
+        </set>
+        <set name="seqSetupContainersForFwdContainerId" table="SEQ_SETUP_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FWD_CONTAINER_ID" length="20">
+                    <comment>Container Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SeqSetupContainer" />
+        </set>
+        <set name="reagents" table="REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20">
+                    <comment>The container identifier for the container that holds the Reagent. A foreign key to the CONTAINER table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Reagent" />
+        </set>
+        <set name="sampleInstrumentAssocs" table="SAMPLE_INSTRUMENT_ASSOC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTAINER_ID" length="20">
+                    <comment>Container identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleInstrumentAssoc" />
+        </set>
+    </class>
+</hibernate-mapping>

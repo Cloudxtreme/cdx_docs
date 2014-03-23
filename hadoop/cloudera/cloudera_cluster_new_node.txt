@@ -1,0 +1,71 @@
+wajig install curl -y
+curl -s http://archive.cloudera.com/debian/archive.key | sudo apt-key add -
+
+vi /etc/apt/sources.list
+deb http://archive.canonical.com/ lucid partner
+deb http://archive.cloudera.com/debian lucid-cdh3 contrib
+
+java -version
+  java version "1.6.0_22"
+
+wajig install sun-java6-jdk -y
+wajig install hadoop-0.20 hadoop-0.20-conf-pseudo -y
+
+master: 
+  ssh-copy-id -i $HOME/.ssh/id_rsa.pub slave
+  ssh slave
+
+  cd /etc/hadoop
+  scp conf.cluster.tar.gz slave:/etc/hadoop
+
+slave:
+  tar zxvf conf.cluster.tar.gz 
+  rm conf.cluster.tar.gz 
+
+  update-alternatives --install /etc/hadoop-0.20/conf hadoop-0.20-conf /etc/hadoop-0.20/conf.cluster 50
+  update-alternatives --display hadoop-0.20-conf
+
+  dirs:
+  cd /var/lib/hadoop-0.20
+  mkdir -p dfs/name dfs/data
+  mkdir -p mapred/local mapred/temp
+  chown -R hdfs:hadoop dfs
+  chown -R mapred:hadoop mapred
+
+master:
+  vi slaves
+
+  /etc/init.d/hadoop-0.20-jobtracker stop
+  /etc/init.d/hadoop-0.20-secondarynamenode stop
+  /etc/init.d/hadoop-0.20-namenode stop
+
+  /etc/init.d/hadoop-0.20-namenode start
+  /etc/init.d/hadoop-0.20-secondarynamenode start
+  /etc/init.d/hadoop-0.20-jobtracker start
+
+slave:
+  /etc/init.d/hadoop-0.20-datanode start
+  /etc/init.d/hadoop-0.20-tasktracker start
+
+
+  su - hdfs
+    hadoop fs -mkdir foo
+    hadoop fs -ls
+    hadoop fs -put /etc/hosts foo
+    hadoop fs -ls foo
+
+Error!!!!
+
+...... Cannot create directory /user/hdfs/PiEstimator_TMP_3_141592654/in......
+
+????
+http://master:50030/ - web UI for MapReduce job tracker(s)
+http://master:50060/ - web UI for task tracker(s)
+http://master:50070/ - web UI for HDFS name node(s)
+
+
+~~~~~~~~~~~~~~~~~~~~
+update-rc.d hadoop-0.20-tasktracker defaults
+update-rc.d hadoop-0.20-datanode defaults
+
+

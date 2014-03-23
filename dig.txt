@@ -1,0 +1,35 @@
+http://www.madboa.com/geek/dig/
+
+
+dig @10.10.37.21 -p 54 -t MX gmail.com
+
+dig @127.0.0.1 cardiodx.com axfr
+dig -p 5300 @10.10.37.21 ccmac.cardiodx.com
+
+dig @10.10.37.21 -p 5300 -t SOA cardiodx.com
+dig @10.10.37.21 -p 5300 -t SOA 37.10.10.in-addr.arpa
+
+
+dig @4.2.2.1 cardiodx.com txt +short
+dig @4.2.2.1 cardiodx.com any +short
+dig www.cardiodx.com +short
+
+dig +nocmd cardiodx.com any +multiline +noall +answer
+
+dig -x 10.10.37.21 +short
+
+host www
+host 10.10.37.21
+
+dig gentoo.de +trace
+
+
+dig +nocmd cardiodx.com MX +noall +answer
+dig +nocmd gmail.com MX +noall +answer
+
+
+- dig spf (in txt record)
+dig @4.2.2.1 -t txt cardiodx.com
+cardiodx.com.		3600	IN	TXT	"v=spf1 mx ~all"
+
+

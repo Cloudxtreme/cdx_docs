@@ -1,0 +1,75 @@
+
+export PATH=$PATH:/usr/jdk1.5.0_10/bin
+export JAVA_HOME=/usr/jdk1.5.0_10
+
+su - mysql
+cd /usr/mysql
+./bin/mysqld_safe --defaults-file=/usr/mysql/my3307.cnf &
+
+/usr/mysql/bin/mysqladmin --defaults-file=/usr/mysql/my3307.cnf -S/tmp/mysqldev.sock -p ping
+/usr/mysql/bin/mysqladmin --defaults-file=/usr/mysql/my3307.cnf -S/tmp/mysqldev.sock -p shutdown
+
+
+./bin/mysql -uroot -S/tmp/mysqldev.sock -p
+podhe9e
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /etc/init.d/
+vi mysql
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Mysql services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo -n "Starting MySQL... "
+        su mysql -c "cd /usr/mysql; ./bin/mysqld_safe --defaults-file=/usr/mysql/my3307.cnf" & 
+        echo "OK"
+        ;;
+    stop)
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi tomcat
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Tomcat services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo -n "Starting Tomcat... "
+        /usr/tomcat/bin/startup.sh &
+        echo "OK"
+        ;;
+    stop)
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+

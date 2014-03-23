@@ -1,0 +1,76 @@
+
+
+--
+-- for the iscsi disk
+--
+  433  iscsiadm -m discovery -t st -p storage1
+  434  iscsiadm -m node
+  435  iscsiadm -m session
+  436  iscsiadm -m node -T storage1.win32 -l
+
+--
+-- for the cd rom (iso file)
+--
+  466  losetup -a
+  470  losetup /dev/loop1 /root/iso/winxp32.iso 
+
+			(detach: losetup -d /dev/loop1)
+
+
+# more win32.cfg 
+kernel      = '/usr/lib/xen/boot/hvmloader'
+builder     = 'hvm'
+memory      = '128'
+vcpus       = '2'
+disk        = [
+                  'phy:/dev/disk/by-path/ip-10.10.37.37:3260-iscsi-storage1.win32-lun-0,ioemu:hda,w',
+		  'phy:/dev/loop1,ioemu:hdc:cdrom,r',
+              ]
+device_model = '/usr/lib/xen/bin/qemu-dm'
+name        = 'win32'
+dhcp        = 'dhcp'
+#vif         = [ 'mac=00:16:3E:B2:52:4E' ]
+vif = [ 'type=ioemu, bridge=eth0' ]
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+
+#extra = '2 console=xvc0'
+boot        = 'd'
+vnc         = 1
+sdl=0
+vncviewer=1
+vncpasswd=''
+
+
+xm create win32.cfg 
+
+vncviewer localhost:0
+
+
+NOTE: ******************** 
+   Remember to remove ----- 'phy:/dev/loop1,ioemu:hdc:cdrom,r'
+     when you're done.
+
+   Otherwise, you'll get  the following message the VM will not come up!!!
+     [2009-09-30 17:28:27 6193] INFO (XendDomainInfo:1299) Domain has shutdown: name=win32 id=7 reason=poweroff.
+
+**************************
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.ioncannon.net/system-administration/80/how-to-transfer-linux-from-virtualbox-to-xen/
+
+VBoxManage internalcommands converttoraw winxp4.vdi hello.img 
+
+
+
+
+
+
+
+
+
+
+
+
+

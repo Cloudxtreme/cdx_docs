@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.InstrumentSetup" table="INSTRUMENT_SETUP" schema="DNALIMS">
+        <comment>Table used to setup information for maintenance schedules</comment>
+        <id name="instrumentSetupId" type="big_decimal">
+            <column name="INSTRUMENT_SETUP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="instrument" class="com.cardiodx.db.waban.table.Instrument" fetch="select">
+            <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true" unique="true">
+                <comment>Instrument Identifier</comment>
+            </column>
+        </many-to-one>
+        <property name="duration" type="big_decimal">
+            <column name="DURATION" precision="22" scale="0">
+                <comment>Duration of the maintenance</comment>
+            </column>
+        </property>
+        <property name="username" type="string">
+            <column name="USERNAME" length="30">
+                <comment>User name who is assigned for this maintenance</comment>
+            </column>
+        </property>
+        <property name="notificationLeadTime" type="big_decimal">
+            <column name="NOTIFICATION_LEAD_TIME" precision="22" scale="0">
+                <comment>Lead time required for notification of the maintenance</comment>
+            </column>
+        </property>
+        <property name="maintenanceGap" type="big_decimal">
+            <column name="MAINTENANCE_GAP" precision="22" scale="0">
+                <comment>Gap between two maintenance</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="maintenanceSchedules" table="MAINTENANCE_SCHEDULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_SETUP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Instrument Setup Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MaintenanceSchedule" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,8 @@
+
+The following will follow the symbolic links and give you the correct size of the files
+
+# du -sm -L dir_name
+
+
+du --exclude opt/zimbra -sk * | sort -n
+

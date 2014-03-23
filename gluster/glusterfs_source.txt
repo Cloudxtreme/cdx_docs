@@ -1,0 +1,26 @@
+
+http://www.gluster.com/community/documentation/index.php/Gluster_3.1:_Installing_GlusterFS_From_Source
+
+source:  http://download.gluster.com/pub/gluster/glusterfs/3.1/LATEST/
+
+
+wajig install flex bison checkinstall
+
+wget http://download.gluster.com/pub/gluster/glusterfs/3.1/LATEST/glusterfs-3.1.1.tar.gz
+tar zxvf glusterfs-3.1.1.tar.gz 
+cd glusterfs-3.1.1/
+./configure
+
+	GlusterFS configure summary
+	===========================
+	FUSE client        : yes
+	Infiniband verbs   : no
+	epoll IO multiplex : yes
+	argp-standalone    : no
+	fusermount         : no
+	readline           : yes
+
+
+checkinstall make install
+wajig install ./glusterfs_3.1.1-1_amd64.deb
+

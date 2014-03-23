@@ -1,0 +1,10 @@
+netbeans tomcat
+
+http://cit.wta.swin.edu.au/cit/subjects/CITP0014/tutorials/netbeans/tomcat/Running_Tomcat_from_Netbeans.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+

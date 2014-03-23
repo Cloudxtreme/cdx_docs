@@ -1,0 +1,1 @@
+http://doc.openerp.com/install/linux/web/index.html

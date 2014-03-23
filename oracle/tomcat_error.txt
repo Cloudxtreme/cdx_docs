@@ -1,0 +1,15 @@
+
+
+  543  /etc/init.d/tomcat5.5 restart
+
+LifecycleException:  Pipeline has not been started
+org.xml.sax.SAXParseException: Premature end of file.
+	:
+	:
+
+Possible that we have corrupt files in tomcat.  Re-install tomcat.
+
+
+  571  wajig purge tomcat5.5 tomcat5.5-admin
+  572  wajig install tomcat5.5 tomcat5.5-admin
+

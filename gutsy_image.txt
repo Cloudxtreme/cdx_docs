@@ -1,0 +1,215 @@
+# cardiodx user with internal password
+# install with lvm -- 10G root & 10G home
+echo 'Acquire::http::Proxy "http://aptcacher.cardiodx.com:3142";' > /etc/apt/apt.conf
+# Enable all repositories, update & upgrade
+cat > /etc/apt/sources.list <<EOF
+deb http://us.archive.ubuntu.com/ubuntu/ gutsy main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ gutsy main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ gutsy-updates main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ gutsy-updates main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu gutsy-security main restricted universe multiverse
+deb-src http://security.ubuntu.com/ubuntu gutsy-security main restricted universe multiverse
+
+EOF
+
+wget http://www.medibuntu.org/sources.list.d/gutsy.list -O /etc/apt/sources.list.d/medibuntu.list
+wget -q http://packages.medibuntu.org/medibuntu-key.gpg -O- | apt-key add - 
+
+apt-get update
+apt-get install wajig -y
+
+wajig upgrade
+reboot
+wajig install build-essential fakeroot deborphan subversion sysv-rc-conf compizconfig-settings-manager -y 
+wajig install postgresql r-base sqlite3 scribus vim-gnome -y
+wajig install libdvdcss2 gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse -y gstreamer0.10-ffmpeg w32codecs -y
+wajig install sun-java6-jdk -y
+wajig install bioperl -y
+wajig install lvm2 xfsprogs -y
+wajig install ntp -y
+
+wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 libpgsql-ruby -y
+wget http://rubyforge.org/frs/download.php/29548/rubygems-1.0.1.tgz  
+tar xzvf rubygems-1.0.1.tgz  
+cd rubygems-1.0.1  
+ruby setup.rb  
+ln -s /usr/bin/gem1.8 /usr/bin/gem  
+gem update --system  
+
+
+# Needs interaction
+gem install -v=1.2.2 rails -y
+gem install mongrel_cluster ferret camping -y
+# Needs interaction
+gem install alib bio ensembl-api roo daemons -y
+gem install ruby-net-ldap ruby-debug slave -y
+gem install rsruby -- --with-R-dir=/usr/lib/R --with-R-include=/usr/share/R/include
+JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.03/ gem install rjb
+
+gem install postgres-pr
+
+
+mkdir /media/pdc
+wajig install smbfs -y
+mount -t cifs //pdc/groups /media/pdc/ -o username=cchou
+
+cd /media/pdc/it/software/ubuntu/gutsy/i386
+
+wajig install ./libgksu2-0_2.0.5-1ubuntu4_i386.deb
+wajig hold libgksu2-0
+
+wajig install ./libpam-mount_0.18-4_i386.deb
+wajig hold libpam-mount
+cp /etc/security/pam_mount.conf /etc/security/pam_mount.conf.orig
+cp  /media/pdc/it/documentation/admin/gutsy/pam_mount.conf /etc/security/pam_mount.conf
+chmod +s /sbin/umount.cifs
+chmod +s /usr/sbin/pmvarrun
+
+cd /media/pdc/it/documentation/admin/gutsy
+wajig install libpam-ldap libnss-ldap -y
+cp /etc/pam.d/common-auth /etc/pam.d/common-auth.orig 
+cp common-auth /etc/pam.d/common-auth
+cp /etc/pam.d/common-account /etc/pam.d/common-account.orig 
+cp common-account /etc/pam.d/common-account
+cp /etc/pam.d/common-password /etc/pam.d/common-password.orig 
+cp common-password /etc/pam.d/common-password
+cp /etc/pam.d/common-session /etc/pam.d/common-session.orig 
+cp common-session /etc/pam.d/common-session
+
+cp /etc/ldap.conf /etc/ldap.conf.orig
+cp ldap.conf /etc/ldap.conf
+cp /etc/nsswitch.conf /etc/nsswitch.conf.orig
+cp nsswitch.conf /etc/nsswitch.conf
+cp pam_ldap.conf /etc/pam_ldap.conf
+
+cp /etc/sudoers /etc/sudoers.orig
+cp sudoers /etc
+
+cd /media/pdc/it/software/nx
+wajig install ./nxclient_3.1.0-2_i386.deb 
+wajig install ./nxnode_3.1.0-3_i386.deb
+wajig install ./nxserver_3.1.0-2_i386.deb
+
+
+cd "/media/pdc/it/software/Oracle 10g"
+wajig install ./oracle-instantclient-basiclite_10.2.0.3-2_i386.deb
+wajig install ./oracle-instantclient-devel_10.2.0.3-2_i386.deb
+wajig install ./oracle-instantclient-sqlplus_10.2.0.3-2_i386.deb
+#sqlplus sqluser/*****@170.224.10.106/car1 
+
+cat > /etc/ld.so.conf.d/oracle.conf <<EOF
+/usr/lib/oracle/10.2.0.3/client/lib
+EOF
+ldconfig
+
+wajig install nscd
+cp /media/pdc/it/documentation/admin/gutsy/nscd /etc/init.d
+
+wajig install libqscintilla7 libqt3-mt-psql
+wajig install ./tora_1.3.21pre22-2ubuntu1_i386_gutsy.deb
+wajig hold tora
+
+cp "/media/pdc/it/software/Oracle 10g/ruby-oci8-1.0.0-rc2.tar.gz" /tmp
+cd /tmp
+tar zxvf ruby-oci8-1.0.0-rc2.tar.gz
+cd ruby-oci8-1.0.0-rc2 
+ruby setup.rb config
+ruby setup.rb setup
+ruby setup.rb install 
+
+wajig install /media/pdc/it/software/adobe/flashplayer/flashplugin-nonfree_9.0.115.0ubuntu0.7.10_i386.deb
+wajig install acroread acroread-plugins -y
+
+cp /media/pdc/it/documentation/admin/gutsy/40-permissions.rules /etc/udev/rules.d/
+
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+cd /etc/skel/
+tar xvf /media/pdc/it/documentation/admin/gutsy/skel_gconf.tar 
+
+gconftool-2 --direct --config-source xml:readwrite:/etc/gconf/gconf.xml.defaults --type string --set /system/gstreamer/0.10/default/videosink "ximagesink"
+
+wajig install openssh-server
+
+cp /media/pdc/it/documentation/admin/gutsy/fstab /root
+cp /media/pdc/it/documentation/admin/gutsy/menu.lst /root
+cp /media/pdc/it/documentation/admin/gutsy/pg_hba.conf /etc/postgresql/8.2/main/pg
+
+wajig clean
+
+umount /media/pdc
+
+# make the image (to sdb1)
+tar --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" --exclude="/media/sdb1" -czvf gutsy.tar.gz /
+ 
+
+# for nivida 8400GX
+wajig install nvidia-glx-new
+
+mv xorg.conf xorg.conf.sav
+scp cchou@srikardesktop:/etc/X11/xorg.conf .
+
+
+
+reboot
+
+###############################################
+# Boot fom the rescue CD (0.3.7)
+format the disk to have:
+  /dev/sda1 100M
+  /dev/sdb2 (the rest of the drive)
+
+pvcreate /dev/sda2
+vgcreate vg0 /dev/sda2
+lvcreate -L50G -n root vg0
+lvcreate -L2G -n swap vg0
+
+lvchange -a y /dev/vg0/root
+
+mkfs.xfs /dev/vg0/root
+mkswap /dev/vg0/swap
+mkfs.ext3 /dev/sda1
+
+mkdir newroot
+mount /dev/vg0/root newroot
+cd newroot
+mkdir boot
+mount /dev/sda1 boot
+
+copy the image
+untar the image
+
+grub 
+device (hd0) /dev/sda
+root (hd0,0)
+setup (hd0)
+
+cd /etc/ssh
+ssh-keygen -t rsa -f ssh_host_rsa_key
+ssh-keygen -t dsa -f ssh_host_dsa_key
+
+cd /etc
+sed -i "s/gutsydesktop/chialindesktop/g" hostname
+sed -i "s/gutsydesktop/chialindesktop/g" hosts
+sed -i "s/gutsydesktop/chialindesktop/g" motd
+
+reboot
+
+# Setup proper defaults for compiz configuration
+#  - What about opengl?
+# setup openoffice to pre-load
+
+#ensembl perl libraries
+#
+# - radrails
+#    unzip /media/pdc/it/software/RadRails/Aptana_Studio_Setup_Linux.zip
+
+  
+   
+    
+
+

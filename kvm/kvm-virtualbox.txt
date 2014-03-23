@@ -1,0 +1,4 @@
+
+kvm virtualbox migration
+
+http://combatwombat.7doves.com/2008/09/05/virtualbox-to-kvm-migration

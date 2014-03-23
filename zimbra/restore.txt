@@ -1,0 +1,75 @@
+-- restore zimbra 5.x.14 to 6.0.8
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- hold the emails at the smtp gatway
+defer_transports = smtp, relay
+
+-- new webmail
+install Ubuntu 8.0.4
+install zimbra zcs-NETWORK-6.0.8_GA_2661.UBUNTU8_64.20100820033955
+  DNS ERROR resolving MX for webmail.cardiodx.com
+  It is suggested that the domain name have an MX record configured in DNS
+  Change domain name? [Yes] 
+  Create domain: [webmail.cardiodx.com] cardiodx.com
+
+  DNS ERROR resolving MX for cardiodx.com
+  It is suggested that the domain name have an MX record configured in DNS
+  Re-Enter domain name? [Yes] No
+  done.
+
+
+LDAP URL: ldap://ldap.cardiodx.com:389
+LDAP filter: (uid=%u)
+LDAP search base: ou=Users,dc=cardiodx,dc=com
+
+
+--
+-- mailbox restore
+--
+
+encfs --public /root/data/encrypted/ /tmp/decrypted/
+
+-- create accounts (w/o data)
+for i in `cat acct1.txt`; do zmrestoreldap -t /tmp/decrypted/daily.0/webmail/opt/zimbra/backup/ \
+     -lb full-20101001.080004.270 -a $i; done
+
+-- change accounts to maintenance mode (mails will be queued)
+for i in `cat acct1.txt`; do zmprov ma $i zimbraAccountStatus maintenance; done
+
+-- restore email boxes
+for i in `cat acct5.txt`; do echo $i; time zmrestore -t /tmp/decrypted/daily.0/webmail/opt/zimbra/backup/ \
+     --ignoreRedoErrors -restoreToTime 20101031.010000 -a $i; \
+     zmprov ma $i zimbraAccountStatus active;done > acct5.log 2>&1
+
+-- distribution lists (data came from ldap.bak)
+zmprov cdl it@cardiodx.com
+zmprov adlm it@cardiodx.com cchou@cardiodx.com
+
+You can use 'zmprov < dist.cmd' (see below)
+
+
+-- recreate all aliases (in the admin console, alias list is empty)
+cat alias.sh
+  aaa cchou@cardiodx.com chialin@cardiodx.com
+  aaa cchou@cardiodx.com chialin.chou@cardiodx.com
+  aaa cchou@cardiodx.com cchou2008@cardiodx.com
+  aaa cchou@cardiodx.com it-staffing@cardiodx.com
+
+zmprov < alias.sh 
+
+~/libexec$ ./zmldapanon -e
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- for individual account:
+--
+zmrestoreldap -t /tmp/decrypted/daily.0/webmail/opt/zimbra/backup/ -lb full-20101001.080004.270 -a mgotshall@cardiodx.com
+zmprov ma mgotshall@cardiodx.com zimbraAccountStatus maintenance
+time zmrestore -t /tmp/decrypted/daily.0/webmail/opt/zimbra/backup/ --ignoreRedoErrors -restoreToTime 20101031.010000 -a mgotshall@cardiodx.com
+zmprov ma mgotshall@cardiodx.com zimbraAccountStatus active
+
+
+
+
+
+

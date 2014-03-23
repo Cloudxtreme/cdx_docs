@@ -1,0 +1,4 @@
+
+
+kvm -m 1024 -cdrom /root/iso/winxp64.iso -boot d /dev/vg0/statwin 
+

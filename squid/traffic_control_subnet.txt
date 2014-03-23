@@ -1,0 +1,82 @@
+
+wajig install tcng
+
+http://www.subnet-calculator.com/cidr.php
+
+10.10.35.0/192  == 10.10.35.0/26    ==> 64 machines 
+10.10.35.64/192 ==> 10.10.35.64/26  ==> 64 machines
+
+10.10.35.0/128  == 10.10.35.0/25    ==> 128 machines
+
+# more cdx.tc
+nclude "fields.tc"
+#include "ports.tc"
+
+dev eth0 {
+    egress {
+        class ( <$internal> ) if ip_src:16 == 10.10.0.0  && ip_dst:16 == 10.10.0.0;
+        class ( <$server> )   if ip_src:21 != 10.10.32.0 && ip_dst:24 == 10.10.37.0 ;
+        class ( <$client1> )  if ip_src:21 != 10.10.32.0 && ip_dst:25 == 10.10.35.0;
+        class ( <$client2> )  if ip_src:21 != 10.10.32.0 && ip_dst:25 == 10.10.35.128;
+        class ( <$client3> )  if ip_src:21 != 10.10.32.0 && ip_dst:25 == 10.10.36.0;
+        class ( <$client4> )  if ip_src:21 != 10.10.32.0 && ip_dst:25 == 10.10.36.128;
+        class ( <$cchou> )    if ip_src:21 != 10.10.32.0 && ip_dst == 10.10.36.190;
+        class ( <$other> )    if 1 ;
+
+        htb () {
+            class ( rate 1024Mbps, ceil 1024Mbps ) {
+                $internal  = class ( rate 1024Mbps, ceil 1024Mbps ) { sfq; } ;
+                $server    = class ( rate 10Mbps, ceil 53Mbps ) { sfq; } ;
+                $client1   = class ( rate 3Mbps, ceil 6Mbps ) { sfq; } ;
+                $client2   = class ( rate 3Mbps, ceil 6Mbps ) { sfq; } ;
+                $client3   = class ( rate 3Mbps, ceil 6Mbps ) { sfq; } ;
+                $client4   = class ( rate 3Mbps, ceil 6Mbps ) { sfq; } ;
+                $other     = class ( rate  1Mbps, ceil  3Mbps ) { sfq; } ;
+                $cchou     = class ( rate  1Mbps, ceil  3Mbps ) { sfq; } ;
+            }
+        }
+    }
+}
+
+
+# tcng cdx.tc 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi traffic-control
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Traffic Control Service
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo "Starting TC... "
+				(Copy and paste the above output here!!!!)
+			
+        ;;
+    stop)
+        echo "Shutdown TC... "
+				tc qdisc del dev eth0 root
+        ;;
+    reload|restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+chmod 755 traffic-control
+update-rc.d traffic-control start 20 2 3 4 5 . stop 99 0 1 6 .
+

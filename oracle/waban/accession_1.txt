@@ -1,0 +1,13 @@
+
+accession, new
+  new --> lab accession trf50565 w/o the letter
+          study: commercial
+  add sample
+     lab tube id: trf50565c
+		 sample type: blood
+		 sample condition: acceptable
+			save
+save
+  click yes to continue
+  click yes to continue
+

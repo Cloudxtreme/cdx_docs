@@ -1,0 +1,73 @@
+etq apache tomcat proxy
+
+Read: apache2_ssl_1.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install apache2
+  apache2 apache2-common apache2-mpm-worker apache2-utils libapr0 libexpat1 libpcre3 ssl-cert
+
+  518  wajig install apache2
+  519  cd /etc/apache2/
+mkdir ssl
+  522  cd ssl/
+scp cchou@cchoudesktop:~/gdrive/it/Private/ssl/wildcard/wild* .
+scp cchou@cchoudesktop:~/gdrive/it/Private/ssl/wildcard/gd* .
+  525  rm wildcard.cardiodx.com.csr
+
+  530  cd sites-available/
+  532  vi etqdevel
+NameVirtualHost etqdevel.cardiodx.com:80
+<VirtualHost etqdevel.cardiodx.com:80>
+  ServerName etqdevel.cardiodx.com
+  Redirect permanent / https://etqdevel.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost etqdevel.cardiodx.com:443>
+  ServerName etqdevel.cardiodx.com
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+  SSLCertificateChainFile /etc/apache2/ssl/gd_intermediate_bundle.crt
+
+  ProxyPass / http://etqdevel.cardiodx.com:8080/
+  ProxyPassReverse / http://etqdevel.cardiodx.com:8080/
+  ProxyPreserveHost On
+  RequestHeader set X_FORWARDED_PROTO 'https'
+
+  ErrorLog "|/usr/bin/logger -p local0.err"
+  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+  CustomLog "|/usr/bin/logger -p local1.info" privacy_format
+  LogLevel warn
+</VirtualHost>
+
+
+  542  cd mods-available/
+  544  vi proxy.conf 
+		Allow from .cardiodx.com
+
+  545  a2enmod ssl
+  546  a2enmod rewrite
+  547  a2enmod proxy_http
+  548  a2dissite default
+  549  a2enmod headers
+
+  553  cd sites-available/
+  555  a2ensite etqdevel
+
+  566  vi ports.conf 
+Listen 443
+
+  614  vi /etc/default/apache2 
+NO_START=0
+
+
+--a2dismod proxy_http
+--a2enmod proxy
+--a2enmod headers
+/etc/init.d/apache2 start
+
+
+http://etqdevel.cardiodx.com/reliance_dev/reliance
+
+
+

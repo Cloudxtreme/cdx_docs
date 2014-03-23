@@ -1,0 +1,32 @@
+  284  wajig update
+  285  wajig upgrade
+  287  wajig install build-essential 
+  288  wajig install bin86
+  304  wajig install sharutils
+  309  wajig install checkinstall
+
+  295  cd /usr/src
+  298  mv /home/cchou/Desktop/madwifi-0.9.2.1.tar.bz2 .
+  300  tar jxvf madwifi-0.9.2.1.tar.bz2 
+  302  cd madwifi-0.9.2.1/
+
+  306  make clean
+  307  make
+  312  checkinstall make install
+
+vi /etc/modules 
+ath_pci
+
+  378  find . -name *.ko
+  379  lsmod | grep ath
+
+  383  rmmod ath_pci
+  385  rmmod ath_rate_sample
+  387  rmmod wlan
+  389  rmmod ath_hal
+
+  394  insmod ./ath/ath_hal.ko
+  395  insmod ./net80211/wlan.ko
+  396  insmod ./ath_rate/sample/ath_rate_sample.ko
+  397  insmod ./ath/ath_pci.ko
+

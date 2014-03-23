@@ -1,0 +1,8 @@
+
+UpdatePaymentDetail.trigger:
+
+Add:
+		List<PatientCase__c> pc = [select Id, Date_Created__c from PatientCase__c where id = :p.Patient_Case__c];
+		//p.addError(String.valueOf(pc[0].Date_Created__c));
+		p.Deposit_Date__c = pc[0].Date_Created__c;
+

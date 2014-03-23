@@ -1,0 +1,53 @@
+
+body ------>  id="dt_example
+
+
+--
+-- Goto url:
+--
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $('#example').dataTable( {
+    bProcessing: true,
+    //sAjaxSource: 'http://cchoudesktop:3000/arrays.txt/'
+    sAjaxSource: 'http://cchoudesktop:3000/hello/datatable/'
+  } );
+
+$("#example tbody").delegate("tr", "click", function() {
+  var firstCellText = $("td:first", this).text();
+  var fourthCellText = $("td:eq(3)", this).text();
+  alert (firstCellText);
+  //document.location.href = 'http://www.google.com';
+});
+
+});
+
+</script>
+
+
+--
+-- another way
+--
+$('#example').delegate('tbody > tr > td', 'click', function ()
+{
+    document.location.href = 'http://www.google.com';
+});
+
+
+--
+-- The best way
+--
+      "aaData" => [
+        [ "Gecko", "Firefox 1.0", "Win 98+ / OSX.2+", "1.7", "<a href='http://www.google.com'>A</a>" ],
+        [ "Gecko", "Firefox 1.0", "Win 98+ / OSX.2+", "1.7", "A" ],
+        [ "Gecko", "Firefox 1.0", "Win 98+ / OSX.2+", "1.7", "A" ],
+        [ "Gecko", "Firefox 1.0", "Win 98+ / OSX.2+", "1.7", "A" ],
+        [ "Gecko", "Firefox 1.0", "Win 98+ / OSX.2+", "1.7", "A" ],
+        [ "Gecko", "Firefox 1.5", "Win 98+ / OSX.2+", "1.8", "A" ],
+        [ "Gecko", "Firefox 2.0", "Win 98+ / OSX.2+", "1.8", "A" ],
+        [ "Gecko", "Firefox 3.0", "Win 2k+ / OSX.3+", "1.9", "A" ],
+        [ "Gecko", "Camino 1.0", "OSX.2+", "1.8", "A" ],
+        [ "Gecko", "Camino 1.5", "OSX.3+", "1.8", "A" ],
+

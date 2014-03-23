@@ -1,0 +1,27 @@
+
+http://www.johnandcailin.com/blog/cailin/exploring-apache-log-files-using-hive-and-hadoop
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+CREATE TABLE apachelog (
+  ipaddress STRING, 
+  identd STRING, 
+  user STRING,
+  finishtime STRING,
+  requestline string, 
+  returncode INT, size INT)
+  ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.dynamic_type.DynamicSerDe'
+  WITH SERDEPROPERTIES (
+    'serialization.format'='org.apache.hadoop.hive.serde2.thrift.TCTLSeparatedProtocol',
+    'quote.delim'='("|\\[|\\])',
+    'field.delim'=' ',
+    'serialization.null.format'='-')
+STORED AS TEXTFILE;
+
+copy portal apache log (local1) from itsrv 
+
+
+LOAD DATA LOCAL INPATH 'local1' OVERWRITE INTO TABLE apachelog;
+
+select * from apachelog limit 10;   
+
+(Hangs!!  Not returning!!!!!)

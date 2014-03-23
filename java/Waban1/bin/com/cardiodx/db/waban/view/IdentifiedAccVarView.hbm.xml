@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.IdentifiedAccVarView" table="IDENTIFIED_ACC_VAR_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.IdentifiedAccVarViewId">
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionVariableFldId" type="big_decimal">
+                <column name="ACCESSION_VARIABLE_FLD_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="protocolDefinedVariableId" type="big_decimal">
+                <column name="PROTOCOL_DEFINED_VARIABLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variableId" type="big_decimal">
+                <column name="VARIABLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="value" type="string">
+                <column name="VALUE" length="4000" />
+            </key-property>
+            <key-property name="variableLabel" type="string">
+                <column name="VARIABLE_LABEL" length="30" />
+            </key-property>
+            <key-property name="numberInSequence" type="big_decimal">
+                <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+            <key-property name="variableName" type="string">
+                <column name="VARIABLE_NAME" length="30" />
+            </key-property>
+            <key-property name="minValue" type="string">
+                <column name="MIN_VALUE" length="50" />
+            </key-property>
+            <key-property name="maxValue" type="string">
+                <column name="MAX_VALUE" length="50" />
+            </key-property>
+            <key-property name="contactId" type="big_decimal">
+                <column name="CONTACT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="organizationId" type="big_decimal">
+                <column name="ORGANIZATION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="patientId" type="big_decimal">
+                <column name="PATIENT_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

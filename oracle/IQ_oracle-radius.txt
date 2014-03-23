@@ -1,0 +1,109 @@
+--
+-- On oracle server
+--
+
+Verify s/w using Waban client.
+  Can login
+  Can browse around
+
+Backup database first!!!!!
+  (This will take about 1 hour.)
+
+cd $ORACLE_HOME/network
+mkdir security
+cd security/
+vi radius.key
+cdxRAD2500
+chmod 660 radius.key 
+
+netmgr
+  click local --> profile
+  change to "Oracle Advanced Security"
+  Authentication 
+    Add RADIUS
+  Other Params
+    Authentication Service: RADIUS
+  Hostname: radius
+  Port: 1812 (1813)?? 1645??
+  Close the window by clicking 'x'.
+  Click 'Save' to save the configuration.
+
+more /u01/app/oracle/product/10.2.0/db_1/network/admin/sqlnet.ora 
+  SQLNET.RADIUS_AUTHENTICATION_PORT = 1812
+  SQLNET.AUTHENTICATION_SERVICES= (BEQ, TCPS, RADIUS)
+  NAMES.DIRECTORY_PATH= (TNSNAMES)
+  SQLNET.RADIUS_AUTHENTICATION = radius
+
+sqlplus system as sysdba
+show parameter os_authent_prefix
+   ops$
+alter system set os_authent_prefix='' scope=spfile;
+shutdown immediate
+startup
+show parameter os_authent_prefix
+  (empty)
+exit
+
+-- shrink temp space
+ll /u01/app/oracle/oradata/ORCL/temp01.dbf
+sqlplus system as sysdba
+alter database tempfile '/u01/app/oracle/oradata/ORCL/temp01.dbf' resize 5G;
+exit
+
+;alter system set REMOTE_OS_AUTHENT = TRUE scope=both;
+
+
+create user cdxtest identified externally;
+grant create session to cdxtest;
+
+sqlplus cdxtest@ORCL
+Enter password: (VerySecret!)
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- Oracle client network configuration
+--
+cd c:\oracle\product\10.2.0\db_1\NETWORK\ADMIN
+vi sqlnet.ora
+QLNET.AUTHENTICATION_SERVICES= (TCPS, RADIUS)
+NAMES.DIRECTORY_PATH= (TNSNAMES)
+
+Run SQL Plus:
+  Start --> All Programs 
+  --> Oracle - OraDb10g_home1
+  --> Application Development
+  --> SQL Plus
+
+  User Name:   cdxtest
+  Password:    VerySecret!
+  Host String: ORCL
+
+
+--
+-- wabaN
+--
+Run Waban Security Manager:
+  Start --> All Programs
+  --> Waban Software
+  --> Waban SCE
+  --> Security Manager
+
+login as system
+(For each user)
+Click the user account:
+  Click Edit
+  Check 'Use Operating System Authentication'
+  Click OK
+  Click OK at the confirmation prompt
+Close the program
+
+Verify it with Waban LIMS
+  Double click Waban LIMS icon on the desktop
+  Enter your User Name, Password, and the correct DSN
+  Clikc OK
+
+
+
+

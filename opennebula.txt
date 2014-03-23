@@ -1,0 +1,4 @@
+ubuntu cloud computing
+
+https://help.ubuntu.com/9.04/serverguide/C/opennebula.html
+https://help.ubuntu.com/community/OpenNebula

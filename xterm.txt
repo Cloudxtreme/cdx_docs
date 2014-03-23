@@ -1,0 +1,9 @@
+xterm xauth
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+xterm Xt error: Can't open display: %s
+xterm:  DISPLAY is not set
+
+Solution:
+wajig isntall xauth

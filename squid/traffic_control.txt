@@ -1,0 +1,87 @@
+traffic control shapping
+
+http://www.faqs.org/docs/Linux-HOWTO/Traffic-Control-tcng-HTB-HOWTO.html
+http://linux-ip.net/gl/tcng/node8.html
+http://tldp.org/HOWTO/Traffic-Control-HOWTO/index.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- http://linux-ip.net/gl/tcng/node8.html
+--
+
+/usr/lib/tcng/bin/tcc --h
+
+# more test1.tc 
+dev "eth0" {
+  egress {
+    fifo;
+  }
+} 
+
+
+tcng test1.tc 
+# ================================ Device eth0 ================================
+tc qdisc add dev eth0 handle 1:0 root dsmark indices 1 default_index 0
+tc qdisc add dev eth0 handle 2:0 parent 1:0 pfifo
+
+# tc -help
+
+
+# tc qdisc show
+
+tc -s qdisc show
+
+tc -s qdisc show dev eth0
+
+tc -s qdisc show dev eth0 | grep -v '0 bytes' | grep -v 0bit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#include "fields.tc"
+#include "ports.tc"
+
+dev "eth0" {
+    egress {
+        // classification
+
+        class (<$high>)
+            if tcp_dport == PORT_HTTP;
+        class (<$low>)
+            if 1;
+
+        // queuing
+
+        prio {
+            $high = class (1) {
+                fifo (limit 20kB);
+            }
+            $low = class (2) {
+                fifo (limit 100kB);
+            }
+        }
+    }
+}
+
+
+# tcng cdx.tc 
+tc qdisc add dev eth0 handle 1:0 root dsmark indices 4 default_index 0
+tc qdisc add dev eth0 handle 2:0 parent 1:0 prio
+tc qdisc add dev eth0 handle 3:0 parent 2:1 bfifo limit 20480
+tc qdisc add dev eth0 handle 4:0 parent 2:2 bfifo limit 102400
+tc filter add dev eth0 parent 2:0 protocol all prio 1 tcindex mask 0x3 shift 0
+tc filter add dev eth0 parent 2:0 protocol all prio 1 handle 2 tcindex classid 2:2
+tc filter add dev eth0 parent 2:0 protocol all prio 1 handle 1 tcindex classid 2:1
+tc filter add dev eth0 parent 1:0 protocol all prio 1 handle 1:0:0 u32 divisor 1
+tc filter add dev eth0 parent 1:0 protocol all prio 1 u32 match u8 0x6 0xff at 9 offset at 0 mask 0f00 shift 6 eat link 1:0:0
+tc filter add dev eth0 parent 1:0 protocol all prio 1 handle 1:0:1 u32 ht 1:0:0 match u16 0x50 0xffff at 2 classid 1:1
+tc filter add dev eth0 parent 1:0 protocol all prio 1 u32 match u32 0x0 0x0 at 0 classid 1:2
+
+
+# tcng cdx.tc > cdx.sh
+# chmod 755 cdx.sh 
+# ./cdx.sh 
+# tc -s qdisc show dev eth0
+
+
+# tc qdisc del dev eth0 root
+
+

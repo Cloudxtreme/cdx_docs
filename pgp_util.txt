@@ -1,0 +1,17 @@
+
+-- dump the content 
+  498  wajig install pgpdump
+  499  pgpdump concursolutions.asc 
+  500  pgpdump cardiodx.asc 
+
+  509  gpg --list-keys
+
+
+-- delete public keys 
+  510  gpg --delete-key 52035DAB
+  512  gpg --delete-key D4D727C0
+
+-- delete private then public keys
+  526  gpg --delete-secret-keys A133CCAF
+  527  gpg --delete-key A133CCAF
+

@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StaarAnonymizationRequest" table="STAAR_ANONYMIZATION_REQUEST" schema="DNALIMS">
+        <comment>STAAR Anonymization Request Table</comment>
+        <id name="staarAnonymizationRequestId" type="big_decimal">
+            <column name="STAAR_ANONYMIZATION_REQUEST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>Checklist Id</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocolByStudyProtocolId" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Study protocol identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="studyProtocolByResearchStudyProtocolId" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="RESEARCH_STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Research Study Protocol Id</comment>
+            </column>
+        </many-to-one>
+        <property name="requestStatus" type="string">
+            <column name="REQUEST_STATUS" length="20" not-null="true">
+                <comment>Request Status</comment>
+            </column>
+        </property>
+        <property name="requestMessage" type="string">
+            <column name="REQUEST_MESSAGE" length="2000">
+                <comment>Request Message</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date Created</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>Created By</comment>
+            </column>
+        </property>
+        <property name="samplesReaccessioned" type="string">
+            <column name="SAMPLES_REACCESSIONED" length="1">
+                <comment>Samples Reaccessioned</comment>
+            </column>
+        </property>
+        <property name="reaccessionedBy" type="string">
+            <column name="REACCESSIONED_BY" length="30">
+                <comment>Reaccessioned By</comment>
+            </column>
+        </property>
+        <property name="dateReaccessioned" type="date">
+            <column name="DATE_REACCESSIONED" length="7">
+                <comment>Date Reaccessioned</comment>
+            </column>
+        </property>
+        <property name="clinicalDataImported" type="string">
+            <column name="CLINICAL_DATA_IMPORTED" length="1">
+                <comment>Clinical Data Imported</comment>
+            </column>
+        </property>
+        <property name="clinicalDataImportedBy" type="string">
+            <column name="CLINICAL_DATA_IMPORTED_BY" length="30">
+                <comment>Clinical Data Imported By</comment>
+            </column>
+        </property>
+        <property name="dateClinicalDataImported" type="date">
+            <column name="DATE_CLINICAL_DATA_IMPORTED" length="7">
+                <comment>Date Clinical Data Imported</comment>
+            </column>
+        </property>
+        <property name="isStudyClosed" type="string">
+            <column name="IS_STUDY_CLOSED" length="1">
+                <comment>Is Study Closed</comment>
+            </column>
+        </property>
+        <property name="studyClosedBy" type="string">
+            <column name="STUDY_CLOSED_BY" length="30">
+                <comment>Study Closed By</comment>
+            </column>
+        </property>
+        <property name="dateStudyClosed" type="date">
+            <column name="DATE_STUDY_CLOSED" length="7">
+                <comment>Date Study Closed</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

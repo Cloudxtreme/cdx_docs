@@ -1,0 +1,18 @@
+solr enterprise search engine
+
+http://lucene.apache.org/solr/tutorial.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wget http://apache.mirrors.airband.net/lucene/solr/1.4.1/apache-solr-1.4.1.tgz
+tar zxvf apache-solr-1.4.1.tgz 
+
+cd example/
+java -jar start.jar
+http://cchoudesktop.cardiodx.com:8983/solr/admin/
+
+-- index two documents
+java -jar post.jar solr.xml monitor.xml 
+
+-- index all documents
+java -jar post.jar *.xml
+

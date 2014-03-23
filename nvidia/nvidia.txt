@@ -1,0 +1,11 @@
+root@cdxdesktop:~# wajig list | grep nvidia
+ii  nvidia-glx-new  169.12+2.6.24.13-19.45  NVIDIA binary XFree86 4.x/X.Org 'new' driver
+ii  nvidia-kernel-common  20051028+1ubuntu8  NVIDIA binary kernel module common files
+
+root@cdxdesktop:~# lsmod | grep nvidia
+nvidia               7825536  34 
+i2c_core               24832  1 nvidia
+agpgart                34760  2 nvidia,intel_agp
+
+copy xorg.conf over
+

@@ -1,0 +1,4 @@
+
+Run Roche480 XML Parser
+java -cp .:../../../lib/bcmail-jdk14-142.jar:../../../lib/bcprov-jdk14-142.jar:../../../lib/commons-logging-1.0.jar:../../../lib/gnu-hylafax-core-1.0.3.jar:../../../lib/gnu-hylafax-inet-ftp-1.0.3.jar:../../../lib/iText-2.1.5.jar:../../../lib/junit-3.7.jar:../../../lib/REngine.jar:../../../lib/resolver.jar:../../../lib/Rserve.jar:../../../lib/serializer.jar:../../../lib/xercesImpl.jar:../../../lib/xercesSamples.jar:../../../lib/xml-apis.jar:../../../lib/ojdbc14.jar com.cardiodx.clims.qpcr.Roche480 test.ixo
+

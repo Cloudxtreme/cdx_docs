@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AssemblyLoad" table="ASSEMBLY_LOAD" schema="DNALIMS">
+        <comment>Information about OCX controls that are used by the application</comment>
+        <id name="ocxLoadId" type="big_decimal">
+            <column name="OCX_LOAD_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="ocxName" type="string">
+            <column name="OCX_NAME" length="100" unique="true">
+                <comment>Name of the external Active-X control that will be loaded when the menu is selected.</comment>
+            </column>
+        </property>
+        <property name="loadOcx" type="string">
+            <column name="LOAD_OCX" length="100">
+                <comment>Name of the external Active-X control that will be loaded when the menu is selected.</comment>
+            </column>
+        </property>
+        <property name="ocxVersion" type="string">
+            <column name="OCX_VERSION" length="15">
+                <comment>Version of OCX file to be loaded</comment>
+            </column>
+        </property>
+        <property name="minAppVersion" type="string">
+            <column name="MIN_APP_VERSION" length="15">
+                <comment>Minimum version of the calling application that supports this control</comment>
+            </column>
+        </property>
+        <property name="ocxType" type="string">
+            <column name="OCX_TYPE" length="30">
+                <comment>Field used to optionally store the type of OCX. This field is used for extended study and subject attributes for dynamic entry screens</comment>
+            </column>
+        </property>
+        <property name="ocxBlob" type="blob">
+            <column name="OCX_BLOB">
+                <comment>BLOB data storing the OCX cab file</comment>
+            </column>
+        </property>
+        <property name="regasm" type="big_decimal">
+            <column name="REGASM" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

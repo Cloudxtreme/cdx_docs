@@ -1,0 +1,14 @@
+IT should not set-up new Quickbooks users. Finance (either Rob or Barbara usually creates new accounts).
+
+Here's the typical process for users wanting to access Quickbooks though.
+
+1. Finance will create a new Quickbooks user for the company file located on \\quickbooks\Quickbooks\Cardiodx.QBW.
+2. On the users machine, install Quickbooks ES v12 on \\filesrv\it\software\QuickBooks\QuickBooksES_v12\Setup.exe
+- Use the license key in the \\filesrv\it\Private\LicenseKeys.xls file.
+- Install Quickbooks as is with no updates.
+- Install the client only since the database is hosted on \\quickbooks
+- Set-up Quickbooks for "Professional Services"
+- Mount the \\quickbooks\Quickbooks path as a network drive
+3. The user will be able to login to Quickbooks installed on any machine moving forward.
+
+

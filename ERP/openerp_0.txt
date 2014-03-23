@@ -1,0 +1,143 @@
+
+http://doc.openerp.com/book/1/1_1_Inst_Config/1_1_Inst_Config_install.html#installation-on-linux-ubuntu
+
+server - lucid 64bit machine
+
+wajig install openerp-server openerp-client pgadmin3 language-pack-gnome-es-base
+wajig install build-essential python-vobject python-dev
+
+-- officially, only 2.5 is supported.
+deb http://ppa.launchpad.net/fkrull/deadsnakes/ubuntu lucid main
+deb-src http://ppa.launchpad.net/fkrull/deadsnakes/ubuntu lucid main 
+wajig install python2.5 python2.5-dev python-profiler
+
+
+  329  cd /usr/bin/
+  332  rm python python2
+  333  ln -s python2.5 python
+  334  ln -s python2.5 python2
+
+wget http://freefr.dl.sourceforge.net/sourceforge/pyxml/PyXML-0.8.4.tar.gz
+tar xvzf PyXML-0.8.4.tar.gz
+cd PyXML-0.8.4/
+python2.5 setup.py install
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/postgresql/8.4/main/pg_hba.conf 
+local   all         all                               ident
+--local all all md5
+
+service postgresql-8.4 restart
+
+  205  mkdir /home/openerp
+  206  chown openerp.nogroup /home/openerp
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+su - postgres
+
+createuser openerp -P
+could not change directory to "/root"
+Enter password for new role: 
+Enter it again: 
+Shall the new role be a superuser? (y/n) n
+Shall the new role be allowed to create databases? (y/n) y
+Shall the new role be allowed to create more new roles? (y/n) n
+exit
+
+createdb openerp
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/openerp-server.conf
+db_name = 
+db_user = openerp
+db_password = openerp
+
+
+??? Not found
+ln -s /usr/lib/python2.6/dist-packages/oldxml/_xmlplus/utils/boolean.so /usr/lib/python2.5/site-packages/oldxml/_xmlplus/utils/
+
+-- cd /usr/bin/
+-- cp openerp-server openerp-server.orig
+-- vi openerp-server
+-- exec /usr/bin/python2.5 ./openerp-server.py $@
+                    ^^^
+
+service openerp-server restart
+
+tail -20f /var/log/openerp-server.log &
+
+lsof -i :8069
+lsof -i :8070
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  501  wajig install openerp-client
+  503  openerp-client 
+
+hit cancel
+
+--
+-- http://doc.openerp.com/book/1/1_1_Inst_Config/1_1_Inst_Config_db_create.html
+--
+File --> Database --> Administrator Password
+  default: admin
+
+File --> Database --> New Database 
+   - Administrator: admin / (internal)
+    - Demo User: demo / demo
+
+   Connect now
+     configure the company
+
+  Start configuration
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+-- openerp-web
+
+wajig install python-setuptools
+easy_install openerp-web
+nohup openerp-web &
+
+http://openerp.cardiodx.com:8080/
+
+
+Or:
+  428  wget http://www.openerp.com/download/stable/source/openerp-web-5.0.14.tar.gz
+  430  tar zxvf openerp-web-5.0.14.tar.gz 
+  432  cd openerp-web-5.0.14/
+  python ./openerp-web.py
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- apache (and ssl)
+
+See ../apache/apache2_ssl_1.txt
+
+root@openerp:/etc/apache2/sites-available# more default
+<VirtualHost *:80>
+  ServerName openerp.cardiodx.com
+  Redirect permanent / https://openerp.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName openerp.cardiodx.com
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+  SSLCertificateChainFile /etc/apache2/ssl/gd_bundle.crt
+
+  ProxyPass / http://openerp.cardiodx.com:8080/
+  ProxyPassReverse / http://openerp.cardiodx.com:8080/
+  ProxyPreserveHost On
+  #RequestHeader set X_FORWARDED_PROTO 'https'
+
+  ErrorLog "|/usr/bin/logger -p local0.err"
+  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+  CustomLog "|/usr/bin/logger -p local1.info" privacy_format
+  LogLevel warn
+</VirtualHost>
+
+

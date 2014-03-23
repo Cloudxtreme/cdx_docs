@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<project name="springapp" basedir="." default="usage">
+
+    <path id="lib">
+        <fileset dir="../../../lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+    </path>
+
+    <target name="build" description="Compile main source tree java files">
+
+    <taskdef name="hibernatetool"
+        classname="org.hibernate.tool.ant.Hbm2JavaExporterTask">
+        <classpath refid="lib"/>
+    </taskdef>
+
+    <hibernatetool destdir="./">
+        <configuration>
+            <fileset dir="./">
+                <include name="**/*.hbm.xml"/>
+            </fileset>
+        </configuration>
+        <hbm2java/> <!-- Generate POJO source -->
+    </hibernatetool>
+    </target>
+
+</project>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbPopulationFreq" table="MDB_POPULATION_FREQ" schema="DNALIMS">
+        <id name="populationFreqId" type="big_decimal">
+            <column name="POPULATION_FREQ_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mdbVariant" class="com.cardiodx.db.waban.table.MdbVariant" fetch="select">
+            <column name="VARIANT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="mdbPopulation" class="com.cardiodx.db.waban.table.MdbPopulation" fetch="select">
+            <column name="POPULATION_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="frequency" type="big_decimal">
+            <column name="FREQUENCY" precision="22" scale="0" />
+        </property>
+        <property name="ethnicity" type="string">
+            <column name="ETHNICITY" length="100" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,74 @@
+
+
+set service nat rule 11
+set service nat rule 11 type destination
+set service nat rule 11 protocol udp
+set service nat rule 11 destination address 67.95.201.198
+set service nat rule 11 destination port 1194
+set service nat rule 11 inside-address address 10.10.37.22
+set service nat rule 11 inbound-interface eth1
+
+set service nat rule 12
+set service nat rule 12 type destination
+set service nat rule 12 protocol tcp
+set service nat rule 12 destination address 67.95.201.198
+set service nat rule 12 destination port 443
+set service nat rule 12 inside-address address 10.10.37.27
+set service nat rule 12 inbound-interface eth1
+
+set service nat rule 13
+set service nat rule 13 type destination
+set service nat rule 13 protocol tcp
+set service nat rule 13 destination address 67.95.201.198
+set service nat rule 13 destination port 3389
+set service nat rule 13 inside-address address 10.10.37.36
+set service nat rule 13 inbound-interface eth1
+
+set service nat rule 14
+set service nat rule 14 type destination
+set service nat rule 14 protocol tcp
+set service nat rule 14 destination address 67.95.201.198
+set service nat rule 14 destination port 443
+set service nat rule 14 inside-address address 10.10.37.36
+set service nat rule 14 inbound-interface eth1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+set firewall name from_internet rule 11
+set firewall name from_internet rule 11 protocol udp
+set firewall name from_internet rule 11 action accept
+set firewall name from_internet rule 11 log disable
+set firewall name from_internet rule 11 source address 0.0.0.0/0
+set firewall name from_internet rule 11 destination address 10.10.37.22
+set firewall name from_internet rule 11 destination port 1194
+
+set firewall name from_internet rule 12
+set firewall name from_internet rule 12 protocol tcp
+set firewall name from_internet rule 12 action accept
+set firewall name from_internet rule 12 log disable
+set firewall name from_internet rule 12 source address 0.0.0.0/0
+set firewall name from_internet rule 12 destination address 10.10.37.27
+set firewall name from_internet rule 12 destination port 443
+
+set firewall name from_internet rule 14
+set firewall name from_internet rule 14 protocol tcp
+set firewall name from_internet rule 14 action accept
+set firewall name from_internet rule 14 log disable
+set firewall name from_internet rule 14 source address 0.0.0.0/0
+set firewall name from_internet rule 14 destination address 10.10.37.27
+set firewall name from_internet rule 14 destination port 993
+
+
+
+
+
+
+
+
+
+
+
+
+
+

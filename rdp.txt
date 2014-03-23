@@ -1,0 +1,17 @@
+remote desktop logooff
+
+http://www.danrigsby.com/blog/index.php/2008/08/26/remotely-log-off-remote-desktop-users/
+
+
+qwinsta /server:<serverName>
+quser /server:<serverName>
+
+logoff <sessionId> /server:<serverName>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://support.microsoft.com/kb/314999
+
+
+
+

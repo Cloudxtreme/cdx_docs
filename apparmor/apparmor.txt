@@ -1,0 +1,84 @@
+ubuntu apparmor
+
+FAQ: http://developer.novell.com/wiki/index.php/Apparmor_FAQ#How_is_AppArmor_different_from_chroot.3F_Will_it_work_with_chroot.3F
+https://help.ubuntu.com/community/AppArmor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install apparmor-profiles
+wajig install auditd 
+
+apparmor_status
+
+--
+-- apparmor for apache2
+--
+
+# aa-genprof /usr/sbin/apache2
+(E)nable Repository
+  http://apparmor.test.opensuse.org/backend/api
+
+(S)can system log for SubDomain events
+Create New User
+Username: cardiodx
+Password: cdxApp1214
+Email Addr: cchou2008@cardiodx.com
+
+have the following problems
+   RPC::XML::Client::send_request: HTTP server error: Not Found
+   See: http://ericlefevre.net/wordpress/2009/11/23/apparmor-how-to-fix-the-create-new-user-issue-with-logprof/
+
+   # cd /etc/apparmor
+   # vi repository.conf 
+	   upload = no
+
+# aa-complain /etc/apparmor.d/usr.sbin.apache2 
+# /etc/init.d/apache2 start
+# /etc/init.d/apache2 restart
+# /etc/init.d/apache2 stop
+
+log: /var/log/audit/audit.log
+# aa-logprof 
+
+# aa-enforce /etc/apparmor.d/usr.sbin.apache2
+# /etc/init.d/apache2 start
+
+
+-- remove
+apparmor_parser -R usr.sbin.apache2
+
+service apparmor reload
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- squid
+--
+# aa-genprof /usr/sbin/squid3
+(D)isable Repository
+(F)inish
+
+# /etc/init.d/squid3 restart
+# aa-logprof
+# cd /etc/apparmor.d/
+# vi usr.sbin.squid3 
+  (see squid.txt)
+
+# aa-complain /usr/sbin/squid3 
+# aa-enforce /usr/sbin/squid3 
+
+# apparmor_status
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- enable
+invoke-rc.d apparmor start
+update-rc.d apparmor start 37 S .
+
+-- remove
+invoke-rc.d apparmor stop
+update-rc.d -f apparmor remove
+
+-- reload
+invoke-rc.d apparmor reload
+apparmor_parser -r /etc/apparmor.d/bin.ping
+

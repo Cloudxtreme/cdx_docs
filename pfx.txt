@@ -1,0 +1,4 @@
+ssl windows 2003 iis certificate
+
+openssl pkcs12 -export -out lms.pfx -inkey wildcard.cardiodx.com.key -in wildcard.cardiodx.com.crt -name "lms.cardiodx.com"
+

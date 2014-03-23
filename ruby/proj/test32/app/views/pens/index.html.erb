@@ -1,0 +1,23 @@
+<h1>Listing pens</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @pens.each do |pen| %>
+  <tr>
+    <td><%= pen.name %></td>
+    <td><%= link_to 'Show', pen %></td>
+    <td><%= link_to 'Edit', edit_pen_path(pen) %></td>
+    <td><%= link_to 'Destroy', pen, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Pen', new_pen_path %>

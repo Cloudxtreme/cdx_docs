@@ -1,0 +1,84 @@
+--
+-- with columns
+--
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # http://cchoudesktop:3000/hello/foo/
+
+class HelloController < ApplicationController
+
+  def foo
+    @columns = [ 'Rendering engine', 'Browser']
+  end
+
+  def bar
+    json = {
+      "sEcho" => 1,
+      "iTotalRecords" => "57",
+      "iTotalDisplayRecords" => "57",
+      "aaData" => [
+        { "engine" => "Gecko", "browser" => "Firefox 1.0"},
+        { "engine" => "Trident", "browser" => "Internet Explorer 4.0"},
+      ]
+    }
+    render :json=>json
+        
+  end   
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  def pipeline
+    @columns = [ 'Rendering engine', 'Browser']
+  end
+
+  def pdata
+    json = {
+      "sEcho" => 1,
+      "iTotalRecords" => "57",
+      "iTotalDisplayRecords" => "57",
+      "aaData" => [
+        { "engine" => "Gecko", "browser" => "Firefox 1.0"},
+        { "engine" => "Trident", "browser" => "Internet Explorer 4.0"},
+      ]
+    }
+    render :json=>json
+  end
+
+end
+
+
+#####################################################################################################################33
+more foo.html.erb 
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#example').dataTable( {
+    bProcessing: true,
+    sAjaxSource: 'http://cchoudesktop:3000/hello/bar/',
+		aoColumns: [
+            { "mData": "engine" },
+            { "mData": "browser" }
+        ]
+  } );
+
+});
+</script>
+
+
+<h1>Live example</h1>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+  <thead>
+    <tr>
+			<% @columns.each do |column| %>
+	      <th width="20%"><%=column%></th>
+			<% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="5" class="dataTables_empty">Loading data from server</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+

@@ -1,0 +1,12 @@
+
+http://ftp.debian.org/debian/pool/main/r/refit/refit_0.7-3_i386.deb
+dpkg -i refit_0.7-3_i386.deb
+sudo gptsync /dev/sda && sudo sfdisk -c /dev/sda 3 83
+
+
+if can't use apt-get update, remove lock file from /var/lib/apt/lists
+
+
+   11  apt-get remove mouseemu
+   12  apt-get install mouseemu
+

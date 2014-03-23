@@ -1,0 +1,62 @@
+kvm86 kvm88
+
+wajig install build-essential
+wajig install linux-headers-2.6.24-24-server 
+wajig install zlib1g-dev pciutils-dev libsdl-dev libasound2-dev pkg-config libgnutls-dev libpciaccess-dev
+wajig install fakeroot
+
+
+--./configure --prefix=/usr/local/kvm-88
+./configure
+make
+make install
+
+# modprobe kvm-amd 
+# lsmod | grep kvm
+kvm_amd                48660  0 
+kvm                   208664  1 kvm_amd
+
+
+
+wajig install libvirt-bin ubuntu-vm-builder
+
+  241  adduser `id -un` libvirtd
+  242  adduser `id -un` kvm
+  243  wajig install ca-certificates -y
+
+
+vi /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+#auto eth0
+#iface eth0 inet dhcp
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_fd 9
+        bridge_hello 2
+        bridge_maxage 12
+        bridge_stp off
+
+iface eth0 inet static
+
+
+cd /etc/libvirt/qemu/networks
+cp default.xml bridge.xml
+vi bridge.xml
+  <name>bridge</name>
+
+
+wajig install python-virtinst virt-viewer xterm xauth -y
+
+
+--virt-install -n win32 -r 512 -f /images/kvm/win32.img -s 15 -c /root/winxp32.iso --accelerate --vnc
+--/usr/local/bin/qemu-img create -f qcow win32.img 10G 
+dd if=/dev/zero bs=10M count=1000 | pv > win32.img
+/usr/local/bin/qemu-system-x86_64 -hda /images/kvm/win32.img -cdrom /root/winxp32.iso -boot d  -m 384
+
+/usr/local/bin/qemu-system-x86_64 -hda /images/kvm/win32.img -m 512 -soundhw es1370 -no-acpi -snapshot -localtime -boot c -net nic,vlan=0,macaddr=00:00:10:52:37:48 -net tap,vlan=0,ifname=tap0,script=no
+
+(Hangs on installing network devices!!!!!!!)

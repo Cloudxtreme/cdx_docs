@@ -1,0 +1,32 @@
+05-Mar-2005 18:09:17.092 general: info: zone 0.0.127.in-addr.arpa/IN: loaded serial 1997022700
+05-Mar-2005 18:09:17.095 general: info: zone 2.168.192.in-addr.arpa/IN: loaded serial 2001042702
+05-Mar-2005 18:09:17.098 general: info: zone mandrakesoft.com/IN: loaded serial 2001042703
+05-Mar-2005 18:09:17.099 general: info: running
+05-Mar-2005 18:09:22.445 general: info: shutting down: flushing changes
+05-Mar-2005 18:09:22.445 general: notice: stopping command channel on 127.0.0.1#953
+05-Mar-2005 18:09:22.450 network: info: no longer listening on 127.0.0.1#53
+05-Mar-2005 18:09:22.451 network: info: no longer listening on 192.168.2.2#53
+05-Mar-2005 18:09:22.455 general: notice: exiting
+05-Mar-2005 18:09:24.561 general: info: zone 0.0.127.in-addr.arpa/IN: loaded serial 1997022700
+05-Mar-2005 18:09:24.565 general: info: zone 2.168.192.in-addr.arpa/IN: loaded serial 2001042702
+05-Mar-2005 18:09:24.567 general: info: zone mandrakesoft.com/IN: loaded serial 2001042703
+05-Mar-2005 18:09:24.569 general: info: running
+05-Mar-2005 18:09:42.224 general: info: shutting down: flushing changes
+05-Mar-2005 18:09:42.227 general: notice: stopping command channel on 127.0.0.1#953
+05-Mar-2005 18:09:42.230 network: info: no longer listening on 127.0.0.1#53
+05-Mar-2005 18:09:42.231 network: info: no longer listening on 192.168.2.2#53
+05-Mar-2005 18:09:42.235 general: notice: exiting
+05-Mar-2005 18:09:44.386 general: info: zone 0.0.127.in-addr.arpa/IN: loaded serial 1997022700
+05-Mar-2005 18:09:44.389 general: info: zone 2.168.192.in-addr.arpa/IN: loaded serial 2001042702
+05-Mar-2005 18:09:44.392 general: info: zone mandrakesoft.com/IN: loaded serial 2001042703
+05-Mar-2005 18:09:44.393 general: info: running
+05-Mar-2005 18:10:23.100 general: info: journal file mandrakesoft.zone.jnl does not exist, creating it
+05-Mar-2005 18:10:23.101 general: error: mandrakesoft.zone.jnl: create: permission denied
+05-Mar-2005 18:11:32.755 general: info: journal file mandrakesoft.zone.jnl does not exist, creating it
+05-Mar-2005 18:11:32.756 general: error: mandrakesoft.zone.jnl: create: permission denied
+05-Mar-2005 18:11:40.477 general: info: journal file mandrakesoft.zone.jnl does not exist, creating it
+05-Mar-2005 18:11:40.478 general: error: mandrakesoft.zone.jnl: create: permission denied
+05-Mar-2005 18:12:19.098 general: info: journal file mandrakesoft.zone.jnl does not exist, creating it
+05-Mar-2005 18:12:19.127 general: info: journal file mandrakesoft.reversed.jnl does not exist, creating it
+05-Mar-2005 18:18:11.928 general: info: journal file mandrakesoft.zone.jnl does not exist, creating it
+05-Mar-2005 18:18:11.966 general: info: journal file mandrakesoft.reversed.jnl does not exist, creating it

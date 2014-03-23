@@ -1,0 +1,154 @@
+.rotate {
+	/* Safari */
+	-webkit-transform: rotate(90deg);
+
+	/* Firefox */
+	-moz-transform: rotate(90deg);
+
+	/* IE */
+	-ms-transform: rotate(90deg);
+
+	/* Opera */
+	-o-transform: rotate(90deg);
+
+	/* Internet Explorer */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+.tinytable {
+	width: 250px;
+}
+
+.tinytable1 {
+  width: 350px;
+}
+
+.smalltable {
+	width: 400px;
+}
+
+.midtable {
+	width: 600px;
+}
+
+.largetable {
+  width: 710px;
+}
+
+.reference {
+	width: 740px;
+}
+
+.rank {
+  background:#e7e7cf;
+  width: 100px;
+	text-align: center
+}
+
+.cdata {
+	text-align: center
+}
+
+.datetime{
+	width: 200px;
+}
+
+.date {
+	width: 100px;
+  text-align: center
+}
+
+.time {
+	width 100px;
+  text-align: center
+}
+
+.number {
+  width: 150px;
+  text-align: right;
+}
+
+.wide {
+	width: 350px;
+}
+
+.wide0 {
+  width: 150px;
+}
+
+.wide2 {
+  width: 200px;
+}
+
+.wide1 {
+	width: 450px;
+}
+
+.trf {
+	width: 55px;
+	text-align: center
+}
+
+.notice {
+  width: 400px;
+  border: 2px solid green;
+  padding: 7px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+.error {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+/* Not sure how to do multi classes???? */
+.table_bg0 {
+	background-color: #f0f0ff;
+}
+
+.table_bg1 {
+  background-color: #ffffff;
+}
+
+.table_selected {
+	background-color: #bbffff;
+}
+
+.table_bg0m {
+  background-color: #f0f0ff;
+	width: 450px;
+}
+
+.table_bg1m {
+  background-color: #ffffff;
+	width: 450px;
+}
+
+.table_bg0w {
+  background-color: #f0f0ff;
+  width: 450px;
+}
+
+.table_bg1w {
+  background-color: #ffffff;
+  width: 450px;
+}
+
+.table_bg0_c {
+  background-color: #f0f0ff;
+}
+
+.table_bg1_c {
+  background-color: #ffffff;
+}
+
+.table_sub {
+  background-color: #e6e6e6;
+}
+
+.highlight2 { color: #000000 !important; font-weight: bold }
+

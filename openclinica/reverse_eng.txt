@@ -1,0 +1,19 @@
+install odbc driver:
+  http://www.postgresql.org/ftp/odbc/versions/msi/
+
+
+username=clinica
+password=clinica
+
+
+cd /etc/postgresql/8.3/main
+
+vi postgresql.conf
+listen_addresses = '*'    
+
+
+vi pg_hba.conf
+host    all         all         10.10.32.0/21          trust
+
+/etc/init.d/postgresql-8.3 restart
+

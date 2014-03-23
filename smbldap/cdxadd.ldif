@@ -1,0 +1,67 @@
+dn: dc=cardiodx,dc=com
+objectClass: dcObject
+objectClass: organization
+o: cardiodx
+dc: cardiodx
+
+dn: ou=Users,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Users
+
+dn: uid=cchou,ou=Users,dc=cardiodx,dc=com
+cn: Chialin
+sn: Chou
+uid: cchou
+uidNumber: 1098
+gidNumber: 513
+loginShell: /bin/bash
+gecos: Chialin Chou
+description: Chialin Chou
+displayName: Chialin Chou
+homeDirectory: /home/cchou
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: posixAccount
+userPassword:: e1NTSEF9ZStyL0NxQ2JnL3pySjZmWS9WYUJqZk0zekNwek9XeDY=
+
+dn: uid=srikar,ou=Users,dc=cardiodx,dc=com
+uid: srikar
+uidNumber: 1005
+gidNumber: 513
+loginShell: /bin/bash
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: posixAccount
+sn: Rao
+cn: Srikar
+homeDirectory: /home/srikar
+gecos: Srikar Rao
+description: Srikar Rao
+displayName: Srikar Rao
+userPassword:: e1NTSEF9V09xZ1FSeEFoMUpPMG5kMEhzSmhVdEd4Q0FLQkNWWkw=
+
+dn: ou=policies,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: policies
+
+#dn: cn=default,ou=policies,dc=cardiodx,dc=com
+dn: cn=defaultpolicy,dc=cardiodx,dc=com
+objectClass: top
+objectClass: device
+objectClass: pwdPolicy
+cn: defaultpolicy
+pwdAttribute: userPassword
+pwdMaxAge: 7516800
+pwdExpireWarning: 432000
+pwdInHistory: 6
+pwdCheckQuality: 1
+pwdMinLength: 8
+pwdMaxFailure: 4
+pwdLockout: TRUE
+pwdLockoutDuration: 1920
+pwdGraceAuthNLimit: 0
+pwdFailureCountInterval: 0
+pwdMustChange: TRUE
+pwdAllowUserChange: TRUE
+pwdSafeModify: FALSE
+

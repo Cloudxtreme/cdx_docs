@@ -1,0 +1,6 @@
+
+sudo route change default 10.10.37.2
+
+netstat -nr
+
+

@@ -1,0 +1,18 @@
+
+
+get the entire website
+  wget -rp http://www.cardiodx.com
+
+
+cp -rp ~/www/orig/ www
+
+   62  find . -name '*.html' -exec sed -ie 's/www.cardiodx.com/cchoudesktop.cardiodx.com/g' {} \;
+   63  find . -name '*.html' -exec grep www.cardiodx.com {} \;
+
+find . -name '*.htmle' -exec rm {} \;
+
+
+
+find . -name '*.html' -exec sed -ie 's/cchoudesktop.cardiodx.com/www.cardiodx.com/g' {} \;
+find . -name '*.htmle' -exec rm {} \;
+

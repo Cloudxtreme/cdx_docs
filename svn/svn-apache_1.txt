@@ -1,0 +1,107 @@
+svn apache
+
+http://www.debuntu.org/2006/05/20/54-how-to-subversion-svn-with-apache2-and-dav
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install apache2 subversion libapache2-svn -y
+
+mkdir /var/lib/svn
+chown www-data:www-data -R /var/lib/svn
+chmod 770 -R /var/lib/svn
+
+vi /etc/apache2/mods-available/dav_svn.conf
+<Location /svn>
+  DAV svn
+  SVNParentPath /var/lib/svn
+  AuthType Basic
+  AuthName "Subversion Repository"
+  AuthUserFile /etc/apache2/dav_svn.passwd
+  <LimitExcept GET PROPFIND OPTIONS REPORT>
+    Require valid-user
+  </LimitExcept> 
+</Location>
+
+htpasswd -c /etc/apache2/dav_svn.passwd tester
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+su www-data
+bash
+svnadmin create /var/lib/svn/it
+svn import /etc/init.d/ file:///var/lib/svn/it/apsvn -m"initial import"
+svn list file:///var/lib/svn/it/apsvn
+exit
+exit
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/etc/init.d/apache2 restart
+
+svn list http://localhost/svn/it/apsvn
+svn list http://apsvn.cardiodx.com/svn/it/apsvn
+
+mkdir svn
+cd svn/
+svn co http://localhost/svn/it
+
+cd ~/svn/it/apsvn
+vi rc
+
+svn diff
+svn ci --username tester -m"add cc1"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- ssl
+--
+
+a2enmod ssl
+
+cd /etc/apache2/sites-available
+
+vi default
+<VirtualHost apsvn.cardiodx.com:80>
+  ServerName apsvn.cardiodx.com
+  Redirect permanent / https://apsvn.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost *:443>
+
+        SSLEngine on
+        SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+        SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+
+cd /etc/apache2
+mkdir ssl
+cd ssl
+scp root@trac:/etc/apache2/ssl/* .
+
+/etc/init.d/apache2 stop
+/etc/init.d/apache2 start
+
+
+svn list http://localhost/svn/it/apsvn
+svn list https://localhost/svn/it/apsvn
+
+
+svn list https://apsvn.cardiodx.com/svn/it/apsvn
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- auth through pam_ldap
+--
+
+read apache2_auth_pam.txt
+
+vi dav_svn.conf
+<Location /svn>
+  DAV svn
+  SVNParentPath /var/lib/svn
+  AuthBasicAuthoritative off
+  AuthPAM_Enabled on
+  AuthType Basic
+  AuthName "Please enter your Login/Password"
+  require valid-user
+  require group linuxusers
+</Location>
+
+svn list https://apsvn.cardiodx.com/svn/it/apsvn
+
+svn ci 

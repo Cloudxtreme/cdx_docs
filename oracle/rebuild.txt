@@ -1,0 +1,86 @@
+
+Binaries are on hardy64 already!!
+
+-- 
+-- Tar servers binary from ccllims:
+--
+tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" \
+     --exclude="/u01/app/oracle/oradata/ORCL/*" --exclude="/u01/app/oracle/dbdump/*" \
+     --exclude="/u01/app/oracle/admin/ORCL/udump/*" --exclude="/u01/app/oracle/archive/*" \
+     --exclude="/clims/*" --exclude="/var/cache/apt/archives/*" -czvf - / | ssh root@storage1 'cat > /root/images/ccllims_pusher.tar.gz'
+
+tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" 
+     --exclude="/u01/app/oracle/oradata/ORCL/*" --exclude="/u01/app/oracle/dbdump/*" \
+     --exclude="/u01/app/oracle/admin/ORCL/udump/*" --exclude="/u01/app/oracle/archive/*" \
+		 --exclude="/u01/app/oracle/admin/ORCL/bdump/*" \
+     --exclude="/root/temp/*" --exclude="/clims/*" --exclude="/var/cache/apt/archives/*" \
+     --exclude="/home/oracle/*" --exclude="/home/mayank/*" \
+     -czvf /root/temp/ccl25.tar.gz /
+
+tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" \
+		--exclude="/u01/app/oracle/oradata/ORCL/*" --exclude="/u01/app/oracle/dbdump/*" \
+		--exclude="/u01/app/oracle/admin/ORCL/udump/*" --exclude="/u01/app/oracle/admin/ORCL/bdump/*" \
+		--exclude="/u01/app/oracle/archive/*" \
+		--exclude="/clims/*"  \
+		--exclude="/home/*" -czvf - / | ssh root@10.10.37.123 'cat > /root/chialin/desktop40.tar.gz'
+
+
+lvextend -i 3 -L+200G /dev/vg1/ccl25
+
+cp portal25.xml ccl25.xml
+uuidgen 
+./genmac.py 
+
+vi ccl25.xml 
+
+more hardy64.xml
+    <disk type='block' device='disk'>
+      <source dev='/dev/disk/by-path/ip-10.10.37.37:3260-iscsi-storage1.ccl25-lun-0'/>
+      <target dev='hdb' bus='ide'/>
+    </disk>
+
+./cdxvm.sh mount portal25
+./cdxvm.sh start hardy64
+
+  untar ccllims_pusher.tar.gz
+  grub
+  :
+
+  change hostname
+  udev
+  mount ccllims_dev gdrive
+  disable backup 
+  pusher (rename portal to portal25)
+
+
+./cdxvm.sh stop hardy64
+./cdxvm.sh umount ccl25
+
+./cdxvm.sh start ccl25
+
+vi listener.ora
+vi tnsnames.ora
+
+
+restore database (will take about 5 hours)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- portal
+tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" \
+     --exclude="/root/*" -czvf - / | ssh root@storage1 'cat > /root/images/portal.tar.gz'
+
+  hostname
+  udev
+  interfaces (static --> dhcp)
+
+   24  wajig purge postgresql-8.4 postgresql
+   25  wajig install postgresql-8.4 postgresql
+   29  vi /etc/postgresql/8.4/main/postgresql.conf
+   30  vi /etc/postgresql/8.4/main/pg_hba.conf
+
+   33  createuser portal --pwprompt
+   40  psql portaldb < portaldb0.sql
+
+(takes about 2 1/2 hourse)
+
+

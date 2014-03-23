@@ -1,0 +1,68 @@
+
+see also: ccmac:~/Documents/ruby/rails/mysql/system.txt
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  310  apt-get update -o Acquire::http::No-Cache=True
+  311  wajig update
+  312  wajig upgrade
+  313  reboot; exit
+
+--
+-- ruby gems
+--
+  315  wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 libpgsql-ruby -y
+  316  wget http://rubyforge.org/frs/download.php/69365/rubygems-1.3.6.tgz
+  317  tar zxvf rubygems-1.3.6.tgz
+  318  cd rubygems-1.3.6/
+  319  ruby setup.rb
+  320  ll /usr/bin/gem1.8
+  321  ln -s /usr/bin/gem1.8 /usr/bin/gem
+
+  347  gem install rails -v 2.3.8 --no-rdoc --no-ri
+  323  gem install ruby-net-ldap ruby-debug slave --no-rdoc --no-ri
+  324  gem install activerecord-activesalesforce-adapter-2.2.2.gem
+
+  328  mkdir svn
+  329  cd svn/
+  331  wajig install subversion
+  332  cd reports/
+  334  svn co svn://svn/datawarehouse/trunk/reports/
+  335  cd reports/
+  336  gem install activerecord-activesalesforce-adapter-2.2.2.gem
+  
+  test SF.com connection!!
+	(see lucid_image.txt)
+
+--
+-- oracle
+--
+  instaqll oracle instant client (see oracle/instant_client.txt)
+
+  354  wajig install ./oracle-instantclient-basic_10.2.0.4-2_amd64.deb 
+				./oracle-instantclient-sqlplus_10.2.0.4-2_amd64.deb 
+				./oracle-instantclient-devel_10.2.0.4-2_amd64.deb
+  355  cd /etc/ld.so.conf.d/
+  356  vi oracle.conf
+  360  ls /usr/lib/oracle/10.2.0.4/client64/lib/
+  364  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/10.2.0.4/client64/lib
+  370  vi tnsnames.ora
+  371  export TNS_ADMIN=.
+  372  export ORACLE_HOME=.
+  374  /usr/lib/oracle/10.2.0.4/client64/bin/sqlplus system/rdlimssys246@rdlims
+  375  gem install ruby-oci8 -v 1.0.4 --no-rdoc --no-ri
+  376  gem install activerecord-oracle-adapter --source http://gems.rubyonrails.org --no-rdoc --no-ri
+
+  test oracle connection!!
+	(see lucid_image.txt)
+
+--
+-- mysql
+--
+  390  wajig install mysql-server
+				secret07
+  392  wajig install libmysqlclient15-dev
+  393  gem install mysql
+
+# mysql -u root -p
+mysql> create database dashboard;
+

@@ -1,0 +1,82 @@
+select pc.patient_case_id, ad.appeal_detail_id
+from pc_fact pc
+left join ad_fact ad
+  on pc.patient_case_id = ad.patient_case_id
+
+select pc.patient_case_id, pad.payment_adjustment_detail_id
+from pc_fact pc
+left join pad_fact pad
+  on pc.patient_case_id = pad.patient_case_id
+
+
+select pc.patient_case_id, ad.appeal_detail_id, pad.payment_adjustment_detail_id
+from pc_fact pc
+left join ad_fact ad
+  on pc.patient_case_id = ad.patient_case_id
+left join pad_fact pad
+  on pc.patient_case_id = pad.patient_case_id
+
+
+select pc.patient_case_id, ad.appeal_detail_id, pad.payment_adjustment_detail_id, plan.plan_id
+from pc_fact pc
+left join ad_fact ad
+  on pc.patient_case_id = ad.patient_case_id
+left join pad_fact pad
+  on pc.patient_case_id = pad.patient_case_id
+	left join plan_fact plan
+	on ad.plan_id = plan.plan_id
+
+
+select pc.patient_case_id, pad.payment_adjustment_detail_id
+from pc_fact pc
+right join pad_fact pad
+  on pc.patient_case_id = pad.patient_case_id
+	right join plan_fact plan 
+	on pad.plan_id = plan.plan_id
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+create table pc (pc_id  int, name char(32));
+insert into pc values (1, 'pc1');
+insert into pc values (2, 'pc2');
+insert into pc values (3, 'pc3');
+insert into pc values (4, 'pc4');
+insert into pc values (5, 'pc5');
+insert into pc values (6, 'pc6');
+insert into pc values (7, 'pc7');
+
+create table ad(ad_id int, name char(32), pc_id int);
+insert into ad values (1, 'ad1', 1);
+insert into ad values (2, 'ad2', 2);
+insert into ad values (3, 'ad3', 3);
+insert into ad values (4, 'ad4', 4);
+
+create table pad(pad_id int, name char(32), pc_id int);
+insert into pad values (3, 'pad4', 3);
+insert into pad values (4, 'pad4', 4);
+insert into pad values (5, 'pad4', 5);
+insert into pad values (6, 'pad4', 6);
+insert into pad values (7, 'pad4', 7);
+
+--left
+select * from pc 
+left join ad
+  on pc.pc_id = ad.pc_id;
+
+select * from pc
+left join pad
+  on pc.pc_id = pad.pc_id
+
+select * from pc
+left join ad
+  on pc.pc_id = ad.pc_id
+left join pad
+  on pc.pc_id = pad.pc_id;
+
+-- right (all the records from left table matches with right table)
+select * from pc
+right join ad
+  on pc.pc_id = ad.pc_id;
+
+
+

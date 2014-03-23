@@ -1,0 +1,18 @@
+
+https://github.com/mikel/mail
+
+wajig install exim4
+
+
+require 'mail'
+
+
+    Mail.deliver do
+      from 'cchou@cardiodx.com'
+      to 'cchou@cardiodx.com'
+      subject "Daily Report #{Date.today}"
+      body rm_str
+    end
+
+
+?????

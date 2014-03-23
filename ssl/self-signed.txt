@@ -1,0 +1,35 @@
+wajig install gnutls-bin
+
+
+certtool --generate-privkey > /etc/ssl/private/cakey.pem
+
+vi /etc/ssl/ca.info
+cn = CardioDx, Inc.
+ca
+cert_signing_key
+
+certtool --generate-self-signed \
+ --load-privkey /etc/ssl/private/cakey.pem \
+ --template  /etc/ssl/ca.info \
+ --outfile /etc/ssl/certs/cacert.pem
+
+
+~~~~
+certtool --generate-privkey > /etc/ssl/private/slapd_key.pem
+
+vi /etc/ssl/slapd.info
+organization = CardioDx, Inc.
+cn = ldaptest.cardiodx.com
+tls_www_server
+encryption_key
+signing_key
+
+
+certtool --generate-certificate \
+ --load-privkey /etc/ssl/private/slapd_key.pem \
+ --load-ca-certificate /etc/ssl/certs/cacert.pem \
+ --load-ca-privkey /etc/ssl/private/cakey.pem \
+ --template /etc/ssl/slapd.info \
+ --outfile /etc/ssl/certs/slapd_cert.pem
+
+

@@ -1,0 +1,11 @@
+
+http://www.miek.nl/blog/archives/2010/02/27/ubuntu_lucid_alpha-3/index.html
+
+grub> ls
+(hd0) (hd0,4) .... (md0) (md1) (md2)    # yes! md devices
+grub> insmod linux              # needed?
+grub> insmod raid
+grub> set root=(md1)
+grub> linux (md0)/vmlinuz-2.6.32-14-generic root=/dev/md1
+grub> initrd (md0)/initrd.img-2.6.32-14-generic
+grub> boot

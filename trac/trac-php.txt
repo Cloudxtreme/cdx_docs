@@ -1,0 +1,4 @@
+
+
+wajig install php5 php5-cli
+

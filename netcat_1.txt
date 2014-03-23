@@ -1,0 +1,3 @@
+server> nc -l 5000 > /dev/null
+client> dd if=lucid64-master.img | pv| nc ganglia 5000
+

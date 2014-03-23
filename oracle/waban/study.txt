@@ -1,0 +1,31 @@
+
+SQL> select study_protocol_id, STUDY_NUMBER, STUDY_TITLE from study_protocol order by study_protocol_id;
+
+STUDY_PROTOCOL_ID STUDY_NUMBER	       STUDY_TITLE
+----------------- -------------------- ----------------------------------------
+		1 Clinical Study       Clinical Study
+		2 Commercial	       Commercial
+	       21 PME		       Post Market Evaluation
+	       23 CCL Studies	       CCL Studies
+	       24 Train and Qual       CCL Training and Qualification
+	       25 Sample PBMC	       Sample PBMC
+	       26 GXP-000228	       Proficiency Assessment
+	       27 Inv Study	       Investigation Study
+	       28 Rgt Qual	       Reagent Qualification
+	       30 sPBMC Test	       Sample PBMC Test
+	       32 COMPASS	       COMPASS
+	       51 IRP		       Internal RNA Pool
+	       53 POSCONTROL	       POSCONTROL
+	       54 2x2 System Test      2x2 System Test
+	       74 HML Pools	       HML Pools
+	       75 PPR-003183	       Multipack Shipping Configuration Study
+	       95 IMPACT Cardiology    IMPACT Cardiology PPR-003221
+	       96 Atlanta	       Atlanta
+	      116 Sample Water	       Sample Water
+	      117 NEGCONTROL	       NEGCONTROL
+	      139 COLOR 	       COLOR
+	      158 PPR-003275	       PPR-003275
+
+22 rows selected.
+
+

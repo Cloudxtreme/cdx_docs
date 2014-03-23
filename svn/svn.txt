@@ -1,0 +1,97 @@
+http://svn.haxx.se/dev/archive-2004-03/0253.shtml
+http://gentoo-wiki.com/Subversion/Basics
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /etc/subversion
+vi config
+store-passwords = no
+store-auth-creds = no
+rm -rf auth/
+
+
+  532  svn list svn://svn/it
+  536  svn co svn://svn/it
+  538  cd it/
+  541  svn info
+  543  mkdir zimlets
+  544  cd zimlets/
+  546  cp ~/Documents/CDX/zimbra/asterisk/* .
+  552  svn add zimlets/
+  554  export EDITOR=vi
+  556  svn ci
+  559  cd svn
+
+  561  rm -rf it
+  562  scn co svn://svn/it/zimlets
+  563  svn co svn://svn/it/zimlets
+  564  ll
+  565  cd zimlets/
+
+svnadmin create /data/svn/repos/etq
+
+chown -R www-data:www-data etq
+
+rm passwd svnserve.conf 
+ln -s ../../../passwd_both passwd
+ln -s ../../../svnserve.conf
+
+on client:
+cd etq/
+mkdir branches tags trunk
+svn add branches/ tags/ trunk/
+
+rm -rf `find . -type d -name .svn`
+
+svn --force add reliance_dev/
+svn --force add files
+
+svn copy svn://svn/clims/trunk svn://svn/clims/tags/release_1.2.3
+svn co svn://svn/clims/release_1.2.3 clims_1.2.3
+svn info (show current directory info)
+
+
+
+svn add oracle-ubuntu.txt oracle-radius.txt ldap-client.txt waban-sce.txt
+
+
+svn co svn://svn/lims/branches/test_CLIA
+svn co svn://svn/lims/branches/test_CLIA/utils
+
+using ssh:
+svn list svn+ssh://svn/data/svn/repos/it
+svn co svn+ssh://svn//data/svn/repos/lims/branches/test_CLIA
+
+svn list svn://svn/lims/tags
+
+for testing:
+cd /var/lib/svn/it/conf
+vi svnserve.conf
+anon-access = write
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  548  wajig install subversion
+  551  svn co svn://svn/it
+  552  cd it/
+  553  ls
+  556  mkdir dhcp-pdns
+  557  cd dhcp-pdns/
+  559  cp /root/dhcp-dns-update/* .
+  562  cd ..
+
+  565  svn status
+  566  svn add dhcp-pdns/
+  569  export EDITOR=vi
+  570  svn ci
+
+  572  cd ..
+  573  ls
+  574  rm -rf it/
+  575  rm -rf dhcp-dns-update/
+  576  svn co svn://svn/it/dhcp-pdns
+  577  cd dhcp-pdns/
+
+
+pdns commands
+ rec_control dump-cache /tmp/foo

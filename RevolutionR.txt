@@ -1,0 +1,45 @@
+
+$ scp RevoEnt-3.0-src.tar.gz root@stat904:
+
+root@stat904:/etc/apt# more sources.list
+deb http://mirrors.xmission.com/ubuntu/ jaunty main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ jaunty main restricted universe multiverse
+
+deb http://mirrors.xmission.com/ubuntu/ jaunty-updates main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ jaunty-updates main restricted universe multiverse
+
+deb http://mirrors.xmission.com/ubuntu/ jaunty-security main restricted universe multiverse
+#deb-src http://mirrors.xmission.com/ jaunty-security main restricted universe multiverse
+
+
+tar zxvf RevoEnt-3.0-src.tar.gz
+
+sudo apt-get build-dep r-base
+
+./configure
+cp SVN-REVISION-CRAN SVN-REVISION
+make
+make check (got errors????)
+checkinstall make install
+
+0 -  Maintainer: [ root@stat904 ]
+1 -  Summary: [ Revolution R for CardioDx ]
+2 -  Name:    [ revo3.0 ]
+3 -  Version: [ 3.0 ]
+4 -  Release: [ 1 ]
+5 -  License: [ GPL ]
+6 -  Group:   [ checkinstall ]
+7 -  Architecture: [ amd64 ]
+8 -  Source location: [ Revo3.0 ]
+9 -  Alternate source location: [  ]
+10 - Requires: [  ]
+11 - Provides: [ revo3.0 ]
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+
+-- on karmic:
+
+wajig install revolution-r
+

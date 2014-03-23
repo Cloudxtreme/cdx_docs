@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ContainerReagent" table="CONTAINER_REAGENT" schema="DNALIMS">
+        <id name="containerReagentId" type="big_decimal">
+            <column name="CONTAINER_REAGENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="reagent" class="com.cardiodx.db.waban.table.Reagent" fetch="select">
+            <column name="REAGENT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="containerBatch" class="com.cardiodx.db.waban.table.ContainerBatch" fetch="select">
+            <column name="CONTAINER_BATCH_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" fetch="select">
+            <column name="CONTAINER_ID" length="20" />
+        </many-to-one>
+        <property name="containerRow" type="big_decimal">
+            <column name="CONTAINER_ROW" precision="22" scale="0" />
+        </property>
+        <property name="containerColumn" type="big_decimal">
+            <column name="CONTAINER_COLUMN" precision="22" scale="0" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

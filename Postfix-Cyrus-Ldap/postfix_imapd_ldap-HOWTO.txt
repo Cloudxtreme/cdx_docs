@@ -1,0 +1,1849 @@
+$Id: postfix_imapd_ldap.txt,v 1.2 2001/05/07 20:02:45 hurd Exp $
+
+=========================================
+ Postfix + Cyrus IMAPD + LDAP mini-HOWTO
+=========================================
+
+
+0. Introduction
+
+
+0.0. 소개
+
+  간단히 말하자면, 이 문서는 UNIX 환경에서, 분산가능한, 대용량, 대규모 메일 
+처리 시스템을 구축하기 위해 생각해 볼 수 있는 한 가지 방법으로 LDAP을 활용하는 
+구체적인 경험을 정리한 것입니다. 몇 해전부터 업무상의 필요 때문에 관련 자료를 
+수집, 분석하여 적용해 본 결과 얻은 결과물들을 정리해 놓은 것이기도 합니다.
+
+  여기서 사용되는 모든 소프트웨어는 GPL 또는 그와 유사한 오픈소스 라이센스
+정책을 따르는 것들입니다. 인터넷을 통해 소스코드를 자유로이 다운로드 받을 수
+있으며, 필요에 따라 소스를 수정하는 일이 허용되는 소프트웨어를 중심적으로
+사용합니다.
+
+  미리 말씀드리지만, 저는 Linux 시스템에 관해 폭넓고 깊이있는 지식을 가지고 
+있는 사람은 아닙니다. 프로그래밍에 필요한 부분만 조금씩 공부해왔을 뿐이며, 주요
+관심분야는 Java 나 C++ 과 같은 프로그래밍 언어와 Networking 입니다. 따라서, 
+제가 가지고 있는 지식이라고 하는 것은 거의 취미 삼아 소일거리로 공부한 정도의 
+얄팍한 것이며, 당연히도 이 문서에 (수 많은?) 오류가 있을 수 있습니다.
+
+
+0.1. 배포 정책
+
+  이 문서는 어느 누구든지 배포, 재배포, 게재할 수 있습니다. 다만, 문서의 내용을
+수정하였을 경우에는 반드시 저에게 알려주십시오. 어떤 `권리'를 행사하기 위해서가
+아니라 원본의 내용에 오류가 있어서 수정된 경우 원본을 함께 수정해는 것이 
+바람직하기 때문입니다.
+
+
+0.2. 이 문서의 최신 버전
+
+  이 문서의 최신 버전은 http://devel.coredump.co.kr/ldap/postfix_imapd_ldap.txt
+에서 확인할 수 있습니다. 현재의 버전은 v1.2 입니다.
+
+
+0.3. 역사
+
+ Version 1.2 2001/05/06
+
+   o 문서 구조화
+   o LMTP를 사용한 SMTP/Mailbox 분산
+   o Cyrus IMAPD 2.0.x 로 업그레이드
+   o Overview 에 ascii art 추가
+   o 기타 설명 보강
+
+ Version 1.1 2001/04/20
+
+   o 초 허접 짜깁기 버전
+
+
+0.4. Feedback
+
+  이 문서의 내용에 오류가 있거나 보강, 수정해야 할 사항이 있다면, 저의 이메일
+주소 hurd@sds.co.kr 로 알려주시기 바랍니다. 또, 이 문서를 보다 풍부하게 
+만드는데 도움이 되는 지적이나, 건의, 질문은 언제든지 환영합니다.
+
+  이 문서에 포함되지 않은 사항, 별로 연관성이 없는 질문, 건의, 지적, 또는 이 
+문서에서 이미 충분하게 설명하고 있는 내용에 대한 재질문 등은 무시될 것입니다. 
+저에게는 답장을 보내지 않을 `권리'가 있습니다.
+
+
+1. Overview
+
+  
+  우리가 구성하게 될 메일 처리 시스템이 어떤 모습이 될 것인지를 그려 본다면
+다음과 같습니다.
+
+
+ [그림 1: 도착한 메일의 처리]
+
+
+             host: mail.sds.co.kr    host: mail.coredump.co.kr
+
+     SMTP        +---------+     LMTP     +-------+  deliver         
+ --------------> | postfix | -----------> | lmtpd | ---------> hurd's mailbox
+  hurd@sds.co.kr +---------+              +-------+
+                     | ^
+             mailbox | |
+             lookup  | | 
+                     | | hurd@mail.coredump.co.kr
+             hurd    | | (실제 메일박스 위치)
+                     v | 
+                 +----------+
+                 | openldap |
+                 +----------+
+
+                dn: uid=hurd,ou=People,dc=sds,dc=co.kr
+                ...
+                maildrop: hurd@mail.coredump.co.kr
+                mailacceptinggeneralid: hurd
+
+
+  위 그림은 hurd@sds.co.kr 을 수신자 주소로 하는 메일이 도착했을 경우 거치게 
+되는 경로를 도식화한 것입니다. 
+
+  SMTP 커넥션으로 들어온 메일은 MTA 인 postfix 가 받아들입니다. 
+hurd@sds.co.kr의 실제 메일박스 위치는 ldap 이 가지고 있으므로, postfix 는 
+openldap 을 검색하여 maildrop 을 읽어 옵니다. 여기서는 hurd@mail.coredump.co.kr
+이라는 값을 읽어오게 됩니다. 즉, hurd 에게 배달되는 메일은 실제로는 
+mail.coredump.co.kr 에 hurd 라는 이름의 mailbox 에 저장되는 것입니다.
+이렇게 로컬 네트워크에서 메일을 메일박스로 배달하는 과정은 LMTP 로 구현됩니다.
+postfix 의 LMTP 클라이언트는 cyrus 의 LMTP 서버에게로 메일을 전달하고, cyrus의
+LMTP 서버가 전달받은 메일을 사용자의 메일박스에 최종 배달(deliver)하게 됩니다.
+
+  이 그림을 구현하기 위해서 우리는 다음과 같은 프로그램들을 사용할 것입니다.
+
+    o Postfix     : SMTP
+    o OpenLDAP    : mail lookup
+    o Cyrus IMAPD : lmtpd, deliver
+
+  또 위의 주요 프로그램들이 내부적으로 사용하는 것으로 다음과 같은 것들이 
+필요합니다.
+
+    o Cyrus SASL  : lmtp 인증에서 사용됨. 또, ldap 에 bind 할 때 사용가능.
+    o Berkeley DB : openldap 의 백앤드 DB
+    o Sieve       : Cyrus IMAP 에 포함되어 있는 서버측 메일 필터링 도구.
+
+    
+  다음은 사용자가 자신의 메일박스에 접근하는 과정을 도식화한 것입니다.
+
+
+ [그림 2: POP3, IMAPD 처리]
+
+
+        IMAPD or POP3    +-------------+  open mailbox
+  User ----------------> | IMAPD, POP3 | --------------> hurd's mailbox 
+        userid, passwd   +-------------+
+                                ^
+                                |
+                          AUTH  |
+                userid, passwd  |
+                                |
+                                v
+                           +----------+    ldpasearch    +----------+
+                           | pam_ldap | <--------------> | openldap |
+                           +----------+      userid,     +----------+
+                                             passwd
+
+
+  사용자는 IMAP 이든 POP3 든 원하는 것을 선택할 수 있습니다. 어느 경우든지,
+인증과정을 거치게 될 것입니다. 사용자가 imapd 또는 pop3d 에게 전달한 userid 와
+passwd 는 pam_ldap 에 전달됩니다. pam_ldap 의 백앤드에는 openldap 이 자리하고
+있으며, pam_ldap 은 전달받은 userid, passwd 가 올바른 것인지를 검증하기 위해
+openldap 의 디렉토리를 검색합니다. 일치하는 엔트리가 있다면 해당 사용자의 
+세션을 수용하게 되며, 그렇지 않다면 적절한 오류 처리를 하게 될 것입니다.
+
+  이 과정을 구현하기 위해서는 다음과 같은 것들이 사용됩니다.
+
+    o OpenLDAP   : PAM_LDAP 의 백앤드 데이터베이스
+    o CyrusIMAPD : imapd, pop3d
+    o PAM_LDAP   : 인증 메카니즘
+
+  그 밖에도 부수적인 몇가지가 더 필요하지만, 그건 필요할 때마다 언급하도록 
+하겠습니다.
+
+  다시 한번 정리해 보자면 필요한 소프트웨어들은 다음과 같습니다.
+
+ - SMTP: postfix snapshot
+         ftp://postfix.webweaver.net/experimental/snapshot-20010228.tar.gz
+
+   정식 릴리즈 버젼을 사용해도 상관없습니다만, LMTP 를 사용하여 SMTP를 메일
+   저장소와 분리하여 사용하려면 스냅샷이 좋습니다.
+
+ - POP3/IMAP: Cyrus IMAPD
+         ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/cyrus-imapd-2.0.12.tar.gz
+
+   Cyrus IMAPD 는 서버측 메일 필터링 언어인 sieve 와 메일박스 분산등을 지원합니
+   다. 또 opepnssl 을 이용한 pop3s, imaps 등을 지원합니다.
+
+ - LDAP: openldap
+        ftp://ftp.OpenLDAP.org/pub/OpenLDAP/openldap-release/openldap-2.0.7.tgz
+
+   Netscape 디렉토리서버를 사용해도 됩니다만, 여기서는 openldap 을 기준으로
+   설명드립니다.
+
+ - PAM_LDAP: nss_ldap, pam_ldap, migrationtools
+        http://www.padl.com/download/nss_ldap.tgz
+        http://www.padl.com/download/pam_ldap.tgz
+        http://www.padl.com/download/MigrationTools.tgz
+
+   /etc/passwd, /etc/group 등을 LDAP으로 대체하는데 필요합니다.
+
+ - DBM: Berkeley DB 3.2.x
+        http://www.sleepycat.com/update/3.2.9/db-3.2.9.tar.gz
+
+   sasl, openldap 등에서 필요로 합니다. gdbm 을 사용해도 되지만, 여기서는
+   berkeley db 를 사용하는 것으로 가정하고 설명하겠습니다.
+
+ - SASL: Cyrus SASL
+        ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/cyrus-sasl-1.5.24.tar.gz
+
+
+
+2. 사전 준비
+
+
+  여기서는 다음과 같이 3 대의 서버로 나누어 구성한다고 가정하며, 그렇다고 할 때
+각 서버에 설치되는 내용을 정리하면 다음과 같습니다. `*' 표시가 된 것은 
+궁극적으로 설치하고자 하는 서버 소프트웨어입니다.
+
+   1) SMTP 서버 (host: smtp.mydomain.com)
+
+      o BerkeleyDB
+      o Cyrus SASL
+      o OpenLDAP API
+      o Postfix (*)
+
+   2) IMAP 서버 (host: imap.mydomain.com)
+
+      o BerkeleyDB
+      o Cyrus SASL
+      o OpenLDAP API
+      o PAM_LDAP
+      o Cyrus IMAPD (*)
+
+   3) LDAP 서버 (host: ldap.mydomain.com)
+
+      o BerkeleyDB
+      o Cyrus SASL
+      o OpenLDAP (*)
+
+
+  물론, 실제로 이렇게 나누어 설치하지 않고 한 대에 몰아 넣어도 상관없습니다.
+자신의 네트워크에서 얼마나 많은 메일이 발생하는지를 평가하여 적절히 분산해 주면
+됩니다.
+
+
+2.1. 모든 서버에 설치할 소프트웨어
+
+
+2.1.1. Berkeley DB 3.2.x
+
+  
+  Berkeley DB 는 OpenLDAP, SASL 에서 사용하게됩니다. GDBM 에 비해 여러가지
+확장 기능을 가지고 있으므로 특별한 이유가 없는한 이를 사용하시기 바랍니다.
+
+우선 웹사이트로부터 최신 버전을 가져옵니다. (아래와 버전이 다를 수 있습니다.)
+
+  $ wget http://www.sleepycat.com/update/3.2.9/db-3.2.9.tar.gz
+
+압축을 풀어 놓습니다.
+
+  $ gzip -dc db-3.2.9.tar.gz | tar xvf -
+
+  컴파일을 합니다. --enable-shared 옵션을 포함시켜 공유라이브러리를 생성하도록
+합니다.
+
+  $ cd db-3.2.9
+  $ cd build_unix
+  $ ../dist/configure --enable-shared
+  $ make
+
+  컴파일이 오류없이 끝났다면 시스템의 적절한 곳으로 설치합니다.
+
+  $ su
+  # make install
+
+  기본적으로 /usr/local/BerkeleyDB.3.2 이하에 복사됩니다. 버전에 따라 이름이
+다를 수 있습니다.
+
+  이제 GNU의 linker인 ld 가 제대로 라이브러리를 찾을 수 있도록 LD_LIBRARY_PATH
+에 추가해 주어야 합니다. 여기서는 간단히 /etc/ld.so.conf 를 수정하도록 합니다.
+
+  # vi /etc/ld.so.conf
+
+    /usr/local/BerkeleyDB.3.2/lib  --> 제일 윗줄에 추가(*중요*)
+
+  이 줄은 맨 윗줄에 위치하여야 합니다. 그렇지 않으면 glibc 에 기본적으로 포함된
+dbm 라이브러리를 찾게 되는 일이 발생합니다.(redhat 계열의 경우 
+/usr/lib/libdb.so) 저도 여러번의 삽질 끝에 알게된 사실인데, 이 별거 아닌 것
+같은 처리를 제대로 해주지 않으면 cyrus imapd 가 별다른 오류메시지 없이 이상하
+게 동작합니다. 오류메시지가 없으니 당연히 원인도 알기 힘듭니다.
+
+  이제 변경사항을 적용합니다.
+
+  # /sbin/ldconfig
+
+
+2.1.2. Cyrus SASL
+
+  Cyrus SASL 라이브러리는 Simple Authentication and Security Layer(RFC 2222)의
+약자로, 카네기 멜론 대학의 Computing Services Department 에서 개발한 것입니다.
+  간단히 말하자면, 인증이 요구되는 프로토콜이라면 어디서나 사용가능한 범용 인증
+메카니즘이라 할 수 있습니다.
+
+  이 문서에서는 SASL 의 상세한 규격에 관해서는 설명하지 않습니다. 관심있는 
+프로그래머라면 RFC 2222와 http://asg2.web.cmu.edu/sasl/ 를 참조하세요.
+
+  최신버전을 받아옵니다.
+
+  $ wget ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/cyrus-sasl-1.5.24.tar.gz
+
+  압축을 풀고 컴파일을 위한 준비를 합니다.
+
+  $ gzip -dc cyrus-sasl-1.5.24.tar.gz | tar xvf -
+  $ cd cyrus-sasl-1.5.24
+  $ env CFLAGS="-O6" \
+   CPPFLAGS="-I/usr/local/BerkeleyDB.3.2/include" \
+   LDFLAGS="-s -L/usr/local/BerkeleyDB.3.2/lib" \
+   ./configure \
+   --prefix=/usr \
+   --enable-static \
+   --enable-shared \
+   --enable-login \
+   --with-dblib=berkeley \
+   --disable-krb4 \
+   --without-rc4 \
+   --disable-cram
+
+  위에서 BerkeleyDB.3.2 관련 사항은 자신의 시스템 상황에 맞게 고쳐주세요.
+  다시한번 얘기하지만, dbm 이 서로 달라 발생하는 문제는 정말 찾아내기 힘듭니다.
+
+  별문제 없이 끝났다면, 이제 컴파일을 합니다.
+
+  $ make
+
+  컴파일이 끝났다면 sasl 이 berkeley DB 와 함께 컴파일 되었는지 확인해 봅니다.
+  별거 아닌 것 같지만, 저처럼 고생하지 않으시려면 반드시 확인해 보세요.
+
+  $ strings -n4 utils/.libs/saslpasswd |grep "libdb"
+
+  이 때 libdb-3.xxx 같은 식의 결과가 출력되어야 합니다.(저의 경우 libdb-3.2.so)
+libdb.so.3 과 같은 식으로 출력되면 문제가 있는 것입니다. 앞서 얘기했듯이 그런 
+경우 imapd 가 이유없이 이상하게 동작합니다. 제 경우는 사용자 인증이 제대로 
+안되는 증상이 발생했었습니다. 그래서, LDAP의 사용자 엔트리에 문제가 있는 것으로
+보고 몇 일동안 LDAP 과 씨름했죠. 나중에 dbm 문제였다는 사실을 알아내고는 얼마나
+허무하던지... ㅠ.ㅠ
+
+  컴파일이 오류없이 끝났다면 설치해줍니다.
+
+  $ su
+  # make install
+  # chmod 755 /usr/lib/sasl/*
+  # chmod 755 /usr/lib/libsasl.la
+  # chmod 755 /usr/lib/libsasl.so.*
+  # /sbin/ldconfig
+
+  앞으로 SASL 인증방식을 사용할 계획이라면 라이브러리 수준에서 로그를 남기는 
+것이 보안상 좋겠죠. syslog 설정에 다음과 같이 새로운 동작을 추가합니다.
+
+  # vi /etc/syslog.conf
+
+  ...
+
+  auth.debug          /var/log/auth.log
+
+  ...
+
+  로그파일을 생성해주고 syslog 데몬을 다시 시작합니다.
+
+  # umask 027
+  # touch /var/log/auth.log
+  # umask 002
+  # killall -HUP syslogd
+
+
+2.2. SMTP 서버를 위한 준비
+
+
+2.2.1.  OpenLDAP API
+
+
+  이제 LDAP API 를 설치 할 차례입니다. 여기서는 openldap 을 사용합니다.
+
+  $ wget ftp://ftp.OpenLDAP.org/pub/OpenLDAP/openldap-release/openldap-2.0.7.tgz
+  $ gzip -dc openldap-2.0.7.tgz |tar xvf -
+  $ cd openldap-2.0.7
+  $ env CFLAGS="-O6 -fomit-frame-pointer" \
+   ./configure \
+   --prefix=/usr \
+   --sysconfdir=/etc \
+   --without-kerberos \
+   --without-cyrus-sasl \
+   --disable-slapd \
+   --disable-slurpd \
+   --enable-static \
+   --without-tls
+
+  $ make depend
+  $ make
+  $ su
+  # make install
+
+  이렇게 하면, redhat 계열의 디렉토리 정책에 따라 /usr 이하에 설치됩니다.
+/usr/lib/libldap.*, /usr/lib/liblber.* 등이 확인된다면 잘 설치된 것입니다.
+여기서는 kerberos 인증과 tls 를 명시적으로 제외했지만, 이는 자신의 상황에 
+맞게 바꾸어 설치하십시오.
+
+
+2.3. IMAP 서버를 위한 준비
+
+
+2.3.1. OpenLDAP API
+
+
+  IMAP 서버는 기본 인증으로 PAM_LDAP 을 사용하기 때문에 LDAP API가 필요합니다.
+2.2.1. 과 같은 방식으로 설치하면 됩니다.
+
+
+3. 설치
+
+
+3.1. LDAP 서버 설치 
+
+
+  LDAP 서버는 앞서 밝힌대로 OpenLDAP 을 설치합니다. BerkeleyDB 와 SASL은 이미
+설치되어 있다고 가정합니다.
+
+  먼저 최신 버전을 받아 옵니다.
+
+  $ wget ftp://ftp.OpenLDAP.org/pub/OpenLDAP/openldap-release/openldap-2.0.7.tgz
+
+  압축을 푼 다음 컴파일, 설치합니다.
+
+  $ gzip -dc openldap-2.0.7.tgz |tar xvf -
+  $ cd openldap-2.0.7
+  $ env CFLAGS="-O6 -fomit-frame-pointer" \
+   ./configure \
+   --prefix=/usr \
+   --sysconfdir=/etc \
+   --without-kerberos \
+   --without-cyrus-sasl \
+   --enable-static \
+   --disable-wrappers \
+   --disable-rlookups \
+   --enable-ldbm \
+   --enable-localstatedir=/var/run \
+   --libexecdir=/usr/sbin \
+   --without-tls
+  $ make depend
+  $ make
+  $ su
+  # make test
+  # make install
+
+  configure 옵션들은 자신의 상황에 맞게 적절히 변경하세요. 잘 모르겠다면, 그냥 
+저처럼 사용해도 됩니다.
+
+  이렇게 LDAP 서버가 마련되었습니다.
+
+  이제 slapd.conf 를 손볼 때입니다. 이미 잘 사용하시던 분이라면 아시겠지만,
+  slapd.conf 의 rootdn 을 위한 패스워드를 만들어야 합니다.
+
+  제 경우는 직접 간단한 프로그램을 만들어서 사용합니다.
+
+  # cat /usr/local/bin/mksha
+
+요기부터...-----------------------------------------------------------
+#!/usr/bin/python
+
+import sys
+import sha
+import base64
+
+if not sys.argv[1:]:
+    print "Usage: %s passwd" % sys.argv[0]
+else:
+    password = sys.argv[1]
+    res = sha.new(password)
+    password = res.digest()
+    print "{SHA}%s" % base64.encodestring(password)
+요기까지...-----------------------------------------------------------
+
+  혹시 아직 clean 패스워드를 사용한다면 위의 간단한 스크립트를 경로에 
+걸어두세요. 만일 'test1234'를 패스워드로 사용하고 싶다면,
+
+  $ mksha test1234
+
+  와 같이 사용하면됩니다. 위의 경우 출력은 다음과 같습니다.
+
+  {SHA}m8NFSdVl2VBbKH3gzSCsd74dPyw=
+
+  이것을 긁어다가 붙여넣으면 됩니다.
+
+  다음은 /etc/slapd.conf 의 한 예입니다.(제가 사용하는 것에서 약간만 고친 
+  것입니다.)
+
+
+------------- 여기부터...---------------------------------------------------
+
+include         /etc/openldap/schema/core.schema
+include         /etc/openldap/schema/cosine.schema
+include         /etc/openldap/schema/inetorgperson.schema
+include         /etc/openldap/schema/nis.schema
+include         /etc/openldap/schema/xmail.schema
+
+defaultaccess   read
+loglevel 256
+idletimeout 0
+sizelimit 1000
+timelimit 3600
+backend ldbm
+
+pidfile         /usr/var/slapd.pid
+argsfile        /usr/var/slapd.args
+
+#######################################################################
+# ldbm database definitions
+#######################################################################
+
+database        ldbm
+readonly        off
+suffix          "dc=mydomain,dc=co.kr"
+rootdn          "cn=root,dc=mydomain,dc=co.kr"
+rootpw          "{SHA}m8NFSdVl2VBbKH3gzSCsd74dPyw="
+directory       /usr/local/ldap
+
+index uid,cn,maildrop,mailacceptinggeneralid pres,eq,sub
+index userPassword pres,eq
+index objectClass pres,eq
+index uidNumber,gidNumber pres,eq
+
+access to attr=userPassword
+    by self write
+    by anonymous auth
+    by dn="cn=root,dc=mydomain,dc=co.kr" write
+    by * none
+access to *
+    by self write
+    by dn="cn=root,dc=mydomain,dc=co.kr" write
+    by * read
+
+--------------- 여기까지... -----------------
+
+  위 내용이 하나도 이해되지 않는다면 ldap 공부를 더 하세요.
+
+  주의하실 것은 다음과 같은 라인입니다.
+
+include         /etc/openldap/schema/xmail.schema
+...
+index uid,cn,maildrop,mailacceptinggeneralid pres,eq,sub
+
+  xmail.schema 는 maildrop 과 mailacceptinggeneralid 를 정의해 놓은 스키마 
+파일입니다. 스키마 검사를 하지 않는다면 문제없지만, 저처럼 스키마 검사를
+생략하는 것을 대단히 찜찜하게 여기신다면, 꼭 포함시켜야 합니다.
+  xmail.schema 는 바로 아래에서 보여드릴 것입니다.
+  maildrop 과 mailacceptinggeneralid 를 인덱싱해두는 것도 상당히 중요합니다.
+인덱스가 있는 것과 그렇지 않은 것과는 상당한 차이가 있습니다. 검색 속도가 
+그야말로 드라마틱하게 빨라집니다.
+
+  물론, dc=mydomain,dc=co.kr 은 자신의 basedn 으로 변경해 주셔야겠죠.
+
+  다음은 maildrop 과 mailacceptinggeneralid 가 정의된 새로운 object, xMail 의
+스키마 파일입니다. maildrop 과 mailacceptinggeneralid 는 SMTP 서버, 즉, postfix
+에서 메일 주소로 실제 메일박스를 찾기 위해 사용하게 됩니다. maildrop 은 
+사용자의 실제 메일박스를 의미하며, 다른 기계를 가리키고 있어도 상관없습니다.
+
+  보통의 경우라면 대개 다음과 같은 모습이 됩니다.
+
+    mailacceptinggeneralid: foo
+    maildrop: foo@imap.mydomain.com
+
+  이럴 경우 foo@mydomain.com 에 메일이 도착하는 과정을 상세히 살펴 보면 다음과
+같습니다.
+       
+   1) 보내는 쪽의 MTA 는 받는 이의 메일 주소 중 도메인 파트, 즉 mydomain.com 의
+      MTA 를 DNS 룩업을 통해 얻어낸다. 여기서 MX 레코드를 참조하게 된다.
+   2) 앞의 과정에서 mydomain.com 의 1차 MTA 주소가 smtp.mydomain.com 이라는 
+      점을 알아내고 smtp.mydomain.com 에 연결하여 메시지를 보낸다.
+   3) 받는 쪽의 MTA(smtp.mydomain.com 의 Postfix)는 자신의 도메인 내에 foo 라는
+      사용자가 있는지를 검색하기 위해 mailacceptinggeneralid 를 검색한다.
+      이 때 /etc/postfix/main.cf 에 정의된 alias_maps 옵션이 가리키는 룰셋에
+      따라 자신의 디렉토리 서버를 찾는다.
+      위 예에서는 foo 로 정의된 엔트리가 있으므로 maildrop 을 읽는다.
+   4) maildrop 의 내용 foo@imap.mydomain.com 을 토대로 foo@mydomain.com 이라는
+      사용자의 메일박스가 imap.mydomain.com 서버에 foo 라는 이름으로 존재한다는
+      사실을 확인하고 imap.mydomain.com 에 배달한다. 이 후의 과정은 LMTP 를 
+      이용하게 된다.
+
+  만일, foo 라는 사용자가 bar@mydomain.com 과 같은 다른 메일 주소를 함께 
+사용하고 싶다면, 다음과 같이 mailacceptinggeneralid 를 추가하면 됩니다.
+
+    mailacceptinggeneralid: foo
+    mailacceptinggeneralid: bar
+    maildrop: foo@imap.mydomain.com
+
+  이와 관련된 내용은 이후의 다른 곳에서 다시 언급하게 될 것입니다.
+
+  xMail 오브젝트의 스키마는 다음과 같습니다.
+
+  $ cat /etc/openldap/schema/xmail.schema
+
+요기부터...-----------------------------------------------------
+attributetype ( 1.3.6.1.4.1.7290.2.1.1
+    NAME 'maildrop'
+    DESC 'address to where admin domain MTA forwards this entrys email'
+    SUP mail
+    SINGLE-VALUE
+    )
+
+attributetype ( 1.3.6.1.4.1.7290.2.1.2
+    NAME 'mailacceptinggeneralid'
+    DESC 'username for mailbox or mail aliasing'
+    SUP uid
+    )
+
+objectclass ( 1.3.6.1.4.1.7290.2.2.1
+    NAME 'xMail'
+    DESC 'LDAP-based routing of SMTP message'
+    SUP top
+    MUST uid
+    MAY (maildrop $ mailacceptinggeneralid)
+    )
+요기까지....----------------------------------------------------------
+
+
+  보시다시피, xMail 이라는 objectclass, maildrop 과 mailacceptinggeneralid 
+  속성을 정의하고 있습니다.(위의 OID를 그대로 사용하시려면 절대로 변경하지
+  마세요.)
+
+  여기까지 일차적인 LDAP 서버 설정은 끝났습니다. 이제 /etc/passwd 를 LDAP으로 
+대체 하는 일이 남아 있습니다. 이 작업은 IMAP 서버에 PAM_LDAP 을 설치한 후 
+다루게 될 것입니다.
+
+
+3.2. SMTP 서버 설치
+
+
+  SMTP 서버에는 이미 BerkeleyDB, SASL, OpenLDAP API 등이 설치되어 있습니다.
+이제 postfix 를 설치하는 일만 남았습니다. postfix 는 official release 와 
+experimental release 이렇게 두 가지 형식으로 배포됩니다. official release 는 
+충분한 검증 단계를 거쳐 버그 수정 이외에는 더 이상 소스 수정이 이루어지지 않는 
+버전을 가리킵니다. Experimental release 는 다음 공식 릴리즈의 전단계로서 새로운
+기능들을 추가하여 시험하는 시험판 기능을 합니다.
+
+  만약, sendmail 이나 다른 MTA가 이미 설치되어 있다면, 소스 패키지에 포함된
+INSTALL 문서를 주의깊게 읽어보시길 권합니다.
+
+  한가지 주의할 점은 현재 버전(20010228-pl02)의 Postfix 는 BerkeleyDB 3.2 와는
+궁합이 잘 맞지 않는다는 점입니다.(제가 여러 각도로 테스트해 본 결과 얻은 
+결론입니다. 컴파일은 잘 되지만, 여러 곳에서 세그폴트가 발생하더군요. -_-; 
+혹시 성공하신 분이 있다면 알려주시기 바랍니다.) 레드햇의 db3-devel 패키지를 
+설치하거나, 아니면 BerkeleyDB 3.1 을 받아 설치하기 바랍니다. Postfix 의 DB는 
+주로 내부적인 해싱에만 사용되기 때문에 IMAP 등과 같은 다른 서버와 충돌을 
+일으키지 않습니다.
+
+  최신 버전을 다운로드 합니다.
+
+  $ wget ftp://ftp.porcupine.org/mirrors/postfix-release/official/postfix-20010228-pl02.tar.gz
+
+  압축을 풉니다.
+
+  $ gzip -dc postfix-20010228-pl02.tar.gz | tar xvf -
+
+  소스 디렉토리로 이동합니다.
+
+  $ cd postfix-20010228-pl02
+
+  만일, 두번째 컴파일 하는 것이라면 소스 트리를 깨끗하게 초기화 합니다.
+
+  $ make tidy
+
+  LDAP 룩업과 SASL 인증을 활성화하여 컴파일하도록 Mailfie 을 생성합니다.
+
+  $ make makefiles \
+    CCARGS="-DHAS_LDAP -DUSE_SASL_AUTH" \
+    AUXLIBS="-lldap -llber -lsasl"
+
+  아무 이상 없다면, 이제 소스를 컴파일합니다.
+
+  $ make
+
+  대개는 별 에러 없이 컴파일이 끝날 것입니다. 컴파일된 바이너리를 설치해 주는
+일이 남았습니다. 설치하기 전에 먼저 postfix 라는 로컬 사용자를 생성해 줍니다.
+Postfix 의 데몬 프로세스들은 바로 이 postfix 권한으로 실행되게 됩니다. postfix
+계정은 쉘과 홈디렉토리가 필요 없으므로 생성할 때 -M -s 옵션을 사용하고 있다는
+점에 주의하십시오. 또 maildrop 그룹을 생성해 주게 되는데, maildrop 그룹은
+/var/spool/maildrop 디렉토리의 소유그룹입니다. 이에 관한 상세한 내용은 INSTALL 
+파일의 "12 - Security: writable versus protected maildrop directory" 부분을 
+참조하시기 바랍니다.
+
+  $ su
+  # useradd -M -s /bin/false postfix
+  # groupadd maildrop
+  # sh INSTALL.sh
+
+install_root: [/] 
+tempdir: [/home/hurd/work/webmail/postfix-20010228-pl02]
+config_directory: [/etc/postfix]
+daemon_directory: [/usr/libexec/postfix]
+command_directory: [/usr/sbin]
+queue_directory: [/var/spool/postfix]
+sendmail_path: [/usr/sbin/sendmail]
+newaliases_path: [/usr/bin/newaliases]
+mailq_path: [/usr/bin/mailq] 
+owner: [postfix] 
+setgid: [no] maildrop
+manpages: [no] /usr/local/man
+
+  여기서는 setgid 항목만 maildrop 으로 지정했을 뿐 나머지는 모두 디폴트 값을 
+사용합니다. 결국, 주요 데몬들은 /usr/libexec/postfix 디렉토리에 설치되며,
+주요 프로그램들은 /usr/sbin 에 설치됩니다. 또, 메일 큐는 /var/spool/postfix 로 
+설정되어 있으며, 설정파일들은 모두 /etc/postfix 이하에 설치됩니다. 설치되는
+디렉토리를 변경하고 싶다면 적절히 고쳐주면 됩니다.
+
+  추가로 /usr/sbin/sendmail 을 /usr/lib 이하에도 링크해 줍니다. 일부 
+응용프로그램에서는 /usr/lib/sendmail 을 찾기 때문입니다.
+
+  # ln -s /usr/sbin/sendmail /usr/lib/sendmail
+
+  설치과정이 성공적으로 끝났다면, 각종 설정파일들을 편집합니다.
+
+  먼저, 메일 앨리어스 설정부터 보겠습니다.
+
+  # vi /etc/postfix/aliases
+여기부터..--------------------------------------------------------
+MAILER-DAEMON:  postmaster
+postmaster:     root
+bin:            root
+daemon:         root
+games:          root
+ingres:         root
+nobody:         root
+system:         root
+toor:           root
+uucp:           root
+manager:        root    
+dumper:         root
+operator:       root
+decode:         root
+postfix:        root
+root:           hurd
+여기까지..-----------------------------------------------------------
+
+  대개는 root 에게 가는 메일을 자신의 메일박스로 전달되도록 하는 정도만 
+고쳐주면 될 것입니다.
+
+
+  # vi /etc/postfix/main.cf
+여기부터..-----------------------------------------------------------
+myhostname = mydomain.com
+myorigin = $myhostname
+mydestination = $myhostname
+relay_domains = $mydestination
+alias_maps = hash:/etc/aliases, ldap:ldapsource
+###########################################
+# LDAP lookup 
+###########################################
+ldapsource_server_host = ldap.mydomain.com
+ldapsource_search_base = ou=People,dc=mydomain,dc=com
+ldapsource_timeout = 10
+ldapsource_bind = no
+ldap_query_filter = (&(mailacceptinggeneralid=%s)(!(|(maildrop="*|*")(maildrop="*:*"))))
+ldap_query_filter = (&(mailacceptinggeneralid=%s)(!(maildrop="*|*")))
+biff = no
+############################################
+# 각종 제한 설정
+############################################
+bounce_size_limit = 50000
+command_time_limit = 1000
+default_process_limit = 50
+deliver_lock_attempts = 5
+deliver_lock_delay = 1
+duplicate_filter_limit = 1000
+fork_attempts = 5
+fork_delay = 1
+header_size_limit = 102400
+# 메시지 크기 제한
+# 20M 로 설정
+message_size_limit = 20971520
+# 10M 로 설정
+#message_size_limit = 10485760
+qmgr_message_active_limit = 1000
+qmgr_message_recipient_limit = 1000
+queue_minfree = 209715200
+stale_lock_time = 500
+transport_retry_time = 60
+여기까지...-----------------------------------------------------------
+
+  위의 내용중 mydomain.com 으로 설정된 내용은 자신의 상황에 맞게 변경되어야 
+합니다. 
+
+  우리의 주제와 관련하여 가장 중요한 7줄을 자세히 살펴보겠습니다.
+
+    alias_maps = hash:/etc/aliases, ldap:ldapsource
+
+  이 행은 메일 앨리어스 데이터베이스를 지정하는 옵션입니다. 여기서는 hash 와 
+ldap 을 사용하는 것으로 설정했습니다. hash 은 흔히 사용되는 방식이므로 설명을
+생략하고, LDAP 부분만 보도록 하겠습니다. ldap:ldapsource 은 풀어서 얘기하자면,
+'ldapsource_' 로 시작하는 디렉티브가 ldap 관련 옵션이라는 의미입니다. 따라서,
+ldapsource 는 myldap 등과 같은 다른 문자열로 바꾸어도 상관없습니다. 다만, 
+변경하였을 경우에는 아래의 ldapsource_server_host, ldapsource_search_base 등과
+같은 옵션들도 함께 변경해 주어야 합니다.
+
+    ldapsource_server_host = ldap.mydomain.com
+
+  이 옵션은 LDAP 서버 주소를 의미합니다. 생략하면 localhost 로 간주합니다.
+가능하다면, IP 주소를 적어주는 것이 좋습니다. DNS 룩업을 생략하게 되므로 보다 
+효율적입니다.
+
+    ldapsource_search_base = ou=People,dc=mydomain,dc=com
+
+  이 옵션은 base dn 을 의미합니다. 기본 값이 없으므로 생략할 수 없습니다.
+
+    ldapsource_timeout = 10
+
+  검색할 때의 타임아웃 시간을 초단위로 지정합니다. 기본 값은 10입니다.
+
+    ldapsource_bind = no
+
+  바인드할 것인지 여부를 설정합니다. OpenLDAP 2.0.x 는 bind 과정을 생략할 수 
+있으므로 no 로 설정하는 것이 오버헤드를 줄이는데 도움이 됩니다. 기본값은 yes 
+이며, 이 경우 bind_dn 과 bind_pw 를 설정해 주어야 합니다.
+
+    ldap_query_filter = (&(mailacceptinggeneralid=%s)(!(|(maildrop="*|*")(maildrop="*:*"))))
+
+    ldap_query_filter = (&(mailacceptinggeneralid=%s)(!(maildrop="*|*")))
+
+  메일 주소를 룩업할 때 함께 사용될 쿼리 필터를 지정합니다. 기본값은 
+(mailacceptinggeneralid=%s) 입니다. 
+
+  그밖에도 퍼포먼스와 관련된 ldap 옵션들이 있지만, 여기서는 다루지 않습니다.
+반드시 소스에 포함된 LDAP_README 를 읽어보시길 바랍니다.
+
+  마지막으로 앞서 수정한 aliases 파일을 해싱합니다.
+
+  # ln -s /etc/postfix/aliases /etc/
+  # /usr/bin/newaliases
+
+  이로써, Postfix 를 단독으로 운영할 수 있게 되었습니다. 간략히 테스트를 해 
+봅니다.
+
+  # /usr/sbin/postfix start
+  # telnet localhost 25
+
+Trying 127.0.0.1...
+Connected to localhost.localdomain.
+Escape character is '^]'.
+220 smtp.mydomain.com ESMTP Postfix
+mail from: <foo@mydomain.com>
+250 Ok
+rcpt to: <bar@yahoo.co.kr>
+250 Ok
+data
+354 End data with <CR><LF>.<CR><LF>
+From: 최영봉 <foo@mydomain.com>
+To: 채림 <bar@yahoo.co.kr>
+Subject: 아싸 테스트...
+
+이것은 테스트 메일입니다. ^^;
+
+.
+250 Ok: queued as C638A121D6
+quit
+221 Bye
+Connection closed by foreign host.
+
+  이렇게 해서 bar@yahoo.co.kr 이 메일을 잘 받는다면 정상적으로 동작하는 
+것입니다.
+
+  syslog 에는 다음과 같은 로그가 남는 것을 확인할 수 있을 것입니다.
+
+May  7 04:19:55 z3n0 postfix-script: starting the Postfix mail system
+May  7 04:19:55 z3n0 postfix/master[9163]: daemon started
+May  7 04:20:24 z3n0 postfix/smtpd[9185]: connect from localhost.localdomain[127.0.0.1]
+May  7 04:20:50 z3n0 postfix/smtpd[9185]: C638A121D6: client=localhost.localdomain[127.0.0.1]
+May  7 04:22:10 z3n0 postfix/cleanup[9186]: C638A121D6: message-id=<20010506192050.C638A121D6@smtp.mydomain.com>
+May  7 04:22:10 z3n0 postfix/qmgr[9165]: C638A121D6: from=<foo@mydomain.com>, size=412, nrcpt=1 (queue active)
+May  7 04:22:10 z3n0 postfix/smtp[9189]: C638A121D6: to=<bar@yahoo.co.kr>, relay=mx1.mail.yahoo.com[216.115.107.17], delay=80, status=sent (250 ok dirdel)
+May  7 04:22:14 z3n0 postfix/smtpd[9185]: disconnect from localhost.localdomain[127.0.0.1]
+
+  이제 남은 일은 local delivery agent 를 설정해 주는 것입니다. 만약, 모든 
+메일 박스가 같은 기계에 존재한다면 cyrus imapd 의 deliver 에게 넘겨주면 됩니다.
+하지만, 이 문서 앞에서 그림으로 확인했듯이 메일박스를 다른 기계에 분산시키기
+위해서 우리는 LMTP(Local Mail Transfer Protocol, RFC2033)를 사용하기로 합니다.
+
+  LMTP 와 관련한 설정은 IMAP 서버를 구성한 다음 하도록 하겠습니다.
+
+
+3.3. IMAP 서버 설치
+
+
+  우리가 구성하려는 IMAP 서버는 크게 볼 때 두 가지 다른 측면을 가집니다.
+
+    1) LMTP 서버
+    2) IMAP, POP3 서버
+
+  이 서버는 Postfix 가 받아들인 메시지를 사용자의 실제 메일박스로 배달하는 
+측면에서는 LMTP 서버로서 기능합니다. 다시 말해, MTA 가 LMTP 클라이언트로서 
+이 서버에게 메시지를 전달하는 셈입니다. 그리고 나서 전달 받은 메시지를 사용자의
+메일박스로 `배달'하게 됩니다.
+
+  다른 측면에서 보면, 이 서버는 메일박스 소유자로 하여금 자신의 메일박스에 
+접근하여 메일을 읽거나 처리할 수 있도록 서비를 제공해야 합니다. 물론, IMAP 
+방식을 사용할지 POP3 를 사용할지는 사용자기 선택할 수 있습니다.
+
+  두번째 기능과 관련하여서는 메일박스의 소유주만 자신의 메일박스를 열 수 있도록
+제한할 필요가 있습니다. 여기서 일반적으로 사용되는 것이 `로그인' 또는 `인증' 
+단계입니다. 앞에서 언급해 두었듯이 우리는 이 단계를 PAM_LDAP 모듈이 수행하도록 
+할 것입니다.
+
+
+3.3.1. PAM_LDAP 모듈 설치
+
+
+  PAM_LDAP 은 말그대로 LDAP을 사용하는 PAM입니다. PAM이 뭔지 잘 모르신다면 
+ http://www.kernel.org/pub/linux/libs/pam/ 를 읽어 보세요.
+  NSS_LDAP 에 관해서는 RFC 2307(http://www.faqs.org/rfcs/rfc2307.html)를 
+읽어보세요.
+
+  간략히 설명드리자면 PAM은 Pluggable Authentication Modules의 약자로 다원화된
+인증 방식에 유연하게 대처하기 위해 탄생한 것입니다. 거의 모든 리눅스 배포본이
+PAM 을 기본 인증 메카니즘으로 채택하고 있으므로 리눅스 사용자라면 PAM을 다시 
+설치할 필요는 없습니다. 다만 /etc/passwd 대신에 LDAP 을 사용하기 위해서 
+PAM_LDAP 모듈을 설치해 주면 됩니다. Solaris 나 FreeBSD 에서도 사용가능합니다.
+
+  NSS_LDAP 은 NIS(Network Information Service, 예전에 Yellow Page, YP 라고 
+불리던 것)에 LDAP 을 사용하는 접근방법에 관한 메모인 RFC 2307 을 구현한 
+것입니다. OpenLDAP 에 포함되어 있는 nis.schema 가 바로 RFC 2307 에서 다루고 
+있는 스키마입니다. Sun 사에서 개발하여 Solaris 에 포함하기 시작한 NameService 
+Switch 인터페이스를 대폭 수용하고 있기 때문에 NSS_LDAP 이라는 이름을 가지게
+되었습니다. NameService Switch Interface 는 /etc/passwd 에 의존적인 
+C 라이브러리의 다양한 시스템 호출 및 함수들을 수정, 확장한 것으로 Solaris 2 의 
+C 라이브러리에 포함된 것을 GNU C 라이브러리에 도입한 것입니다. NSS_LDAP 은 바로
+이 NameService Switch Interface 의 LDAP 모듈입니다.
+
+  이 문서에서는 /etc/passwd 와 /etc/shadow 만 LDAP 으로 옮깁니다. 나머지는 그냥
+보통의 flat 파일을 사용하는 것으로 간주합니다. 만일 NSS_LDAP 을 시스템 전체에
+걸쳐 적용하고자 한다면, http://www.padl.com/tools.html 를 참조하십시오.
+
+
+3.3.1.1. NSS_LDAP
+
+
+  최신버전을 PADL Software 로부터 가져옵니다.
+
+  $ wget http://www.padl.com/download/nss_ldap.tgz
+
+  압축을 풀고 컴파일합니다. 비교적 새 버전이 빠르게 릴리즈되므로 버전은 다를 수
+있습니다.
+
+  $ gzip -dc nss_ldap.tgz |tar xvf -
+  $ cd nss_ldap-150
+  $ ./configure --with-ldap-lib=openldap
+  $ make
+
+  컴파일시 몇 개의 warning 이 나타날 수 있는데, 대개는 로컬 변수가 사용되지 
+않았다는 내용으로 별로 중요한 것은 아닙니다. 그냥 무시하셔도 됩니다.
+
+  컴파일이 오류 없이 끝났다면 설치해줍니다.
+ 
+  $ su
+  # make install
+
+  /lib/libnss_ldap.so.2 와 /etc/nsswitch.ldap 이 확인된다면 정상적으로 설치된 
+것입니다.
+
+
+3.3.1.2. PAM_LDAP
+
+
+  PAM_LDAP 의 경우도 NSS_LDAP과 유사합니다.
+
+  $ wget http://www.padl.com/download/pam_ldap.tgz
+  $ gzip -dc pam_ldap.tgz |tar xvf -
+  $ cd pam_ldap-108
+  $ ./configure --with-ldap-lib=openldap
+  $ make
+  $ make check
+  $ su
+  # make install
+
+  이렇게 하면, /lib/security/ 아래에 pam_ldap.so 파일이 설치됩니다. 이 파일이
+PAM 이 실제로 사용하게 되는 모듈입니다.
+
+  또, /etc/ldap.conf 파일이 설치됩니다. 이 파일은 pam_ldap 이 사용하는 설정
+파일입니다. 따라서, 적절히 수정하는 작업이 필요합니다.
+
+  다음은 /etc/ldap.conf 의 설정 내용입니다.
+
+  # cat /etc/ldap.conf
+
+
+host ldap.mydomain.co.kr
+base dc=mydomain,dc=co.kr
+scope one
+pam_filter objectclass=posixAccount
+
+
+  디폴트 값으로 그냥 사용해도 되는 부분은 생략했습니다. 버전에 따라 몇개의 
+옵션이 더 있을 수 있습니다. 주석을 잘 읽어보시면, 각 옵션이 의미하는 바가 
+뭔지를 쉽게 알 수 있습니다. 적절히 고쳐주세요.
+
+  위의 예에서는 LDAP 서버가 ldap.mydomain.co.kr 에 있는 것으로 가정하고 
+있습니다. Base DN 은 dc=mydomain,dc=co.kr 입니다. 
+자신의 /etc/openldap/slapd.conf 내용에 따라 적절히 바꾸어 줍니다. 아직 ldap 
+서버를 설치하지 않았다면, 이 후 설치한 다음 다시 수정해 주면됩니다.
+  
+  여기까지 마쳤다면 한가지 결정할 사항이 있습니다. pam_ldap 인증을 사용할 
+서비스를 결정하는 것입니다. pam_ldap 소스디렉토리의 pam.d 디렉토리를 살펴보시면
+알만한 이름을 가진 파일들이 보이실 겁니다. 원하는 파일만 /etc/pam.d 로 
+옮겨주시면 됩니다. 여기서는 imap 과 pop3 에서만 사용할 것이므로 다음과 같이 
+복사해줍니다.
+
+  # cp -f pam.d/imap /etc/pam.d/
+  # cp -f pam.d/pop /etc/pam.d/
+
+  각 파일의 내용을 이해하시려면 앞서 언급한 PAM 관련 URL을 참조하세요.
+
+
+3.3.1.3. Migration
+
+
+  pam_ldap 모듈과 관련하여 남은 일은 LDAP 디렉토리를 만들어 주는 것입니다.
+  PADL Software 의 Migration 툴을 이용할 수도 있습니다. 2년전에 펄로된 
+  그 툴을 사용해보고 너무 실망한 나머지(당시에는 상당히 문제가 많았습니다) 
+  그냥 python 으로 직접 만들어 사용해 오다가 몇 달 전 최신 버전을 다시 한번 
+  사용해 보았는데, 몇 줄만 고쳐주면 꽤 쓸만하더군요.
+
+  각설하고, Migration 툴을 받아와서 압축을 풀어 놓습니다.
+
+  $ wget http://www.padl.com/download/MigrationTools.tgz
+  $ gzip -dc MigrationTools.tgz |tar xvf -
+  $ cd MigrationTools-37
+
+  일반적인 설정사항을 고쳐줍니다.
+
+  $ vi migrate_common.ph
+-----------------------------------------------------------
+$DEFAULT_MAIL_DOMAIN = "mydomain.co.kr";
+$DEFAULT_BASE = "dc=mydomain,dc=co.kr";
+$DEFAULT_MAIL_HOST = "imap.mydomain.co.kr";
+-----------------------------------------------------------
+  대충 보시면 아시겠지만, 이 설정사항이 다른 스크립트들에서 사용됩니다.
+
+  다음은 우리의 관심사항인 /etc/passwd 을 LDAP 디렉토리로 옮겨 넣는 스크립트를
+  적절히 수정합니다.
+
+  $ vi migrate_passwd.pl
+-----------------------------------------------------------
+    print $HANDLE "objectClass: account\n";
+    print $HANDLE "objectClass: posixAccount\n";
+    print $HANDLE "objectClass: xMail\n";
+    print $HANDLE "objectClass: top\n";
+
+    ...
+
+    print $HANDLE "maildrop: $user@","$DEFAULT_MAIL_DOMAIN\n";
+    print $HANDLE "mailacceptinggeneralid: $user\n";
+    print $HANDLE "\n";
+-----------------------------------------------------------
+
+  보시다시피, xMail, maildrop, mailaccepting 등을 추가해 넣은 것 외에는
+  변동사항이 없습니다.
+
+  이 스크립트가 하는 일은 /etc/passwd 를 읽어서 LDIF 형식의 파일로 변환하는
+  것입니다. 다음과 같이 /etc/passwd 와 /etc/group 을 변환하도록 합니다.
+
+  $ ./migrate_passwd.pl /etc/passwd passwd.ldif
+  $ ./migrate_group.pl /etc/group group.ldif
+
+  만약, NIS 전반에 걸쳐 LDAP 으로 마이그레이션하려면 
+
+  http://www.padl.com/tools.html
+
+  를 읽어보신 후 적절히 처리하시면 됩니다.(이 경우 반드시 root 권한의 콘솔을
+  한 개 정도 열어두신 후 하세요. 자칫하면 로그인이 아예 안됩니다.)
+
+  위에서 생성한 LDIF 파일은 곧장 디렉토리에 써넣을 수 없습니다. 
+  LDAP 디렉토리를 초기화하는 작업이 필요합니다.
+
+  다음은 필요한 엔트리들을 만들기 위한 LDIF 파일입니다.
+
+  $ cat init.ldif
+-----------------------------------------------------------
+# Organization for MyDomain Organization
+dn: dc=mydomain,dc=com
+objectClass: dcObject
+objectClass: organization
+dc: mydomain
+o: Coredump Organization
+description: The Coredump Organization
+
+# Organizational Role for Directory Manager
+dn: cn=root,dc=mydomain,dc=com
+objectClass: organizationalRole
+cn: root
+description: Directory Manager
+
+# for /etc/passwd
+dn: ou=People,dc=mydomain,dc=com
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+# for /etc/group
+dn: ou=Group,dc=mydomain,dc=com
+ou: Group
+objectClass: top
+objectClass: organizationalUnit
+
+# for 'cyrus' IMAP Admin Account 
+dn: uid=cyrus,ou=People,dc=mydomain,dc=com
+objectClass: top
+objectClass: account
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: xMail
+uid: cyrus
+cn: cyrus
+userPassword: {SHA}//diwldksl2dVzyhz0z02fLc=
+loginShell: /bin/bash
+uidNumber: 76
+gidNumber: 12
+homeDirectory: /usr/local/cyrus/imap
+maildrop: foo@imap.mydomain.com
+mailacceptinggeneralid: cyrus
+
+# test user
+dn: uid=hurd,ou=People,dc=mydomain,dc=com
+objectClass: top
+objectClass: account
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: xMail
+uid: hurd
+cn: hurd
+userPassword: {SHA}//diwldksl2dVzyhz0z02fLc=
+loginShell: /bin/bash
+uidNumber: 1005
+gidNumber: 100
+homeDirectory: /no/shell
+maildrop: hurd@imap.mydomain.com
+mailacceptinggeneralid: hurd
+-----------------------------------------------------------
+
+  위와 같은 모습이 되겠군요. dc=mydomain,dc=com 은 적절히 변경해 주셔야합니다.
+cyrus 엔트리는 이후 IMAP의 어드민 user 를 미리 생성해주는 부분입니다. 
+userPassword 와 maildrop 등을 적절히 고쳐주셔야 합니다. 마찬가지로 이 문서 
+끝에서 테스트용으로 사용할 사용자인 hurd 도 추가했습니다. 비밀번호를 적당히
+변경해 주시기 바랍니다.
+
+  초기화 엔트리를 정의할 파일을 이제 디렉토리에 옮겨 씁니다.
+  (LDAP 서버에 slapd 가 이미 돌아가고 있다고 가정합니다.)
+ 
+  $ ldapadd -f init.ldif -x -h ldap.mydomain.com -D "cn=root,dc=mydomain,dc=com" -W
+
+  성공적으로 디렉토리가 만들어졌다면, passwd 와 group 를 마이그레이션합니다.
+
+  $ ldapadd -f passwd.ldif -x -h ldap.mydomain.com -D "cn=root,dc=mydomain,dc=com" -W
+  $ ldapadd -f group.ldif -x -h ldap.mydomain.com -D "cn=root,dc=mydomain,dc=com" -W
+
+  이제 ldapsearch 등으로 확인해 보면 /etc/passwd 내용이 올바르게 옮겨졌는지
+  확인할 수 있을 것입니다. 아.. GQ 와 같은 GUI 프로그램을 써도 되겠군요 :)
+
+  PAM_LDAP 과 관련하여 한가지 더 /etc/nsswitch.conf 를 수정합니다.
+
+  # vi /etc/nsswitch.conf
+
+  와 같이 파일을 열어서 passwd, shadow, group 등에 ldap 을 추가해 줍니다.
+
+  -----------------------------------------------------------
+  passwd:     files ldap
+  shadow:     files ldap
+  group:      files ldap
+  -----------------------------------------------------------
+
+  nisplus 나 nis 를 사용한다면 그 것도 추가해 주시기 바랍니다. nsswitch.conf 는
+수정 즉시 반영됩니다. 잘못 수정하였을 경우 콘솔 로그인 조차 안될 수 있습니다.
+이 작업을 하기 전에 만드시 root 권한의 콘솔을 한 개 정도 열어 두시기 바랍니다.
+
+
+3.3.2. Cyrus IMAPD 2.0.x 설치
+
+
+  Cyrus IMAPD 에 관한 보다 상세한 정보는 http://asg.web.cmu.edu/cyrus/ 에서
+얻을 수 있습니다.
+
+
+3.3.2.1. 사전 준비
+
+
+  아래 내용을 따라 Cyrus IMAPD 2.0.x 를 설치하기 전에 반드시 cyrus-imapd 소스에
+포함된 문서들을 읽어보길 바랍니다.
+
+
+  o Standard ML of New Jersey, SML/NJ (for Cyrus SML ACAP server)
+  (참고 URL: http://cm.bell-labs.com/cm/cs/what/smlnj/)
+
+  $ netscape ftp://ftp.research.bell-labs.com/dist/smlnj/release/110/RPMS/
+    --> get smlnj-110.0.7-4.i386.rpm
+  $ su
+  # rpm -Uvh smlnj-110.0.7-4.i386.rpm
+  # exit
+
+
+  o Cyrus SML ACAP server
+  (참고 URL: http://asg.web.cmu.edu/cyrus/smlacapd/ )
+
+  $ wget ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/cyrus-smlacapd-0.5.tar.gz
+  $ tar xvzf cyrus-smlacapd-0.5.tar.gz
+  $ cd cyrus-smlacapd-0.5
+
+  소스 중 com_err.h 를 include 하는 부분을 et/com_err.h 로 변경합니다.
+
+  $ perl -p -i -e 's/com_err\.h/et\/com_err\.h/g' frontend/*.c
+  $ perl -p -i -e 's/com_err\.h/et\/com_err\.h/g' lib/*.c
+
+  $ ./configure
+
+   * (일부 배포판의 경우) 만일 compile_et 관련 에러가 발생하면,
+     e2fsprogs-devel 을 rpmfind.net 에서 찾아 설치해 줍니다.
+
+  $ make
+  $ su
+  # mkdir -p /usr/local/include/cyrus
+  # make install
+  # vi /etc/services
+-----------------------------------------------------------
+acap        674/tcp
+-----------------------------------------------------------
+  # vi /etc/xinetd.d/acap  <== xinetd 를 사용하는 경우
+-----------------------------------------------------------
+service acap
+{
+    disable             = no
+    socket_type         = stream
+    wait                = no
+    user                = root
+    server              = /usr/cyrus/bin/frontend
+    server_args         = frontend
+}
+-----------------------------------------------------------
+  # vi /etc/inetd.conf  <== 보통 inetd 를 사용하는 경우
+-----------------------------------------------------------
+acap  stream  tcp  nowait  root  /usr/cyrus/bin/frontend  frontend
+-----------------------------------------------------------
+  # /etc/rc.d/init.d/xinetd restart
+
+  또는
+
+  # /etc/rc.d/init.d/inetd restart
+
+  # vi /etc/acapd.conf
+-----------------------------------------------------------
+configdirectory: /var/acap
+datadirectory: /var/spool/acap
+-----------------------------------------------------------
+  # mkdir /var/acap
+  # mkdir /var/spool/acap
+  # mkdir /var/acap/log
+
+  * 테스트
+
+  # cd /usr/cyrus/bin; ./backend-acapd 
+-----------------------------------------------------------
+compacting /...
+accept loop started...
+starting...
+-----------------------------------------------------------
+
+  * 다른 터미널에서
+
+  # telnet localhost acap
+-----------------------------------------------------------
+Trying 127.0.0.1...
+Connected to localhost.localdomain.
+Escape character is '^]'.
+* Acap (Implementation "SML Frontend, Carnegie Mellon Project Cyrus") (ContextLimit "100") (Sasl "ANONYMOUS" "LOGIN" "PLAIN")
+1 AUTHENTICATE "ANONYMOUS" "hurd"
+1 Ok "Welcome"
+2 SEARCH "/" RETURN ("*") ALL
+2 ENTRY "" (("modtime" "20010221145524000000") ("entry" "") ("dataset.owner" "$master") ("dataset.acl" ("$anyone        xrwia")))
+2 MODTIME "20010221145709000000"
+2 OK "search completed"
+3 LOGOUT
+* BYE "have a nice day"
+3 OK "LOGOUT completed"
+Connection closed by foreign host.
+-----------------------------------------------------------
+
+  * 원래 터미널
+-----------------------------------------------------------
+remote connection opened...
+spawning parser...
+ready to parse line...
+authenticating as anonymous...
+ready to parse line...
+starting search...
+loading /
+done search
+ready to parse line...
+user logged out
+reader came back
+response thread dying
+remote connection closed...
+-----------------------------------------------------------
+
+
+3.3.2.2. Cyrus IMAPD 2.0.x
+
+
+  이 문서를 작성하고 있을 때 version 2.0.13 이 릴리즈되었다는 소식이 메일링 
+리스트에 올라오기에 설치를 시도해 보았으나 실패했습니다. 그래서, 시간 관계상 
+2.0.12 를 기준으로 설명드리겠습니다.
+
+  새버전인 2.0.13 에는 가상 도메인 개념이 강화되어 환경설정 파일도 여러 개 가질
+수 있습니다. 또, 한 개의 imapd 프로세스로 여러 클라이언트 세션을 감당한다고 
+합니다.(아마 fork() 대신 select() 를 사용하지 않을까 싶군요.)
+
+  $ wget ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/OLD-VERSIONS/imap/cyrus-imapd-2.0.12.tar.gz
+  $ tar xvzf cyrus-imapd-2.0.12.tar.gz
+  $ cd cyrus-imapd-2.0.12
+  $ cd makedepend
+  $ ./configure
+  $ make
+  $ export PATH=`pwd`:$PATH
+  $ cd ..
+
+  위의 내용은 대충 아시는 내용일 것입니다. 이제 본격적인 설치과정이 남아있는데,
+주의할 것이 있습니다. cyrus imapd 는 메시지 헤더에 7비트 문자만 허용하도록
+되어 있습니다. 7비트 이외에 다른 문자가 왔을 경우 아예 메일을 reject 하거나,
+'X'로 대체해 버립니다. 때문에, Subject: 에 한글 제목이 들어가거나, 
+From: 이나 To:, Cc: 등에 한글 이름등이 base64 인코딩없이 들어갈 경우, 
+문제가 생깁니다. 이를 해결하기 위해서는 다음과 같이 소스를 약간 고쳐주어야 
+합니다.
+
+  다음 부분을 주석처리합니다.
+  
+  $ vi imap/message.c
+-----------------------------------------------------------
+
+            } else {
+            /* We have been configured to munge all mail of this
+               form. */
+            *p = 'X';
+
+-----------------------------------------------------------
+  $ env CC="gcc" \
+   CFLAGS="-O6" \
+   LDFLAGS="-s" \
+   ./configure \
+   --with-cyrus-prefix=/usr/cyrus \
+   --with-cyrus-user=cyrus \
+   --with-cyrus-group=mail \
+   --with-statedir=/var \
+   --with-sasldir=/usr \
+   --with-dbdir=/usr/local/BerkeleyDB.3.2 \
+   --with-auth=unix \
+   --without-notify \
+   --without-inn \
+   --without-krb \
+   --with-tcl=/usr \
+   --enable-murder
+
+  여기서 곧장 컴파일할 경우 레드햇 계열의 시스템에서는 에러가 발생할 것입니다.
+문제는 com_err.h 를 include 하는 부분에 기인하는데 다음과 같이 소스를 수정해 
+주면 해결 됩니다.(소스 중 com_err.h 를 et/com_err.h 로 변경합니다.)
+
+  $ for d in master imap timsieved; \
+do \
+   perl -p -i -e 's/com_err\.h/et\/com_err\.h/g' $d/*.c ; \
+done
+
+  컴파일을 합니다. 오류가 발생하는 경우는 대개 필요한 무언가가 설치되어 있지
+않기 때문인 경우가 대부분입니다. 에러 메시지를 잘 읽어보시고 필요한 
+소프트웨어를 설치해 주시면 대개는 해결됩니다.
+
+  $ make depend
+  $ make all
+
+  다음은 cyrus imapd 의 관리 어카운트를 생성해주는 부분입니다. 관련 디렉토리의
+퍼미션은 여기서 생성해주는 관리 계정의 소유로 설정됩니다.
+
+  $ su
+  # /usr/sbin/useradd -c "Cyrus imapd owner" -d /data/cyrus -g mail \
+   -s /bin/bash -u 76 -r cyrus
+
+  앞에서 컴파일한 바이너리들을 인스톨합니다.
+
+  # make install
+
+  인스톨된 바이너리들의 퍼미션을 보정합니다.
+
+  # chmod -R o+rx /usr/cyrus
+  # chmod 4555 /usr/cyrus/bin/deliver
+
+  로그 관련 설정을 해 줍니다.
+
+  # vi /etc/logrotate.d/cyrus-imapd
+-----------------------------------------------------------
+/var/log/imapd.log {
+        nocompress
+}
+-----------------------------------------------------------
+  # vi /etc/syslog.conf
+-----------------------------------------------------------
+local6.debug          /var/log/imapd.log
+-----------------------------------------------------------
+  # touch /var/log/imapd.log
+  # chmod 640 /var/log/imapd.log
+  # killall -HUP syslogd
+
+  Cyrus IMAPD 의 기본 설정파일을 만들어 줍니다. 여기서는 /data/cyrus 
+  이하를 사용하도록 하고 있지만, Cyrus 문서에서 설명하고 있는 /var/imap 등을
+  사용해도 됩니다. 다만, 그럴 경우 아래의 설명 중 디렉토리 부분을 적절히
+  변경하셔야 합니다.
+
+  # vi /etc/imapd.conf
+-----------------------------------------------------------
+configdirectory: /data/cyrus/imap
+partition-default: /data/cyrus/spool
+admins: cyrus
+allowanonymouslogin: no
+umask: 077
+quotawarn: 80
+timeout: 30
+autocreatequota: 10240
+logtimestamps: no
+sasl_maximum_layer: 256
+sasl_minimum_ldyer: 0
+sasl_pwcheck_method: PAM
+sasl_auto_transition: no
+sieveusehomedir: false
+sievedir: /data/cyrus/sieve
+sieve_maxscriptsize: 100
+sieve_maxscripts: 5
+lmtpsocket: /data/cyrus/imap/socket/lmtp
+-----------------------------------------------------------
+
+  주목하실 부분은
+
+  sasl_pwcheck_method: PAM
+
+  라고 된 부분입니다. 바로 이 항목 때문에 Cyrus IMAPD 의 기본 인증 라이브러리인
+SASL 이 PAM 을 사용하게 되는 것입니다. 또, PAM_LDAP 을 설치하면서, IMAP 과 POP3
+는 LDAP 인증을 사용하도록 했으므로,
+
+  SASL --> PAM --> LDAP
+
+와 같이 결과적으로 LDAP을 통해 인증절차를 거치게 됩니다.
+
+  # mkdir -p /data/cyrus/imap
+  # chown cyrus:mail /data/cyrus/imap
+  # chmod 750 /data/cyrus/imap
+  # mkdir -p /data/cyrus/spool
+  # chown cyrus:mail /data/cyrus/spool
+  # chmod 750 /data/cyrus/spool
+  # mkdir -p /data/cyrus/sieve
+  # chown cyrus:mail /data/cyrus/sieve
+  # chmod 750 /data/cyrus/sieve
+  # su cyrus
+
+  소스에 포함된 스크립트를 이용하여 나머지 관련 디렉토리들을 생성합니다.
+
+  $ ./tools/mkimap
+-----------------------------------------------------------
+reading configure file...
+i will configure directory /data/cyrus/imap.
+i saw partition /data/cyrus/spool.
+you are using /data/cyrus/sieve as your sieve directory.
+done
+creating /data/cyrus/imap...
+creating /data/cyrus/sieve...
+creating /data/cyrus/spool...
+done
+-----------------------------------------------------------
+
+  /etc/services 를 아래 내용과 비교하여 편집합니다.
+
+  # vi /etc/services
+-----------------------------------------------------------
+pop3        110/tcp     pop-3       # POP version 3
+pop3        110/udp     pop-3
+imap        143/tcp     imap        # Interim Mail Access Proto v2
+imap        143/udp     imap
+imaps       993
+pop3s       995
+kpop        1109/tcp            # Pop with Kerberos
+sieve       2000/tcp
+lmtp        2003/tcp
+fud         4201/udp
+-----------------------------------------------------------
+
+  Cyrus IMAPD 의 실행 데몬인 master 의 환경 설정 파일을 편집합니다.
+
+  # cp master/conf/prefork.conf /etc/cyrus.conf
+  # vi /etc/cyrus.conf
+-----------------------------------------------------------
+# standard standalone server implementation
+
+START {
+  # do not delete these entries!
+  mboxlist  cmd="ctl_mboxlist -r"
+  deliver   cmd="ctl_deliver -r"
+
+  # this is only necessary if using idled for IMAP IDLE
+#  idled        cmd="idled"
+}
+
+# UNIX sockets start with a slash and are put into /var/imap/sockets
+SERVICES {
+  # add or remove based on preferences
+  imap      cmd="imapd" listen="imap" prefork=5
+  #imaps        cmd="imapd -s" listen="imaps" prefork=1
+  pop3      cmd="pop3d" listen="pop3" prefork=3
+  #pop3s        cmd="pop3d -s" listen="pop3s" prefork=1
+  sieve     cmd="timsieved" listen="sieve" prefork=0
+
+  # at least one LMTP is required for delivery
+  lmtp      cmd="lmtpd" listen="127.0.0.1:lmtp" prefork=1
+  #lmtpunix cmd="lmtpd" listen="/data/cyrus/imap/socket/lmtp" prefork=1
+}
+
+EVENTS {
+  # this is required
+  checkpoint    cmd="ctl_mboxlist -c" period=30
+
+  # this is only necessary if using duplicate delivery suppression
+  delprune  cmd="ctl_deliver -E 3" period=1440
+}
+-----------------------------------------------------------
+
+  여기서는 imap, pop3, sieve, lmtp 만 서비스하도록 설정하였습니다. 
+
+  LMTP 는 두 가지로 설정 가능한데, postfix 와 cyrus imapd 가 같은 기계에서
+동작하고 있다면, UNIX domain socket 을 사용하고, 다른 기계에서 동작한다면,
+TCP 를 사용해야 합니다. 위에서는 서로 다른 기계에서 각각 서비스되고 있다고
+가정하고 TCP로 설정하고 있습니다. 
+
+  이 경우 Postfix 의 환경설정 파일도 수정해 주어야 합니다.
+
+  # vi /etc/postfix/main.cf
+
+  mailbox_transport = lmtp:imap.mydomain.com:2003
+  lmtp_sasl_auth_enable = yes
+  lmtp_sasl_password_maps = hash:/etc/postfix/lmtp_sasl_pass
+
+  또, /etc/postfix/master.cf 에 lmtp 부분이 없다면 추가해 주어야 합니다.
+
+    lmtp      unix  -       -       n       -       -       lmtp
+
+  기본적으로는 위 줄이 포함되어 있을 것입니다.
+
+  이렇게 하면, postfix 의 local delivery agent 가 앨리어스 및 .forward 룰을
+처리한 후 imap.mydomain.com 의 포트 2003 에서 대기하고 있는 LMTP 서버로 메일을
+넘겨주게 됩니다.
+  이 때 LMTP 서버는 SASL 인증을 요구하므로 lmtp_sasl_auth_enable 을 yes 로 설정
+하였습니다. SASL 인증 데이터는 /etc/postfix/lmtp_sasl_pass 에 저장됩니다.
+
+  # vi /etc/postfix/lmtp_sasl_pass
+
+  imap.mydomain.com username:password
+
+  물론, username 과 password 는 사용가능한 것으로 바꾸어 넣어야 합니다. 제 
+경우는 그냥 imapd 의 관리 어카운트인 cyrus 의 것을 사용합니다.)
+  
+
+  *** UNIX domain socket 을 사용하는 경우 ***
+
+  postfix 와 cyrus imapd 를 한 기계에서 운영하는 경우에는 다음과 같이 UNIX 
+domain socket 을 사용합니다.
+
+  먼저 /etc/cyrus.conf 에
+
+    lmtpunix cmd="lmtpd" listen="/data/cyrus/imap/socket/lmtp" prefork=1
+
+과 같이 한 줄을 추가합니다. 여기서 /data/cyrus/imap/socket/lmtp 는 소켓의
+경로입니다.
+
+  또 /etc/postfix/main.cf 에 다음과 같이 한 줄을 추가합니다.
+
+    mailbox_transport = lmtp:unix:/data/cyrus/imap/socket/lmtp
+
+  소켓의 경로가 /etc/cyrus.conf 와 일치해야 합니다.
+
+  *** UNIX domain socket 을 사용하는 경우 (끝) ***
+  
+
+  이제 남은 일은 각각의 데몬을 실행하여 제대로 동작하는지 테스트하는 일입니다.
+
+  imap.mydomain.com 의 rc.local 파일에 cyrus imapd 의 master 를 실행하는 줄을
+넣습니다.
+
+  # vi /etc/rc.d/rc.local
+
+  /usr/cyrus/bin/master &
+
+  libsasl은 각 어플리케이션 별로 환경 설정 파일을 /usr/lib/sasl 디렉토리에 
+저장합니다. Cyrus IMAPD 가 기본적으로 SASL을 사용하므로 Cyrus 관련 인증 
+메카니즘을 PAM 으로 설정해 줄 필요가 있습니다.
+
+  # vi /usr/lib/sasl/Cyrus.conf
+
+  pwcheck_method:PAM
+
+  # touch /etc/sasldb
+  # chown cyrus:mail /etc/sasldb
+  # chmod 644 /etc/sasldb
+
+  이제 cyrus imapd 를 운영할 수 있는 모든 준비를 마쳤습니다.
+  실제로 cyrus imapd 를 가동하는 일은 다음과 같이 master 를 실행함으로써 
+가능합니다. (이 줄 /etc/rc.d/rc.local 등에 넣어두면 됩니다.)
+
+  # /usr/cyrus/bin/master &
+
+
+
+4. 테스트
+
+
+  본격적인 테스트에 앞서 한가지 고쳐두어야 할 부분이 있습니다. Cyrus IMAPD 의 
+관리 툴인 cyradm 의 소스를 고쳐 주는 일인데, cyradm 은 PERL 로 제작되어 
+있습니다. 일반 에디터로 열어서 Cyrus::IMAP::Shell 의 인클루드 경로를 
+적어줍니다. 제 경우는 /usr/local/lib/site_perl/5.6.0/i586-linux 입니다.
+
+  # vi /usr/local/bin/cyradm
+-----------------------------------------------------------
+x) exec perl -I/usr/local/lib/site_perl/5.6.0/i586-linux -MCyrus::IMAP::Shell -e shell -- ${1+"$@"} ;;
+*) exec perl -I/usr/local/lib/site_perl/5.6.0/i586-linux -MCyrus::IMAP::Shell -e shell -- "$@" ;;
+-----------------------------------------------------------
+  # exit
+
+  또, 필요한 데몬들을 모두 다시 실행해 줍니다. (필수적인 것은 아닙니다.)
+
+  각각의 서버에서 slapd, master, postfix 를 다시 실행해 줍니다.
+
+  (slapd)
+  # killall slapd
+  # /usr/sbin/slapd -f /etc/openldap/slapd.conf
+
+  (cyrus imapd)
+  # kill `pidof master`
+  # /usr/local/bin/master &
+
+  (postfix)
+  # /usr/sbin/postfix reload
+
+  
+4.1. 사용자 메일박스 생성
+
+
+  먼저, 테스트용 메일박스를 생성합니다. 메일박스 생성은 cyradm 툴로 하면 
+됩니다. IMAPD 의 관리 계정인 cyrus 로 접속합니다. 이 계정은 3.3.1.3. 에서 LDAP
+엔트리로 추가한 바 있습니다. 비밀번호는 LDAP 에 추가할 때 넣었던 것을 
+사용합니다.
+
+  $ /usr/local/bin/cyradm -user cyrus localhost
+-----------------------------------------------------------
+Please enter your password: 
+IMAP Password:
+localhost> cm user.hurd
+localhost> sq user.hurd 10000
+localhost> quit
+-----------------------------------------------------------
+
+  cyradmin 에서 사용가능한 명령어는 다음과 같습니다.
+
+   -----------------+---------+-------------------------------
+     명령어         | 축약형  | 설명
+   -----------------+---------+-------------------------------
+   createmailbox    | cm      | create a mailbox
+   deleteaclmailbox | dam     | delete an ACL on a mailbox
+   deletemailbox    | dm      | delete a mailbox
+   help             |         | get help on commands
+   listaclmailbox   | lam     | list the ACL on a mailbox
+   listmailbox      | lm      | list mailboxes
+   listquota        | lq      | list quota on root
+   listquotaroot    | lqr,lqm | list quota roots on mailbox
+   quit             |         | exit program
+   renamemailbox    | renm    | rename a mailbox
+   setaclmailbox    | sam     | set an ACL on a mailbox
+   setquota         | sq      | set quota limits
+   -----------------+---------+-------------------------------
+
+  위 예에서는 hurd 라는 사용자의 메일박스를 생성하고 쿼타를 10MB 로 
+설정했습니다.
+
+  이번에는 hurd 로 로그인해서 다른 메일박스를 생성해 봅니다.
+
+  $ /usr/local/bin/cyradm -user hurd localhost
+-----------------------------------------------------------
+localhost> cm INBOX.OUTBOX
+localhost> cm INBOX.TRASH
+localhost> cm INBOX.TEMP
+-----------------------------------------------------------
+
+  일반 사용자 입장에서는 INBOX 가 루트 메일박스이름입니다. 관리자의 측면에서는
+user.userid 가 각 사용자의 메일박스를 가리킵니다.
+
+
+4.2. 메일 발송/수신 테스트
+
+
+  메일 발송 테스트는 다음과 같이 간단히 telnet 을 이용하거나 메일 클라이언트를
+사용하면 됩니다.
+
+
+  $ telnet smtp.mydomain.com smtp
+-----------------------------------------------------------
+Trying 210.97.xxx.xx...
+Connected to smtp.mydomain.com
+Escape character is '^]'.
+220 smtp.mydomain.com ESMTP Postfix
+MAIL FROM: <hurd@sds.co.kr>
+250 Ok
+RCPT TO: <hurd@mydomain.com>
+250 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+From: hurd <hurd@sds.co.kr>
+To: hurd <hurd@mydomain.com>
+Subject: Test!!
+
+메일 발신 테스트입니다.
+.
+250 Ok: queued as BB0EAFC21
+quit
+221 Bye
+Connection closed by foreign host.
+-----------------------------------------------------------
+
+
+  수신 테스트 역시 hurd@mydomain.com 으로 메일을 보내보면 됩니다.
+메일이 도착했는지를 살펴보기 위해서 다음과 같이 해봅니다.
+
+  $ telnet imap.mydomain.com imap
+-----------------------------------------------------------
+Trying 210.97.227.131...
+Connected to imap.mydomain.com.
+Escape character is '^]'.
+* OK mydomain Cyrus IMAP4 v2.0.12 server ready
+. login hurd mypassword
+. OK User logged in
+. list "" *
+* LIST () "." "INBOX"
+* LIST () "." "INBOX.OUTBOX"
+* LIST () "." "INBOX.TEMP"
+* LIST () "." "INBOX.TRASH"
+. OK Completed (0.000 secs 5 calls)
+. select INBOX
+* FLAGS (\Answered \Flagged \Draft \Deleted \Seen)
+* OK [PERMANENTFLAGS (\Answered \Flagged \Draft \Deleted \Seen \*)]  
+* 2 EXISTS
+* 2 RECENT
+* OK [UNSEEN 1]  
+* OK [UIDVALIDITY 985239414]  
+* OK [UIDNEXT 1087]  
+. OK [READ-WRITE] Completed
+. logout
+* BYE LOGOUT received
+. OK Completed
+Connection closed by foreign host.
+-----------------------------------------------------------
+
+  이 때 imapd.log 에는 다음과 같은 기록이 남습니다.
+
+-----------------------------------------------------------
+May  8 04:14:25 imap imapd[31047]: accepted connection
+May  8 04:14:25 imap master[31057]: about to exec /usr/cyrus/bin/imapd
+May  8 04:14:25 imap service-imapd[31057]: executed
+May  8 04:14:32 imap imapd[31047]: login: test.coredump.co.kr[210.97.xxx.xxx] hurd plaintext 
+May  8 04:14:42 imap imapd[31047]: seen_db: user hurd opened /data/cyrus/imap/user/h/hurd.seen
+May  8 04:14:42 imap imapd[31047]: open: user hurd opened INBOX
+May  8 04:14:47 imap master[29579]: process 31047 exited, status 0
+-----------------------------------------------------------
+
+  그리고 메일이 도착할 당시의 LMTP 관련 기록이 그 위쪽에 보일 것입니다.
+
+-----------------------------------------------------------
+May  8 04:03:59 imap lmtpd[31006]: accepted connection
+May  8 04:03:59 imap lmtpd[31006]: lmtp connection preauth'd as postman
+May  8 04:03:59 imap master[31045]: about to exec /usr/cyrus/bin/lmtpd
+May  8 04:03:59 imap master[29579]: process 31004 exited, status 0
+May  8 04:03:59 imap service-lmtpd[31045]: executed
+-----------------------------------------------------------
+
+  이런 방식으로 다양하게 테스트해 보시길 바랍니다. postfix 머신의 로그와 
+LDAP 서버의 로그도 함께 보시면 이해하는데 도움이 되리라 생각됩니다.
+
+
+4.3. Sieve 테스트
+
+
+  Cyrus IMAP 에 기본적으로 포함되어 있는 서버측 메일 필터링 언어인 Sieve 도
+  테스트해 봅시다. sieve 에 관한 상세한 정보를 알고 싶으신 분은 
+
+    http://www.cyrusoft.com/sieve/
+
+  를 참고하십시오.
+
+
+  $ vi myscript.script
+-----------------------------------------------------------
+require ["reject", "fileinto"];
+
+if address :contains :all "From" "hurd@mydomain.co.kr" {
+        reject "Testing..";
+}
+-----------------------------------------------------------
+  $ /usr/local/bin/installsieve -m PLAIN -u hurd -i myscript.script localhost
+  Please enter your password:
+
+  $ /usr/local/bin/installsieve -l -m PLAIN -u hurd localhost
+  Please enter your password: 
+  Authentication succeeded.
+  You have the following scripts on the server:
+    myscript  <- Active Sieve Script
+
+  이렇게 확인한 다음 hurd@mydomain.co.kr 에서 메일을 보내서 reject 되는지 
+  확인합니다.
+
+
+5. 마치며
+
+
+5.1. 퍼포먼스
+
+
+  사실 이 문서에서는 `퍼포먼스'라는 중요한 측면을 전혀 고려하지 않고 있습니다.
+이를테면, TCP 를 경유하는 LMTP 를 이용하는 것 보다는 Postfix 와 IMAP 을 한 
+기계에 몰아넣고 유닉스 소켓을 사용하는 것이 훨씬 빠를 것입니다. 제가 그리고자 
+했던 그림은 세상에서 가장 빠른 메일 시스템의 모습이 아니라 LDAP 을 구심으로 
+다수의 메일 관련 서버들이 여유있게 어우러지는 다소 느슨한 풍경이었습니다.
+
+  만일 보다 실전적인 구성을 생각하신다면 이 문서에서 언급하고 있는 각종 문서들,
+README 들 INSTALL 문서들, 웹사이트들을 꼼꼼히 읽어 보셔야 할 것입니다. 특히, 
+Cyrus IMAPD 의 소스에 포함된 install-perf.html 은 꼭 읽어보십시오.
+
+  그리고, Postfix 의 메일링 리스트, Cyrus 의 메일링 리스트 아카이브를 
+참조하십시오. 거기서 여러 사람들로부터 충분한 경험을 통해 얻은 값진 팁들을 얻을
+수 있을 것입니다.
+
+
+5.2. 앞으로 보강하고자 하는 내용
+
+
+  o 이 문서의 HTML 버전
+  o SSL + Cyrus IMAPD
+  o Cyrus Murder 를 이용한 메일박스 분산 처리
+  o Virtual Host
+  o Sieve 필터링 언어에 관한 보다 풍부한 설명
+  o 퍼포먼스/벤치마킹 관련 주제들
+
+
+-- 
+Nobody knows when you're down & out.
+
+Samjung Data Service Co.,Ltd. I&T Research Ins.
+Chief Researcher, Youngbong Choe.
+mailto: hurd@sds.co.kr, hurd@coredump.co.kr

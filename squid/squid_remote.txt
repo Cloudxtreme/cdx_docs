@@ -1,0 +1,26 @@
+
+
+--
+-- squid server
+--
+
+  323  wajig install squid3 squid3-common
+  324  cd /etc/squid3
+  325  mv squid.conf squid.conf.orig
+  326  grep -v "^#" squid.conf.orig | sed '/^$/d' > squid.conf
+  327  vi /etc/squid3/squid.conf
+  328  /etc/init.d/squid3 restart
+  329  iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 10.10.37.25:3128
+
+
+--
+-- client
+--
+   60  route delete default
+   61  route add default gw 10.10.37.25
+   62  route -n
+
+ping doesn't work!!
+http works fine.
+
+monowall doesn't support nat from the internal interface!!!!

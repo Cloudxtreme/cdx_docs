@@ -1,0 +1,20 @@
+network monitoring tool
+
+wajig install ntop
+wajig install rrdtool
+
+
+ntop --set-admin-password
+
+/etc/init.d/ntop
+
+http://itsrv:3000
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install vnstat
+vnstat -u -i eth0
+
+0-55/5 * * * *   root    /usr/bin/vnstat -u
+
+vnstat -d

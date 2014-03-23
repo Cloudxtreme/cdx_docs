@@ -1,0 +1,38 @@
+interface network performance
+
+pktstat -t -T -n -i eth1 "not (src net 10.10.37.0/24 or dst net 10.10.37.0/24)"
+
+wajig install sysstat vnstat
+
+root@kvmsrv2:/kvm/images# iperf -s
+root@cchoudesktop:/data/cchou# iperf -c kvmsrv2
+
+
+server: iperf -s -p 5001
+client: iperf -c storage1 -p 5001
+
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec  1.09 GBytes    938 Mbits/sec
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vnstat 
+-- http://humdi.net/vnstat/
+
+  540  vnstat -u -i eth0
+  541  vnstat -u -i eth1
+  542  vnstat -u -i eth2
+  543  vnstat -u -i eth3
+
+vnstat -l -i eth1
+
+
+  507  vnstat -h -i eth1
+  515  vnstat -t -i eth1
+
+
+  570  vnstat -m -i eth0
+  571  vnstat -m -i eth1
+  572  vnstat -m -i eth2
+  573  vnstat -m -i eth3
+

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.OligoDesign" table="OLIGO_DESIGN" schema="DNALIMS">
+        <id name="oligoId" type="big_decimal">
+            <column name="OLIGO_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="roi" class="com.cardiodx.db.waban.table.Roi" fetch="select">
+            <column name="ROI_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="oligoName" type="string">
+            <column name="OLIGO_NAME" length="50" not-null="true" unique="true" />
+        </property>
+        <property name="oligoSequence" type="string">
+            <column name="OLIGO_SEQUENCE" length="1000">
+                <comment>Oligo Sequence</comment>
+            </column>
+        </property>
+        <property name="modification5" type="string">
+            <column name="MODIFICATION_5" length="50">
+                <comment>5th prime modification</comment>
+            </column>
+        </property>
+        <property name="modification3" type="string">
+            <column name="MODIFICATION_3" length="50">
+                <comment>3rd prime modification</comment>
+            </column>
+        </property>
+        <property name="internalModification" type="string">
+            <column name="INTERNAL_MODIFICATION" length="50">
+                <comment>Internal Modification</comment>
+            </column>
+        </property>
+        <property name="oligoType" type="string">
+            <column name="OLIGO_TYPE" length="50">
+                <comment>Oligo Type</comment>
+            </column>
+        </property>
+        <property name="temperature" type="string">
+            <column name="TEMPERATURE" length="10">
+                <comment>Temperature</comment>
+            </column>
+        </property>
+        <property name="purpose" type="string">
+            <column name="PURPOSE" length="50">
+                <comment>Purpose</comment>
+            </column>
+        </property>
+        <property name="mixture" type="string">
+            <column name="MIXTURE" length="1">
+                <comment>Indicates whether oligo is a mixture of existing oligo or not</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>CREATED BY USERNAME</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date Created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>Modified By User Name</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date modified on</comment>
+            </column>
+        </property>
+        <set name="oligoReagents" table="OLIGO_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK of Oligo_ID in Oligo Table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoReagent" />
+        </set>
+        <set name="cpValues" table="CP_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpValue" />
+        </set>
+        <set name="oligoMixtureDesignsForOligoMixtureId" table="OLIGO_MIXTURE_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_MIXTURE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoMixtureDesign" />
+        </set>
+        <set name="oligoAssayDesigns" table="OLIGO_ASSAY_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK - Oligo table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoAssayDesign" />
+        </set>
+        <set name="cpNormalizedValues" table="CP_NORMALIZED_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpNormalizedValue" />
+        </set>
+        <set name="oligoMixtureDesignsForOligoId" table="OLIGO_MIXTURE_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_ID" precision="22" scale="0">
+                    <comment>PRIMARY KEY</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoMixtureDesign" />
+        </set>
+        <set name="oligoPurposeDesigns" table="OLIGO_PURPOSE_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="OLIGO_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to Oligo table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoPurposeDesign" />
+        </set>
+    </class>
+</hibernate-mapping>

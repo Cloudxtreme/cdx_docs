@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.GenotypeAutocallRule" table="GENOTYPE_AUTOCALL_RULE" schema="DNALIMS">
+        <comment>Genotype autocall rule</comment>
+        <id name="genotypeAutocallRuleId" type="big_decimal">
+            <column name="GENOTYPE_AUTOCALL_RULE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                <comment>FK to Gene</comment>
+            </column>
+        </many-to-one>
+        <property name="ruleName" type="string">
+            <column name="RULE_NAME" length="50">
+                <comment>User supplied Rule Name an alternate key</comment>
+            </column>
+        </property>
+        <property name="geneResult" type="string">
+            <column name="GENE_RESULT" length="100">
+                <comment>Composite Genotype assigned by this rule</comment>
+            </column>
+        </property>
+        <property name="isValid" type="big_decimal">
+            <column name="IS_VALID" precision="22" scale="0">
+                <comment>Is the rule valid</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>Creator of the record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>Modifier of the record</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date Modified</comment>
+            </column>
+        </property>
+        <set name="genotypeAutocallAlleles" table="GENOTYPE_AUTOCALL_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENOTYPE_AUTOCALL_RULE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to genotype_autocall table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypeAutocallAllele" />
+        </set>
+    </class>
+</hibernate-mapping>

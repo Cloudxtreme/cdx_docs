@@ -1,0 +1,140 @@
+wajig install mysql-server mysql-client
+
+cdxMysql
+ (or use mysqladmin -u [iser] password [password]
+
+
+wajig list-files mysql-server-5.0
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mysql -u root -p 
+
+
+cd /etc/mysql
+cp /usr/share/doc/mysql-server-5.0/examples/my-large.cnf.gz .
+gzip -d my-large.cnf.gz
+mv my.cnf my.cnf.orig
+mv my-large.cnf my.cnf
+
+vi my.cnf
+max_connections=1000
+max_allowed_packet = 32M
+
+
+/etc/init.d/mysql restart
+
+mysql -u root -p 
+
+
+
+mysql> create user 'etq' identified by 'cdxEtq';
+mysql> grant all privileges on *.* to 'etq'@'localhost';
+mysql -u etq 
+(allow to login without a password????)
+
+
+reliance20080304-1915.zip
+
+???Run /MySQLScripts/Enable21CFR/ENABLE_21CFR.sql
+
+
+wajig install tomcat5.5 tomcat5.5-admin tomcat5.5-webapps  
+http://etq01:8180/
+
+
+/usr/share/tomcat5.5-webapps
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--mysql -uroot -S/tmp/mysqldev.sock
+
+mysql -u root -p
+
+source /root/reliance/MySQLScripts/StartupPatch/Startup-Patch.SQL
+source /root/reliance/MySQLScripts/1-ENGINE_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/2-ENGINE_DATA.SQL;
+source /root/reliance/MySQLScripts/3-DATACENTER_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/4-DATACENTER_DATA.SQL;
+source /root/reliance/MySQLScripts/5-ENGINE_CONSTRAINTS.SQL;
+source /root/reliance/MySQLScripts/6-DATACENTER_CONSTRAINTS.SQL;
+source /root/reliance/MySQLScripts/7-LOOKUPS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/8-LOOKUPS_DATA.SQL;
+source /root/reliance/MySQLScripts/9-LOOKUPS_CONSTRAINTS.SQL;
+source /root/reliance/MySQLScripts/10-REPORTING_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/11-AUDITS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/12-AUDITS_DATA.sql;
+source /root/reliance/MySQLScripts/13-AUDITS_CONSTRAINTS.SQL;
+source /root/reliance/MySQLScripts/14-AUDITSARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/15-CALIBRATION_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/16-CHANGE_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/17-COMPLAINTS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/18-CORRACT_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/19-DELEGATION_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/20-DEVIATION_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/21-TRAINING_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/22-DOCARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/23-DOCWORK_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/24-INCIDENTS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/25-MATRET_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/26-NCMR_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/27-QUALRECS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/28-QUALRECSARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/29-VACATION1_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/30-RISK_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/31-MEETINGS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/32-MSDS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/33-MSDSARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/34-ASPECTS_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/35-ASPECTSARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/36-EMERGENCY_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/37-EMERGENCYARC_SCHEMA.SQL
+source /root/reliance/MySQLScripts/38-MONITORING_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/39-MONITORINGARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/40-REGULATORY_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/41-REGULATORYARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/42-EVALIDATOR_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/43-EVALIDATORARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/44-VALIDATION_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/45-VALIDATIONARC_SCHEMA.SQL;
+source /root/reliance/MySQLScripts/46-PROJECT_SCHEMA.SQL;
+
+
+cd /usr/share/tomcat5.5-webapps/
+mkdir reliance
+cd reliance
+jar xvf reliance.war
+
+change mysql password
+
+vi /usr/share/tomcat5.5/conf/tomcat-users.xml
+
+  <user username="admin" password="secret" roles="manager,admin"/>
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /reliance/Build/Installation
+vi install.properties
+
+< databaseVendor=mysql
+< databaseUser=root
+< databasePassword=cdxMysql
+< databaseUrl=jdbc:mysql://localhost:PORT/TEST?autoReconnect=true
+< databaseHost=localhost
+< databasePort=3306
+< applicationServerVendor=tomcat
+< applicationServerIP=localhost
+< applicationServerPort=8180
+< applicationServerHome=/usr/share/tomcat5.5-webapps
+< contextRoot=http://etq01:8180/reliance
+< licenseKey=AB511777F0A0584C3643F88C703416E87F18A42DA57D0044CE791980E9CE8ADE09AA6E69EA91D248FF2C5B8A62E8AA68C34AB65C640A1170EC67BCDF6CC93403F4FCE2E4454FA917FFF63CBEAAFEFAA55D240546533259CD41343E3FC31D3EFDDE4C2183BDC73D417717FAC22264270FCF47AC8DD60B08226A8EE619EAC8E7AD0BD9E1CC8FC404936551F2C05D7F6480859BD82FB4232B77182C36EE0118CA763A1790F3B067E881AE52A9D76B87F9F1271343AD9DEC044D3595775CA5B758E2B1175F83CB73AD75D1FCCBD51EC424B3CB755227D5DCB2BC91DA4E0011C8C27FBDC2E0DF57189214EA399A5260AD6C786FC88785CA5D11FB7B37242639FD4E711B1ACA908A34BACE2826DCB1CD0B24FF1A6C917F754F8B50431B5B00520765A5095C0375D01BAF2D8B291D9FEF65998A1A1DCB4EA4A92C4999D7C0FCC69C3B8B981BA746EE16B0508FB88B8CCB84869684EB1991AAFBBE92E1860EF63D0D2AE9D2F0DC038A236AB8
+< systemEmail=cchou@cardiodx.com
+< attachmentRoot=/usr/files
+< indexRoot=/usr/index
+< mailHost=mail.cardiodx.com
+
+
+vi create_reliance_db.xml
+
+
+
+

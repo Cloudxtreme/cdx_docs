@@ -1,0 +1,3 @@
+ldap keerberos
+
+http://www.openinput.com/auth-howto/

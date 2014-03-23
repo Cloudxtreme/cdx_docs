@@ -1,0 +1,34 @@
+
+take out all 4 drives (preparing for the h/w migration).
+put back all 4 droves (can't migrate.  need a different (supermicro) sata controller card (rather than 3ware))
+got degraded raid (3 out of 4 drive)
+
+# cat /proc/mdstat 
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] 
+md1 : active raid5 sda2[0] sdc2[3] sdb2[1]
+      5860222464 blocks level 5, 64k chunk, algorithm 2 [4/3] [UU_U]
+      
+md0 : active raid1 sda1[0] sdc1[3] sdb1[1]
+      104320 blocks [4/3] [UU_U]
+      
+unused devices: <none>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# mdadm /dev/md0 -a /dev/sdd1
+mdadm: re-added /dev/sdd1
+
+# mdadm /dev/md1 -a /dev/sdd2
+mdadm: re-added /dev/sdd2
+
+# cat /proc/mdstat 
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] 
+md1 : active raid5 sdd2[4] sda2[0] sdc2[3] sdb2[1]
+      5860222464 blocks level 5, 64k chunk, algorithm 2 [4/3] [UU_U]
+      [>....................]  recovery =  0.0% (745048/1953407488) finish=436.7min speed=74504K/sec
+      
+md0 : active raid1 sdd1[2] sda1[0] sdc1[3] sdb1[1]
+      104320 blocks [4/4] [UUUU]
+      
+unused devices: <none>
+
+

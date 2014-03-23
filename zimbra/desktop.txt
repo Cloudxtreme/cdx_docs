@@ -1,0 +1,11 @@
+
+
+as root
+cd zdesktop_2_0_b10580_linux_i686 
+./install.pl 
+
+as cchou:
+/opt/zimbra/zdesktop/linux/user-install.pl
+
+
+

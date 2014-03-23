@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Reagent" table="REAGENT" schema="DNALIMS">
+        <comment>Information about reagents used in procedures.</comment>
+        <id name="reagentId" type="big_decimal">
+            <column name="REAGENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="ORGANIZATION_ID" precision="22" scale="0">
+                <comment>Sponsor company identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="containerBatch" class="com.cardiodx.db.waban.table.ContainerBatch" fetch="select">
+            <column name="CONTAINER_BATCH_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" fetch="select">
+            <column name="CONTAINER_ID" length="20">
+                <comment>The container identifier for the container that holds the Reagent. A foreign key to the CONTAINER table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="reagent" class="com.cardiodx.db.waban.table.Reagent" fetch="select">
+            <column name="PARENT_REAGENT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="reagentBarcode" type="string">
+            <column name="REAGENT_BARCODE" length="20" unique="true">
+                <comment>Reagent barcode.</comment>
+            </column>
+        </property>
+        <property name="reagentName" type="string">
+            <column name="REAGENT_NAME" length="50">
+                <comment>Reagent name.</comment>
+            </column>
+        </property>
+        <property name="lotNumber" type="string">
+            <column name="LOT_NUMBER" length="20">
+                <comment>Reagent lot number.</comment>
+            </column>
+        </property>
+        <property name="volume" type="big_decimal">
+            <column name="VOLUME" precision="22" scale="0">
+                <comment>Reagent Volume</comment>
+            </column>
+        </property>
+        <property name="concentration" type="big_decimal">
+            <column name="CONCENTRATION" precision="22" scale="0" />
+        </property>
+        <property name="expirationDate" type="date">
+            <column name="EXPIRATION_DATE" length="7">
+                <comment>Reagent expiration date.</comment>
+            </column>
+        </property>
+        <property name="unit" type="string">
+            <column name="UNIT" length="50">
+                <comment>Unit for measuring concentration</comment>
+            </column>
+        </property>
+        <property name="containerRow" type="big_decimal">
+            <column name="CONTAINER_ROW" precision="22" scale="0">
+                <comment>The Reagent''s row location in its container.</comment>
+            </column>
+        </property>
+        <property name="containerColumn" type="big_decimal">
+            <column name="CONTAINER_COLUMN" precision="22" scale="0">
+                <comment>The Reagents''s column location in its container.</comment>
+            </column>
+        </property>
+        <property name="dateReceived" type="date">
+            <column name="DATE_RECEIVED" length="7">
+                <comment>Received date of an Oligo.</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="50">
+                <comment>Status of Oligo</comment>
+            </column>
+        </property>
+        <property name="comments" type="string">
+            <column name="COMMENTS">
+                <comment>Comments on Oligo</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="oligoReagents" table="OLIGO_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK of Reagent_ID in Reagent Table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoReagent" />
+        </set>
+        <set name="containerReagents" table="CONTAINER_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerReagent" />
+        </set>
+        <set name="concentrationAdjustments" table="CONCENTRATION_ADJUSTMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0">
+                    <comment>Reagent identifier and foreign key to the REAGENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConcentrationAdjustment" />
+        </set>
+        <set name="masterMixReagentsForReagentId" table="MASTER_MIX_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MasterMixReagent" />
+        </set>
+        <set name="masterMixReagentsForNewReagentId" table="MASTER_MIX_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NEW_REAGENT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MasterMixReagent" />
+        </set>
+        <set name="checklistReagents" table="CHECKLIST_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Reagent identifier and foreign key to the REAGENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistReagent" />
+        </set>
+        <set name="transfers" table="TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0">
+                    <comment>Reagent identifier for the reagent used in the dilution and foreign key to the REAGENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Transfer" />
+        </set>
+        <set name="reagents" table="REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PARENT_REAGENT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Reagent" />
+        </set>
+        <set name="gelMarkers" table="GEL_MARKER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REAGENT_ID" precision="22" scale="0">
+                    <comment>Reagent identifier used as a marker and foreign key to the REAGENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GelMarker" />
+        </set>
+    </class>
+</hibernate-mapping>

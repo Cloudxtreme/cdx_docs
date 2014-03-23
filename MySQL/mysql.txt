@@ -1,0 +1,16 @@
+
+wajig install mysql-server
+root/secret07
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+UPDATE user SET password = password('cdxBugzilla') WHERE user = 'root';
+FLUSH PRIVILEGES;
+
+mysql -u root -p 
+DELETE FROM user WHERE user = '';
+FLUSH PRIVILEGES;
+
+
+wajig install mysql-server-5.0 
+wajig install libmysqlclient15-dev 
+gem install mysql

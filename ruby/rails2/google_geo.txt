@@ -1,0 +1,36 @@
+https://github.com/alexkv/rails-xmlrpc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vi Gemfile
+gem 'rails-xmlrpc'
+
+
+bundle install
+
+
+vi .....controller.rb
+
+require 'xmlrpc/client'
+
+
+
+      server = XMLRPC::Client.new2('http://rpc.geocoder.us/service/xmlrpc')
+      result = server.call2('geocode', address)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ more google.rb 
+#!/usr/local/rvm/rubies/ruby-1.9.3-p392/bin/ruby
+
+require 'xmlrpc/client'
+
+address='2500 Faber Place, Palo Alto, CA'
+server = XMLRPC::Client.new2('http://rpc.geocoder.us/service/xmlrpc')
+result = server.call2('geocode', address)
+puts result
+
+puts "#{result[1][0]['lat']}, #{result[1][0]['long']}"
+
+
+

@@ -1,0 +1,37 @@
+
+
+ip route add table 4 default via 67.95.201.193 dev eth5
+iptables -t mangle -A PREROUTING -s 67.95.201.200/32 -j MARK --set-mark 4
+iptables -t nat -A POSTROUTING -o eth5 -j SNAT --to-source 67.95.201.200
+ip rule add fwmark 4 table 4
+
+
+wolverine # ip rule
+0:	from all lookup local 
+32765:	from all fwmark        4 lookup 4 
+32766:	from all lookup main 
+32767:	from all lookup default 
+
+
+wolverine # ip route show table 4
+default via 67.95.201.193 dev eth5 
+
+
+wolverine # iptables -L -t nat
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination         
+MASQUERADE  all  --  10.10.32.0/21        anywhere            
+MASQUERADE  all  --  10.10.32.0/21        anywhere            
+SNAT       all  --  anywhere             anywhere            to:67.95.201.200 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+after reload the config, we'll need to run the followings:
+
+ip route add table 4 default via 67.95.201.193 dev eth5
+ip route add table 4 10.10.32.0/21 via 10.10.37.2 dev eth1
+iptables -t mangle -A PREROUTING -s 67.95.201.200/32 -j MARK --set-mark 4
+iptables -t nat -A POSTROUTING -o eth5 -j SNAT --to-source 67.95.201.200
+
+
+

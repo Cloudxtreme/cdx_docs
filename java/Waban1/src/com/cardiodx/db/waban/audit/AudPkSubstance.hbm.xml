@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudPkSubstance" table="AUD_PK_SUBSTANCE" schema="DNALIMS">
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="pkSubstanceId" type="big_decimal">
+            <column name="PK_SUBSTANCE_ID" precision="22" scale="0">
+                <comment>Primary key for table</comment>
+            </column>
+        </property>
+        <property name="substanceName" type="string">
+            <column name="SUBSTANCE_NAME" length="60">
+                <comment>Unique name of each substance</comment>
+            </column>
+        </property>
+        <property name="interval1VarId" type="big_decimal">
+            <column name="INTERVAL1_VAR_ID" precision="22" scale="0">
+                <comment>FK to first time interval attribute used for grouping results</comment>
+            </column>
+        </property>
+        <property name="interval2VarId" type="big_decimal">
+            <column name="INTERVAL2_VAR_ID" precision="22" scale="0">
+                <comment>FK to second time interval attribute used for grouping results</comment>
+            </column>
+        </property>
+        <property name="interval3VarId" type="big_decimal">
+            <column name="INTERVAL3_VAR_ID" precision="22" scale="0">
+                <comment>FK to third time interval attribute used for grouping results</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>Last user to modify this data</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Time when data was last modified</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

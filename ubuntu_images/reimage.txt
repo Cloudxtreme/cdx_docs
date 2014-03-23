@@ -1,0 +1,159 @@
+reimage a new ubuntu 64 bit machine
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+boot from rescue cd in 64 bit
+boot: rescue64
+
+net-setup eth0
+  manual config network
+  10.10.37.123
+  10.10.39.255
+  10.10.248.0
+  10.10.37.1
+  10.10.37.21
+
+ifconfig
+
+/etc/init.d/ssh start
+
+passwd (to set root password)
+
+sfdisk -d /dev/sda | sfdisk /dev/sdb
+
+mknod /dev/md1 b 9 1
+
+mdadm -Cv /dev/md0 -l 1 -n 2 /dev/sda1 /dev/sdb1
+mdadm -Cv /dev/md1 -l 1 -n 2 /dev/sda2 /dev/sdb2
+pvcreate /dev/md1
+vgcreate vg0 /dev/md1
+lvcreate -L+15G -n root vg0
+lvcreate -L+5G -n swap vg0
+
+
+% lvscan
+  inactive          '/dev/vg0/root' [20.00 GB] inherit
+  inactive          '/dev/vg0/swap' [2.00 GB] inherit
+
+% lvchange -a y /dev/vg0/root
+
+
+% mkfs.ext3 /dev/md0 
+% mkfs.xfs -f /dev/vg0/root 
+
+% mkdir newroot
+% mount /dev/vg0/root newroot 
+% cd newroot 
+% mkdir boot
+% mount /dev/md0 boot 
+
+% df -k
+/dev/mapper/vg0-root  20961280      4256  20957024   1% /root/newroot
+/dev/md0                101018      5663     90139   6% /root/newroot/boot
+
+% scp cchou@cchoudesktop:~/Desktop/images/raw804.tar.gz .
+% tar zxvf ../raw804.tar.gz
+
+
+% cd etc
+% vi fstab
+/dev/mapper/vg0-root  /               xfs     relatime        0       1
+/dev/md0  						/boot           ext3    relatime        0       2
+/dev/mapper/vg0-swap 	none            swap    sw              0       0
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% mount -o bind /dev /root/newroot/dev 
+% mount -t proc /proc /root/newroot/proc 
+
+% chroot newroot bash
+
+# cd /etc/apt
+# vi apt.conf
+Acquire::http::Proxy "http://aptcacher.cardiodx.com:3142";
+
+# mv sources.list sources.list.orig
+# vi sources.list
+deb http://mirror.anl.gov/ubuntu/ hardy main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ hardy main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu/ hardy-updates main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ hardy-updates main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu hardy-security main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu hardy-security main restricted universe multiverse
+
+# apt-get update
+# apt-get install wajig
+# wajig update
+# wajig install mdadm
+
+
+-- find uuid of a hard drive (partition)
+blkid
+
+# mdadm --detail --scan
+ARRAY /dev/md0 level=raid1 num-devices=2 UUID=07bd3edc:3421cb38:fa79197f:9694a612
+ARRAY /dev/md1 level=raid1 num-devices=2 UUID=171390f0:984aa566:ea0bf326:de18ad27
+
+# mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+# vi /etc/mdadm/mdadm.conf
+  comment out the old meta devices
+
+
+cd /boot
+update-initramfs -k 2.6.24-24-server -u -v
+
+--mv initrd.img-2.6.24-16-server initrd.img-2.6.24-16-server.orig
+--mkinitramfs -d /etc/initramfs-tools/ -k -o initrd.img-2.6.24-16-server 2.6.24-16-server
+
+cd /etc/
+vi fstab
+
+vi hostname
+
+cd /lib/dhcp3-client/
+chown root:dhcp call-dhclient-script
+chmod u+s call-dhclient-script
+
+
+cd /etc/udev/rules.d
+vi 70-persistent-net.rules
+
+/etc/init.d/network restart
+
+exit
+
+
+umount /root/newroot/proc
+umount /root/newroot/dev
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- NOTE: 
+--  if you have md0, you'll need to use Rescue CD 1.3.1!!!!!!
+--
+grub
+grub> device (hd0) /dev/sda
+grub> root (hd0,0)
+grub> setup (hd0)
+
+
+reboot
+
+
+
+For 
+  Processing triggers for man-db ...
+  fopen: Permission denied
+
+chown -R man:root /var/cache/man
+
+ubuntu-vm-builder kvm hardy --domain test64 --arch amd64 \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --libvirt qemu:///system \
+    --hostname test64 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx;
+

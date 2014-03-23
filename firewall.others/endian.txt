@@ -1,0 +1,28 @@
+
+connect CF to FC_2_SATA card
+connect card to machine
+install from CD/ROM
+
+  allow serial console
+  installation console F2
+
+
+https://10.10.37.124:10443
+admin/firewall pwrd
+
+???
+cu -l /dev/ttyS0 -s 38400
+
+
+cd /boot/grub
+vi grub.conf
+	console=ttyS0,38400
+
+
+
+problems:
+  1) IPSec doesn't work for ERT
+       Will come up for only 10 seconds if reset the tunnel.
+       Doesn't work for Clinix!! (maybe I had the IP wrong???)
+  2) No console (try multiple baud rates and couldn't get it to work!!)
+  3) Took 6 min to boot!!

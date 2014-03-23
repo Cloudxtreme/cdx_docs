@@ -1,0 +1,35 @@
+asterisk/hylafax upgrade issue....
+
+can't shutdown aster64.  had to hard it shutdown
+move drive from aster64 to multitech 
+put pri card to the new aster64 machine
+
+startup hylafax doesn't work any more
+
+# faxstat -s
+Service not available, remote server closed connection
+No control connection for command
+
+not sure what went wrong!!!!
+
+everything looks normal in the log.  it just doesn't want to work!!!!
+
+Srikar found out there is an error in the 'user' log (and only happen today!!!):
+
+May 23 14:01:00 aster64 Fatal: no entropy gathering module detected
+
+I foud this page showing how to fix the problem:
+  http://www.yamihoshi.nl/tech/?p=768
+
+  504  cd /var/spool/hylafax/
+  506  cd dev/
+  509  /sbin/MAKEDEV urandom
+  510  /sbin/MAKEDEV random
+  511  chmod 777 /dev/urandom
+  512  chmod 777 /dev/random
+
+  523  faxstat -s
+problem fixed!!!
+
+
+

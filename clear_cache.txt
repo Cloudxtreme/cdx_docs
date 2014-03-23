@@ -1,0 +1,16 @@
+linux clear cache
+
+# free
+             total       used       free     shared    buffers     cached
+Mem:      16468640   16408276      60364          0         12   15909064
+-/+ buffers/cache:     499200   15969440
+Swap:      5242872        116    5242756
+
+# sync; echo 3 > /proc/sys/vm/drop_caches
+
+# free
+             total       used       free     shared    buffers     cached
+Mem:      16468640      93400   16375240          0         12       5652
+-/+ buffers/cache:      87736   16380904
+Swap:      5242872        116    5242756
+

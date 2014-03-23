@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PlatePendingView" table="PLATE_PENDING_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PlatePendingViewId">
+            <key-property name="plateNo" type="string">
+                <column name="`Plate No`" length="4000" />
+            </key-property>
+            <key-property name="noOfSamples" type="big_decimal">
+                <column name="`No of Samples`" precision="22" scale="0" />
+            </key-property>
+            <key-property name="filename" type="string">
+                <column name="Filename" length="256" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="autoaccessionLoadId" type="big_decimal">
+                <column name="AUTOACCESSION_LOAD_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

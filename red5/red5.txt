@@ -1,0 +1,63 @@
+
+
+http://www.nixspot.com/red5/archive/index.php/t-1330.html
+
+http://localhost:5080/demos/port_tester.swf
+http://www.red5tutorials.net/index.php/Tutorials:Weblinks
+
+
+--
+-- http://osflash.org/red5/ubuntu804
+--
+wajig install subversion
+wajig install sun-java6-jdk -y
+wajig install ant
+
+
+
+
+-- get the s/w
+  521  mkdir red5
+  522  cd red5/
+  524  svn co http://red5.googlecode.com/svn/java/server/trunk red5
+
+-- make
+  527  export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.17/
+  528  export ANT_HOME=/usr/share/ant/
+  529  cd red5/
+  531  /usr/share/ant/bin/ant
+
+-- install 
+  534  mkdir /usr/share/red5
+  540  cp -rp dist/* /usr/share/red5/
+
+-- run
+  542  cd /usr/share/red5/
+  545  ./red5.sh &
+
+http://red5:5080/
+
+
+firewall:
+  5080 (http) 
+	1935 (rtmp). 
+
+export RED5_HOME=/usr/share/red5/
+init script????
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+1) install oflaDemo
+Run oflaDemo
+  rtmp://red5/oflaDemo
+  click Connect
+
+  Double click: avatar.flv
+
+  Click Disconnect
+
+root@red5:/usr/share/red5/webapps/oflaDemo/streams# ll
+
+2) Publisher:
+  readtime video
+
+

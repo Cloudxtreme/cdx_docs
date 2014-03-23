@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MenuItem" table="MENU_ITEM" schema="DNALIMS">
+        <comment>Information about dynamic menus used in the GTLIMS application</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.MenuItemId">
+            <key-property name="parentMenuId" type="big_decimal">
+                <column name="PARENT_MENU_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numberInSequence" type="big_decimal">
+                <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="parentMenu" class="com.cardiodx.db.waban.table.ParentMenu" update="false" insert="false" fetch="select">
+            <column name="PARENT_MENU_ID" precision="22" scale="0" not-null="true">
+                <comment>Name of the parent menu that this menu item will appear. Values can be File, Lab Setup, Study Setup, Sample, Container, Results, or Tools.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="ocxLoad" class="com.cardiodx.db.waban.table.OcxLoad" fetch="select">
+            <column name="OCX_LOAD_ID" precision="22" scale="0">
+                <comment>foreign key to functional pack stored in ocx_load table</comment>
+            </column>
+        </many-to-one>
+        <property name="caption" type="string">
+            <column name="CAPTION" length="30" not-null="true">
+                <comment>Text of the menu item to appear in the menu</comment>
+            </column>
+        </property>
+        <property name="ocxName" type="string">
+            <column name="OCX_NAME" length="100">
+                <comment>Name of the external Active-X control that will be loaded when the menu is selected.</comment>
+            </column>
+        </property>
+        <property name="urlName" type="string">
+            <column name="URL_NAME" length="100">
+                <comment>Name of URL to be loaded in browser for menu item</comment>
+            </column>
+        </property>
+        <property name="screenName" type="string">
+            <column name="SCREEN_NAME" length="100">
+                <comment>Name of screen in application to be loaded by menu item</comment>
+            </column>
+        </property>
+        <property name="modal" type="java.lang.Boolean">
+            <column name="MODAL" precision="1" scale="0">
+                <comment>Indicator used to open screen in modal mode</comment>
+            </column>
+        </property>
+        <property name="iconName" type="string">
+            <column name="ICON_NAME" length="100">
+                <comment>Name of icon used in menu</comment>
+            </column>
+        </property>
+        <property name="iconBlob" type="blob">
+            <column name="ICON_BLOB">
+                <comment>blob used to store icon displayed in menu</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

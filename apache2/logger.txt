@@ -1,0 +1,21 @@
+
+http://httpd.apache.org/docs/1.3/mod/mod_log_config.html
+
+        ErrorLog "|/usr/bin/logger -p local0.err"
+        LogFormat "%h %u \"%r\" %>s %b" privacy_format
+        CustomLog "|/usr/bin/logger -p local1.info" privacy_format
+        LogLevel warn
+
+
+
+  LogFormat "%h %u \"%r\" %>s %b" privacy_format
+  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+
+
+~~~~~~~~~~~~
+Common Log Format (CLF) 						"%h %l %u %t \"%r\" %>s %b"
+Common Log Format with Virtual Host "%v %h %l %u %t \"%r\" %>s %b"
+NCSA extended/combined log format 	"%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\""
+Referer log format 									"%{Referer}i -> %U"
+Agent (Browser) log format 					"%{User-agent}i"
+

@@ -1,0 +1,41 @@
+
+
+for new server installation, you'll ned to copy 
+
+   NX> 704 /usr/NX/share/keys/default.id_dsa.key
+
+
+
+
+Or-->
+   If you want to use the same key for all clients: copy the following to /usr/NX/home/nx/.ssh/authorized_keys2
+
+no-port-forwarding,no-agent-forwarding,command="/usr/NX/bin/nxserver --login" ssh-dss AAAAB3NzaC1kc3MAAACBAJe/0DNBePG9dYLWq7cJ0SqyRf1iiZN/IbzrmBvgPTZnBa5FT/0Lcj39sRYt1paAlhchwUmwwIiSZaON5JnJOZ6jKkjWIuJ9MdTGfdvtY1aLwDMpxUVoGwEaKWOyin02IPWYSkDQb6cceuG9NfPulS9iuytdx0zIzqvGqfvudtufAAAAFQCwosRXR2QA8OSgFWSO6+kGrRJKiwAAAIEAjgvVNAYWSrnFD+cghyJbyx60AAjKtxZ0r/Pn9k94Qt2rvQoMnGgt/zU0v/y4hzg+g3JNEmO1PdHh/wDPVOxlZ6Hb5F4IQnENaAZ9uTZiFGqhBO1c8Wwjiq/MFZy3jZaidarLJvVs8EeT4mZcWxwm7nIVD4lRU2wQ2lj4aTPcepMAAACANlgcCuA4wrC+3Cic9CFkqiwO/Rn1vk8dvGuEQqFJ6f6LVfPfRTfaQU7TGVLk2CzY4dasrwxJ1f6FsT8DHTNGnxELPKRuLstGrFY/PR7KeafeFZDf+fJ3mbX5nxrld3wi5titTnX+8s4IKv29HJguPvOK/SI7cjzA+SqNfD7qEo8= 
+
+
+sessions:
+
+root@phildesktop:/usr/NX/bin# ./nxserver --list
+
+NX> 127 Session list: 
+
+Display Username                         Remote IP       Session ID                       Node
+------- -------------------------------- --------------- -------------------------------- -----------
+1010    cchou                            10.10.36.190    AF39D4F91214739FA48516A15A91DE02 localhost:22
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if you reach max user count and can't login
+/usr/NX/etc# strings users.db
+
+./nxserver --userdel cchou
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you run emacs and have the following probem:
+
+	Xlib:  extension "Generic Event Extension" missing on display ":1016.0".
+	Undefined color: "black"
+
+  212  cp /usr/share/emacs/22.2/etc/rgb.txt /etc/X11/
+  213  /etc/init.d/nxserver restart
+

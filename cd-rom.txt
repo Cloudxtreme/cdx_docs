@@ -1,0 +1,27 @@
+record iso image to cdrom
+
+
+wodim
+
+-- login as root
+sudo bash
+
+wodim -scanbus
+scsibus1:
+	1,0,0	100) 'PLDS    ' 'DVD+-RW DH-16A6S' 'YD11' Removable CD-ROM
+	1,1,0	101) *
+	1,2,0	102) *
+	1,3,0	103) *
+	1,4,0	104) *
+	1,5,0	105) *
+	1,6,0	106) *
+	1,7,0	107) *
+
+
+cdrecord -v dev=1,0,0 ubuntu-9.04-server-amd64.iso
+
+
+
+
+
+

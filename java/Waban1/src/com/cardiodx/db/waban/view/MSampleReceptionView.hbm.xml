@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.MSampleReceptionView" table="M_SAMPLE_RECEPTION_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.MSampleReceptionViewId">
+            <key-property name="sampleReceptionId" type="big_decimal">
+                <column name="SAMPLE_RECEPTION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="shipmentNo" type="big_decimal">
+                <column name="SHIPMENT_NO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="dateShipmentExpected" type="date">
+                <column name="DATE_SHIPMENT_EXPECTED" length="7" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="noSampleExpected" type="big_decimal">
+                <column name="NO_SAMPLE_EXPECTED" precision="22" scale="0" />
+            </key-property>
+            <key-property name="shippedSampleType" type="string">
+                <column name="SHIPPED_SAMPLE_TYPE" length="30" />
+            </key-property>
+            <key-property name="organizationId" type="big_decimal">
+                <column name="ORGANIZATION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="trackingNumbers" type="string">
+                <column name="TRACKING_NUMBERS" />
+            </key-property>
+            <key-property name="contactId" type="big_decimal">
+                <column name="CONTACT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="receivedBy" type="string">
+                <column name="RECEIVED_BY" length="30" />
+            </key-property>
+            <key-property name="dateReceived" type="date">
+                <column name="DATE_RECEIVED" length="7" />
+            </key-property>
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="sponsorStudyNumber" type="string">
+                <column name="SPONSOR_STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="studyDirector" type="string">
+                <column name="STUDY_DIRECTOR" length="30" />
+            </key-property>
+            <key-property name="contactName" type="string">
+                <column name="CONTACT_NAME" length="40" />
+            </key-property>
+            <key-property name="sampleCondition" type="string">
+                <column name="SAMPLE_CONDITION" length="20" />
+            </key-property>
+            <key-property name="volume" type="string">
+                <column name="VOLUME" length="40" />
+            </key-property>
+            <key-property name="dateAccessioned" type="date">
+                <column name="DATE_ACCESSIONED" length="7" />
+            </key-property>
+            <key-property name="accessionedBy" type="string">
+                <column name="ACCESSIONED_BY" length="30" />
+            </key-property>
+            <key-property name="sampleTubeId" type="string">
+                <column name="SAMPLE_TUBE_ID" length="25" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="104" />
+            </key-property>
+            <key-property name="company" type="string">
+                <column name="COMPANY" length="100" />
+            </key-property>
+            <key-property name="autoaccessionLoadId" type="big_decimal">
+                <column name="AUTOACCESSION_LOAD_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="pendingSampleId" type="big_decimal">
+                <column name="PENDING_SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="dateReceivedTrunc" type="date">
+                <column name="DATE_RECEIVED_TRUNC" length="7" />
+            </key-property>
+            <key-property name="dateAccessionedTrunc" type="date">
+                <column name="DATE_ACCESSIONED_TRUNC" length="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

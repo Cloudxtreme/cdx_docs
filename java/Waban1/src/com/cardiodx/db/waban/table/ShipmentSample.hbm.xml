@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ShipmentSample" table="SHIPMENT_SAMPLE" schema="DNALIMS">
+        <id name="shipmentSampleId" type="big_decimal">
+            <column name="SHIPMENT_SAMPLE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="LAB_ORG_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="shipmentReceipt" class="com.cardiodx.db.waban.table.ShipmentReceipt" fetch="select">
+            <column name="SHIPMENT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="qcStatus" type="string">
+            <column name="QC_STATUS" length="30" />
+        </property>
+        <property name="qcComment" type="string">
+            <column name="QC_COMMENT" length="100" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

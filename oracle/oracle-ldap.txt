@@ -1,0 +1,75 @@
+
+
+create user ops$cardiodx identified externally;
+grant connect to ops$cardiodx;
+
+sqlplus -H
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://www.oracle.com/technology/products/oid/oidhtml/sec_idm_training/html_masters/handson.htm
+http://www.orafaq.com/maillist/oracle-l/2003/12/08/0607.htm
+http://download.oracle.com/docs/cd/B28196_01/idmanage.1014/b15995/odip_edirectory.htm
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/u01/app/oracle/product/10.2.0/db_1/ldap
+
+$ORACLE_HOME/network/admin
+DIRECTORY_SERVERS=localhost:389
+DIRECTORY_SERVER_TYPE=oid DEFAULT_ADMIN_CONTEXT="cn=Manager,dc=world" 
+
+sqlnet.ora to contain:
+NAMES.DIRECTORY_PATH= (LDAP)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://frits.homelinux.com/wordpress/?p=7
+http://web.archive.org/web/20070328211733/http://home.nc.rr.com/jtlayton/oid2openldap.html
+
+
+cd /u01/app/oracle/product/10.2.0/db_1/ldap/schema/oid
+
+oidSchemaCreateBase.sbs .
+oidSchemaCreateNet.sbs .
+oidSchemaCreateRDBMS.sbs .
+
+cat oidSchemaCreateBase.sbs | grep -i attributetypes | egrep -v '^add' > oracle.ldif
+cat oidSchemaCreateBase.sbs | grep -i objectclasses | egrep -v '^add' | egrep -v '^#' >> oracle.ldif
+cat oidSchemaCreateNet.sbs | grep -i attributetypes | egrep -v '^add' >> oracle.ldif
+cat oidSchemaCreateNet.sbs | grep -i objectclasses | egrep -v '^add' | egrep -v '^#' >> oracle.ldif
+cat oidSchemaCreateRDBMS.sbs | grep -i attributetypes | egrep -v '^add' >> oracle.ldif
+cat oidSchemaCreateRDBMS.sbs | grep -i objectclasses | egrep -v '^add' | egrep -v '^#' >> oracle.ldif
+
+cat base.ldif net.ldif rdbms.ldif > oracle.ldif
+
+# cd /opt/fedora-ds/slapd-ldapserver/config/schema
+#scp frits@bedrock:~/ldap/oracle.ldif .
+#echo "dn: cn=schema" >71oracle.ldif
+#cat oracle.ldif >> 71oracle.ldif
+#rm oracle.ldif
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Oracle internet directory (OID)
+http://www.oracle-base.com/articles/9i/OracleInternetDirectory9i.php
+
+
+$ which ldapsearch
+/u01/app/oracle/product/10.2.0/db_1/bin/ldapsearch
+
+ldapsearch -h smb01 -b "dc=cardiodx,dc=com" "(uidNumber=0)"
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+
+

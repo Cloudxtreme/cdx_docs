@@ -1,0 +1,49 @@
+backup svn
+
+http://wiki.archlinux.org/index.php/Subversion_backup_and_restore
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+mkdir backups
+
+vi backup_svn.sh
+#!/bin/bash
+
+status=0
+
+for i in /var/lib/svn/*
+do 
+if [ -d $i ]; then
+  db=`echo $i | sed 's:^..*/::'`
+  svnadmin dump $i > /root/backups/$db.svn.dump
+  if [ $? != 0 ]; then
+   echo 'Error backing up svn for $j'
+   status=1
+  fi
+fi
+done
+
+exit $status
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+on svn:
+svnadmin dump /data/svn/repos/it > it.svn.dump
+
+on trac:
+svnadmin load /var/lib/svn/it < it.svn.dump
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+on source:
+cd /data/svn/repos 
+svnadmin dump /data/svn/repos/it/ > ~/it.dmp
+scp it.dmp root@bksrv:
+
+on dest:
+mkdir svn
+cd svn/
+mkdir repos
+svnadmin create /data/svn/repos/it
+svnadmin load /data/svn/repos/it < ~/it.dmp 
+
+chown -R www-data:www-data /data/svn

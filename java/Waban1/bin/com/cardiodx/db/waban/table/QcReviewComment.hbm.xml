@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.QcReviewComment" table="QC_REVIEW_COMMENT" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.table.QcReviewCommentId">
+            <key-property name="qcReviewCommentId" type="big_decimal">
+                <column name="QC_REVIEW_COMMENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="qcReviewId" type="big_decimal">
+                <column name="QC_REVIEW_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="isValid" type="big_decimal">
+                <column name="IS_VALID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistRow" type="big_decimal">
+                <column name="CHECKLIST_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistCol" type="big_decimal">
+                <column name="CHECKLIST_COL" precision="22" scale="0" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="60" />
+            </key-property>
+            <key-property name="qcComment" type="string">
+                <column name="QC_COMMENT" length="1000" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+
+xo = "bge0"
+internal = "em0"
+local = "lo0"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+
+pass in on $xo proto tcp from 67.95.201.192/27 to any port 22
+pass in on $xo proto tcp from 76.202.193.212/32 to any port 22
+
+pass in on $internal
+
+#pass quick on $xo from 67.95.201.199
+#set skip on enc0
+
+pass in quick on $xo proto udp from 67.95.201.199 to 67.95.201.201 port isakmp
+pass in quick on $xo proto esp from 67.95.201.199 to 67.95.201.201
+
+pass in quick on enc0 proto icmp
+pass in quick on enc0 proto ipencap all
+pass in quick on enc0 proto tcp from 10.10.32.0/21 to 192.168.10.2/32 port 3389
+

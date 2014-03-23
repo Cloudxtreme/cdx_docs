@@ -1,0 +1,110 @@
+
+
+cd /var/lib/trac/it/db/
+sqlite3 trac.db
+
+
+.schema ticket
+
+--
+-- Jun-01 2009 ~ Dec-31-2009
+--
+select count(id) 
+from ticket 
+where time between 1230796800 and 1262246400;
+
+select "  ", component, count(*) 
+from ticket 
+where time between 1262332800 and 1270105200
+group by component 
+order by count(*) desc;
+
+Tickets (between 06/01/09 and 12/31/09): 714
+
+Total days:
+  7*20=140
+
+Tickets/day:
+  714/140=5
+
+select count(*) 
+from ticket_change
+where ticket in (
+  select id from ticket
+  where changetime between 1243839600 and 1262246400);
+
+6115/140=43
+43/5=8 (changes/ticket)
+
+select t.id, avg(c.time-t.time)
+from ticket t, ticket_change c
+where t.id = c.ticket
+and changetime between 1243839600 and 1262246400
+group by t.id
+order by avg(c.time-t.time) desc;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+06-01-2009: 1243839600
+07-01-2009: 1246431600
+08-01-2009: 1249110000  // echo '08-01-2009: ' . mktime(0, 0, 0, 8, 01, 2009) . "\n";
+09-01-2009: 1251788400  // echo '09-01-2009: ' . mktime(0, 0, 0, 9, 01, 2009) . "\n";
+10-01-2009: 1254380400  // echo '10-01-2009: ' . mktime(0, 0, 0, 10, 01, 2009) . "\n";
+11-01-2009: 1257058800  // echo '11-01-2009: ' . mktime(0, 0, 0, 11, 01, 2009) . "\n";
+12-01-2009: 1259654400  // echo '12-01-2009: ' . mktime(0, 0, 0, 12, 01, 2009) . "\n";
+01-01-2010: 1262332800  // echo '01-01-2010: ' . mktime(0, 0, 0, 01, 01, 2010) . "\n";
+02-01-2010: 1265011200  // echo '02-01-2010: ' . mktime(0, 0, 0, 02, 01, 2010) . "\n";
+
+delete from summary;
+drop table summary;
+create table summary (year test, month test, ticket integer, day integer);
+
+insert into summary (year, month, ticket, day)
+  select '2009', '10', id, (changetime-time)/60/60/24
+  from ticket
+  where time between 1254380400 and 1257058800
+  and status = 'closed'
+  and component != 'IT'
+  order by (changetime-time)/60/60/24 desc;
+
+select day, count(ticket) 
+from summary
+where year = '2009' and month = '09'
+group by day;
+
+
+select day, count(ticket)
+from summary
+group by day;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+<?php
+
+// current time:
+$nextWeek = time() + (7 * 24 * 60 * 60);
+echo 'Now: '. date('Y-m-d') . ' (' . time() . ")\n";
+
+// earliest trac ticket
+echo 'Time: ' . date('Y-m-d', '1222479833') . "\n";
+
+// How about June-01-2009 in Trac?
+$referencePoint = mktime(0, 0, 0, 6, 01, 2009);
+echo 'Jun-01-2009: ' . $referencePoint . "\n";
+
+$referencePoint = mktime(0, 0, 0, 12, 31, 2009);
+echo 'Dec-31-2009: ' . $referencePoint . "\n";
+
+?>
+
+root@trac:~# php test.php
+Now: 2010-02-11 (1265915814)
+Time: 2008-09-26
+Jun-01-2009: 1243839600
+Dec-31-2009: 1262246400
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+http://devzone.zend.com/article/644
+
+wajig install php5-sqlite3 php5-sqlite
+

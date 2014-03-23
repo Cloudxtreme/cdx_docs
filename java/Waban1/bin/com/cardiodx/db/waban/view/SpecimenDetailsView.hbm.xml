@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.SpecimenDetailsView" table="SPECIMEN_DETAILS_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.SpecimenDetailsViewId">
+            <key-property name="sampleTubeId" type="string">
+                <column name="SAMPLE_TUBE_ID" length="4000" />
+            </key-property>
+            <key-property name="clientSampleTubeId" type="string">
+                <column name="CLIENT_SAMPLE_TUBE_ID" length="4000" />
+            </key-property>
+            <key-property name="sampleStatus" type="string">
+                <column name="SAMPLE_STATUS" length="50" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="4000" />
+            </key-property>
+            <key-property name="sourceType" type="string">
+                <column name="SOURCE_TYPE" length="30" />
+            </key-property>
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="containerRow" type="big_decimal">
+                <column name="CONTAINER_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumn" type="big_decimal">
+                <column name="CONTAINER_COLUMN" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleCondition" type="string">
+                <column name="SAMPLE_CONDITION" length="4000" />
+            </key-property>
+            <key-property name="initialVolume" type="string">
+                <column name="INITIAL_VOLUME" length="16" />
+            </key-property>
+            <key-property name="dateReceived" type="string">
+                <column name="DATE_RECEIVED" length="10" />
+            </key-property>
+            <key-property name="volume" type="big_decimal">
+                <column name="VOLUME" precision="22" scale="0" />
+            </key-property>
+            <key-property name="concentration" type="big_decimal">
+                <column name="CONCENTRATION" precision="22" scale="0" />
+            </key-property>
+            <key-property name="finalStorageTube" type="java.lang.Boolean">
+                <column name="FINAL_STORAGE_TUBE" precision="1" scale="0" />
+            </key-property>
+            <key-property name="numberInAccSequence" type="big_decimal">
+                <column name="NUMBER_IN_ACC_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="pendingSampleId" type="big_decimal">
+                <column name="PENDING_SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="24" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="specimenRequestId" type="big_decimal">
+                <column name="SPECIMEN_REQUEST_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

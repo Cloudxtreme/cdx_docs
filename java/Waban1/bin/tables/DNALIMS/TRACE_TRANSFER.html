@@ -1,0 +1,1742 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+	<head>
+		<title>Hibernate Mappings - Table Info</title>
+		<link rel="stylesheet" type="text/css" href="../../assets/doc-style.css" title="Style"/>
+	</head>
+	<body>
+
+	<div id="header">
+
+		<div id="logo">
+			<a href="http://www.hibernate.org/" target="_blank">
+				<img src="../../assets/hibernate_logo.gif" alt="Hibernate"/>
+			</a>
+		</div>
+
+		<ul><li><a href="../index.html" target="_top">Tables</a></li><li><a href="../../entities/index.html" target="_top">Entities</a></li></ul>
+
+		<hr/>
+
+	</div>
+
+		<h4>Schema DNALIMS</h4>
+		<h2>Table TRACE_TRANSFER</h2>
+
+
+		<table id="column_summary">
+			<thead>
+				<tr>
+					<th class="MainTableHeading" colspan="7">
+						Column Summary
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 14%">
+						Name
+					</th>
+					<th style="width: 14%">
+						SqlType
+					</th>
+					<th style="width: 14%">
+						Length
+					</th>
+					<th style="width: 14%">
+						Precision
+					</th>
+					<th style="width: 14%">
+						Scale
+					</th>
+					<th style="width: 14%">
+						Nullable
+					</th>
+					<th style="width: 14%">
+						Unique
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr>
+						<td>
+							<a href="#column_detail_TRACE_TRANSFER_ID">
+								TRACE_TRANSFER_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							false
+						</td>
+						<td>
+							true
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_PLATE_ID">
+								PLATE_ID
+							</a>
+						</td>
+						<td>
+							varchar2(20 char)
+						</td>
+						<td>
+							20
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							false
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CONTAINER_ROW">
+								CONTAINER_ROW
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CONTAINER_COLUMN">
+								CONTAINER_COLUMN
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SAMPLE_ID">
+								SAMPLE_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_INSTRUMENT_NAME">
+								INSTRUMENT_NAME
+							</a>
+						</td>
+						<td>
+							varchar2(225 char)
+						</td>
+						<td>
+							225
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_INSTRUMENT_MODEL">
+								INSTRUMENT_MODEL
+							</a>
+						</td>
+						<td>
+							varchar2(225 char)
+						</td>
+						<td>
+							225
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_QUALITY_STATUS">
+								QUALITY_STATUS
+							</a>
+						</td>
+						<td>
+							varchar2(100 char)
+						</td>
+						<td>
+							100
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SEQUENCE_CALLED">
+								SEQUENCE_CALLED
+							</a>
+						</td>
+						<td>
+							clob
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_TARGET_MATCH_LENGTH">
+								TARGET_MATCH_LENGTH
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_TOTAL_TARGET_MATCH">
+								TOTAL_TARGET_MATCH
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_ROI_ID">
+								ROI_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_TEST_ACCESSION_ID">
+								TEST_ACCESSION_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CASE_ID">
+								CASE_ID
+							</a>
+						</td>
+						<td>
+							varchar2(50 char)
+						</td>
+						<td>
+							50
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SUBSIDIARY_ID">
+								SUBSIDIARY_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_CREATED_BY">
+								CREATED_BY
+							</a>
+						</td>
+						<td>
+							varchar2(30 char)
+						</td>
+						<td>
+							30
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_DATE_CREATED">
+								DATE_CREATED
+							</a>
+						</td>
+						<td>
+							date
+						</td>
+						<td>
+							7
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_VERSIONED_DOCUMENT_ID">
+								VERSIONED_DOCUMENT_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_MODIFIED_BY">
+								MODIFIED_BY
+							</a>
+						</td>
+						<td>
+							varchar2(30 char)
+						</td>
+						<td>
+							30
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_DATE_MODIFIED">
+								DATE_MODIFIED
+							</a>
+						</td>
+						<td>
+							date
+						</td>
+						<td>
+							7
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_TARGET_PERCENTAGE">
+								TARGET_PERCENTAGE
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_DESCRIPTION">
+								DESCRIPTION
+							</a>
+						</td>
+						<td>
+							varchar2(2000 char)
+						</td>
+						<td>
+							2,000
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_MAX_TARGET_MATCH">
+								MAX_TARGET_MATCH
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_PLATE_SUMMARY_ID">
+								PLATE_SUMMARY_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_AVERAGE_QUALITY_SCORE">
+								AVERAGE_QUALITY_SCORE
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_TRACE_TRANSFERRED">
+								TRACE_TRANSFERRED
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+		<table id="primary_key">
+			<thead>
+				<tr>
+					<th class="MainTableHeading" colspan="2">
+						Primary Key
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 50%">
+						Name
+					</th>
+					<th style="width: 50%">
+						Columns
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr>
+						<td>
+								PK_TRACE_TRANSFER
+						</td>
+						<td>
+								<a href="#column_detail_TRACE_TRANSFER_ID">
+									TRACE_TRANSFER_ID
+								</a>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+			<table id="foreign_keys">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="3">
+							Foreign Keys
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 33%">
+							Name
+						</th>
+						<th style="width: 33%">
+							Referenced Table
+						</th>
+						<th style="width: 33%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								FKC6E359C58E38DAF
+							</td>
+							<td>
+								<a href="PLATE_SUMMARY.html" target="generalFrame">
+									PLATE_SUMMARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_PLATE_SUMMARY_ID">
+										PLATE_SUMMARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FKC6E359C5CA31F0B3
+							</td>
+							<td>
+								<a href="TEST_ACCESSION.html" target="generalFrame">
+									TEST_ACCESSION
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_TEST_ACCESSION_ID">
+										TEST_ACCESSION_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_TRACE_TRANS_PLATE_SUMARY_ID
+							</td>
+							<td>
+								<a href="PLATE_SUMMARY.html" target="generalFrame">
+									PLATE_SUMMARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_PLATE_SUMMARY_ID">
+										PLATE_SUMMARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FKC6E359C5C43DD2F2
+							</td>
+							<td>
+								<a href="SAMPLE_TABLE.html" target="generalFrame">
+									SAMPLE_TABLE
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SAMPLE_ID">
+										SAMPLE_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_TRACE_TEST_ACCESSION_ID
+							</td>
+							<td>
+								<a href="TEST_ACCESSION.html" target="generalFrame">
+									TEST_ACCESSION
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_TEST_ACCESSION_ID">
+										TEST_ACCESSION_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_TRACE_TRANSFER_SID
+							</td>
+							<td>
+								<a href="SUBSIDIARY.html" target="generalFrame">
+									SUBSIDIARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FKC6E359C589A67BFC
+							</td>
+							<td>
+								<a href="SUBSIDIARY.html" target="generalFrame">
+									SUBSIDIARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_TRACE_SAMPLE_ID
+							</td>
+							<td>
+								<a href="SAMPLE_TABLE.html" target="generalFrame">
+									SAMPLE_TABLE
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SAMPLE_ID">
+										SAMPLE_ID
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+			
+			<table id="unique_keys">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="2">
+							Unique Keys
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 50%">
+							Name
+						</th>
+						<th style="width: 50%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								PK_TRACE_TRANSFER
+							</td>
+							<td>
+									<a href="#column_detail_TRACE_TRANSFER_ID">
+										TRACE_TRANSFER_ID
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+		
+			<table id="indexes">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="2">
+							Indexes
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 50%">
+							Name
+						</th>
+						<th style="width: 50%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_VER_DOC_ID
+							</td>
+							<td>
+									<a href="#column_detail_VERSIONED_DOCUMENT_ID">
+										VERSIONED_DOCUMENT_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_PLATE_ID
+							</td>
+							<td>
+									<a href="#column_detail_PLATE_ID">
+										PLATE_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_SID
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_CASE_ID
+							</td>
+							<td>
+									<a href="#column_detail_CASE_ID">
+										CASE_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_PLATE_SUMID
+							</td>
+							<td>
+									<a href="#column_detail_PLATE_SUMMARY_ID">
+										PLATE_SUMMARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_SAMPLE_ID
+							</td>
+							<td>
+									<a href="#column_detail_SAMPLE_ID">
+										SAMPLE_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_TRACE_TRANSFER_ROI_ID
+							</td>
+							<td>
+									<a href="#column_detail_ROI_ID">
+										ROI_ID
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+		
+			<p id="column_detail" class="MainTableHeading">
+				Column Detail
+			</p>
+				
+				<h3 id="column_detail_TRACE_TRANSFER_ID">TRACE_TRANSFER_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> false
+					</li>
+					<li>
+						<strong>Unique:</strong> true
+					</li>
+					<li>
+						<strong>Comment:</strong> Primary Key
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_PLATE_ID">PLATE_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(20 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 20
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> false
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Container Identifier. foreign key to container table
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CONTAINER_ROW">CONTAINER_ROW</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Well Row
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CONTAINER_COLUMN">CONTAINER_COLUMN</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Well Column
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SAMPLE_ID">SAMPLE_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_INSTRUMENT_NAME">INSTRUMENT_NAME</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(225 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 225
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Name Of Instrument.Tag name used in trace file MCHN
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_INSTRUMENT_MODEL">INSTRUMENT_MODEL</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(225 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 225
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Instrument Model.Tag name used in trace file MODL
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_QUALITY_STATUS">QUALITY_STATUS</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(100 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 100
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Status whether traces PASSED/FAILED
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SEQUENCE_CALLED">SEQUENCE_CALLED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> clob
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Tag name used in trace file PBAS
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_TARGET_MATCH_LENGTH">TARGET_MATCH_LENGTH</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Target match length of sequence
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_TOTAL_TARGET_MATCH">TOTAL_TARGET_MATCH</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Total number target match of sequence
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_ROI_ID">ROI_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> ROI Identifier
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_TEST_ACCESSION_ID">TEST_ACCESSION_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> TEST_ACCESSION_ID from TEST_ACCESSION table
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CASE_ID">CASE_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(50 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 50
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> CASE Identifier
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SUBSIDIARY_ID">SUBSIDIARY_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Subsidiary Identifier
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_CREATED_BY">CREATED_BY</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(30 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 30
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> User who created this record.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_DATE_CREATED">DATE_CREATED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> date
+					</li>
+					<li>
+						<strong>Length:</strong> 7
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Date this record was created.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_VERSIONED_DOCUMENT_ID">VERSIONED_DOCUMENT_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Identifier for checked in or added document
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_MODIFIED_BY">MODIFIED_BY</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(30 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 30
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> User who modified this record.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_DATE_MODIFIED">DATE_MODIFIED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> date
+					</li>
+					<li>
+						<strong>Length:</strong> 7
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Date this record was modified.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_TARGET_PERCENTAGE">TARGET_PERCENTAGE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_DESCRIPTION">DESCRIPTION</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(2000 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 2,000
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_MAX_TARGET_MATCH">MAX_TARGET_MATCH</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> To store the length of the largest target match section.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_PLATE_SUMMARY_ID">PLATE_SUMMARY_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> To store plate summary id from plate_summary table.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_AVERAGE_QUALITY_SCORE">AVERAGE_QUALITY_SCORE</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_TRACE_TRANSFERRED">TRACE_TRANSFERRED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				
+
+	</body>
+</html>

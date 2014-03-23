@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.StaarAssayResultView" table="STAAR_ASSAY_RESULT_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.StaarAssayResultViewId">
+            <key-property name="geneId" type="big_decimal">
+                <column name="GENE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleId" type="big_decimal">
+                <column name="ALLELE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleResultId" type="big_decimal">
+                <column name="ALLELE_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="procedureName" type="string">
+                <column name="PROCEDURE_NAME" length="120" />
+            </key-property>
+            <key-property name="sopVersion" type="string">
+                <column name="SOP_VERSION" length="10" />
+            </key-property>
+            <key-property name="assResult" type="string">
+                <column name="ASS_RESULT" length="50" />
+            </key-property>
+            <key-property name="assStatus" type="string">
+                <column name="ASS_STATUS" length="20" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleTubeId" type="string">
+                <column name="SAMPLE_TUBE_ID" length="25" />
+            </key-property>
+            <key-property name="comments" type="string">
+                <column name="COMMENTS" length="500" />
+            </key-property>
+            <key-property name="assayResultId" type="big_decimal">
+                <column name="ASSAY_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="4000" />
+            </key-property>
+            <key-property name="assWho" type="string">
+                <column name="ASS_WHO" length="30" />
+            </key-property>
+            <key-property name="assWhen" type="date">
+                <column name="ASS_WHEN" length="7" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="lasttube" type="string">
+                <column name="LASTTUBE" length="4000" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

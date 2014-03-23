@@ -1,0 +1,8 @@
+waban import/export database
+
+
+order: 
+  GTMETA --> SCESCHEMA --> DNALIMS
+
+
+

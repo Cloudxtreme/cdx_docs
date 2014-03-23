@@ -1,0 +1,43 @@
+http://myweb.tiscali.co.uk/eggnbacon/docs/urpmi-howto/
+http://www.mandrakehelp.com/RPM-HOWTO.html#3
+http://www.speculation.org/garrick/urpmifaq.txt
+
+
+http://easyurpmi.zarb.org/
+
+
+
+urpmi links
+	  lynx
+
+
+cd /etc/urpmi/
+mv urpmi.cfg urpmi.cfg.orig
+
+
+--urpmi.addmedia --update updates ftp://mirrors.secsup.org/pub/linux/mandrake/Mandrakelinux/official/updates/10.1/main_updates with media_info/hdlist.cz 
+--urpmi.addmedia main ftp://mirrors.secsup.org/pub/linux/mandrake/Mandrakelinux/official/10.1/i586/media/main with media_info/hdlist.cz 
+--urpmi.addmedia contrib ftp://mirrors.secsup.org/pub/linux/mandrake/Mandrakelinux/official/10.1/i586/media/contrib with media_info/hdlist.cz 
+
+
+
+urpmi.addmedia --update updates ftp://mirror.cs.wisc.edu/pub/mirrors/linux/Mandrakelinux/official//updates/10.1/main_updates with media_info/hdlist.cz 
+urpmi.addmedia main ftp://mirror.cs.wisc.edu/pub/mirrors/linux/Mandrakelinux/official/10.1/i586/media/main with media_info/hdlist.cz 
+urpmi.addmedia contrib ftp://mirror.cs.wisc.edu/pub/mirrors/linux/Mandrakelinux/official/10.1/i586/media/contrib with media_info/hdlist.cz 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+
+vi urpmi.cfg
+
+
+
+
+
+bash complication
+
+
+
+urpmf smbldap
+
+urpmq 

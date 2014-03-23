@@ -1,0 +1,78 @@
+zimbra installation centos
+
+http://wiki.zimbra.com/index.php?title=Network_Edition_Disaster_Recovery
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+install centos 4.4 (min installation)
+
+disable sendmail
+# service sendmail stop
+# chkconfig --level 2345 sendmail off
+
+vi /etc/hosts
+remove hostname from 127.0.0.1 (just leave localhost and localhost.localdomain)
+10.10.37.181 cczimbra.cardiodx.com cczimbra 
+10.10.37.100            webmail.cardiodx.com webmail
+10.10.37.100            mail.cardiodx.com mail
+
+
+yum install libidn curl fetchmail compat-libstdc++-296 compat-libstdc++-33 libstdc++
+
+
+modify i18n according to the following:
+http://wiki.zimbra.com/index.php?title=CentOS_-_UTF-8_-_unicode_start
+# vi /etc/sysconfig/i18n
+LANG="en_US" 
+SUPPORTED="en_US:en" 
+SYSFONT="latarcyrheb-sun16" 
+
+
+~~~~~~~~~~~~~~~~~~~~
+install bind
+yum install bind
+configure bind/named according to dns.txt (under CDx/zimbra)
+
+~~~~~~~~~~~~~~~~~~~~
+http://wiki.zimbra.com/index.php?title=Network_Edition_Disaster_Recovery
+
+install zimbra
+./install.sh
+(to uninstall use ./install.sh -u)
+Change domain from zimbra.cardiodx.com to cardiodx.com
+Set root password
+Set license file from g:\it\Private\ZCSLicense.xml
+
+NOTE: should have
+  same domain name
+  same machine name
+  same admin password
+
+Backup file can't be on NFS
+
+zmcontrol restart
+
+Change 2 spam training and 1 global document accounts
+Global Documents account: 6pbajcndi@cardiodx.com
+Spam training account: dulm2hjj@cardiodx.com
+Spam training account: mlw4wb8ak@cardiodx.com
+
+(should we disable 'default backup schedule' and 'start servers after configuration???)
+
+zmcontrol stop
+
+rm -rf db/data/*
+
+zmmyinit
+
+zmrestoreldap -lbs
+
+zmrestoreldap -lb (latest backup - can be inc-....)
+
+zmconvertctl start
+
+zmrestoreoffline -sys -a all -c -br
+
+zmcontrol stop
+
+zmcontrol start
+

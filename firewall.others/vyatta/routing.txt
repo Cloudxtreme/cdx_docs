@@ -1,0 +1,11 @@
+
+																to
+Network --> DNAT --> route --> local?  --> (in) --> (out) --> SNAT --> Network
+                                |															 ^
+															  |															 |
+																v															 |
+														  (local)													 | 
+																|													     |
+																v															 |
+														   local ----------------------> route 
+																

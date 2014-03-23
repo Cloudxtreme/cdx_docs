@@ -1,0 +1,40 @@
+
+cd gdrive/it/software/Oracle10gClient
+copy 10201_client_win32.zip to WinXP
+Extract the zip file
+
+Install Oracle client
+Choose "InstantClient"
+
+
+Configure ODBC
+System DSN
+  Add Oracle In OraClient10g_home1
+  Database Source Name: Waban
+  TNS Service Name: //orabuntu/orcl
+  Test Connection - using system account
+
+.net frame work 2.0
+g:\it\software\microsoft\DotNetFramWork
+Run dotnetfx.exe
+
+
+install Waban LIMS admin
+G:\it\software\Waban\Waban_LIMS_Admin
+
+install Waban LIMS client
+G:\it\software\Waban\Waban_LIMS_Client
+
+Run Waban limst security manager
+Change database URL: jdbc:oracle:thin:@orabuntu:1521:orcl
+
+create a new user
+CARDIODX
+  Use DEFAULT profile
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run Waban LIMS
+
+
+Install 09/17/08 release (According to the release note)

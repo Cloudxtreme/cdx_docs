@@ -1,0 +1,7 @@
+lvs -o +devices
+
+lvcreate -L+20G -i 2 -n abc vg2
+lvextend -L+10G -i 3 /dev/vg2/abc
+
+lvs -o +devices
+

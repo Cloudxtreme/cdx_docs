@@ -1,0 +1,36 @@
+-- 
+-- joomla:
+--
+
+tar czf joomla.tar.gz joomla
+scp joomla.tar.gz root@10.10.43.101:/var/www
+
+cd /var/www/backup 
+scp joomla.dump.gz root@10.10.43.101:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- www
+--
+mysqldump -uroot --password=secret07 --databases joomladb | gzip > /var/www/backup/promotion.dump.gz
+
+gzip -d promotion.dump.gz 
+mysql -u root -p < promotion.dump 
+
+cd /var/www
+tar zxvf joomla.tar.gz
+rm joomla.tar.gz
+
+  598  cd joomla/
+  600  mv * ..
+  607  mv .htaccess ..
+  610  rmdir joomla/
+
+
+  752  cd templates/
+  759  ln -s system _system
+
+  750  cd /var/www
+  767  ln -s images/flash .
+
+favicon.ico

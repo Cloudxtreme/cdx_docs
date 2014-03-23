@@ -1,0 +1,4 @@
+mv slapd.conf slapd.conf.orig
+
+vi slapd.conf.orig
+

@@ -1,0 +1,890 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Subsidiary" table="SUBSIDIARY" schema="DNALIMS">
+        <id name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="contact" class="com.cardiodx.db.waban.table.Contact" fetch="select">
+            <column name="CONTACT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="100" not-null="true" unique="true" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <set name="testVariableFlds" table="TEST_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestVariableFld" />
+        </set>
+        <set name="instrumentPrograms" table="INSTRUMENT_PROGRAM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InstrumentProgram" />
+        </set>
+        <set name="pgxGeneDataReports" table="PGX_GENE_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxGeneDataReport" />
+        </set>
+        <set name="userSubsidiaries" table="USER_SUBSIDIARY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.UserSubsidiary" />
+        </set>
+        <set name="instruments" table="INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Instrument" />
+        </set>
+        <set name="pgxModifyTemplateComments" table="PGX_MODIFY_TEMPLATE_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifyTemplateComment" />
+        </set>
+        <set name="autoaccessionColumns" table="AUTOACCESSION_COLUMN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AutoaccessionColumn" />
+        </set>
+        <set name="traceTransfers" table="TRACE_TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceTransfer" />
+        </set>
+        <set name="sampleVariableFldTbls" table="SAMPLE_VARIABLE_FLD_TBL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>USER SUBSIDIARY</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleVariableFldTbl" />
+        </set>
+        <set name="instrumentSetups" table="INSTRUMENT_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InstrumentSetup" />
+        </set>
+        <set name="pgxDataReports" table="PGX_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxDataReport" />
+        </set>
+        <set name="plateSummaries" table="PLATE_SUMMARY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true">
+                    <comment>Subsidary Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateSummary" />
+        </set>
+        <set name="autoaccessionLoads" table="AUTOACCESSION_LOAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AutoaccessionLoad" />
+        </set>
+        <set name="protocolAlleles" table="PROTOCOL_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolAllele" />
+        </set>
+        <set name="caseRois" table="CASE_ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseRoi" />
+        </set>
+        <set name="geneValues" table="GENE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneValue" />
+        </set>
+        <set name="transfers" table="TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Transfer" />
+        </set>
+        <set name="standardCurves" table="STANDARD_CURVE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StandardCurve" />
+        </set>
+        <set name="assaies" table="ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Assay" />
+        </set>
+        <set name="plateTemplateWells" table="PLATE_TEMPLATE_WELL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateWell" />
+        </set>
+        <set name="instrumentParams" table="INSTRUMENT_PARAM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InstrumentParam" />
+        </set>
+        <set name="genotypingVendorAssayMaps" table="GENOTYPING_VENDOR_ASSAY_MAP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypingVendorAssayMap" />
+        </set>
+        <set name="deadlines" table="DEADLINE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Deadline" />
+        </set>
+        <set name="roiAttributes" table="ROI_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiAttribute" />
+        </set>
+        <set name="reagents" table="REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Reagent" />
+        </set>
+        <set name="studyProtocols" table="STUDY_PROTOCOL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyProtocol" />
+        </set>
+        <set name="anonymizationStudySetups" table="ANONYMIZATION_STUDY_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationStudySetup" />
+        </set>
+        <set name="plateTemplates" table="PLATE_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplate" />
+        </set>
+        <set name="emailQueues" table="EMAIL_QUEUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.EmailQueue" />
+        </set>
+        <set name="pgxPatientDataReports" table="PGX_PATIENT_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxPatientDataReport" />
+        </set>
+        <set name="checklistContents" table="CHECKLIST_CONTENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistContent" />
+        </set>
+        <set name="phenotypeAutocallRules" table="PHENOTYPE_AUTOCALL_RULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PhenotypeAutocallRule" />
+        </set>
+        <set name="identifiedSampleAttributes" table="IDENTIFIED_SAMPLE_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.IdentifiedSampleAttribute" />
+        </set>
+        <set name="accessionComments" table="ACCESSION_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionComment" />
+        </set>
+        <set name="gelMarkers" table="GEL_MARKER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GelMarker" />
+        </set>
+        <set name="measurements" table="MEASUREMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Measurement" />
+        </set>
+        <set name="autocallGenotypes" table="AUTOCALL_GENOTYPE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AutocallGenotype" />
+        </set>
+        <set name="eventProcesses" table="EVENT_PROCESS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.EventProcess" />
+        </set>
+        <set name="requestItems" table="REQUEST_ITEM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RequestItem" />
+        </set>
+        <set name="freezers" table="FREEZER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Freezer" />
+        </set>
+        <set name="anonymizedCrfIds" table="ANONYMIZED_CRF_ID" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizedCrfId" />
+        </set>
+        <set name="protocolDefinedVariables" table="PROTOCOL_DEFINED_VARIABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolDefinedVariable" />
+        </set>
+        <set name="discreteAttributeTables" table="DISCRETE_ATTRIBUTE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DiscreteAttributeTable" />
+        </set>
+        <set name="anonymizationQueries" table="ANONYMIZATION_QUERY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationQuery" />
+        </set>
+        <set name="anonymizationBusinessRules" table="ANONYMIZATION_BUSINESS_RULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationBusinessRule" />
+        </set>
+        <set name="dnaDestructionVendors" table="DNA_DESTRUCTION_VENDOR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionVendor" />
+        </set>
+        <set name="staarAnonymizationRequests" table="STAAR_ANONYMIZATION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StaarAnonymizationRequest" />
+        </set>
+        <set name="reviews" table="REVIEW" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Review" />
+        </set>
+        <set name="plateTemplateContainers" table="PLATE_TEMPLATE_CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateContainer" />
+        </set>
+        <set name="sampleIdentificationKeies" table="SAMPLE_IDENTIFICATION_KEY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleIdentificationKey" />
+        </set>
+        <set name="geneResults" table="GENE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneResult" />
+        </set>
+        <set name="wordreports" table="WORDREPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Wordreport" />
+        </set>
+        <set name="anonymizationLogs" table="ANONYMIZATION_LOG" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationLog" />
+        </set>
+        <set name="userCommentses" table="USER_COMMENTS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.UserComments" />
+        </set>
+        <set name="maintenanceSchedules" table="MAINTENANCE_SCHEDULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MaintenanceSchedule" />
+        </set>
+        <set name="pgxModifiedGeneTemplates" table="PGX_MODIFIED_GENE_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifiedGeneTemplate" />
+        </set>
+        <set name="procedureTemplates" table="PROCEDURE_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplate" />
+        </set>
+        <set name="procedureTemplateGenes" table="PROCEDURE_TEMPLATE_GENE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateGene" />
+        </set>
+        <set name="worklists" table="WORKLIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Worklist" />
+        </set>
+        <set name="approvals" table="APPROVAL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Approval" />
+        </set>
+        <set name="testAttributeFlds" table="TEST_ATTRIBUTE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestAttributeFld" />
+        </set>
+        <set name="stepTemplates" table="STEP_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplate" />
+        </set>
+        <set name="studyVariableRoles" table="STUDY_VARIABLE_ROLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyVariableRole" />
+        </set>
+        <set name="caseOrderses" table="CASE_ORDERS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary Identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseOrders" />
+        </set>
+        <set name="stepTemplateValues" table="STEP_TEMPLATE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateValue" />
+        </set>
+        <set name="pendingSampleAttributeTables" table="PENDING_SAMPLE_ATTRIBUTE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PendingSampleAttributeTable" />
+        </set>
+        <set name="genotypingVendorProjects" table="GENOTYPING_VENDOR_PROJECT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypingVendorProject" />
+        </set>
+        <set name="assayAlleleResults" table="ASSAY_ALLELE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayAlleleResult" />
+        </set>
+        <set name="stepTemplateParameters" table="STEP_TEMPLATE_PARAMETER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateParameter" />
+        </set>
+        <set name="alleleResults" table="ALLELE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AlleleResult" />
+        </set>
+        <set name="worklistSamples" table="WORKLIST_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorklistSample" />
+        </set>
+        <set name="oligoReagents" table="OLIGO_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoReagent" />
+        </set>
+        <set name="outboundAssaies" table="OUTBOUND_ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OutboundAssay" />
+        </set>
+        <set name="vendorResultMaps" table="VENDOR_RESULT_MAP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.VendorResultMap" />
+        </set>
+        <set name="patientVariableFlds" table="PATIENT_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PatientVariableFld" />
+        </set>
+        <set name="patients" table="PATIENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Patient" />
+        </set>
+        <set name="clinicalDatas" table="CLINICAL_DATA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ClinicalData" />
+        </set>
+        <set name="genotypeAutocallAlleles" table="GENOTYPE_AUTOCALL_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypeAutocallAllele" />
+        </set>
+        <set name="procedureTemplateAlleles" table="PROCEDURE_TEMPLATE_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateAllele" />
+        </set>
+        <set name="outboundRequests" table="OUTBOUND_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OutboundRequest" />
+        </set>
+        <set name="assayResults" table="ASSAY_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResult" />
+        </set>
+        <set name="dnaDestructionRequests" table="DNA_DESTRUCTION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionRequest" />
+        </set>
+        <set name="accessions" table="ACCESSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Accession" />
+        </set>
+        <set name="pgxSetupTemplates" table="PGX_SETUP_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxSetupTemplate" />
+        </set>
+        <set name="concentrationAdjustments" table="CONCENTRATION_ADJUSTMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConcentrationAdjustment" />
+        </set>
+        <set name="protocolGeneValues" table="PROTOCOL_GENE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolGeneValue" />
+        </set>
+        <set name="protocolAlleleValues" table="PROTOCOL_ALLELE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolAlleleValue" />
+        </set>
+        <set name="checklistSamples" table="CHECKLIST_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistSample" />
+        </set>
+        <set name="roiAttributeFlds" table="ROI_ATTRIBUTE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiAttributeFld" />
+        </set>
+        <set name="containerFilenames" table="CONTAINER_FILENAME" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerFilename" />
+        </set>
+        <set name="sampleReceptions" table="SAMPLE_RECEPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleReception" />
+        </set>
+        <set name="testSetups" table="TEST_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestSetup" />
+        </set>
+        <set name="userses" table="USERS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Users" />
+        </set>
+        <set name="investigatorProtocols" table="INVESTIGATOR_PROTOCOL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InvestigatorProtocol" />
+        </set>
+        <set name="alleleValues" table="ALLELE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AlleleValue" />
+        </set>
+        <set name="testingFacilities" table="TESTING_FACILITY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestingFacility" />
+        </set>
+        <set name="protocolTests" table="PROTOCOL_TEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolTest" />
+        </set>
+        <set name="filenames" table="FILENAME" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Filename" />
+        </set>
+        <set name="sampleTables" table="SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleTable" />
+        </set>
+        <set name="checklists" table="CHECKLIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Checklist" />
+        </set>
+        <set name="containers" table="CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Container" />
+        </set>
+        <set name="caseRoiHistories" table="CASE_ROI_HISTORY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseRoiHistory" />
+        </set>
+        <set name="accessionVariableFldTables" table="ACCESSION_VARIABLE_FLD_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionVariableFldTable" />
+        </set>
+        <set name="caseVariableFldTables" table="CASE_VARIABLE_FLD_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseVariableFldTable" />
+        </set>
+        <set name="eventSubscriptions" table="EVENT_SUBSCRIPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.EventSubscription" />
+        </set>
+        <set name="genotypeAutocallRules" table="GENOTYPE_AUTOCALL_RULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypeAutocallRule" />
+        </set>
+        <set name="transitionMatrixes" table="TRANSITION_MATRIX" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TransitionMatrix" />
+        </set>
+        <set name="configReagents" table="CONFIG_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary Identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConfigReagent" />
+        </set>
+        <set name="assignInstruments" table="ASSIGN_INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssignInstrument" />
+        </set>
+        <set name="testAccessions" table="TEST_ACCESSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestAccession" />
+        </set>
+        <set name="caseHistories" table="CASE_HISTORY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseHistory" />
+        </set>
+        <set name="cdxChlistFileValues" table="CDX_CHLIST_FILE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CdxChlistFileValue" />
+        </set>
+        <set name="protocolGenes" table="PROTOCOL_GENE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolGene" />
+        </set>
+        <set name="accessionProcedures" table="ACCESSION_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionProcedure" />
+        </set>
+        <set name="studyVariableFlds" table="STUDY_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyVariableFld" />
+        </set>
+        <set name="pendingSampleTables" table="PENDING_SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PendingSampleTable" />
+        </set>
+        <set name="rois" table="ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Roi" />
+        </set>
+        <set name="dnaDestructionSamples" table="DNA_DESTRUCTION_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionSample" />
+        </set>
+        <set name="wordreportParams" table="WORDREPORT_PARAM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WordreportParam" />
+        </set>
+        <set name="dnaFluors" table="DNA_FLUOR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaFluor" />
+        </set>
+        <set name="anonymizationValidations" table="ANONYMIZATION_VALIDATION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationValidation" />
+        </set>
+        <set name="stepTemplateWorkflows" table="STEP_TEMPLATE_WORKFLOW" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplateWorkflow" />
+        </set>
+        <set name="traceQcs" table="TRACE_QC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceQc" />
+        </set>
+        <set name="assayResultInfos" table="ASSAY_RESULT_INFO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Used with VPD must be specific to each site.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultInfo" />
+        </set>
+        <set name="protocolProcedures" table="PROTOCOL_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolProcedure" />
+        </set>
+        <set name="testConditionAttributes" table="TEST_CONDITION_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestConditionAttribute" />
+        </set>
+        <set name="genotypingVendProjDtlses" table="GENOTYPING_VEND_PROJ_DTLS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypingVendProjDtls" />
+        </set>
+        <set name="stagingClinicalDatas" table="STAGING_CLINICAL_DATA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StagingClinicalData" />
+        </set>
+        <set name="pcrSetupPlaceRois" table="PCR_SETUP_PLACE_ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary Identifier and foreign key to SUBSIDIARY table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrSetupPlaceRoi" />
+        </set>
+        <set name="checklistComments" table="CHECKLIST_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistComment" />
+        </set>
+        <set name="pgxGeneNarrativeTemplateses" table="PGX_GENE_NARRATIVE_TEMPLATES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxGeneNarrativeTemplates" />
+        </set>
+        <set name="anonymizationRequests" table="ANONYMIZATION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationRequest" />
+        </set>
+        <set name="dnaSpecs" table="DNA_SPEC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaSpec" />
+        </set>
+        <set name="checklistReagents" table="CHECKLIST_REAGENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ChecklistReagent" />
+        </set>
+        <set name="pgxModifyDataRptComments" table="PGX_MODIFY_DATA_RPT_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifyDataRptComment" />
+        </set>
+        <set name="vendorProjectAssaies" table="VENDOR_PROJECT_ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.VendorProjectAssay" />
+        </set>
+        <set name="roiSelections" table="ROI_SELECTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                    <comment>Subsidiary identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiSelection" />
+        </set>
+        <set name="identifiedSamples" table="IDENTIFIED_SAMPLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.IdentifiedSample" />
+        </set>
+    </class>
+</hibernate-mapping>

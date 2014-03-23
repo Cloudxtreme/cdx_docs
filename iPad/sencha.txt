@@ -1,0 +1,5 @@
+
+
+~/sencha/bin/Sencha/Cmd/3.0.2.288
+
+

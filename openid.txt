@@ -1,0 +1,6 @@
+openid
+
+http://openid.net/get/
+http://www.intertwingly.net/blog/2007/01/03/OpenID-for-non-SuperUsers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+

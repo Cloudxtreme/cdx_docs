@@ -1,0 +1,69 @@
+
+how to mount initrd
+
+   45  mv initrd.img-2.6.15-27-amd64-server a.gz
+   46  gzip -d a.gz
+       mkdir init
+   48  cd init
+   50  cpio -i < ../a
+   52  history
+
+mkdir init
+mv initrd.img-2.6.24-16-server init
+cd init
+zcat initrd.img-2.6.24-16-server | cpio -i 
+
+
+(see initrd_1.txt)
+
+
+-- (below) May NOT Work!!!
+find dir -print |cpio -o |bzip2 >dir.cpio.bz2
+
+   34  find init -print | cpio -o > b
+   36  gzip b
+   38  mv b.gz myinit.img
+
+/usr/share/initramfs-tools/scripts/init-premount
+mkinitramfs -v -o myinit
+mkinitramfs -k -v -o test
+cd /tmp
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd init/scripts/local-top
+comment out the whole part for detecting raid levels
+add: 
+  modprobe -Qb 0 2>/dev/null
+  modprobe -Qb 1 2>/dev/null
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Problem with lvmtest(kvmsrv1, hardy):
+boot with the problem initramfs.img
+(initramfs)
+create md
+mknod /dev/md0 b 9 0
+mknod /dev/md1 b 9 1
+mdadm -A /dev/md0 /dev/sda1 /dev/sdb1
+mdadm -A /dev/md1 /dev/sda2 /dev/sdb2
+lvm pvscan
+lvm vgscan
+lvm lvscan
+exit
+
+cd /etc/mdadm
+mdadm --detail --scan > mdadm.conf
+mkinitramfs -v -o myinit
+
+copy myinit to initramfs....
+run grub
+change hostname
+vi /etc/fstab
+
+
+cd /boot
+update-initramfs -u
+update-initramfs -u -k all
+
+
+
+

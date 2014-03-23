@@ -1,0 +1,24 @@
+http://www.hermann-uwe.de/blog/howto-encrypted-usb-thumb-drives-and-usb-hard-disks-using-loop-aes
+
+# wajig install loop-aes-utils
+
+
+# modprobe cryptoloop 
+
+# losetup -e aes256 -C 3 -S 'MySeed' /dev/loop0 /dev/sda3
+Password: thisismypassword123456 ( > 20 char long)
+
+# mkfs.xfs /dev/loop0
+
+# losetup -d /dev/loop0
+
+# mount -t xfs -o pseed=MySeed,noauto,loop=/dev/loop0,encryption=AES256,itercountk=3 /dev/sda3 /root/foobar/
+Password: thisismypassword123456
+
+# dd if=/dev/zero bs=1G count=16 | pv > testfile
+    16GB 0:06:46 [40.3MB/s]
+
+# umount /root/foobar/
+
+
+

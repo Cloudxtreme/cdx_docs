@@ -1,0 +1,2 @@
+sqlite3 trac.db .dump > 1.sql
+

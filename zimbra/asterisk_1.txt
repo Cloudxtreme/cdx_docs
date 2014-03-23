@@ -1,0 +1,11 @@
+
+Download zimlet from: http://sourceforge.net/projects/ch-bnc-asterisk/
+
+mv ch_bnc_asterisk_0.65.zip ch_bnc_asterisk.zip
+
+tail -20f /opt/zimbra/log/mailbox.log
+zmzimletctl deploy ch_bnc_asterisk.zip 
+zmzimletctl listZimlets
+
+
+

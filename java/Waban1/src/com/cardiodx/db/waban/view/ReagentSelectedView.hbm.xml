@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.ReagentSelectedView" table="REAGENT_SELECTED_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.ReagentSelectedViewId">
+            <key-property name="reagentName" type="string">
+                <column name="REAGENT_NAME" length="50" />
+            </key-property>
+            <key-property name="reagentBarcode" type="string">
+                <column name="REAGENT_BARCODE" length="20" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="reagentId" type="big_decimal">
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistReagentId" type="big_decimal">
+                <column name="CHECKLIST_REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="stepTemplateId" type="big_decimal">
+                <column name="STEP_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

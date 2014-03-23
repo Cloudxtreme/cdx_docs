@@ -1,0 +1,52 @@
+
+options { sync (0);
+  time_reopen (10);
+  log_fifo_size (1000);
+  long_hostnames (off);
+  use_dns (no);
+  use_fqdn (no);
+  create_dirs (no);
+  keep_hostname (yes);
+};
+
+source s_all { 
+  file ("/proc/kmsg" log_prefix("kernel: ")); 
+  unix-stream ("/dev/log"); 
+  internal(); 
+};
+
+destination df_auth { file("/var/log/auth.log"); };
+destination df_syslog { file("/var/log/syslog"); };
+destination df_cron { file("/var/log/cron.log"); };
+destination df_daemon { file("/var/log/daemon.log"); };
+destination df_kern { file("/var/log/kern.log"); };
+destination df_mail { file("/var/log/mail.log"); };
+destination df_user { file("/var/log/user.log"); };
+destination df_debug { file("/var/log/debug"); };
+destination df_messages { file("/var/log/messages"); };
+
+destination du_all { usertty("*"); };
+destination df_loghost { udp("syslog" port(514)); };
+
+filter f_auth { facility(auth, authpriv); };
+filter f_syslog { not facility(auth, authpriv); };
+filter f_cron { facility(cron); };
+filter f_daemon { facility(daemon); };
+filter f_kern { facility(kern); };
+filter f_mail { facility(mail); };
+filter f_user { facility(user); };
+filter f_debug { level(debug) and not facility(auth, authpriv, mail); };
+filter f_messages { level(info,notice,warn) and not facility(auth,authpriv,cron,daemon,mail); };
+
+log { source(s_all); filter(f_auth); destination(df_auth); };
+log { source(s_all); filter(f_syslog); destination(df_syslog); };
+log { source(s_all); filter(f_cron); destination(df_cron); };
+log { source(s_all); filter(f_daemon); destination(df_daemon); };
+log { source(s_all); filter(f_kern); destination(df_kern); };
+log { source(s_all); filter(f_user); destination(df_user); };
+log { source(s_all); filter(f_mail); destination(df_mail); };
+log { source(s_all); filter(f_debug); destination(df_debug); }; 
+log { source(s_all); filter(f_messages); destination(df_messages); }; 
+
+log { source(s_all); destination(df_loghost); };
+

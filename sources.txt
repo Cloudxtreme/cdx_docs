@@ -1,0 +1,11 @@
+sources.list
+
+
+deb http://mirror.anl.gov/ubuntu/ hardy main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ hardy main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu/ hardy-updates main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ hardy-updates main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu hardy-security main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu hardy-security main restricted universe multiverse

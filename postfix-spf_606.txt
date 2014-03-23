@@ -1,0 +1,33 @@
+ubuntu 606 
+
+http://www.howtoforge.com/postfix_spf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install postfix
+  internet site
+  postfix606.cardiodx.com
+
+vi main.cf
+
+mynetworks = 127.0.0.0/8 10.10.32.0/21
+transport_maps = hash:/etc/postfix/transport
+
+vi transport
+cardiodx.com   smtp:[webmail.cardiodx.com]
+
+postmap /etc/postfix/transport 
+newaliases
+postalias /etc/aliases
+
+/etc/init.d/postfix restart
+
+
+perl -MCPAN -e shell
+
+
+install Bundle::CPAN
+reload cpan
+
+install Mail::SPF
+
+

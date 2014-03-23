@@ -1,0 +1,4 @@
+backup pc 
+
+http://www.howtoforge.com/linux_backuppc
+

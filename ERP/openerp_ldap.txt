@@ -1,0 +1,22 @@
+
+wajig install python-ldap
+
+wget http://www.openerp.com/download/modules/5.0/users_ldap.zip
+
+--unzip users_ldap.zip
+----mv users_ldap /usr/lib/openerp-server/addons
+
+
+chown openerp .
+
+
+Main Menu --> Administratioin --> Module Management --> Import module
+  Browser the users_ldap.zip
+
+Hit 'Close' button
+
+Click users_ldap and install it.
+
+
+Well, according to the module description, it only works with ldap, not ldaps!
+  

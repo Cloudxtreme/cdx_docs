@@ -1,0 +1,63 @@
+
+cd /usr/local/
+
+nano cdx_rw
+
+#!/bin/sh
+#
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+umask 022
+stty erase ^H
+. /etc/config/hwconfig
+. /usr/config/functions
+
+mount_flash_rw
+
+
+nano cdx_ro
+#!/bin/sh
+#
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+umask 022
+stty erase ^H
+. /etc/config/hwconfig
+. /usr/config/functions
+
+mount_flash_ro
+
+
+chmod 755 cdx_rw
+chmod 755 cdx_ro
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#!/bin/sh
+#
+
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+umask 022
+
+# Fix backspace for telnet sessions
+if [ "$TERM" != "linux" ]; then
+        stty erase ^H
+fi
+
+if [ -r /etc/config/hwconfig ]; then
+	. /etc/config/hwconfig
+fi
+
+. /usr/config/functions
+
+mount_flash_rw
+if ! [ -d /mnt/config/rc.d ]; then
+	mkdir /mnt/config/rc.d
+fi
+if ! [ -r /mnt/config/rc.d/post-boot-script ]; then
+	touch /mnt/config/rc.d/post-boot-script
+fi
+chmod 700 /mnt/config/rc.d/post-boot-script
+nano -w /mnt/config/rc.d/post-boot-script
+mount_flash_ro
+
+

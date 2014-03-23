@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CdxFaxAttempt" table="CDX_FAX_ATTEMPT" schema="DNALIMS">
+        <id name="cdxFaxAttemptId" type="big_decimal">
+            <column name="CDX_FAX_ATTEMPT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="accession" class="com.cardiodx.db.waban.table.Accession" fetch="select">
+            <column name="ACCESSION_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="faxNumber" type="string">
+            <column name="FAX_NUMBER" length="20" />
+        </property>
+        <property name="faxNumberType" type="string">
+            <column name="FAX_NUMBER_TYPE" />
+        </property>
+        <property name="faxStatus" type="string">
+            <column name="FAX_STATUS" length="40" not-null="true" />
+        </property>
+        <property name="faxComment" type="string">
+            <column name="FAX_COMMENT" />
+        </property>
+        <property name="hylafaxId" type="big_decimal">
+            <column name="HYLAFAX_ID" precision="22" scale="0" />
+        </property>
+        <property name="versionedDocumentId" type="big_decimal">
+            <column name="VERSIONED_DOCUMENT_ID" precision="22" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="40" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="40" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

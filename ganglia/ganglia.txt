@@ -1,0 +1,113 @@
+http://www.mail-archive.com/ganglia-general@lists.sourceforge.net/msg02655.html
+http://wiki.freaks-unidos.net/ganglia-quickstart#using-unicast
+http://www.msg.ucsf.edu/local/ganglia/ganglia_docs/install.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+dir: /opt/ganglia/3.0.2/i686/
+
+rrd db: svn:/var/lib/ganglia/rrds
+
+gmetad: svn
+   /etc/gmetad.conf
+
+
+./gstat
+./gstat -a
+
+
+on cchou:
+	telnet localhost 8649 
+
+http://www.mail-archive.com/ganglia-developers@lists.sourceforge.net/msg00597.html
+
+telnet localhost 8649 | grep "HOST NAME"
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://web.njit.edu/all_topics/HPC/basement/ganglia/README
+http://debianclusters.cs.uni.edu/index.php/Ganglia:_Installation
+http://term.ie/devdev/howto_ganglia
+http://www-941.ibm.com/collaboration/wiki/display/WikiPtype/ganglia
+
+-- on ganglia server:
+wajig install rrdtool librrds-perl librrd2-dev
+wajig install php5-gd
+wajig install ganglia-monitor gmetad
+wajig install build-essential
+wajig install libapr1-dev libconfuse-dev libexpat1-dev
+
+--wget http://downloads.sourceforge.net/ganglia/ganglia-3.0.7.tar.gz?modtime=1204128965&big_mirror=0
+wget http://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/3.1.2%20%28Langley%29/ganglia-3.1.2.tar.gz/download
+tar xvzf ganglia*.tar.gz
+./configure --prefix=/opt/ganglia --enable-gexec --with-gmetad
+mkdir /var/www/ganglia
+cp -rp web/* /var/www/ganglia
+
+# vi /etc/apache2/sites-enabled/000-default
+ <Directory /var/www/>
+     Options FollowSymLinks MultiViews
+     AllowOverride None
+     Order allow,deny
+     allow from all
+     RedirectMatch ^/$ /ganglia/
+ </Directory>
+ 
+# apache2ctl restart
+
+http://ganglia.cardiodx.com/ganglia/
+
+-- on ganglia client:
+wajig install ganglia-monitor 
+
+vi /etc/gmond.conf
+< name  "server"
+< mcast_port    8679
+< mcast_if  br0
+< host_dmax 43200
+
+/etc/init.d/ganglia-monitor restart
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For different grid (cluster)
+on gutsydesktop, change: 
+name "desktop"
+mcast_port    8659
+trusted_hosts ganglia
+
+host_dmax 43200
+
+on server, add:
+data_source "desktop" gutsydesktop
+
+
+on kvm servers:
+# grep -v '#' gmond.conf
+name  "kvm"
+mcast_port    8669
+mcast_if  br0
+setuid     ganglia
+
+on cdx servers:
+name  "server"
+mcast_port    8679
+setuid     ganglia
+host_dmax 43200
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# for mulieple NICs (backup, webmail, kvm servers)
+mcast_if  br0
+
+
+trusted_hosts ganglia
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gstat -a -i pdc
+gstat -a --gmond_ip=10.10.36.223
+telnet pdc 8649
+
+

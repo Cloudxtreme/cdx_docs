@@ -1,0 +1,55 @@
+http://ubuntuguide.org/wiki/Ubuntu_Edgy
+https://wiki.ubuntu.com/MacBookPro
+http://wiki.cchtml.com/index.php/Ubuntu_Edgy_Installation_Guide
+http://wiki.cchtml.com/index.php/Xgl-Compiz-Dapper
+
+    3  cd /etc/apt
+    5  mv sources.list sources.list.orig
+    6  vi sources.list
+    7  apt-get update
+    8  apt-get install wajig
+
+   11  vi /etc/X11/xorg.conf
+
+Section "Extensions"
+        Option  "Composite" "Disable"
+EndSection
+
+Section "ServerFlags"
+        Option  "AIGLX" "off"
+EndSection
+
+   15  wajig install linux-restricted-modules-$(uname -r)
+   16  wajig install xorg-driver-fglrx
+   19  aticonfig --initial
+   20  aticonfig --overlay-type=Xv
+   21  reboot; exit
+
+   24  alsamixer
+
+   37  wajig install build-essential 
+
+   25  wajig install pciutils-dev
+   26  wajig install subversion
+   27  svn co https://mactel-linux.svn.sourceforge.net/svnroot/mactel-linux/trunk mactel-linux
+   29  cd mactel-linux/
+   31  cd tools/
+   33  cd backlight/
+   35  make
+
+   43  backlight 
+   44  backlight 150
+
+   47  cd temperature/
+   49  make
+
+   54  modprobe msr
+   55  lsmod | grep msr
+   57  cp coretemp /usr/local/bin/
+   56  coretemp 
+
+
+
+  166  wajig install hddtemp
+  168  hddtemp /dev/sda
+

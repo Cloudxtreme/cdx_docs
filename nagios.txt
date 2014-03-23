@@ -1,0 +1,50 @@
+wajig install nagios-text
+
+
+
+wajig install nagios2 nagios-plugins nagios-images 
+wajig install apache2
+
+
+cd /etc/nagios2/
+sudo htpasswd -c htpasswd.users nagiosadmin
+
+cd /etc/apache2/sites-available 
+cp /etc/nagios2/apache2.conf nagios2
+a2ensite nagios2 
+/etc/init.d/apache2 restart
+
+http://nagios.cardiodx.com/nagios2/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi contacts_nagios2.cfg
+
+define contact{
+        contact_name                    cchou
+        alias                           Chialin Chou
+        service_notification_period     24x7
+        host_notification_period        24x7
+        service_notification_options    w,u,c,r
+        host_notification_options       d,r
+        service_notification_commands   notify-by-email
+        host_notification_commands      host-notify-by-email
+        email                           cchou@cardiodx.com
+        }
+
+define contactgroup{
+        contactgroup_name       cdxadmins
+        alias                   CDX Administrators
+        members                 cchou
+        }
+
+
+# vi itsrv.cfg
+define host {
+        host_name   itsrv
+        address     10.10.37.25
+        use         generic-host
+        }
+
+
+

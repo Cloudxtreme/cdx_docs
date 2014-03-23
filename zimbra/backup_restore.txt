@@ -1,0 +1,12 @@
+Backing Up a Single Account:
+
+root@webmail:/# su zimbra
+zimbra@webmail:/tmp/testbackuprestore$ zmbackup -f -t /tmp/testbackuprestore/ -a zimbra6_00@cardiodx.com
+(-f = full, -t = target, -a = account)
+
+Restoring a Single Account:
+
+root@zimbra6devel:/# su zimbra
+zimbra@zimbra6devel:/tmp$ zmrestore -rf -t /tmp/testbackuprestore/ -a zimbra6_00@cardiodx.com
+(-rf = restore full most recent backup, not incremental, -t = target, -a = account)
+

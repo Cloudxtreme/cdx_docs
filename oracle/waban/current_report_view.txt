@@ -1,0 +1,25 @@
+  SELECT cprr.cp_run_report_id,
+	acc.accession_id,
+	acc.accession_number,
+	cpr.cp_run_id,
+	cpr.status "CP_RUN_STATUS",
+	cprr.versioned_document_id,
+  vd.short_file_name "FILE_NAME",
+  substr(vd.short_file_name, 1, instr(vd.short_file_name, '_', 1, 1) - 1) "REPOR T_TYPE",
+  substr(substr(vd.short_file_name, instr(vd.short_file_name, '_', -1) + 1), 1, instr(substr(vd.short_file_name, instr(vd.short_file_name, '_', -1) + 1), '.', 1) - 1) "REPORT_ID",
+  acc.date_received,
+  CDX_VALIDATION.first_fax_attempt_date(cprr.versioned_document_id) "DATE_FAXED",
+  CDX_VALIDATION.first_fax_attempt_date(cprr.versioned_document_id) - acc.date_received "TURN_AROUND_TIME"
+FROM cp_run_report cprr, accession acc, cp_run cpr, sceschema.versioneddocument vd
+  WHERE acc.accession_id = cprr.accession_id
+  AND cprr.versioned_document_id = (SELECT CDX_VALIDATION.get_current_report_id(cprr.accession_id) FROM DUAL)
+  AND cprr.cp_run_report_id = (select max(cp_run_report_id) from cp_run_report where accession_id = acc.accession_id)
+  AND cprr.cp_run_id = cpr.cp_run_id(+)
+  AND vd.versioned_document_id = cprr.versioned_document_id
+  AND lower(vd.short_file_name) like '%.pdf'
+  AND (select nvl(lims_attr_util.get_accession_attr(acc.accession_id, 'Stop Delivery!', 'ACCESSION'), 'No') from dual) != 'Yes'
+  AND (select nvl(lims_attr_util.get_accession_attr(acc.accession_id, 'Stop Report!', 'ACCESSION'), 'No') from dual) != 'Yes'
+  AND (select nvl(lims_attr_util.get_study_attr(acc.study_protocol_id, 'Report Generation', 'STUDY'), 'Off') from dual) = 'On'
+  AND (select nvl(lims_attr_util.get_study_attr(acc.study_protocol_id, 'Report Delivery', 'STUDY'), 'Off') from dual) = 'On'
+
+

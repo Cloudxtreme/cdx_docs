@@ -1,0 +1,24 @@
+
+
+git clone git://github.com/jmettraux/ruote-web2.git
+cd ruote-web2
+rake submodule:update
+sudo rake gems:install
+rake ruote:install
+
+mysql -u root -p -e 'create database rw2_development'
+vi config/database.yml (enter the password)
+
+vi config/environment.rb
+  require 'openwfe/extras/participants/activeparticipants'
+
+mv lib lib.sav
+mv lib_ruote/ lib
+mv lib.sav/ruote_plugin.rb lib
+
+rake db:migrate
+rake data:populate
+
+
+./script/server -p 3002
+

@@ -1,0 +1,15 @@
+http://blog.chadwollenberg.com/2008/08/26/asterisk-on-hardy-server/
+
+
+
+mkdir gui
+cd gui
+
+
+svn co http://svn.digium.com/svn/asterisk-gui/branches/2.0
+
+cd 2.0
+./configure
+make
+
+

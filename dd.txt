@@ -1,0 +1,18 @@
+
+
+#dd if=/dev/lvm/cholula-disk | bar -s 15g | \
+    ssh -c arcfour $host "dd of=/dev/lvm/cholula-disk"
+
+
+dd if=/dev/vg0/chialin804 | ssh root@kvmsrv3 "dd of=/dev/vg0/chialin804"
+dd if=/dev/vg0/ubuntu804 | ssh root@ubuntu904 'dd of=/dev/vg0/ubuntu804'
+
+dd if=/dev/vg0/cbshub |pv| ssh root@kvmsrv2 'dd of=/dev/vg0/cbshub'
+
+
+
+dd if=hardy32.img of=/dev/etherd/e1.4 bs=10M &
+[1] 6010
+
+kill -USR1 6010
+

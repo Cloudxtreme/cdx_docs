@@ -1,0 +1,27 @@
+
+
+  501  lvcreate -L+10G -n ext4 vg0
+  502  mkfs.ext4 /dev/vg0/ext4 
+
+  505  mkdir ext4
+  506  mount /dev/vg0/ext4 ext4/
+
+  507  cd ext4/
+  511  dd if=/dev/zero of=testfile bs=2G count=1
+
+
+root@cchoudesktop:~/ext4# df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg0-ext4  10321208   2251252   7545668  23% /home/cchou/ext4
+
+root@cchoudesktop:~/ext4# resize2fs /dev/vg0/ext4 
+resize2fs 1.41.11 (14-Mar-2010)
+Filesystem at /dev/vg0/ext4 is mounted on /home/cchou/ext4; on-line resizing required
+old desc_blocks = 1, new_desc_blocks = 1
+Performing an on-line resize of /dev/vg0/ext4 to 3145728 (4k) blocks.
+The filesystem on /dev/vg0/ext4 is now 3145728 blocks long.
+
+root@cchoudesktop:~/ext4# df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg0-ext4  12385456   2253808   9502528  20% /home/cchou/ext4
+

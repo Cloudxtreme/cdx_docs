@@ -1,0 +1,293 @@
+oracle rman backup restore
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.orafusion.com/art_rman3.htm
+http://users.telenet.be/oraguy.be/rman1.htm
+
+--
+-- preparation
+--
+CREATE TABLESPACE "TOOLS" LOGGING
+DATAFILE '/u01/app/oracle/oradata/ORCL/tools01.dbf'
+SIZE 100M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT
+SPACE MANAGEMENT  AUTO;
+
+
+sqlplus sys
+SQL> create user rman identified by rman;
+SQL> alter user rman default tablespace tools temporary tablespace temp;
+SQL> alter user rman quota unlimited on tools;
+SQL> grant connect, resource, recovery_catalog_owner to rman;
+SQL> exit;
+
+
+rman catalog rman/rman@ORCL
+RMAN> create catalog tablespace tools;
+RMAN> exit;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- on the target machine
+--
+cd /u01/app/oracle/product/10.2.0/db_1/network/admin
+vi tnsnames.ora 
+RMAN =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = rmansrv.cardiodx.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCL)
+    )
+  )
+
+
+rman target sys/waban123 catalog rman/rman@rman
+RMAN> register database;
+RMAN> exit;
+
+
+rman target sys/waban123 catalog rman/rman@rman
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqlplus system/test22sys246
+alter system set db_recovery_file_dest_size=100G scope=both;
+
+rman target sys/test22sys246@TEST22 catalog rman/rman@RMAN
+rman target sys/srikar22sys246@srikar22 catalog rman/rman@RMAN
+
+
+show all;
+report schema;
+
+backup database;
+--backup as compressed backupset database;
+sql 'alter system archive log current';
+backup current controlfile;
+
+backup archivelog until time 'Sysdate-2' all delete input;
+backup archivelog all delete input;
+backup archivelog all;
+
+list backup;
+
+
+--delete backupset 113;
+
+report obsolete;
+delete noprompt obsolete;
+
+report obsolete recovery window of 7 days; 
+delete obsolete recovery window of 7 days;
+
+report unrecoverable database;
+
+resync catalog;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+RUN
+{
+  allocate channel disk1 device type disk;
+  allocate channel disk2 device type disk;
+  allocate channel disk3 device type disk;
+  backup database;
+  release channel disk1;
+  release channel disk2;
+  release channel disk3;
+
+}
+
+--
+-- The only difference between a level 0 incremental backup and a full backup is that 
+--   a full backup is never included in an incremental strategy.
+--
+
+Sun:
+backup incremental level 0 database;
+
+Mon,Tue,Wed,Thr,Fri,Sat
+backup incremental level 1 database;
+
+
+--------------------------------
+-- lost of a datafile
+--------------------------------
+
+cd /u01/app/oracle/oradata/ORCL
+mv users01.dbf users01.dbf.sav
+
+qlplus system/waban123 as sysdba
+SQL> startup
+ORACLE instance started.
+Redo Buffers		    6369280 bytes
+Database mounted.
+ORA-01157: cannot identify/lock data file 4 - see DBWR trace file
+ORA-01110: data file 4: '/u01/app/oracle/oradata/ORCL/users01.dbf'
+
+$ rman catalog rman/rman@orcl
+RMAN> connect target sys/waban123@oratest;
+RMAN> restore datafile 4;
+RMAN> recover datafile 4;
+RMAN> alter database open;
+
+
+--------------------------------
+-- lost of a datafile (online)
+--------------------------------
+rm users01.dbf 
+
+SQL> create table test(id int) tablespace users;
+create table test(id int) tablespace users
+*
+ERROR at line 1:
+ORA-01116: error in opening database file 4
+ORA-01110: data file 4: '/u01/app/oracle/oradata/ORCL/users01.dbf'
+ORA-27041: unable to open file
+Linux-x86_64 Error: 2: No such file or directory
+Additional information: 3
+
+SQL> select tablespace_name, file_name from dba_data_files;
+------------------------------ -----------------------------------
+USERS			       /u01/app/oracle/oradata/ORCL/users01.dbf
+SYSAUX			     /u01/app/oracle/oradata/ORCL/sysaux01.dbf
+UNDOTBS1		     /u01/app/oracle/oradata/ORCL/undotbs01.dbf
+SYSTEM			     /u01/app/oracle/oradata/ORCL/system01.dbf
+SCE_CONTENT		   /u01/app/oracle/oradata/ORCL/sec_content_01.dbf
+SCE_DATA		     /u01/app/oracle/oradata/ORCL/sec_data_01.dbf
+INDX			       /u01/app/oracle/oradata/ORCL/indx01.dbf
+
+RMAN> sql 'alter tablespace users offline immediate';
+RMAN> restore datafile 4;
+RMAN> recover tablespace users;
+RMAN> sql 'alter tablespace users online';
+
+SQL> create table test(id int) tablespace users;
+SQL> drop table test;
+
+--------------------------------
+-- block corruption
+--------------------------------
+SQL> select count(*) from test_table;
+ORA-01578: ORACLE data block corrupted (file #4, block #2015)
+
+RMAN> blockrecover datafile 4 block 2015;
+
+(not tested, yet)
+
+--------------------------------
+-- lost of log files
+--------------------------------
+rm redo02.log
+SQL> alter system archive log current;
+SQL> alter system archive log current;
+ERROR at line 1:
+ORA-16038: log 2 sequence# 72 cannot be archived
+ORA-00312: online log 2 thread 1: '/u01/app/oracle/oradata/ORCL/redo02.log'
+
+col member for a40;
+SELECT a.group#, a.member, b.bytes, FIRST_CHANGE#
+FROM v$logfile a, v$log b 
+WHERE a.group# = b.group#;
+
+    GROUP# MEMBER					 BYTES FIRST_CHANGE#
+---------- ---------------------------------------- ---------- -------------
+	 3 /u01/app/oracle/oradata/ORCL/redo03.log    52428800	     3126827
+	 2 /u01/app/oracle/oradata/ORCL/redo02.log    52428800	     3126820
+	 1 /u01/app/oracle/oradata/ORCL/redo01.log    52428800	     3123338
+
+SCN-1 ==> 3126820 - 1 = 3126819
+
+RMAN> restore database until scn 3126819;
+ORA-19573: cannot obtain exclusive enqueue for datafile 5
+
+SQL> shutdown immediate;
+SQL> shutdown abort;
+SQL> startup
+ORA-00313: open failed for members of log group 2 of thread 1
+ORA-00312: online log 2 thread 1: '/u01/app/oracle/oradata/ORCL/redo02.log'
+
+oracle@rmansrv:~$ rman catalog rman/rman@orcl
+RMAN> connect target sys/waban123@oratest;
+RMAN> restore database until scn 3126819;
+
+NOTE: takes a long time and hangs!!!!
+
+
+--------------------------------
+-- lost of control files
+--------------------------------
+cd /u01/app/oracle/oradata/ORCL
+rm control0*
+
+SQL> connect sys as sysdba;
+SQL> shutdown abort;
+SQL> startup
+ORA-00205: error in identifying control file, check alert log for more info
+
+rman target sys/waban123 catalog rman/rman@rman
+RMAN> shutdown abort;
+RMAN> startup nomount;
+RMAN> list backup;
+RMAN> restore controlfile from tag TAG20090521T120947;
+RMAN> mount database;
+RMAN> restore database;
+
+RMAN> alter database open resetlogs;
+
+
+--------------------------------
+-- full recovery
+--------------------------------
+$ sqlplus /nolog
+SQL> connect sys as sysdba
+SQL> shutdown abort;
+SQL> quit
+
+cd /u01/app/oracle/oradata/ORCL
+rm *
+
+$ sqlplus /nolog
+SQL> connect sys as sysdba
+SQL> startup nomount
+
+SQL> show parameter control_file;
+------------------------------------ ----------- ------------------------------
+control_files			     string	 /u01/app/oracle/oradata/ORCL/control01.ctl, 
+															/u01/app/oracle/oradata/ORCL/control02.ctl, 
+															/u01/app/oracle/oradata/ORCL/control03.ctl
+SQL> show parameter log_archive_dest;
+------------------------------------ ----------- ------------------------------
+log_archive_dest_1		     string	 LOCATION=/u01/app/oracle/archive
+
+
+rman target sys/waban123 catalog rman/rman@rman
+RMAN> startup nomount
+RMAN> list backup;
+
+RMAN> restore controlfile from tag TAG20090521T103345;
+RMAN> alter database mount;
+RMAN> restore database;
+RMAN> recover database;
+		unable to find archive log
+		archive log thread=1 sequence=62
+		RMAN-00571: ===========================================================
+		RMAN-00569: =============== ERROR MESSAGE STACK FOLLOWS ===============
+		RMAN-00571: ===========================================================
+		RMAN-03002: failure of recover command at 05/21/2009 11:28:27
+		RMAN-06054: media recovery requesting unknown log: thread 1 seq 62 lowscn 3105626
+
+(The error message above simply indicates that RMAN has reached, unsuccessfully, for 
+subsquent logs.)
+
+RMAN> alter database open resetlogs;
+
+sqlplus cdxtest/cdxtest@orcl
+
+
+
+

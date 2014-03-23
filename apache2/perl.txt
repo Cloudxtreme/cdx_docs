@@ -1,0 +1,14 @@
+http://www.fireflake.com/tech/2008/08/02/perl-on-apache2-ubuntu-8041-jeos/
+
+
+wajig install libapache2-mod-perl2
+
+vi /usr/lib/cgi-bin/test.pl
+#!/usr/bin/perl -w
+print "Content-type: text/plain\n\nHello World!\n"
+
+chmod 755 /usr/lib/cgi-bin/test.pl
+perl /usr/lib/cgi-bin/test.pl
+
+http://mail.cardiodx.com/cgi-bin/test.pl
+

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AssayResultInfo" table="ASSAY_RESULT_INFO" schema="DNALIMS">
+        <id name="assayResultInfoId" type="big_decimal">
+            <column name="ASSAY_RESULT_INFO_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="assayResultLoad" class="com.cardiodx.db.waban.table.AssayResultLoad" fetch="select">
+            <column name="ASSAY_RESULT_LOAD_ID" precision="22" scale="0">
+                <comment>Foreign key to the corresponding ASSAY_RESULT_LOAD record.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Used with VPD must be specific to each site.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="assayResult" class="com.cardiodx.db.waban.table.AssayResult" fetch="select">
+            <column name="ASSAY_RESULT_ID" precision="22" scale="0">
+                <comment>Foreign key to the ASSAY_RESULT record which is created for each sample in the results file.</comment>
+            </column>
+        </many-to-one>
+        <property name="topic" type="string">
+            <column name="TOPIC" length="100">
+                <comment>Freeform value column header stored for each ASSAY_RESULT record. Note that there may be more than one record for each ASSAY_RESULT, but each record will
+                need a different TOPIC value. This record will be displayed from the Results Review screen.</comment>
+            </column>
+        </property>
+        <property name="value" type="string">
+            <column name="VALUE" length="200">
+                <comment>Value for current topic. This field can be expanded if needed for other types of genetic data.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>Created by Username</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Created on Date and Time</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

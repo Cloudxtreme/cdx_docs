@@ -1,0 +1,89 @@
+linux memory map pid limit
+
+  536  pmap `pidof java`
+  538  pmap -d `pidof java`
+  540  pmap -x `pidof java`
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Linux Out of memory problem (OOM)
+
+2: be precise about the overcommit - never commit a virtual address space 
+  larger than swap space plus a fraction overcommit_ratio of the physical memory. 
+# echo 2 > /proc/sys/vm/overcommit_memory
+# echo 80 > /proc/sys/vm/overcommit_ratio
+
+cat /proc/meminfo
+
+
+http://linux-vserver.org/Memory_Limits
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- memory limit
+http://linux-vserver.org/Memory_Limits
+
+http://wiki.egee-see.org/index.php/How_to_limit_per-process_physical_memory_consumption_on_WNs
+
+ulimit -v 131072
+ulimit -v 2202009
+ulimit -a
+
+/etc/security/limits.conf
+* hard as 2202009
+
+vi /etc/pam.d/common-session
+session required        pam_limits.so
+
+relogin as cchou
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*
+ * xmalloc.c
+ *
+ * Just allocate a chunk of memory
+ * and make sure it gets written, so that
+ * the demand-paging mechanism of Linux actually
+ * has to find physical pages or swap for it
+ *
+ * Vangelis Koukis <vkoukis@cslab.ece.ntua.gr>
+ * July 2007
+ */ 
+  
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h> 
+
+int main(int argc, char *argv[])
+{
+	char *p;
+	long i;
+	size_t n; 
+
+	/* I'm too bored to do proper cmdline parsing */
+	if (argc != 2 || atol(argv[1]) <= 0 ) {
+		fprintf(stderr, "I'm bored... Give me the size of the memory chunk in KB\n");
+		return 1;
+	}
+	n = 1024 * atol(argv[1]);
+
+	if (! (p = malloc(n))) {
+		perror("malloc failed");
+		return 2;
+	} 
+
+ 	/* Temp, just want to check malloc */
+	printf("Malloc was successful\n");
+	return 0; 
+
+	/* Touch all of the buffer, to make sure it gets allocated */
+	for (i = 0; i < n; i++)
+		p[i] = 'A';
+
+
+	printf("Allocated and touched buffer, sleeping for 60 sec...\n");
+	sleep(60);
+	printf("Done!\n"); 
+
+	return 0;
+}
+

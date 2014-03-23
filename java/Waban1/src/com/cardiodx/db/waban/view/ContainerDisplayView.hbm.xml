@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.ContainerDisplayView" table="CONTAINER_DISPLAY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.ContainerDisplayViewId">
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="purpose" type="string">
+                <column name="PURPOSE" length="40" />
+            </key-property>
+            <key-property name="layout" type="string">
+                <column name="LAYOUT" length="96" />
+            </key-property>
+            <key-property name="containerLocation" type="string">
+                <column name="CONTAINER_LOCATION" length="4000" />
+            </key-property>
+            <key-property name="freesp" type="big_decimal">
+                <column name="FREESP" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="string">
+                <column name="CHECKLIST_ID" length="4000" />
+            </key-property>
+            <key-property name="procedureName" type="string">
+                <column name="PROCEDURE_NAME" length="4000" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="50" />
+            </key-property>
+            <key-property name="comments" type="string">
+                <column name="COMMENTS" length="4000" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="1" />
+            </key-property>
+            <key-property name="freezerId" type="big_decimal">
+                <column name="FREEZER_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerMapId" type="big_decimal">
+                <column name="CONTAINER_MAP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="compartment" type="string">
+                <column name="COMPARTMENT" length="20" />
+            </key-property>
+            <key-property name="shelf" type="string">
+                <column name="SHELF" length="20" />
+            </key-property>
+            <key-property name="rack" type="string">
+                <column name="RACK" length="20" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="50" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="DESCRIPTION" length="50" />
+            </key-property>
+            <key-property name="checkoutBy" type="string">
+                <column name="CHECKOUT_BY" length="30" />
+            </key-property>
+            <key-property name="dateCheckout" type="date">
+                <column name="DATE_CHECKOUT" length="7" />
+            </key-property>
+            <key-property name="discarded" type="java.lang.Boolean">
+                <column name="DISCARDED" precision="1" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerCondition" type="string">
+                <column name="CONTAINER_CONDITION" length="50" />
+            </key-property>
+            <key-property name="type" type="string">
+                <column name="TYPE" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

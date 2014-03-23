@@ -1,0 +1,245 @@
+firewall # iptables -L -t nat
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination         
+igd-preroute  all  --  anywhere             anywhere            
+auto-forward  all  --  anywhere             anywhere            
+port-forward  all  --  anywhere             anywhere            
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination         
+MASQUERADE  all  --  10.10.32.0/21        anywhere            
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination         
+
+Chain auto-forward (1 references)
+target     prot opt source               destination         
+
+Chain igd-preroute (1 references)
+target     prot opt source               destination         
+
+Chain port-forward (1 references)
+target     prot opt source               destination         
+DNAT       udp  --  anywhere             vpn.cardiodx.com    udp dpt:1194 to:10.10.37.22:1194 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:https to:10.10.37.27:443 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:imaps to:10.10.37.27:993 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:www to:67.95.201.196:80 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:3389 to:10.10.37.36:3389 
+DNAT       tcp  --  anywhere             ip67-95-201-197.z201-95-67.customer.algx.net tcp dpt:https to:10.10.37.36:443 
+firewall # 
+firewall # 
+firewall # 
+firewall # iptables -nvL -t nat
+Chain PREROUTING (policy ACCEPT 60M packets, 4873M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  61M 4941M igd-preroute  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  61M 4941M auto-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  61M 4941M port-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain POSTROUTING (policy ACCEPT 3450K packets, 221M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  28M 1839M MASQUERADE  all  --  *      eth0    10.10.32.0/21        0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain auto-forward (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain igd-preroute (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain port-forward (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 2158 99988 DNAT       udp  --  *      *       0.0.0.0/0            67.95.201.194       udp dpt:1194 to:10.10.37.22:1194 
+1056K   65M DNAT       tcp  --  *      *       0.0.0.0/0            67.95.201.194       tcp dpt:443 to:10.10.37.27:443 
+47919 2936K DNAT       tcp  --  *      *       0.0.0.0/0            67.95.201.194       tcp dpt:993 to:10.10.37.27:993 
+ 2500  136K DNAT       tcp  --  *      *       0.0.0.0/0            67.95.201.194       tcp dpt:80 to:67.95.201.196:80 
+  120  5524 DNAT       tcp  --  *      *       0.0.0.0/0            67.95.201.194       tcp dpt:3389 to:10.10.37.36:3389 
+  491 39271 DNAT       tcp  --  *      *       0.0.0.0/0            67.95.201.197       tcp dpt:443 to:10.10.37.36:443 
+firewall # 
+firewall # 
+firewall # iptables -nvL -t filter
+Chain INPUT (policy DROP 42 packets, 3659 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+24886 3125K ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           state RELATED,ESTABLISHED 
+ 123K   10M drop-packet-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0           state INVALID 
+  88M   61G igd-input  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  88M   61G wolv-local-acls  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  29M 2837M drop-packet-local  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  27M 1478M TCPMSS     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0           tcp flags:0x06/0x02 TCPMSS set 1300 
+1488M  823G ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           state RELATED,ESTABLISHED 
+ 688K   93M drop-packet  all  --  *      *       0.0.0.0/0            0.0.0.0/0           state INVALID 
+  38M 3114M igd-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  38M 3114M wolv-user-acls  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+62284   15M auto-forward-acl  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+62284   15M drop-packet  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 46M packets, 8816M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain accept-packet (28 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  45M   28G LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0           LOG flags 0 level 6 
+  98M   61G ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain accept-packet-local (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  423 23460 ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain auto-forward-acl (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain clinix (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 accept-packet  icmp --  *      *       66.18.106.160/27     0.0.0.0/0           
+   10   600 accept-packet  tcp  --  *      *       66.18.106.160/27     10.10.37.106        tcp dpt:9100 
+
+Chain dhcp-server (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain dmzin (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 323K   19M accept-packet  tcp  --  *      *       67.95.201.196        10.10.37.21         tcp dpt:389 
+ 400K   27M accept-packet  udp  --  *      *       67.95.201.196        10.10.37.21         udp dpt:53 
+5048K  786M accept-packet  udp  --  *      *       67.95.201.196        10.10.37.22         udp dpt:514 
+
+Chain dmzout (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+1222K   74M accept-packet  tcp  --  *      *       67.95.201.196        0.0.0.0/0           tcp dpt:25 
+  190 11400 accept-packet  tcp  --  *      *       67.95.201.196        0.0.0.0/0           tcp dpt:80 
+14834 1127K accept-packet  udp  --  *      *       67.95.201.196        0.0.0.0/0           udp dpt:123 
+
+Chain drop-packet (3 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 300K   48M LOG        all  --  *      *       0.0.0.0/0            0.0.0.0/0           LOG flags 0 level 6 
+ 750K  108M DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain drop-packet-local (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  29M 2848M DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain http-hosts (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  423 23460 accept-packet-local  all  --  *      *       10.10.32.0/21        0.0.0.0/0           
+
+Chain icmp-limit (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 139K 9547K RETURN     icmp --  *      *       0.0.0.0/0            0.0.0.0/0           icmp type 8 limit: avg 1/sec burst 100 
+  253 21252 drop-packet  icmp --  *      *       0.0.0.0/0            0.0.0.0/0           icmp type 8 
+
+Chain icmp-rules (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+1136K   53M accept-packet  icmp --  eth0   *       0.0.0.0/0            0.0.0.0/0           icmp type 8 
+ 166K   16M accept-packet  icmp --  eth1   *       0.0.0.0/0            0.0.0.0/0           icmp type 8 
+
+Chain igd-forward (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain igd-input (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain inert (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain inert2 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain infuse (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 accept-packet  tcp  --  *      *       70.58.37.37          10.10.37.36         tcp dpt:3389 
+    0     0 accept-packet  tcp  --  *      *       24.10.180.184        10.10.37.36         tcp dpt:3389 
+    0     0 accept-packet  tcp  --  *      *       71.199.56.195        10.10.37.36         tcp dpt:3389 
+    0     0 accept-packet  tcp  --  *      *       206.71.69.92         10.10.37.36         tcp dpt:3389 
+
+Chain inout (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  30M 2091M accept-packet  all  --  *      *       10.10.32.0/21        0.0.0.0/0           
+
+Chain ipsec-input (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  58M   58G accept-packet  esp  --  *      *       0.0.0.0/0            0.0.0.0/0           state NEW 
+    0     0 accept-packet  ah   --  *      *       0.0.0.0/0            0.0.0.0/0           state NEW 
+  480 67656 accept-packet  udp  --  *      *       0.0.0.0/0            0.0.0.0/0           udp spt:500 dpt:500 state NEW 
+
+Chain outdmz (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 404K   20M accept-packet  tcp  --  *      *       0.0.0.0/0            67.95.201.196       tcp dpt:25 
+ 3142  172K accept-packet  tcp  --  *      *       0.0.0.0/0            67.95.201.196       tcp dpt:80 
+ 2289  146K accept-packet  tcp  --  *      *       0.0.0.0/0            67.95.201.196       tcp dpt:465 
+83229 5268K accept-packet  tcp  --  *      *       0.0.0.0/0            67.95.201.196       tcp dpt:443 
+
+Chain outin (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+1166K   72M accept-packet  tcp  --  *      *       0.0.0.0/0            10.10.37.27         tcp dpt:443 
+48009 2942K accept-packet  tcp  --  *      *       0.0.0.0/0            10.10.37.27         tcp dpt:993 
+19825 1273K accept-packet  udp  --  *      *       0.0.0.0/0            10.10.37.22         udp dpt:1194 
+  493 39387 accept-packet  tcp  --  *      *       0.0.0.0/0            10.10.37.36         tcp dpt:443 
+
+Chain pptp-input (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   54  3505 accept-packet  47   --  *      *       0.0.0.0/0            0.0.0.0/0           state NEW 
+    5  1616 accept-packet  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0           tcp dpt:1723 state NEW 
+
+Chain snmp-hosts (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain ssh-hosts (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 accept-packet-local  all  --  *      *       10.10.32.0/21        0.0.0.0/0           
+
+Chain wolv-local-acls (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   93  8031 snmp-hosts  udp  --  *      *       0.0.0.0/0            0.0.0.0/0           udp dpt:161 
+1301K   69M icmp-rules  icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+84454 4075K http-hosts  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0           tcp flags:0x16/0x02 
+ 3127  169K ssh-hosts  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0           tcp dpt:22 flags:0x16/0x02 
+  87M   61G pptp-input  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  87M   61G ipsec-input  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  29M 2817M dhcp-server  udp  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain wolv-user-acls (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 140K 9568K icmp-limit  icmp --  *      *       0.0.0.0/0            0.0.0.0/0           
+  38M 3114M inout      all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+8797K 1023M outin      all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+7563K  947M outdmz     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+7070K  921M dmzin      all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+1299K   90M dmzout     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+62294   15M inert      all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+62294   15M inert2     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+62294   15M clinix     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+62284   15M infuse     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+firewall # 
+firewall # 
+firewall # 
+firewall # iptables -nvL -t mangle
+Chain PREROUTING (policy ACCEPT 1616M packets, 887G bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain INPUT (policy ACCEPT 88M packets, 61G bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy ACCEPT 1527M packets, 826G bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 46M packets, 8817M bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain POSTROUTING (policy ACCEPT 1572M packets, 837G bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+firewall # 
+firewall # 
+firewall # 
+firewall # route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+67.95.201.196   0.0.0.0         255.255.255.255 UH    0      0        0 eth2
+67.95.201.192   0.0.0.0         255.255.255.224 U     0      0        0 eth0
+10.10.43.0      0.0.0.0         255.255.255.0   U     0      0        0 eth2
+10.10.32.0      0.0.0.0         255.255.248.0   U     0      0        0 eth1
+0.0.0.0         67.95.201.193   0.0.0.0         UG    0      0        0 eth0
+

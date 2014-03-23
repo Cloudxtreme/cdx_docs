@@ -1,0 +1,14 @@
+<appconfig>
+	<dbType>MYSQL</dbType>
+	<driver>com.mysql.jdbc.Driver</driver>
+	<jdbcConnectionString>jdbc:mysql://127.0.0.1/demo</jdbcConnectionString>
+	<databaseIP>localhost</databaseIP>
+	<databaseCatalog>demo</databaseCatalog>
+	<databaseUsername>root</databaseUsername>
+	<databasePassword>abcdefgh</databasePassword>
+	<sourceTarget>d:/yourcompany</sourceTarget>
+	<libPath>COTS</libPath>
+	<projectName>demo</projectName>
+	<topLevel>com.demo</topLevel>
+	<schemaStrategy>PARTIAL</schemaStrategy>
+</appconfig>

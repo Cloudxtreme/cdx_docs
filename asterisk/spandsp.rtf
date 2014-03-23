@@ -1,0 +1,123 @@
+{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf420
+{\fonttbl\f0\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww15920\viewh15880\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+program installed on the test asterisk server (2500 Faber Drive):\
+\
+	wajig packages:\
+		build-essential\
+		(not needed?) cmucl-source \
+		(not needed?) libncurses5-dev (for termcap)\
+		libssl-dev\
+		linux-headers-2.6.15-28-server (zaptel)\
+		libxml2, libxml2-dev (spandsp) \
+		libtiff4-dev\
+		libtiff-tools\
+\
+	zaptel-1.2.16 (zaptel-1.2.14-r1t1.tgz)\
+		(need to use make install since checkinstall will try to overwrite a kernel file)\
+		Ger R1T1 driver from Rhino\
+		ftp://ftp.rhinoequipment.com/R1T1/Drivers/latest/r1t1.c\
+		change Makefile	\
+		MODULES:=zaptel r1t1 tor2 torisa\
+\
+		make\
+		make install\
+		make install-udev\
+		make config\
+\
+		(?) modprobe ztdummy\
+		modprobe zaptel\
+		(?) modprobe r1t1\
+\
+\
+\
+	libpri-1.2.4.tar.gz  (http://ftp.digium.com/pub/libpri/)\
+		make\
+		make install\
+\
+	spandsp-0.0.2pre26.tar.gz  (http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.2pre26/)\
+	spandsp_patches  (copy 3 files to asterisk - http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.2pre26/asterisk-1.2.x/)  \
+		app_rxfax.c, app_txfax.c, Makefile.patch  ==> asterisk/apps \
+		patch <Makefile.patch\
+\
+  		575  ./configure --prefix=/usr\
+  		576  make clean\
+  		577  make \
+  		578  make install\
+\
+		\
+	asterisk-1.2.15.tar.gz   \
+		make\
+		make install\
+		make samples\
+	\
+	asterfax  (Not going to install)\
+\
+	LDAPget\
+\
+\
+\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+\
+dabber\
+libspandsp0\
+checkinstall spandsp\
+wajig force asterisk-app-fax\
+checkinstall\
+dpkg\
+wajig source\
+fakeroot\
+~~~~~~~~~~~~~~~~~~~~~\
+\
+libzaptel \
+copy r1t1.c to here and vi the Makefile\
+\
+libpri\
+(use checkinstall)\
+\
+\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+\
+(for LDAPget)\
+           wajig install ldap-utils\
+           wajig install libldap2-dev\
+\
+(Others)\
+  499  wajig install subversion\
+  500  wajig install syslog-ng \
+  501  wajig install vsftpd \
+  502  wajig install mime-construct\
+  508  wajig install mpg123\
+  507  wajig install libglib2.0-0\
+\
+diff between production and machine installed by this document:\
+\
+< ldapvi\
+< libnewt-dev\
+< libslang2-dev\
+\
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+\
+copy iax.conf, extension.conf\
+\
+root@asdfgf:/etc/asterisk# asterisk -cvvvvv\
+ dial 14088883248@default\
+\
+startup scripts\
+\
+backup dir:\
+/var/log/asterisk/cdr-*\
+/etc/asterisk\
+/var/spool/asterisk\
+/var/lib/asteirsk/jnctn.pub and cdx-*.gsm (3 of them)\
+\
+root@asdfgf:/root/asterisk/asterisk-1.2.18/contrib/init.d# ll\
+root@asdfgf:/root/asterisk/asterisk-1.2.18/contrib/init.d# cp rc.debian.asterisk /etc/init.d/asterisk\
+\
+\
+\
+}

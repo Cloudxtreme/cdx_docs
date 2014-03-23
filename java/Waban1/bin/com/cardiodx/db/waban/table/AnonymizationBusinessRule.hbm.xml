@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AnonymizationBusinessRule" table="ANONYMIZATION_BUSINESS_RULE" schema="DNALIMS">
+        <comment>Used to associate validation stored procedures to be used for anonymization studies</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.AnonymizationBusinessRuleId">
+            <key-property name="anonymizationStudySetupId" type="big_decimal">
+                <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="validationId" type="big_decimal">
+                <column name="VALIDATION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="anonymizationStudySetup" class="com.cardiodx.db.waban.table.AnonymizationStudySetup" update="false" insert="false" fetch="select">
+            <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" not-null="true">
+                <comment>Anonymization Study Setup ID</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

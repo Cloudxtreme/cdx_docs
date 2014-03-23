@@ -1,0 +1,6 @@
+ubuntu cloud computing
+
+
+Docs: https://help.ubuntu.com/community/Eucalyptus
+Blog: http://cloud.ubuntu.com/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,235 @@
+==============================
+
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+==============================
+
+cat > /etc/apt/apt.conf <<EOF
+Acquire::http::Proxy "http://proxy.cardiodx.com";
+EOF
+
+mv /etc/apt/sources.list /etc/apt/sources.list.orig
+
+cat > /etc/apt/sources.list <<EOF
+deb http://mirrors.xmission.com/ubuntu/ precise main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ precise-updates main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ precise-security main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ precise-backports main restricted universe multiverse
+deb http://archive.canonical.com/ precise partner
+EOF
+
+==============================
+
+vi /etc/default/grub
+GRUB_DEFAULT=0
+#GRUB_HIDDEN_TIMEOUT=0
+GRUB_HIDDEN_TIMEOUT_QUIET=false
+GRUB_TIMEOUT="3"
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+GRUB_CMDLINE_LINUX=""
+
+update-grub2
+
+reboot
+
+==============================
+
+cd /etc/default
+vi rcS
+VERBOSE=yes
+
+vi console-setup
+VERBOSE_OUTPUT=yes
+
+==============================
+
+ldap
+
+wajig install libpam-ldap libnss-ldap libpam-foreground nscd -y
+hit 'enter' 7 times to accept all defaults
+
+cat > /etc/ldap.conf <<EOF
+uri ldaps://pdc.cardiodx.com
+base dc=cardiodx,dc=com
+start_tls
+ssl on
+tls_checkpeer no
+
+scope sub
+#timelimit 30
+
+pam_filter objectclass=User
+pam_login_attribute sAMAccountName
+pam_lookup_policy yes
+pam_password ad
+
+# Modify cn=User,dc=e... to your container with your users.
+nss_base_passwd cn=Users,dc=cardiodx,dc=com?sub
+nss_base_shadow cn=Users,dc=cardiodx,dc=com?sub
+nss_base_group  cn=Users,dc=cardiodx,dc=com?sub
+
+nss_map_objectclass posixAccount User
+nss_map_objectclass shadowAccount User
+nss_map_objectclass posixGroup Group
+nss_map_attribute uid sAMAccountName
+nss_map_attribute uniqueMember member
+nss_map_attribute uidNumber uidNumber
+nss_map_attribute gidNumber gidNumber
+nss_map_attribute homedirectory unixHomeDirectory
+nss_map_attribute loginshell loginShell
+nss_map_attribute gecos displayName
+#nss_map_attribute userPassword msSFU30Password
+#nss_map_attribute cn sAMAccountName
+EOF
+
+==============================
+
+kerberos
+
+wajig install krb5-kdc libpam-krb5 -y
+    -Don't type anything in the package config prompt, we'll take care of it afterwards.
+mv /etc/krb5.conf /etc/krb5.conf.orig
+
+cat > /etc/krb5.conf << EOF
+[libdefaults]
+default_realm = CARDIODX.COM
+dns_lookup_kdc = true
+dns_lookup_realm = true
+verify_ap_req_nofail = false
+#allow_weak_crypto = true
+ticket_lifetime = 24h
+forwardable = yes
+
+[realms]
+CARDIODX.COM = {
+kdc = pdc.cardiodx.com
+admin_server = pdc.cardiodx.com
+}
+
+[domain_realm]
+.cardiodx.com = CARDIODX.COM
+
+[logging]
+default = FILE:/var/log/kerberos
+kdc = FILE:/var/log/kerberos
+kdc_rotate = {
+period = 1d
+version = 10
+}
+
+[appdefaults]
+kinit = {
+renewable = true
+forwardable= true
+}
+EOF
+
+kinit cwoo
+klist
+
+==============================
+
+pam_mount:
+
+wajig install libpam-mount smbfs acl -y
+
+vi /etc/security/pam_mount.conf.xml
+
+                <!-- Volume definitions -->
+<volume user="*" fstype="cifs" server="filesrv" path="%(USER)" mountpoint="/home/%(USER)/hdrive" options="domain=CDX" />
+<volume user="*" fstype="cifs" server="filesrv" path="groups" mountpoint="/home/%(USER)/gdrive" options="domain=CDX" />
+<volume user="*" fstype="cifs" server="filesrv" path="public" mountpoint="/home/%(USER)/pdrive" options="domain=CDX" />
+<cifsmount>mount -t cifs //%(SERVER)/%(VOLUME) %(MNTPT) -o "user=%(USER),%(OPTIONS)"</cifsmount>
+
+==============================
+
+pam-auth-update (terminal command)
+    checked: kerberos, unix, mount volumes, gnome keyring, consolekit session, inheritable capabilities
+    unchecked: ldap authentication
+
+vi /etc/pam.d/common-session
+add this at the bottom:
+session optional    pam_mkhomedir.so skel=/etc/skel/ umask=0022
+
+visudo
+%linuxadmins ALL=(ALL) ALL
+
+vi /etc/nsswitch.conf
+passwd:         compat ldap
+group:          compat ldap
+shadow:         compat ldap
+
+vi /etc/lightdm/lightdm.conf
+[SeatDefaults]
+greeter-session=unity-greeter
+user-session=ubuntu
+greeter-show-manual-login=true
+
+reboot!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+remove the annoying scrollbars
+wajig purge liboverlay-scrollbar-0.2-0 liboverlay-scrollbar3-0.2-0 overlay-scrollbar
+
+gnome classic
+sudo apt-get install gnome-panel
+
+gnome3
+sudo apt-get install gnome-shell
+
+restore desktop icons (only working with gnome classic)
+gsettings set org.gnome.desktop.background show-desktop-icons true (restart/logoff after entering this)
+gsettings set org.gnome.nautilus.desktop computer-icon-visible true
+gsettings set org.gnome.nautilus.desktop home-icon-visible true
+gsettings set org.gnome.nautilus.desktop network-icon-visible true
+gsettings set org.gnome.nautilus.desktop trash-icon-visible true
+gsettings set org.gnome.nautilus.desktop volumes-visible true
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install ntp sysstat build-essential fakeroot deborphan subversion sysv-rc-conf \
+        vim-gnome lvm2 xfsprogs ntp vim-nox -y
+
+wajig install openjdk-7-jdk openjdk-7-jre -y
+wajig install chromium-browser
+
+wajig dist-upgrade 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- Ruby/Rails
+--
+wajig install curl git-core
+wajig install libreadline6 libreadline6-dev zlib1g zlib1g-dev libssl-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev autoconf libc6-dev ncurses-doc automake libtool bison subversion
+
+groupadd -g 501 admin
+wajig install ruby-rvm
+
+rvm install 1.9.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

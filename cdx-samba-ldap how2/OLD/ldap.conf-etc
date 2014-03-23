@@ -1,0 +1,3 @@
+#
+The distinguished name of the search base.
+base dc=cardiodx,dc=com

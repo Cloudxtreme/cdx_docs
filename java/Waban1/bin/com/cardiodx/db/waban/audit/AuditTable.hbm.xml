@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AuditTable" table="AUDIT_TABLE" schema="DNALIMS">
+        <comment>Information about tables that are audited.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.audit.AuditTableId">
+            <key-property name="tableType" type="string">
+                <column name="TABLE_TYPE" length="20" />
+            </key-property>
+            <key-property name="limsTable" type="string">
+                <column name="LIMS_TABLE" length="60" />
+            </key-property>
+        </composite-id>
+        <property name="audTable" type="string">
+            <column name="AUD_TABLE" length="60" not-null="true">
+                <comment>The corresponding audit table name.</comment>
+            </column>
+        </property>
+        <property name="pkfield" type="string">
+            <column name="PKFIELD" length="60">
+                <comment>The table's primary key field.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="256">
+                <comment>A table usage description.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

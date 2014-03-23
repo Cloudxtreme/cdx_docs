@@ -1,0 +1,54 @@
+waban sce
+
+wajig install sun-java6-jdk -y
+wajig install r-base 
+wajig install build-essential
+
+addgroup --gid 560 waban
+adduser --gid 560 --uid 560 waban
+
+su - waban
+
+-- install sce server
+unzip SCEserver.zip
+chmod 755 installlinux.sh
+vi installlinux.sh
+  change sh to bash
+./installlinux.sh
+JAVA_HOME: /usr/lib/jvm/java-6-sun
+dir: /home/waban/sce
+
+-- install daemon
+sudo bash
+cd bin
+export LINUX_TYPE=ubuntu
+vi ./InstallDaemon.sh
+  change sh to bash
+./InstallDaemon.sh
+
+
+vi daemonconfig.properties
+< DATASOURCE=jdbc:oracle:thin:@common25410:1521:ORCL
+< SANDBOX_DIR=/home/waban/sce/sandboxes
+< R_PATH=/usr/bin/R
+
+chown -R waban:waban sce
+
+-- 64 bit fix
+scp Ubuntu64.zip 
+
+cp Ubuntu64.zip sce
+unzip Ubuntu64.zip
+
+
+cd bin
+mv wrapper wrapper.i386
+ln -s wrapper_64 wrapper
+chmod 755 wrapper_64
+
+
+-- reshape for R
+copy reshape_0.8.0.tar.gz over
+tar zxvf reshape_0.8.0.tar.gz
+R CMD INSTALL reshape
+

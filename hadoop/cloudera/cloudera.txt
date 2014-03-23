@@ -1,0 +1,43 @@
+
+cloudera hadoop
+
+https://docs.cloudera.com/display/DOC/Hadoop+Deployment+%28CDH3%29+in+Standalone+Mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+  301  vi sources.list
+deb http://archive.canonical.com/ lucid partner
+
+  302  apt-get update -o Acquire::http::No-Cache=True
+  303  wajig update
+  304  wajig install sun-java6-jdk -y
+  305  java -version
+java version "1.6.0_22"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install curl -y
+curl -s http://archive.cloudera.com/debian/archive.key | sudo apt-key add -
+
+vi /etc/apt/sources.list
+deb http://archive.cloudera.com/debian lucid-cdh3 contrib
+
+wajig install hadoop-0.20 -y
+
+	Hadoop wrapper script          /usr/bin/hadoop-0.20
+	Hadoop Configuration Files     /etc/hadoop-0.20/conf
+	Hadoop Jar and Library Files   /usr/lib/hadoop-0.20
+	Hadoop Log Files               /var/log/hadoop-0.20
+	Hadoop Man pages               /usr/share/man
+	Hadoop service scripts         /etc/init.d/hadoop-0.20-*
+
+
+--
+-- stand alone mode
+--
+  358  cd /tmp/
+  360  mkdir input
+  361  cp /etc/hadoop-0.20/conf/*.xml input
+
+  371  hadoop-0.20 jar /usr/lib/hadoop-0.20/hadoop-0.20.2+737-examples.jar grep input output20 'dfs[a-z.]+'
+  372  cat /tmp/output20/part-00000 | head
+

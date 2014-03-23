@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudCpNormalizedValue" table="AUD_CP_NORMALIZED_VALUE" schema="DNALIMS">
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0" />
+        </property>
+        <property name="cpNormalizedValueId" type="big_decimal">
+            <column name="CP_NORMALIZED_VALUE_ID" precision="22" scale="0" />
+        </property>
+        <property name="cpRunId" type="big_decimal">
+            <column name="CP_RUN_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="oligoId" type="big_decimal">
+            <column name="OLIGO_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="dateCalculated" type="date">
+            <column name="DATE_CALCULATED" length="7" not-null="true" />
+        </property>
+        <property name="cpNormalizedValue" type="string">
+            <column name="CP_NORMALIZED_VALUE" length="50" not-null="true" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true" />
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30" />
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7" />
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PcrMastermixView" table="PCR_MASTERMIX_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PcrMastermixViewId">
+            <key-property name="reagentBarcode" type="string">
+                <column name="REAGENT_BARCODE" length="20" />
+            </key-property>
+            <key-property name="aspPos" type="string">
+                <column name="ASP_POS" length="3" />
+            </key-property>
+            <key-property name="dispBarcode" type="string">
+                <column name="DISP_BARCODE" length="20" />
+            </key-property>
+            <key-property name="dispPos" type="string">
+                <column name="DISP_POS" length="4000" />
+            </key-property>
+            <key-property name="pcrSetupId" type="big_decimal">
+                <column name="PCR_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="reagentId" type="big_decimal">
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

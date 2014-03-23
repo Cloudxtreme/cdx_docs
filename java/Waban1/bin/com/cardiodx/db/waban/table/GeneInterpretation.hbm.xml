@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.GeneInterpretation" table="GENE_INTERPRETATION" schema="DNALIMS">
+        <comment>Information about phenotypes linked to a gene.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.GeneInterpretationId">
+            <key-property name="geneInterprDefinitionId" type="big_decimal">
+                <column name="GENE_INTERPR_DEFINITION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneId" type="big_decimal">
+                <column name="GENE_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="geneInterprDefinition" class="com.cardiodx.db.waban.table.GeneInterprDefinition" update="false" insert="false" fetch="select">
+            <column name="GENE_INTERPR_DEFINITION_ID" precision="22" scale="0" not-null="true">
+                <comment>Phenotype identifier. Part of the primary key and foreign key to the GENE_INTERP_DEFINITION table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" update="false" insert="false" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                <comment>Gene identifier. Part of the primary key and foreign key to the GENE table.</comment>
+            </column>
+        </many-to-one>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Display order in list.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

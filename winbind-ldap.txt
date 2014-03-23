@@ -1,0 +1,130 @@
+samba winbind
+
+linux authentication through samba
+
+NOTE: since IDs are all messed up, we use ldap to retrieve uid, and gid
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install winbind samba
+
+cd /etc/samba
+mv smb.conf smb.conf.orig
+vi smb.conf
+[global]
+workgroup = CDX
+security = domain
+encrypt passwords = true
+#password server = *
+idmap uid = 10000-20000
+idmap gid = 10000-20000
+winbind enum users = yes
+winbind enum groups = yes
+template shell = /bin/bash
+template homedir = /home/%U
+
+winbind cache time = 5
+winbind use default domain = Yes
+winbind trusted domains only = Yes
+winbind nested groups = Yes
+
+vi /etc/nsswitch.conf
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+
+
+# net rpc join -S pdc -U Administrator
+(enter windows admin pwrd)
+
+/etc/init.d/winbind start
+/etc/init.d/winbind status
+
+getent passwd
+getent group
+
+wbinfo -u
+wbinfo -g
+
+wbinfo -u | grep cchou
+
+
+-
+- NOTE: To resolve 'Could not receive trustdoms' problem (after rebooting)
+-
+# cd /etc/network/if-up.d
+# vi winbind
+
+#!/bin/sh
+
+/etc/init.d/winbind restart
+
+
+chmod 755 winbind
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# vi common-auth
+auth [success=done default=ignore] pam_unix.so
+auth [success=1 default=ignore] pam_winbind.so use_first_pass
+auth requisite pam_deny.so
+auth optional pam_mount.so
+
+# vi common-password
+#password sufficient   pam_ldap.so
+#password   required   pam_unix.so try_first_pass nullok obscure min=4 max=8 md5
+password sufficient pam_unix.so
+password required pam_winbind.so
+
+# vi common-account
+account sufficient      pam_ldap.so
+account required        pam_unix.so
+
+# vi common-session
+session required pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional pam_mount.so
+session sufficient pam_ldap.so
+session required pam_unix.so
+session optional pam_foreground.so
+
+
+NOTE: 
+  1) ssh won't work for logging out. 
+       the mounts will still be there. 
+	2) login/logout from console (gdm) works fine.
+
+
+su - cdxtest
+passwd
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- some fixes
+--
+
+cat /var/run/pam_mount/cchou
+
+vi /etc/ldap.conf
+change ldap to ldap.cardiodx.com
+
+
+wajig list | grep libpam-foreground
+
+
+ssh not umount?????
+su - (on exit) getting 'umount: /home/cchou/gdrive is not in the fstab (and you are not root)'!!!!
+Not getting the followings from auth.log!!!!!
+
+chialindesktop sshd[4300]: pam_mount(pam_mount.c:576): received order to close things 
+
+
+
+
+
+
+
+
+
+
+
+

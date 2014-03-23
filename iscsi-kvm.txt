@@ -1,0 +1,88 @@
+iscsi ocfs kvm
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- kvm
+--
+  218  wajig install kvm libvirt-bin ubuntu-vm-builder -y
+  219  adduser `id -un` libvirtd
+  220  adduser `id -un` kvm
+  221  wajig install ca-certificates -y
+  222  virsh -c qemu:///system list
+  223  wajig install virt-viewer -y
+  224  wajig install xterm xauth -y
+  227  cd /etc/libvirt/qemu/networks
+  228  cp default.xml bridge.xml
+  229  vi bridge.xmlo
+
+vi /etc/network/interface
+auto eth0
+iface eth0 inet static
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_fd 9
+        bridge_hello 2
+        bridge_maxage 12
+        bridge_stp off
+        post-up echo "Waiting for network to come up before starting iSCSI..." && sleep 5
+        post-up /etc/init.d/open-iscsi start
+        pre-down umount -a -O _netdev
+        pre-down /etc/init.d/open-iscsi stop
+
+--
+-- change iscsi startup order (need to bring up br0 first)
+--
+cd /etc/rcS.d
+  294  mv S25open-iscsi S42open-scsi
+
+
+-- 
+-- script to mount iscsi fs
+--
+
+cd /etc/init.d
+vi cdx-mountfs
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          cdx-mountfs
+# Required-Start:    
+# Required-Stop:
+# Default-Start:     
+# Default-Stop:
+# Short-Description: 
+### END INIT INFO
+
+PATH=/sbin:/bin
+
+. /lib/lsb/init-functions
+
+
+case "$1" in
+  start)
+        echo "Mounting iscsi file systems "
+        mount /dev/sdc1 /iscsi/public
+        mount /dev/sdd1 /iscsi/private
+        mount /dev/sde1 /iscsi/test 
+        ;;
+  stop)
+        echo "Un-mounting iscsi file systems "
+        umount /iscsi/public
+        umount /iscsi/private
+        umount /iscsi/test
+        ;;
+  *)
+        echo "Usage: $0 start|stop" >&2
+        exit 3
+        ;;
+esac
+
+
+lrwxrwxrwx 1 root root 21 2009-09-22 12:19 ../rc0.d/K18cdx-mountfs -> ../init.d/cdx-mountfs
+lrwxrwxrwx 1 root root 21 2009-09-22 12:19 ../rc2.d/S18cdx-mountfs -> ../init.d/cdx-mountfs
+lrwxrwxrwx 1 root root 21 2009-09-22 12:12 ../rc3.d/S18cdx-mountfs -> ../init.d/cdx-mountfs
+lrwxrwxrwx 1 root root 21 2009-09-22 12:19 ../rc4.d/S18cdx-mountfs -> ../init.d/cdx-mountfs
+lrwxrwxrwx 1 root root 21 2009-09-22 12:19 ../rc5.d/S18cdx-mountfs -> ../init.d/cdx-mountfs
+lrwxrwxrwx 1 root root 21 2009-09-22 12:19 ../rc6.d/K18cdx-mountfs -> ../init.d/cdx-mountfs
+

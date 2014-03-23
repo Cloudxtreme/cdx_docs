@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.EmailTemplate" table="EMAIL_TEMPLATE" schema="DNALIMS">
+        <comment>Template for E-Mail bOdy Message</comment>
+        <id name="emailTemplateId" type="big_decimal">
+            <column name="EMAIL_TEMPLATE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="emailName" type="string">
+            <column name="EMAIL_NAME" length="30" not-null="true">
+                <comment>E-mail name</comment>
+            </column>
+        </property>
+        <property name="emailContents" type="string">
+            <column name="EMAIL_CONTENTS" length="300">
+                <comment>E-mails message</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,58 @@
+
+--volume remove-brick vol1 mayankdesktop:/export/gluster phildesktop:/export/gluster
+
+gluster peer probe srikardesktop
+gluster peer probe randaldesktop1
+
+gluster volume create vol0 \
+    transport tcp \
+	  jonathandesktop:/export/gluster/vol0 \
+    srikardesktop:/export/gluster/vol0 \
+    randaldesktop1:/export/gluster/vol0
+
+gluster volume start vol0
+
+
+-- client
+mount -t glusterfs jonathandesktop:vol0 gluster1
+mount -t nfs srikardesktop:vol0 gluster1
+
+vi /etc/fstab
+jonathandesktop:/vol0 /home/cchou/gluster1 glusterfs defaults,_netdev 0 0 
+
+
+-- adding a new brick
+gluster peer probe mayankdesktop
+gluster volume add-brick vol0 mayankdesktop:/export/gluster/vol0
+
+gluster volume rebalance vol0 start
+gluster volume rebalance vol0 status
+
+
+-- decommission a machine.... mayankdesktop
+***start
+gluster volume replace-brick vol0 mayankdesktop:/export/gluster/vol0 srikardesktop:/export/gluster/vol0-tmp start
+gluster volume replace-brick vol0 mayankdesktop:/export/gluster/vol0 srikardesktop:/export/gluster/vol0-tmp status
+gluster volume replace-brick vol0 mayankdesktop:/export/gluster/vol0 srikardesktop:/export/gluster/vol0-tmp commit
+
+gluster volume info
+gluster peer detach mayankdesktop
+
+***replace the macine, add it back
+gluster volume replace-brick vol0 srikardesktop:/export/gluster/vol0-tmp mayankdesktop:/export/gluster/vol0 start
+gluster volume replace-brick vol0 srikardesktop:/export/gluster/vol0-tmp mayankdesktop:/export/gluster/vol0 status
+gluster volume replace-brick vol0 srikardesktop:/export/gluster/vol0-tmp mayankdesktop:/export/gluster/vol0 commit
+
+gluster volume info
+
+-- mount -o remount /home/cchou/gluster1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gluster volume create vol1 \
+    replica 2 \
+    transport tcp \
+    jonathandesktop:/export/gluster \
+    srikardesktop:/export/gluster
+
+gluster volume start vol1

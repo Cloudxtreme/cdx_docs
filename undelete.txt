@@ -1,0 +1,3 @@
+http://www.faqs.org/docs/Linux-mini/Ext2fs-Undeletion-Dir-Struct.html
+
+http://www.linux.com/archive/feature/58142

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TestSetupView" table="TEST_SETUP_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TestSetupViewId">
+            <key-property name="testNumber" type="string">
+                <column name="TEST_NUMBER" length="30" />
+            </key-property>
+            <key-property name="testName" type="string">
+                <column name="TEST_NAME" length="30" />
+            </key-property>
+            <key-property name="testType" type="string">
+                <column name="TEST_TYPE" length="30" />
+            </key-property>
+            <key-property name="version" type="string">
+                <column name="VERSION" length="10" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="30" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="DESCRIPTION" length="100" />
+            </key-property>
+            <key-property name="testSource" type="string">
+                <column name="TEST_SOURCE" length="10" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="testSetupId" type="big_decimal">
+                <column name="TEST_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="testClass" type="string">
+                <column name="TEST_CLASS" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

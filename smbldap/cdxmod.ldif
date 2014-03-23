@@ -1,0 +1,13 @@
+# Password is foobar for both entries
+
+dn: uid=cchou,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}PlvELxk1tDICdD0Pp9n1rRBEVNslfQaT
+
+dn: uid=srikar,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}eYxB+mCYtw8rZbyUMEAUrGj4JaK3ESOC
+
+

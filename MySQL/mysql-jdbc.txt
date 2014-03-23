@@ -1,0 +1,47 @@
+mysql jdbc
+
+https://help.ubuntu.com/community/JDBCAndMySQL
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install mysql-server-5.0
+wajig install sun-java6-jdk
+wajig install libmysql-java
+
+mysql -u root -p
+CREATE DATABASE orderlystats;
+GRANT ALL PRIVILEGES ON orderlystats.* TO 'orderlystats'@'localhost' IDENTIFIED BY 'orderlystats' WITH GRANT OPTION;
+
+vi DBDemo.java 
+import java.sql.*;
+import java.util.Properties;
+
+public class DBDemo {
+  private static final String dbClassName = "com.mysql.jdbc.Driver";
+  private static final String CONNECTION = "jdbc:mysql://127.0.0.1/orderlystats";
+
+  public static void main(String[] args) throws
+  ClassNotFoundException,SQLException {
+    System.out.println(dbClassName);
+    Class.forName(dbClassName);
+    Properties p = new Properties();
+    p.put("user","orderlystats");
+    p.put("password","orderlystats");
+
+    Connection c = DriverManager.getConnection(CONNECTION,p);
+    System.out.println("It works !");
+    c.close();
+  }
+}
+
+
+
+  539  export CLASSPATH=.:/usr/share/java/mysql.jar
+  541  javac DBDemo.java 
+  542  java DBDemo
+
+
+mysql> GRANT ALL PRIVILEGES ON dbsync.* TO 'dbsync'@'*' IDENTIFIED BY 'dbsync' WITH GRANT OPTION;
+mysql> GRANT ALL PRIVILEGES ON dbsync.* TO 'dbsync'@'localhost' IDENTIFIED BY 'dbsync' WITH GRANT OPTION;
+mysql> GRANT ALL PRIVILEGES ON dbsync.* TO 'dbsync'@'aster64.cardiodx.com' IDENTIFIED BY 'dbsync' WITH GRANT OPTION;
+mysql> GRANT ALL PRIVILEGES ON dbsync.* TO 'dbsync'@'avankia.cardiodx.com' IDENTIFIED BY 'dbsync' WITH GRANT OPTION;
+

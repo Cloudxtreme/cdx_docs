@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.SampleIdentificationKey" table="SAMPLE_IDENTIFICATION_KEY" schema="DNALIMS">
+        <comment>Linking Table for Identified and non identified sample attributes</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.SampleIdentificationKeyId">
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="anonymizationLogId" type="big_decimal">
+                <column name="ANONYMIZATION_LOG_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="anonymizationRequestId" type="big_decimal">
+                <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="anonymizationStudySetupId" type="big_decimal">
+                <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="identifiedSampleId" type="string">
+                <column name="IDENTIFIED_SAMPLE_ID" />
+            </key-property>
+            <key-property name="isEncrypted" type="java.lang.Boolean">
+                <column name="IS_ENCRYPTED" precision="1" scale="0" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="anonymizationStudySetup" class="com.cardiodx.db.waban.table.AnonymizationStudySetup" update="false" insert="false" fetch="select">
+            <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0">
+                <comment>Anonymization Study Setup ID and primary Key</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="anonymizationRequest" class="com.cardiodx.db.waban.table.AnonymizationRequest" update="false" insert="false" fetch="select">
+            <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0">
+                <comment>Anonymization Request ID and Primary Key</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" update="false" insert="false" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Study protocol identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" update="false" insert="false" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

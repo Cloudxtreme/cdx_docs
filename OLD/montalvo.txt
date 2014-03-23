@@ -1,0 +1,25 @@
+Server:
+	samab-server
+	openssh-server
+
+Network Computer (client)
+
+already installed
+openssh-server
+samba-server
+samba-client
+
+install the following:
+openldap-servers
+openldap-client
+pam_ldap
+
+urpmi samba-doc
+
+---------------------------------------
+
+
+copy smbldap-2.tar
+
+---------------------------------------
+

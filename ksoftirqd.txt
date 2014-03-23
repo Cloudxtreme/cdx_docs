@@ -1,0 +1,4 @@
+ksoftirqd cpu high load
+
+problem: virtualbox is running
+fix: nohz=off in the boot option /boot/grub/menu.list

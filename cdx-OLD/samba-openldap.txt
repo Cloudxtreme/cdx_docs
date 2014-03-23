@@ -1,0 +1,498 @@
+http://us2.samba.org/samba/docs/man/Samba-Guide/happy.html#ch6-dbconf
+
+http://defindit.com/readme_files/ldap.html
+
+gq
+
+cd1: urpmi openldap-client
+dvd, cd1: urpmi openldap-servers
+
+cd1: urpmi samba-server
+cd1: urpmi samba-client
+--urpmi samba-doc
+
+cd1: urpmi pam_ldap
+
+
+cd1: samba-winbind?
+
+-- 
+-- backup configuration files
+--
+cp /etc/openldap/slapd.conf ~
+cp /etc/openldap/ldap.conf ~
+cp /etc/samba/smb.conf ~
+cp /etc/pam.d/system-auth ~
+cp /etc/samba/smbldap_conf.pm ~
+cp /etc/ldap.conf ~/ldap.conf-etc
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			/usr/share/openldap/gencert.sh
+
+
+			for debugging....
+
+			sldapd /etc/syslog.conf 
+				local4.*                                                        -/var/log/ldap/ldap.log
+					^^^^
+					change from 0
+
+			NSS_LDAP: /etc/ldap.conf  (add)
+			debug 256
+			logdir /data/logs
+
+			mkdir -p /data/logs
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+vi /etc/openldap/slapd.conf
+rootpw          secret
+
+index      sambaSID,sambaPrimaryGroupSID,sambaDomainName    eq
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/openldap/ldap.conf
+BASE    dc=cardiodx, dc=com
+HOST    127.0.0.1
+
+#URI     ldap://pdc
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+			service ldap start
+			--debugging...
+			/usr/sbin/slapd -d -128 -u ldap
+
+
+
+vi /usr/share/openldap/schema/sudo.schema
+remove lines with "#"
+
+
+vi slapd.conf
+#modulepath     /usr/lib/openldap
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/ldap.conf
+binddn cn=Manager,dc=cardiodx,dc=com
+bindpw secret
+
+
+~~~~~~~~~~~~~~~~~~~~~~
+service ldap start
+
+service ldap stop
+cp -rp /var/lib/ldap /var/lib/ldap.sav
+service ldap start
+
+
+--vi base.ldif
+--ldapadd -a -W -x -D "cn=Manager,dc=cardiodx,dc=com" -f base.ldif
+--ldapadd -a -W -x -D "cn=Manager,dc=cardiodx,dc=com" -f cdx.ldif
+
+** 10.1!!
+
+cd /etc/samba
+vi smbldap_conf.pm 
+$binddn = "cn=Manager,$suffix";	# changed from root
+
+smbldap-populate
+
+			NOTE: 10.2 will get "failed to add entry: no global superior knowledge 
+				at /usr/bin/smbldap-populate line 389, <GEN1> line 2.
+				adding new entry: ou=People,dc=example,dc=com"
+
+--------
+
+
+** 10.2!!
+cd /etc/samba
+
+vi smbldap.conf
+vi smbldap_bind.conf
+	*change
+		root 		--> Manager
+		example 	--> cardiodx
+		secret		--> cdxSecret
+
+(cd /usr/share/samba/scripts)
+
+
+(run this twice)
+smbldap-populate
+smbldap-populate -a root
+
+getent passwd | grep root
+
+
+--------
+
+
+slapcat
+
+ldapsearch -x -b "dc=cardiodx,dc=com" "(ObjectClass=*)"
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/etc/samba/smb.conf
+
+
+** 10.1!!
+	copy it from c:\Chialin\Samba\mandrake files
+		workgroup
+		example --> Manager
+
+** 10.2!!
+	copy it from c:\Chiialin\Samba\mandrake 10.2
+
+
+smbpasswd -w cdxSecret
+
+service smb start
+
+testparm -s
+smbclient -U% -L localhost
+
+
+
+
+vi /etc/samba/smbldap.conf
+#sambaUnixIdPooldn="cn=NextFreeUnixId,${suffix}"
+sambaUnixIdPooldn="sambaDomainName=CDX,dc=cardiodx,dc=com"
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vi /etc/pam.d/system-auth
+#%PAM-1.0
+
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so likeauth nullok
+auth        sufficient    pam_ldap.so use_first_pass
+auth        required      pam_deny.so
+
+account     required      pam_unix.so
+account     sufficient    pam_ldap.so
+
+password    required      pam_cracklib.so retry=3 minlen=2  dcredit=0  ucredit=0
+password    sufficient    pam_unix.so nullok use_authtok md5 shadow
+password    sufficient    pam_ldap.so use_authtok
+password    required      pam_deny.so
+
+session     required      pam_limits.so
+session     required      pam_unix.so
+session     optional      pam_ldap.so
+
+
+
+vi /etc/nsswitch.conf
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://groups-beta.google.com/group/linux.samba/browse_frm/thread/ca91f1add591b232/f383f045a5828b7f?q=samba+%22join+to+domain%22+%22is+not+valid%22#f383f045a5828b7f
+
+service ldap restart
+service smb restart 
+service winbind restart 
+
+smbldap-usermod -u 0 -d /root -s /bin/bash root
+
+
+--smbpasswd -a root
+net rpc rights list -Uroot
+%enter unix password
+
+net rpc testjoin
+net rpc info
+net groupmap list
+net lookup dc cdx
+net lookup master cdx
+
+
+
+--net rpc join -S pdc -U root%secret
+net rpc join -S pdc -U root
+net rpc join -d 3 -S pdc -U root
+
+
+
+net -S pdc  -U root%not24get rpc rights grant "CDX\Domain Admins" SeMachineAccountPrivilege SePrintOperatorPrivilege SeAddUsersPrivilege SeDiskOperatorPrivilege SeRemoteShutdownPrivilege
+
+
+
+
+/usr/sbin/slapd -d -128 -u ldap &
+service smb start
+
+
+
+
+tail -20f /var/log/messages &  
+
+cd /var/log/samba
+tail -f 127.0.0.1 &  
+tail -f log.nmbd &  
+tail -f log.smbd & 
+tail -f log.pdc & 
+
+tail -f pdc &  
+tail -f smbd &  
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			***
+
+			/usr/share/doc/samba-doc-3.0.11/examples/LDAP/smbldap-tools-0.8.6/smbldap_tools.pm
+			smbldap_tools.pm
+			/usr/lib/perl5/vendor_perl/5.8.6/smbldap_tools.pm
+			/usr/local/sbin/smbldap_tools.pm
+			/opt/IDEALX/sbin/smbldap_tools.pm
+
+			cd /usr/share/samba/scripts
+
+			/usr/local/sbin
+
+			/etc/
+
+			/usr/bin
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- for testing...
+mkdir /data
+mkdir /data/accounts
+chmod -R 777 /data
+
+
+
+smbclient -U% -L localhost
+
+** for 10.1
+cd /usr/share/samba/scripts/
+also it has "" at the end
+***
+
+smbldap-useradd -m -u 1001 -a david
+smbldap-passwd david
+ldapsearch -x -b 'uid=david,ou=People,dc=cardiodx,dc=com' 
+pdbedit -Lv david
+smbclient //pdc/accounts -d 3 -U david
+
+**
+smbldap-userdel david
+pdbedit -Lv david
+net use * /d /y
+
+
+smbldap-useradd -m -a -u 1004 tom
+smbldap-passwd tom
+ldapsearch -x -b 'uid=tom,ou=People,dc=cardiodx,dc=com' 
+smbclient //pdc/homes -U tom
+
+smbldap-useradd -m -a -u 1002 ian
+smbldap-passwd ian
+ldapsearch -x -b 'uid=ian,ou=People,dc=cardiodx,dc=com' 
+
+??ssh -l ian pdc
+
+??/usr/bin/smbpasswd -a cchou
+
+
+
+
+
+***10.2
+/usr/bin/smbldap-useradd -m -u 1001 -a david
+/usr/bin/smbldap-passwd david
+ldapsearch -x -b 'uid=david,ou=People,dc=cardiodx,dc=com' 
+pdbedit -Lv david
+smbclient //pdc/accounts -d 3 -U david
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /usr/share/samba/scripts
+
+--group
+smbldap-groupadd -a -g 1000 science
+smbldap-groupadd -a -g 1001 it
+smbldap-groupadd -a -g 1002 operations
+
+--user
+smbldap-useradd -m -u 1001 -g 1000 -a david
+smbldap-useradd -m -u 1004 -g 1001 -a tom
+
+smbldap-passwd david
+smbldap-passwd tom
+
+--add user to group
+smbldap-groupmod -m tom science
+smbldap-groupmod -m david it
+
+--display
+smbldap-groupshow it
+smbldap-usershow david
+
+--smbldap-groupmod -x tom science
+
+
+net groupmap list | sort
+slapcat | grep ou=Group
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mkdir -p /data/{science,it,operations,public,software}
+chgrp science /data/science
+chgrp it /data/it
+chgrp operations /data/operations
+
+
+chmod 770 /data/*
+chmod 777 /data/public
+chmod 755 /data/software
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mkdir -p /home/samba/netlogon
+
+cd /home/samba/netlogon
+
+vi netlogon.bat
+net use x: \\192.168.100.56\accounts
+net use p: \\192.168.100.56\public
+net use f: \\192.168.100.56\finsvcs
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+smbpasswd -a root
+
+vi /etc/samba/smbusers 
+root = administrator admin
+nobody = guest pcguest smbguest
+
+
+vi /etc/samba/smb.conf
+username map = /etc/samba/smbusers 
+
+
+???net groupmap modify ntgroup="Domain Admins"  unixgroup=root
+
+
+ getent passwd | grep root
+root:x:0:0:root:/root:/bin/bash
+	  ^^^^^	
+		has to be 0. if not, use "smbldap-usermod -u 0 -d /root -s /bin/bash root"
+
+getent group | grep Domain
+
+
+??smbpasswd -a Administrator
+
+
+smbldap-groupmod -m david "Domain Admins"
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/openldap/slapd.conf(57)
+vi /usr/share/openldap/schema/sudo.schema(4)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[2005/03/12 23:03:48, 0] lib/util_sock.c:get_peer_addr(1150)
+  getpeername failed. Error was Transport endpoint is not connected
+Mar 12 23:03:48 pdc smbd[9264]: [2005/03/12 23:03:48, 0] lib/util_sock.c:get_peer_addr(1150)
+Mar 12 23:03:48 pdc smbd[9264]:   getpeername failed. Error was Transport endpoint is not connected
+Mar 12 23:03:48 pdc smbd[9264]: [2005/03/12 23:03:48, 0] lib/util_sock.c:read_socket_data(384)
+Mar 12 23:03:48 pdc smbd[9264]:   read_socket_data: recv failure for 4. Error = Connection reset by peer
+conn=11 fd=14 closed
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		32 bit os
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+modify smb.conf
+
+
+vi /etc/hosts      (or to DNS)
+192.168.0.106 cchouxp
+
+vi /etc/passwd 
+cchouxp$:x:1400:1400:Workstation:/dev/null:/bin/false
+
+
+/usr/local/samba/bin/smbpasswd -m -a cchouxp
+/usr/local/samba/bin/smbpasswd -a root
+
+-- on client windows
+/usr/local/samba/bin/smbpasswd -a root
+
+net use * /d /y
+
+my computer --> properties  --> chnange
+
+	Domain: WORKGROUP
+	root
+	root password
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# net getlocalsid
+[2005/03/15 19:02:42, 0] lib/smbldap.c:smbldap_search_suffix(1169)
+  smbldap_search_suffix: Problem during the LDAP search:  (No such object)
+SID for domain BACKUP is: S-1-5-21-3456070711-384854378-2298550416
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+  973  ldapsearch -x -b "dc=cardiodx,dc=com"
+  974  ldapsearch -x -b "dc=cardiodx,dc=com" "(ObjectClass=*)"
+  975  ldapsearch -x -b "dc=cardiodx,dc=com" "(ObjectClass=posixAccount)"
+  976  ldapsearch -x -b "dc=cardiodx,dc=com" "(cn=ian)"
+  977  ldapsearch -x -b "dc=cardiodx,dc=com" "(gidNumber=513)"
+  978  ldapsearch -x -b "dc=cardiodx,dc=com" "|(gidNumber=513)(objectClass=posixAccount)"
+  979  ldapsearch -x -b "dc=cardiodx,dc=com" "(|(gidNumber=513)(objectClass=posixAccount))"
+  980  ldapsearch -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  981  ldapsearch -x -b "dc=cardiodx,dc=com"
+  982  man ldapsearch
+  983  ldapsearch -x -b -L "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  984  ldapsearch -x -b -LLL "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  985  ldapsearch -LLL -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"ldapsearch -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  986  ldapsearch -L -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  987  man ldapsearch
+  988  slapcat
+  989  ldapsearch -x -b -LLL "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  990  ldapsearch -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))"
+  991  ldapsearch -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))" userPassword
+  992  ldapsearch -LLL -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))" userPassword
+  993  ldapsearch -LLL -x -b "dc=cardiodx,dc=com" "(&(gidNumber=513)(objectClass=posixAccount))" userPassword uidNumber

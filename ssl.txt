@@ -1,0 +1,52 @@
+wajig install openssl 
+
+
+/usr/lib/ssl/misc/CA.pl -newca
+hit return to generate a new CA
+(cardioCA.)
+
+Certificate Details:
+        Serial Number:
+            ed:db:2d:a5:3e:93:3a:37
+        Validity
+            Not Before: Apr 10 00:01:17 2007 GMT
+            Not After : Apr  9 00:01:17 2010 GMT
+        Subject:
+            countryName               = US
+            stateOrProvinceName       = California
+            organizationName          = CardioDX, Inc.
+            organizationalUnitName    = IT
+            commonName                = ca.cardiodx.com
+            emailAddress              = it@cardiodx.com
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                A3:A6:4C:98:28:E3:8C:AE:37:59:EA:D3:C2:8E:2C:CD:3B:EE:63:23
+            X509v3 Authority Key Identifier: 
+                keyid:A3:A6:4C:98:28:E3:8C:AE:37:59:EA:D3:C2:8E:2C:CD:3B:EE:63:23
+
+Certificate is to be certified until Apr  9 00:01:17 2010 GMT (1095 days)
+
+
+cat demoCA/private/cakey.pem 
+
+
+
+/usr/lib/ssl/misc/CA.pl -newreq
+
+openssl req -text -noout < newreq.pem 
+
+
+/usr/lib/ssl/misc/CA.pl -sign
+
+
+
+
+
+
+
+
+

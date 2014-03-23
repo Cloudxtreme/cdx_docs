@@ -1,0 +1,55 @@
+
+ldapmodify -Y EXTERNAL -H ldapi:///
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+dn: olcDatabase={1}hdb,cn=config  <---------------------
+add: olcDbIndex                   <---------------------
+olcDbIndex: uidNumber eq          <---------------------
+
+modifying entry "olcDatabase={1}hdb,cn=config"
+
+Ctrl+D
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi uid_index.ldif
+dn: olcDatabase={1}hdb,cn=config
+add: olcDbIndex
+olcDbIndex: uid eq,pres,sub
+
+ldapmodify -Y EXTERNAL -H ldapi:/// -f uid_index.ldif
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ldapmodify -Y EXTERNAL -H ldapi:///
+dn: cn=config
+changetype: modify
+delete: olcTLSCACertificateFile
+
+
+
+ldapmodify -Y EXTERNAL -H ldapi:///
+dn: cn=config
+changetype: modify
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/wildcard.cardiodx.com.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/wildcard.cardiodx.com.key
+-
+(Ctrl+D)
+
+~~~~~~
+ldapmodify -Y EXTERNAL -H ldapi:///
+dn: cn=config
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/wildcard.cardiodx.com.crt
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/wildcard.cardiodx.com.key
+
+modifying entry "cn=config"
+(Ctrl+D)
+
+

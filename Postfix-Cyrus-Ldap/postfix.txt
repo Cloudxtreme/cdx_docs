@@ -1,0 +1,217 @@
+
+http://rpgoldman.real-time.com/linux/postfix-linux.html
+http://www.postfix.org/LDAP_README.html
+http://www.redhat.com/support/resources/howto/RH-postfix-HOWTO/book1.html
+http://66.102.7.104/search?q=cache:VvGhGztcgLsJ:home.eray.biz/sites/postfix/+postfix+howto+mandrake&hl=en
+
+SASL: http://www.postfix.org/SASL_README.html
+	http://postfix.state-of-mind.de/patrick.koetter/smtpauth/
+
+http://www.cs.wcupa.edu/~rkline/Linux/email.html
+
+
+urpmi postfix
+	postfix-2.1.5-5mdk.x86_64.rpm
+	
+urpmi postfix-ldap
+	postfix-ldap-2.1.5-5mdk.x86_64.rpm
+	
+	amavisd
+	clamav
+	spamassiassin
+	
+
+urpmi bind-utils
+urpmi telnet
+
+
+cd /usr/share/doc/postfix-2.1.4/README_FILES
+		INSTALL
+		LDAP_README
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/passwd
+postfix:x:73:73:system user for postfix:/var/spool/postfix:/bin/false
+
+vi /etc/aliases
+root:           postfix
+
+
+vi /etc/group
+postdrop:x:422:postfix
+
+
+vi /etc/resolv.conf
+nameserver 192.168.100.12
+nameserver 192.168.100.26
+domain mentorware.com
+search mentorware.com mentorware.net
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /etc/postfix/
+cp main.cf main.cf.orig
+vi main.cf
+
+myhostname = pdc.mentorware.com
+myorigin = mentorware.com
+#mydestination = $myorigin 
+relay_domains = mentorware.com, mentorware.net
+mynetworks = 192.168.100.0/24, 208.45.250.128/27, 210.18.51.104/32, 210.18.51.105/32, 210.18.51.106/32
+smtpd_sender_restrictions = reject_unknown_sender_domain, reject_unverified_sender 
+
+
+-- at the end
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+transport_maps = hash:/etc/postfix/transport
+
+
+		## cyrus
+
+		vi virtual 
+		mentorware.com anything
+		cchou@mentorware.com cchou\\\@mentorware.com
+
+		postmap dbm:/etc/postfix/virtual
+
+		vi main.cf
+		mailbox_transport = cyrus
+		virtual_maps = dbm:/etc/postfix/virtual
+
+
+		master.cf
+		/usr/cyrus/bin/deliver (replace /usr/sbin/cyrdeliver)
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# generate transport db
+vi transport
+mentorware.com smtp:mail.mentorware.com
+	
+postmap /etc/postfix/transport
+
+newaliases
+
+postalias /etc/aliases
+
+
+service postfix start
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /var/log/mail/
+tail -200f info
+
+
+# telnet pdc 25
+Trying 127.0.0.1...
+Connected to pdc.
+Escape character is '^]'.
+220 pdc.mentorware.com ESMTP Postfix (2.1.4) (Mandrake Linux)
+helo pdc
+250 pdc.mentorware.com
+mail from: dnoland@mentorware.com
+250 Ok
+rcpt to: cchou@mentorware.com
+data
+s250 Ok
+354 End data with <CR><LF>.<CR><LF>
+ubject: another test
+
+anoter test
+
+.
+250 Ok: queued as E722B63D41
+quit
+221 Bye
+Connection closed by foreign host.
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi main.cf
+alias_maps = hash:/etc/aliases, ldap:/etc/postfix/ldap-aliases.cf
+
+
+
+ldap:/etc/postfix/ldap-aliases.cf 
+    server_host = ldap.cardiodx.com
+    search_base = dc=cardiodx, dc=com
+
+
+Postfix will search the LDAP server listening at port 389 on ldap.cardiodx.com.
+	(bind anonymously)
+	
+		mailacceptinggeneralid = ldapuser
+		maildrop
+
+
+????use postmap to verify 
+postmap -q info@example.com hash:/etc/postfix/virtual
+postmap -q info@example.com ldap:/etc/postfix/virtual.cf
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# telnet pdc 25
+Trying 127.0.0.1...
+Connected to pdc (127.0.0.1).
+Escape character is '^]'.
+220 pdc.cardiodx.com ESMTP Postfix (2.1.5) (Mandrakelinux)
+mail from: <chialin668@yahoo.com>
+250 Ok
+rcpt to: <cchou@cardiodx.com>
+250 Ok
+data
+354 End data with <CR><LF>.<CR><LF>
+subject: 2
+
+2
+.
+250 Ok: queued as 36544C3BF45
+quit
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+http://www.cise.ufl.edu/help/software/doc/postfix/LMTP_README
+
+
+/etc/cyrus.conf:
+	SERVICES { 
+  ... 
+  lmtp cmd="lmtpd -a" listen="127.0.0.1:lmtp" prefork=1 
+  ... 
+	} 
+
+/etc/services:
+	lmtp 2003/tcp
+
+/etc/postfix/main.cf:
+	mailbox_transport = lmtp:localhost
+
+/etc/postfix/master.cf:
+	lmtp      unix  -       -       n       -       -       lmtp
+
+
+
+
+
+postmap -q cchou@cardiodx.com /etc/postfix/virtual
+
+
+
+mailq|grep tom |awk '{print $1}' | postsuper -d -

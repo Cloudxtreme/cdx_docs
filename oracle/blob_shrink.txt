@@ -1,0 +1,98 @@
+http://www.idevelopment.info/data/Oracle/DBA_tips/LOBs/LOBS_85.shtml
+
+
+CREATE TABLE test_lob (
+    id                NUMBER
+  , file_name         VARCHAR2(45)
+  , image             BLOB
+  , timestamp         DATE
+)
+/
+
+wget http://www.google.com/images/srpr/logo3w.png
+
+CREATE OR REPLACE DIRECTORY images_dir
+AS '/tmp'
+/
+
+CREATE OR REPLACE PROCEDURE Load_BLOB_From_File_Image
+AS
+    dest_loc    BLOB;
+    file_name   TEST_LOB.FILE_NAME%TYPE  := 'logo3w.png';
+    src_loc     BFILE := BFILENAME('IMAGES_DIR', file_name);
+BEGIN
+    INSERT INTO test_lob (id, file_name, image, timestamp)
+        VALUES (test_lob_seq.nextval, file_name, empty_blob(), sysdate)
+        RETURNING image INTO dest_loc;
+
+    DBMS_LOB.OPEN(src_loc, DBMS_LOB.LOB_READONLY);
+    DBMS_LOB.OPEN(dest_loc, DBMS_LOB.LOB_READWRITE);
+
+    DBMS_LOB.LOADFROMFILE(
+          dest_lob => dest_loc
+        , src_lob  => src_loc
+        , amount   => DBMS_LOB.getLength(src_loc));
+
+    DBMS_LOB.CLOSE(dest_loc);
+    DBMS_LOB.CLOSE(src_loc);
+    COMMIT;
+END;
+/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SELECT count(1) FROM test_lob;
+
+BEGIN
+    FOR i IN 1 .. 1000
+    LOOP
+        Load_BLOB_From_File_Image();
+    END LOOP;
+END;
+/
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SELECT count(1) FROM test_lob;
+
+SELECT table_name, column_name, segment_name, a.bytes
+FROM user_segments a JOIN user_lobs b
+USING (segment_name)
+WHERE b.table_name = 'TEST_LOB';
+
+TABLE_NAME		       COLUMN_NAME				SEGMENT_NAME			    BYTES
+------------------------------ ---------------------------------------- ------------------------------ ----------
+TEST_LOB		       IMAGE					SYS_LOB0000154750C00003$$	  9437184
+
+
+SELECT NVL((SUM(DBMS_LOB.GETLENGTH(image))),0) AS BYTES FROM test_lob;
+
+     BYTES
+----------
+   7007000
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DELETE FROM test_lob;
+ALTER TABLE test_lob MODIFY LOB (image) (SHRINK SPACE);
+
+delete from test_lob where id > 2500;
+
+
+
+TABLE_NAME		       COLUMN_NAME				SEGMENT_NAME			    BYTES
+------------------------------ ---------------------------------------- ------------------------------ ----------
+TEST_LOB		       IMAGE					SYS_LOB0000154750C00003$$	  4325376
+
+     BYTES
+----------
+   3489486
+
+
+
+
+
+
+
+
+
+

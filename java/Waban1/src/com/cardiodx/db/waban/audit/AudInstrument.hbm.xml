@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudInstrument" table="AUD_INSTRUMENT" schema="DNALIMS">
+        <comment>Audit of information about instruments used in procedures.</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="instrumentId" type="big_decimal">
+            <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                <comment>Instrument identifier.</comment>
+            </column>
+        </property>
+        <property name="testingFacilityId" type="big_decimal">
+            <column name="TESTING_FACILITY_ID" precision="22" scale="0">
+                <comment>Test facility identifier.</comment>
+            </column>
+        </property>
+        <property name="organizationId" type="big_decimal">
+            <column name="ORGANIZATION_ID" precision="22" scale="0">
+                <comment>The foreign key to the vendor / supplier for each instrument.</comment>
+            </column>
+        </property>
+        <property name="instrumentNumber" type="string">
+            <column name="INSTRUMENT_NUMBER" length="20">
+                <comment>Number or name alias for the instrument.</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30">
+                <comment>Current status of instrument</comment>
+            </column>
+        </property>
+        <property name="type" type="string">
+            <column name="TYPE" length="50">
+                <comment>Type of instrument.</comment>
+            </column>
+        </property>
+        <property name="objectClass" type="string">
+            <column name="OBJECT_CLASS" length="100">
+                <comment>The class of objects supporting this instrument.</comment>
+            </column>
+        </property>
+        <property name="instrumentDescription" type="string">
+            <column name="INSTRUMENT_DESCRIPTION" length="100">
+                <comment>Description of the instrument.</comment>
+            </column>
+        </property>
+        <property name="checkoutBy" type="string">
+            <column name="CHECKOUT_BY" length="30">
+                <comment>The user who checked out the INSTRUMENT</comment>
+            </column>
+        </property>
+        <property name="dateCheckout" type="date">
+            <column name="DATE_CHECKOUT" length="7">
+                <comment>The date the INSTRUMENT was checked out.</comment>
+            </column>
+        </property>
+        <property name="dateScheduled" type="date">
+            <column name="DATE_SCHEDULED" length="7">
+                <comment>Date that instrument is scheduled for maintenance</comment>
+            </column>
+        </property>
+        <property name="isStorage" type="big_decimal">
+            <column name="IS_STORAGE" precision="22" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created the record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified the record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date the record was last modified.</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

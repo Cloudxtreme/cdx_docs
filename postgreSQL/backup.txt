@@ -1,0 +1,15 @@
+
+
+postgres@cchoudesktop:~$ psql 
+postgres=# create database test;
+postgres=# quit
+
+postgres@cchoudesktop:~$ psql test
+test=# create table tab1 (id int, name char(255));
+test=# create table tab2 (id int, name char(255));
+test=# create table tab3 (id int, name char(255));
+test=# create table tab4 (id int, name char(255));
+test=# create table tab5 (id int, name char(255));
+test=# \dt
+
+pg_dump -h hostname dbname -t tablename -uf filename.sql

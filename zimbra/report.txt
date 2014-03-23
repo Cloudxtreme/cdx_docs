@@ -1,0 +1,9 @@
+
+How many viruses found in 2010?
+
+$ grep '2010 ->' clamd.log | grep FOUND | wc -l                     
+634
+
+
+
+

@@ -1,0 +1,184 @@
+samba winbind
+
+linux authentication through samba
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install winbind samba
+
+
+cd /etc/samba
+mv smb.conf smb.conf.orig
+cat > smb.conf << EOF
+[global]
+  workgroup = CDX
+  security = domain
+  encrypt passwords = yes
+  #password server = 10.0.0.1
+  idmap uid = 10000-20000
+  idmap gid = 10000-20000
+  winbind enum users = yes
+  winbind enum groups = yes
+  template shell = /bin/bash
+  template homedir = /home/%U
+
+  #client use spnego = yes
+  client ntlmv2 auth = yes
+  winbind use default domain = yes
+  restrict anonymous = 2
+EOF
+
+vi /etc/nsswitch.conf
+passwd:         files winbind
+group:          files winbind
+shadow:         files winbind
+
+
+# net rpc join -S pdc -U Administrator
+(enter windows admin pwrd)
+
+/etc/init.d/winbind start
+/etc/init.d/winbind status
+
+getent passwd
+getent group
+
+wbinfo -u
+wbinfo -g
+
+wbinfo -u | grep cchou
+
+
+-
+- NOTE: To resolve 'Could not receive trustdoms' problem (after rebooting)
+-
+# cd /etc/network/if-up.d
+# vi winbind
+
+#!/bin/sh
+
+/etc/init.d/winbind restart
+
+
+chmod 755 winbind
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mv common-auth common-auth.orig
+mv common-account common-account.orig
+mv common-password common-password.orig
+
+# cat > common-auth <<EOF
+auth sufficient pam_unix.so
+auth sufficient pam_winbind.so use_first_pass
+auth required pam_deny.so
+EOF
+
+# cat > common-account <<EOF
+account sufficient     pam_unix.so
+account required       pam_winbind.so
+EOF
+
+# cat > common-password <<EOF
+password sufficient pam_unix.so
+password required pam_winbind.so
+EOF
+
+~~~~~~~~~~~~~
+su - cdxtest
+passwd
+
+
+reboot
+
+login as cdxtest
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- ldap (NOTE: since IDs are all messed up, we use ldap to retrieve uid, and gid)
+--
+
+wajig install smbfs libpam-foreground libpam-ldap libnss-ldap -y
+
+vi /etc/nsswitch.conf
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+
+
+cd /etc
+mv ldap.conf ldap.conf.orig
+cat > ldap.conf <<EOF
+host ldap.cardiodx.com
+base dc=cardiodx,dc=com
+#rootbinddn cn=manager,dc=example,dc=net
+start_tls
+ssl on
+tls_checkpeer no
+#bind_policy soft
+EOF
+
+--
+-- http://linux.die.net/man/5/pam.d
+--
+  * required: 		[success=ok new_authtok_reqd=ok ignore=ignore default=bad] 
+  * requisite: 		[success=ok new_authtok_reqd=ok ignore=ignore default=die] 
+  * sufficient: 	[success=done new_authtok_reqd=done default=ignore] 
+  * optional: 		[success=ok new_authtok_reqd=ok default=ignore] 
+
+# vi common-auth
+auth [success=done default=ignore] pam_unix.so
+auth [success=1 default=ignore] pam_winbind.so use_first_pass
+auth requisite pam_deny.so
+auth optional pam_mount.so
+
+# vi common-session
+session required pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional pam_mount.so
+session required pam_unix.so
+session optional pam_foreground.so
+
+# vi common-account
+account sufficient      pam_ldap.so
+account required        pam_unix.so
+
+# vi common-password
+password sufficient pam_unix.so
+password required pam_winbind.so
+
+
+NOTE:
+  1) ssh won't work for logging out.
+       the mounts will still be there.
+  2) login/logout from console (gdm) works fine.
+	3) su also doesn't work
+
+
+Get the source code
+
+wajig source winbind
+wajig build-depend winbind
+
+cd samba-3.3.2
+vi ./source/nsswitch/pam_winbind.c
+  (around line 2419)
+  frozen on releasing memory!!!!
+  if (logon.blobs) {
+    wbcFreeMemory(logon.blobs);
+  }
+
+comment wbcFreeMemory out
+  if (logon.blobs) {
+    // wbcFreeMemory(logon.blobs);
+  } 
+  
+for debugging, you can add the following:
+  _pam_log(ctx, LOG_NOTICE, "Chialin-3");
+
+cd samba-3.3.2/
+debian/rules binary
+cd ..
+wajig purge winbind
+wajig install ./winbind_3.3.2-1ubuntu3.1_i386.deb
+
+reboot
+

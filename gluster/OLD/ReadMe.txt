@@ -1,0 +1,4 @@
+
+
+
+http://www.howtoforge.com/high-availability-storage-with-glusterfs-on-ubuntu-9.10-automatic-file-replication-mirror-across-two-storage-servers

@@ -1,0 +1,40 @@
+SQL> startup 
+ORACLE instance started.
+
+Database mounted.
+ORA-00600: internal error code, arguments: [kcratr1_lastbwr], [], [], [], [], [], [], []
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~30min to rsync
+~80min to untar
+
+OK ruth30     -rw-r--r--  1 root root 65488366807 2012-06-16 03:59 db_files.tar.gz
+OK devlims    -rw-r--r--  1 root root 66246374732 2012-06-30 04:03 db_files.tar.gz
+OK chialin40  -rw-r--r--  1 root root 66909067317 2012-07-14 04:13 db_files.tar.gz
+  :
+XX devlims    -rw-r--r--  1 root root 69104319570 2012-08-04 04:03 db_files.tar.gz
+XX chialin40  -rw-r--r--  1 root root 69056510621 2012-08-13 04:08 db_files.tar.gz
+  :
+?? devlims    -rw-r--r--  1 root root 70248398739 2012-09-10 04:00 db_files.tar.gz
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+root@ccllims:~# date
+Tue Sep 11 03:35:27 PDT 2012
+
+root@ccllims:~# uptime
+ 03:33:14 up 89 days, 11:49,  1 user,  load average: 1.23, 1.19, 1.11
+
+
+http://space.itpub.net/12330444/viewspace-620993
+出现该错误是因为系统强制关机造成的!
+症状为数据库无法打开!
+解决办法:
+1>shutdown
+2>startup mount
+3>recover database
+4>alter database open
+
+SQL> shutdown immediate;
+SQL> startup
+
+

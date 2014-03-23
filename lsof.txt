@@ -1,0 +1,15 @@
+
+lsof
+
+lsof -c smtp
+
+
+lsof -n -i @10.10.37.174
+
+
+lsof -i 4
+
+lsof -i @pdc.cardiodx.com
+
+
+

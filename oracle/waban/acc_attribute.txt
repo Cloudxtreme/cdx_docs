@@ -1,0 +1,58 @@
+--
+-- org info
+--
+select acc.ACCESSION_ID, acc.ACCESSION_NUMBER, acc.STUDY_PROTOCOL_ID, acc.DATE_RECEIVED, acc.RESULT_STATUS, 
+acc.DESTROYED, sp.STUDY_NUMBER, sp.STUDY_TITLE, sp.SPONSOR_STUDY_NUMBER, sp.STUDY_DIRECTOR, 
+sp.SPONSOR_STUDY_TITLE, con.NAME, org.COMPANY, TO_CHAR(acc.date_received,'DD-MON-YYYY') date_received1, acc.GPI_CODE 
+From ACCESSION acc, STUDY_PROTOCOL sp, ORGANIZATION org, contact con 
+Where acc.Study_Protocol_ID = sp.Study_Protocol_ID 
+  AND sp.CONTACT_ID = con.CONTACT_ID 
+  AND con.ORGANIZATION_ID = org.ORGANIZATION_ID 
+  AND acc.ACCESSION_Number = 'TRF44797';
+
+--
+-- 'blood' sample info (for a given sample_id)
+--    1938706 TRF44797A	Blood	0 T1053373(3,1)   Acceptable	  8751.33
+--
+SELECT pdv.variable_label, limspackage.sample_att_value(svf.sample_variable_fld_id) value,
+  --	pdv.variable_id, var.variable_type_id, var.min_value, var.max_value,
+  -- svf.SAMPLE_VARIABLE_FLD_ID, pdv.protocol_defined_variable_id,
+  pdv.number_in_sequence, 
+	-- Var.Variable_Name, 
+	vt.screen_name, nvl(svf.CONTACT_id,svf.ORGANIZATION_id) 
+FROM SAMPLE_VARIABLE_FLD svf, PROTOCOL_DEFINED_VARIABLE pdv, VARIABLE var, variable_type vt 
+WHERE pdv.study_protocol_id = 2 
+	AND pdv.variable_id = var.variable_id 
+	and var.variable_type_id = vt.variable_type_id 
+	and svf.PROTOCOL_DEFINED_VARIABLE_ID(+) = pdv.protocol_defined_variable_id 
+	and pdv.ATTRIBUTE_LEVEL_ID = 'T' 
+	AND svf.SAMPLE_ID(+) = 1938706 
+order by pdv.number_in_sequence;
+
+--
+-- accession information
+--
+select 
+	pdv.number_in_sequence, 
+pdv.variable_label,limspackage.accession_att_value(avf.accession_variable_fld_id) value,
+	--pdv.variable_id,var.variable_type_id,var.min_value,var.max_value,
+	--avf.accession_variable_fld_id,pdv.protocol_defined_variable_id,
+	--var.variable_name, 
+	vt.screen_name,nvl(avf.patient_id,nvl(avf.CONTACT_id,avf.ORGANIZATION_id)) 
+from accession_variable_fld avf, protocol_defined_variable pdv,variable var, variable_type vt 
+where pdv.study_protocol_id = 2 
+	and pdv.variable_id = var.variable_id 
+	and var.variable_type_id = vt.variable_type_id 
+	and avf.protocol_defined_variable_id (+) = pdv.protocol_defined_variable_id 
+	and pdv.ATTRIBUTE_LEVEL_ID = 'A' and avf.accession_id (+) = 20858 
+order by pdv.number_in_sequence;
+
+SELECT ORG.COMPANY 
+FROM ACCESSION_VARIABLE_FLD AVF , ORGANIZATION ORG   
+WHERE ORG.ORGANIZATION_ID =  AVF.ORGANIZATION_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+
+select pdv.variable_label, lims_kit_accession.case_att_value(cvf.case_variable_fld_id) value, pdv.variable_id,var.variable_type_id,var.min_value, var.max_value,cvf.case_variable_fld_id,pdv.protocol_defined_variable_id, pdv.number_in_sequence, var.variable_name, vt.screen_name, nvl(cvf.patient_id,nvl(cvf.CONTACT_id,cvf.ORGANIZATION_id)) 
+from CASE_VARIABLE_FLD_TABLE cvf, protocol_defined_variable pdv, variable var, variable_type vt 
+where pdv.study_protocol_id = 2 AND TRIM(UPPER(pdv.variable_label)) NOT IN ('CASE ID') and pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and cvf.protocol_defined_variable_id (+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'C' and cvf.TEST_ACCESSION_ID(+) = 0 
+order by pdv.number_in_sequence
+

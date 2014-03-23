@@ -1,0 +1,139 @@
+
+***Document: /usr/share/doc/bind-9.3.0
+
+
+disk1/3: /mnt/cdrom/media/main
+	dhcp-server-3.0.1-5mdk.i586.rpm
+
+disk2: /mnt/cdrom/media/main2
+	bind-utils-9.3.0-3mdk.i586.rpm
+	bind-9.3.0-3mdk.i586.rpm
+
+
+
+--
+-- dhcp
+--
+
+cd /etc
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/dhcp/etc/dhcpd.conf .
+
+vi dhcpd.conf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- dir
+--
+cd /var
+mv named named.orig
+cp -Rp /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/var/named/ .
+
+chown named:named /var/named
+
+mkdir /var/named/log
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+--
+-- config files
+--
+
+
+cd /etc
+
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/etc/bogon_acl.conf .
+
+mv localtime localtime.orig
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/etc/localtime .
+
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/etc/logging.conf .
+
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/etc/named.conf .
+
+mv rndc.conf rndc.conf.orig
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/etc/rndc.conf .
+
+mv rndc.key rndc.key.orig
+cp -p /usr/share/doc/bind-9.3.0/dhcp-dynamic-dns-examples/bind/etc/rndc.key .
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/named.conf
+
+(modify)
+include "/etc/logging.conf";
+include "/etc/bogon_acl.conf";
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/logging.conf
+chnage the logging directory to /var/named/log
+
+1,$s/log\//named\/log\//g
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/resolv.conf
+domain mandrakesoft.com
+nameserver 192.168.2.178
+search 192.168.2.178
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+chown -R named:named /var/named
+
+service dhcpd start
+
+service named start
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		chroot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mkdir /chroot
+chmod 700 /chroot
+
+
+cd /usr/share/doc/bind*/chroot
+cp -rp chroot/name /chroot
+
+
+vi named.conf
+put full path in the "include"
+	/etc/named/bogon...
+	/etc/named/logging....
+
+mknod /chroot/named/dev/random c 1 8
+
+chown -R named:named /chroot/named
+chmod 700 /chroot/named
+
+vi /etc/sysconfig/named
+ROOTDIR=/chroot/named
+
+vi bogon_acl.conf
+
+
+//       10.0.0.0/8;
+//       192.168.0.0/16;
+
+
+
+
+
+
+
+
+
+
+

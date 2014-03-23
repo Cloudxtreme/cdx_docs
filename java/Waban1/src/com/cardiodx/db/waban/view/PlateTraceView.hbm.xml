@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PlateTraceView" table="PLATE_TRACE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PlateTraceViewId">
+            <key-property name="plateId" type="string">
+                <column name="`Plate ID`" length="20" />
+            </key-property>
+            <key-property name="runDate" type="string">
+                <column name="`Run Date`" length="11" />
+            </key-property>
+            <key-property name="instrument" type="string">
+                <column name="Instrument" length="225" />
+            </key-property>
+            <key-property name="%OfPassedTraces" type="big_decimal">
+                <column name="`% of Passed Traces`" precision="22" scale="0" />
+            </key-property>
+            <key-property name="noOfTraces" type="big_decimal">
+                <column name="`No of Traces`" precision="22" scale="0" />
+            </key-property>
+            <key-property name="plateStatus" type="string">
+                <column name="`Plate Status`" length="20" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="plateSummaryId" type="big_decimal">
+                <column name="PLATE_SUMMARY_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

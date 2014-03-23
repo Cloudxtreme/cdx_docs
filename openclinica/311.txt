@@ -1,0 +1,53 @@
+
+Not working!!!!!
+
+please read 311_1.txt
+
+  206  apt-get update -o Acquire::http::No-Cache=True
+  207  wajig update
+  208  wajig upgrade
+
+  209  wajig install tomcat6 tomcat6-admin tomcat6-common tomcat6-user tomcat6-docs tomcat6-examples
+  210  vi /etc/tomcat6/tomcat-users.xml
+<role rolename="manager"/>
+<role rolename="admin"/>
+<user name="admin" password="cdxSecret07" roles="manager,admin"/>
+
+  211  /etc/init.d/tomcat6 restart
+
+  219  cd /usr/local/
+  221  mkdir oc
+  225  wajig install unzip
+  224  unzip /root/OpenClinica-3.1.1.zip 
+  230  ln -s OpenClinica-3.1.1-Community/ OpenClinica
+
+
+wajig install postgresql
+su - postgres
+psql
+postgres=# CREATE ROLE clinica LOGIN ENCRYPTED PASSWORD 'clinica' SUPERUSER NOINHERIT NOCREATEDB NOCREATEROLE;
+postgres=# CREATE DATABASE  openclinica WITH ENCODING='UTF8' OWNER=clinica;
+
+  236  cd OpenClinica/distribution
+  254  cp OpenClinica.war /var/lib/tomcat6/webapps
+
+cd /var/lib/tomcat6
+mkdir openclinica.data
+chown tomcat6 openclinica.data/
+
+  299  cd /var/lib/tomcat6/
+  306  cd webapps/OpenClinica/WEB-INF/classes/
+  319  vi datainfo.properties
+filePath=/var/lib/tomcat6/openclinica.data/
+log.dir=/var/log/tomcat6
+
+
+chown -R tomcat6:tomcat6 OpenClinica/
+cd /var/log/tomcat6/
+tail -20f catalina.out 
+
+??? need to move!!
+cd /usr/share/tomcat6
+ln -s /var/log/tomcat6 ./logs
+
+/etc/init.d/tomcat6 restart

@@ -1,0 +1,140 @@
+KW: zimbra install zimlet asterisk
+
+ToDo:
+- regular expression
+   should be fixed. should allow between 7 and 11 numbers, excluding ' ', '(', '-', and '.'
+- clickable on contacts
+   currently, it doesn't call the asterisk procedure.
+- pop-up; from mail, should have a popup when clicking the asterisk icon.
+   so user can enter (or cut and paste) the phone number.
+
+
+http://www.zimbra.com/docs/ne/latest/administration_guide/Zimlets.11.1.html
+http://www.howtoforge.com/installing_zimbra_collaboration_suite_on_ubuntu
+
+vi /etc/hosts
+10.10.37.201    zimbra.cdxtest.com zimbra
+
+# cat /etc/hostname 
+zimbra
+
+root@zimbra:~/zcs-5.0.0_BETA3_1276.UBUNTU6.20070822122320# nslookup 
+> set type=MX
+> cdxtest.com
+
+expend LVM to add 2GB to root (zimbra needs 5GB)
+
+wajig install libidn11 curl fetchmail libpcre3 libgmp3c2 libexpat1 libxml2 libstdc++5 
+
+setup bind9 (as dns.txt)
+vi resolv.conf
+cp the new rndc.key over
+
+license file: /opt/zimbra/conf/ZCSLicense.xml
+
+./install.sh
+./install -u (for uninstall)
+
+DNS ERROR resolving MX for zimbra.cdxtest.com
+It is suggested that the domain name have an MX record configured in DNS
+Change domain name? [Yes] 
+Create Domain: [zimbra.cdxtest.com] cdxtest.com
+
+
+change:
+	admin password
+
+zmcontrol status
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Jetty:
+
+java -DSTOP.PORT=8079 -DSTOP.KEY=secret -jar start.jar etc/jetty.xml
+
+java -DSTOP.PORT=8079 -DSTOP.KEY=secret -jar start.jar
+java -DSTOP.PORT=8079 -DSTOP.KEY=secret -jar start.jar --stop
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+zimlet:
+
+wajig install zip unzip
+
+For Yahoo Map
+Yahoo changed the image server name. This is fixed in 5.0 (or you can make the edit yourself)./opt/zimbra/tomcat/webapps/serrvice/zimlets/com_zimbra_ymaps/ymaps.jsChange http://img -> http://gws
+
+
+http://wiki.zimbra.com/index.php?title=Asterisk_VOIP_Zimlet
+vi config_template.xml
+zmzimletctl configure config_template.xml 
+tomcat restart
+
+  554  zmzimletctl undeploy com_zimbra_cchou
+  562  zip ../com_zimbra_cchou.zip *
+  566  zmzimletctl deploy com_zimbra_cchou.zip 
+  567  tomcat restart
+
+  555  cd zimlets-extra/
+  557  rm com_zimbra_asterisk.zip 
+  558  cd asterisk
+  560  zip ../com_zimbra_asterisk.zip *
+  563  zmzimletctl undeploy com_zimbra_asterisk
+  564  zmzimletctl deploy com_zimbra_asterisk.zip 
+  565  tomcat restart
+
+For development/test, work under ~/tomcat/webapps/service/zimlet/com_zimbra_asterisk
+   For jsp
+    will need to restart tomcat
+   For js
+    refresh browser
+
+Valie phone number format:
+
+(650) 475-2721 
+1 (650) 475-2721 
+1-650-475-2721 
+
+zmzimletctl listZimlets
+zmzimletctl deploy com_zimbra_asterisk.zip 
+
+copy the zip file to ccMac
+deploy it from the admin Web interface
+vi config_template.xml and change:
+    <property name="sipHost">10.10.37.26</property>
+    <property name="myAddress">10.10.37.204</property>
+
+vi com_zimbra_asterisk.xml
+<actionUrl target="http://10.10.37.26">
+
+vi asterisk.js
+
+run 'zmzimletctl configure config_template.xml' from zimbra
+tomcat restart
+call from the client Web user interface
+you'll need to enter:
+  2721/2721polycom
+  server.....
+
+http://www.zimbra.com/forums/zimlets/9808-q-how-dial-using-asterisk-instead-skype.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For debugging: Will call my cell first before calling my desktop
+
+cd ~/tomcat/webapps/service/zimlet/com_zimbra_asterisk$ 
+vi asterisk.jsp
+change debug flag from 0 to 32
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+copy and rename asterisk to cchou on all files (and all entries)
+debug:
+	vi config_template.xml
+    	<property name="debug">true</property>
+	
+	In cchou.jsp
+            if (dbg.equals("true")) {
+                System.out.println ("Asterisk debug mode on");
+	    }
+
+
+
+
+
+

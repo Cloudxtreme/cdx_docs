@@ -1,0 +1,25 @@
+
+
+https://help.ubuntu.com/community/Grub2#Uninstalling%20GRUB%202
+http://brettshaffer.com/blog/linux/downgrade-grub-2/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig purge grub-pc grub-common
+
+
+   15  mv grub/ grub.2
+
+   17  wajig install grub
+   19  update-grub
+
+   25  grub-install /dev/sda
+   26  grub-install /dev/sdb
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+for lucid, if you can't install grub2:
+  1) boot from rescue cd
+  2) mount the LVs
+  3) mount boot
+  4) chroot to newroot
+  5) run the commands above

@@ -1,0 +1,29 @@
+http://www.zeroshell.net/eng/net5501/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wget http://polymicrosystems.com/mirror/zeroshell/ZeroShell-1.0.beta12-ALIX-CompactFlash-1GB.img.gz
+gunzip ZeroShell-1.0.beta12-ALIX-CompactFlash-1GB.img.gz 
+dd < ZeroShell-1.0.beta12-ALIX-CompactFlash-1GB.img > /dev/sdc
+
+picocom -b 19200 /dev/ttyS0
+Press 'control + p' when seing the following:
+  N Seconds to automatic boot.   Press Ctrl-P for entering Monitor.
+show
+> set ConMute=Enabled
+> set ConSpeed=38400
+
+  ^a ^x (quit)
+
+picocom -b 38400 /dev/ttyS0
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+my ip: 192.168.0.123/24
+connect to eth4
+
+--https://192.168.0.75
+admin/zeroshell
+
+
+Problems:
+  Doesn't support IPSec.

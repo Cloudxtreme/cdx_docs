@@ -1,0 +1,131 @@
+--
+-- update 14 overflow containers (84 cp runs)
+--
+exec ChangeReasonPackage.SetChangeReason('v_3_0_6 - Change CP_RUN_IDs');
+
+create or replace trigger cascade_update_cp_run
+after update of cp_run_id on cp_run
+for each row
+begin
+   update cp_final_score set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cdx_cp_run_qc set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cp_run_report set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cdx_cp_run_batch set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cp_value set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+   update cp_normalized_value set cp_run_id = :new.cp_run_id where cp_run_id = :old.cp_run_id;
+end;
+/
+
+select cp_run_id 
+from cp_run where container_id in 
+  ('AR011575', 'AR011560', 'AR011538', 'AR011532', 'AR011529', 'AR011523',
+   'AR011686', 'AR011678', 'AR011675', 'AR011632', 'AR011607', 'AR011572',
+   'AR011540', 'AR011539');
+
+update cp_run set cp_run_id = -32766 where cp_run_id = 32794;
+update cp_run set cp_run_id = -32765 where cp_run_id = 32851;
+update cp_run set cp_run_id = -32764 where cp_run_id = 32844;
+update cp_run set cp_run_id = -32763 where cp_run_id = 32848;
+update cp_run set cp_run_id = -32762 where cp_run_id = 32841;
+update cp_run set cp_run_id = -32761 where cp_run_id = 32779;
+update cp_run set cp_run_id = -32760 where cp_run_id = 32781;
+update cp_run set cp_run_id = -32759 where cp_run_id = 32837;
+update cp_run set cp_run_id = -32758 where cp_run_id = 32835;
+update cp_run set cp_run_id = -32757 where cp_run_id = 32816;
+update cp_run set cp_run_id = -32756 where cp_run_id = 32809;
+update cp_run set cp_run_id = -32755 where cp_run_id = 32811;
+update cp_run set cp_run_id = -32754 where cp_run_id = 32842;
+update cp_run set cp_run_id = -32753 where cp_run_id = 32783;
+update cp_run set cp_run_id = -32752 where cp_run_id = 32818;
+update cp_run set cp_run_id = -32751 where cp_run_id = 32812;
+update cp_run set cp_run_id = -32750 where cp_run_id = 32805;
+update cp_run set cp_run_id = -32749 where cp_run_id = 32799;
+update cp_run set cp_run_id = -32748 where cp_run_id = 32790;
+update cp_run set cp_run_id = -32747 where cp_run_id = 32793;
+update cp_run set cp_run_id = -32746 where cp_run_id = 32855;
+update cp_run set cp_run_id = -32745 where cp_run_id = 32789;
+update cp_run set cp_run_id = -32744 where cp_run_id = 32839;
+update cp_run set cp_run_id = -32743 where cp_run_id = 32776;
+update cp_run set cp_run_id = -32742 where cp_run_id = 32769;
+update cp_run set cp_run_id = -32741 where cp_run_id = 32774;
+update cp_run set cp_run_id = -32740 where cp_run_id = 32775;
+update cp_run set cp_run_id = -32739 where cp_run_id = 32777;
+update cp_run set cp_run_id = -32738 where cp_run_id = 32827;
+update cp_run set cp_run_id = -32737 where cp_run_id = 32817;
+update cp_run set cp_run_id = -32736 where cp_run_id = 32813;
+update cp_run set cp_run_id = -32735 where cp_run_id = 32810;
+update cp_run set cp_run_id = -32734 where cp_run_id = 32802;
+update cp_run set cp_run_id = -32733 where cp_run_id = 32791;
+update cp_run set cp_run_id = -32732 where cp_run_id = 32784;
+update cp_run set cp_run_id = -32731 where cp_run_id = 32785;
+update cp_run set cp_run_id = -32730 where cp_run_id = 32787;
+update cp_run set cp_run_id = -32729 where cp_run_id = 32843;
+update cp_run set cp_run_id = -32728 where cp_run_id = 32832;
+update cp_run set cp_run_id = -32727 where cp_run_id = 32831;
+update cp_run set cp_run_id = -32726 where cp_run_id = 32828;
+update cp_run set cp_run_id = -32725 where cp_run_id = 32830;
+update cp_run set cp_run_id = -32724 where cp_run_id = 32821;
+update cp_run set cp_run_id = -32723 where cp_run_id = 32807;
+update cp_run set cp_run_id = -32722 where cp_run_id = 32798;
+update cp_run set cp_run_id = -32721 where cp_run_id = 32800;
+update cp_run set cp_run_id = -32720 where cp_run_id = 32792;
+update cp_run set cp_run_id = -32719 where cp_run_id = 32771;
+update cp_run set cp_run_id = -32718 where cp_run_id = 32823;
+update cp_run set cp_run_id = -32717 where cp_run_id = 32808;
+update cp_run set cp_run_id = -32716 where cp_run_id = 32803;
+update cp_run set cp_run_id = -32715 where cp_run_id = 32797;
+update cp_run set cp_run_id = -32714 where cp_run_id = 32850;
+update cp_run set cp_run_id = -32713 where cp_run_id = 32853;
+update cp_run set cp_run_id = -32712 where cp_run_id = 32788;
+update cp_run set cp_run_id = -32711 where cp_run_id = 32778;
+update cp_run set cp_run_id = -32710 where cp_run_id = 32834;
+update cp_run set cp_run_id = -32709 where cp_run_id = 32833;
+update cp_run set cp_run_id = -32708 where cp_run_id = 32814;
+update cp_run set cp_run_id = -32707 where cp_run_id = 32824;
+update cp_run set cp_run_id = -32706 where cp_run_id = 32796;
+update cp_run set cp_run_id = -32705 where cp_run_id = 32852;
+update cp_run set cp_run_id = -32704 where cp_run_id = 32854;
+update cp_run set cp_run_id = -32703 where cp_run_id = 32846;
+update cp_run set cp_run_id = -32702 where cp_run_id = 32847;
+update cp_run set cp_run_id = -32701 where cp_run_id = 32849;
+update cp_run set cp_run_id = -32700 where cp_run_id = 32845;
+update cp_run set cp_run_id = -32699 where cp_run_id = 32786;
+update cp_run set cp_run_id = -32698 where cp_run_id = 32782;
+update cp_run set cp_run_id = -32697 where cp_run_id = 32780;
+update cp_run set cp_run_id = -32696 where cp_run_id = 32836;
+update cp_run set cp_run_id = -32695 where cp_run_id = 32829;
+update cp_run set cp_run_id = -32694 where cp_run_id = 32826;
+update cp_run set cp_run_id = -32693 where cp_run_id = 32815;
+update cp_run set cp_run_id = -32692 where cp_run_id = 32822;
+update cp_run set cp_run_id = -32691 where cp_run_id = 32804;
+update cp_run set cp_run_id = -32690 where cp_run_id = 32806;
+update cp_run set cp_run_id = -32689 where cp_run_id = 32801;
+update cp_run set cp_run_id = -32688 where cp_run_id = 32795;
+update cp_run set cp_run_id = -32687 where cp_run_id = 32840;
+update cp_run set cp_run_id = -32686 where cp_run_id = 32838;
+update cp_run set cp_run_id = -32685 where cp_run_id = 32819;
+update cp_run set cp_run_id = -32684 where cp_run_id = 32820;
+update cp_run set cp_run_id = -32683 where cp_run_id = 32825;
+
+drop trigger cascade_update_cp_run;
+
+exec ChangeReasonPackage.ResetChangeReason;
+
+--
+-- fix trigger
+--
+drop SEQUENCE CP_RUN_SEQ;
+
+create SEQUENCE CP_RUN_SEQ
+  MINVALUE -32600
+  MAXVALUE 0
+  INCREMENT BY 1
+  START WITH -32600
+  CACHE 20
+  NOORDER
+  NOCYCLE;
+
+
+
+
+

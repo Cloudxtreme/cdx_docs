@@ -1,0 +1,43 @@
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+
+[Phase 1]
+67.95.201.201=peer-67.95.201.201 force
+
+[peer-67.95.201.201]
+Phase=1 force
+Address=67.95.201.201 force
+Authentication=cdxTest123 force
+Configuration=phase1-peer-67.95.201.201 force
+
+[phase1-peer-67.95.201.201]
+EXCHANGE_TYPE=ID_PROT force
+Transforms=AES-SHA force
+
+
+[Phase 2]
+Connections=from-10.10.32.0/21-to-192.168.10.0/24
+
+[from-10.10.32.0/21-to-192.168.10.0/24]
+Phase=2 force
+ISAKMP-peer=peer-67.95.201.201 force
+Configuration=phase2-from-10.10.32.0/21-to-192.168.10.0/24 force
+Local-ID=from-10.10.32.0/21 force
+Remote-ID=to-192.168.10.0/24 force
+
+[phase2-from-10.10.32.0/21-to-192.168.10.0/24]
+EXCHANGE_TYPE=QUICK_MODE force
+Suites=QM-ESP-AES-SHA2-256-PFS-SUITE force
+
+[from-10.10.32.0/21]
+ID-type=IPV4_ADDR_SUBNET force
+Network=10.10.32.0 force
+Netmask=255.255.248.0 force
+
+[to-192.168.10.0/24]
+ID-type=IPV4_ADDR_SUBNET force
+Network=192.168.10.0 force
+Netmask=255.255.255.0 force
+
+

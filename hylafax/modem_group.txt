@@ -1,0 +1,49 @@
+
+If you want a group of send-only modems and a group of receive-only modems, instead of using ModemGroup, 
+consider setting 
+      RingsBeforeAnswer: 0 for the send-only modems and 
+      ModemReadyState: D for the receive-only modems.
+											on iaxmodems
+
+receiving fax: asterisk will know what modem to use.
+for sending fax, since we have D in iaxmodems, hylafax will only send through MultiTech?
+
+ModemReadyState:
+  This is useful for controlling outbound use of a modem;
+  by marking a modem state as busy or down the HylaFAX scheduler will not assign any outbound jobs to the modem.
+
+			R (ready for use) 
+			B (busy)
+			D (down)
+
+
+ModemGroup¹                  string     -                  define a name for a set of modems
+ModemPriority                 integer    255                scheduling priority for outbound jobs
+
+
+root@aster64:/etc/hylafax# grep -i rings config* | grep -v '#'
+config.ttyIAX1:RingsBeforeAnswer:	1
+config.ttyIAX2:RingsBeforeAnswer:	1
+config.ttyIAX3:RingsBeforeAnswer:	1
+config.ttyS10:RingsBeforeAnswer:	1
+config.ttyS11:RingsBeforeAnswer:	1
+config.ttyS12:RingsBeforeAnswer:	1
+config.ttyS5:RingsBeforeAnswer:	1
+config.ttyS6:RingsBeforeAnswer:	1
+config.ttyS7:RingsBeforeAnswer:	1
+config.ttyS8:RingsBeforeAnswer:	1
+config.ttyS9:RingsBeforeAnswer:	1
+
+
+--
+-- by marking a modem state as busy or down the HylaFAX scheduler will not assign any outbound jobs to the modem.
+--
+root@aster64:/etc/hylafax# grep -i ModemReadyState config* | grep -v '#'
+config.ttyIAX1:ModemReadyState: D
+config.ttyIAX2:ModemReadyState: D
+config.ttyIAX3:ModemReadyState: D
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+jobcontrols ---> send jobs to a specific modem 
+

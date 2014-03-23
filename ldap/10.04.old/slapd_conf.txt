@@ -1,0 +1,15 @@
+
+ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b cn=config dn
+
+
+-- 
+-- modify cn=config 
+--
+vi uid_index.ldif
+dn: olcDatabase={1}hdb,cn=config
+add: olcDbIndex
+olcDbIndex: uid eq,pres,sub
+
+ldapmodify -Y EXTERNAL -H ldapi:/// -f uid_index.ldif
+
+

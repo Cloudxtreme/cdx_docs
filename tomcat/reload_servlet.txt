@@ -1,0 +1,9 @@
+
+cd conf/
+
+vi context.xml
+
+<Context>
+
+  ----> <Context reloadable="true">
+ 

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.EventProcess" table="EVENT_PROCESS" schema="DNALIMS">
+        <comment>Table used to record event handlers that have been executed in response to events from the application</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.EventProcessId">
+            <key-property name="eventProcessId" type="big_decimal">
+                <column name="EVENT_PROCESS_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="eventSubscriptionId" type="big_decimal">
+                <column name="EVENT_SUBSCRIPTION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="objectId" type="string">
+            <column name="OBJECT_ID" length="30">
+                <comment>Varchar2 field used to store the primary key of the object used to process the event</comment>
+            </column>
+        </property>
+        <property name="objectType" type="string">
+            <column name="OBJECT_TYPE" length="30">
+                <comment>Description of the object used for the event (ACCESSION, SAMPLE, STUDY, etc...)</comment>
+            </column>
+        </property>
+        <property name="processedBy" type="string">
+            <column name="PROCESSED_BY" length="30">
+                <comment>User who caused the event to be processed.</comment>
+            </column>
+        </property>
+        <property name="dateProcessed" type="date">
+            <column name="DATE_PROCESSED" length="7">
+                <comment>Date the event was processed.</comment>
+            </column>
+        </property>
+        <property name="warning" type="string">
+            <column name="WARNING" length="4000">
+                <comment>The warning message returned from the event which the user has acknowledged</comment>
+            </column>
+        </property>
+        <property name="eventHandlerId" type="big_decimal">
+            <column name="EVENT_HANDLER_ID" precision="22" scale="0">
+                <comment>Foreign key to handler used to process event</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

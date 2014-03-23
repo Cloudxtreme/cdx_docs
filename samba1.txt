@@ -1,0 +1,112 @@
+ubuntu hardy ldap samba smbldap
+
+http://blog.zrmt.com/2007/10/19/howto-ppolicy-openldap/
+
+wajig install slapd ldap-utils 
+wajig install samba samba-common samba-doc smbclient smbldap-tools
+
+cp /usr/share/doc/samba-doc/examples/LDAP/samba.schema.gz /etc/ldap/schema/
+cd /etc/ldap/schema/
+gzip -d samba.schema.gz
+
+
+cd /etc/ldap
+vi slapd.conf
+  (example --> cardiodx)
+include         /etc/ldap/schema/samba.schema
+include         /etc/ldap/schema/misc.schema
+include         /etc/ldap/schema/ppolicy.schema
+
+backend         hdb
+database        hdb
+suffix "dc=cardiodx,dc=com"
+rootdn "cn=Manager,dc=cardiodx,dc=com"
+rootpw cardiodx007
+
+
+vi ldap.conf
+  (example --> cardiodx)
+
+ldapsearch -x -b "dc=cardiodx,dc=com" "(uidNumber=1098)" -ZZ
+ldapsearch -x -b "dc=cardiodx,dc=com" "(objectClass=*)"
+ldapsearch -D "cn=admin,dc=cardiodx,dc=com" -W -x 
+
+
+
+smbclient -U% -L localhost
+
+# net getlocalsid
+SID for domain SMBTEST is: S-1-5-21-2479071188-3228806463-3657084036
+
+
+moduleload      ppolicy
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+slapadd -v -c -l ppolicy.ldif 
+
+root@smbtest:~# slapadd -v -c -l ppolicy.ldif 
+added: "cn=default,ou=Policies,dc=cardiodx,dc=com" (00000004)
+Error, entries missing!
+  entry 3: ou=policies,dc=cardiodx,dc=com
+
+Note: Need to add ou first!!!
+
+
+ldapadd -D "cn=admin,dc=cardiodx,dc=com" -W -x -f ppolicy.ldif
+
+http://www.openldap.org/lists/openldap-software/200802/msg00339.html
+http://archive.netbsd.se/?ml=OpenLDAP-software&a=2008-02&t=6493793
+
+# more opolicy.ldif 
+dn: ou=Policies,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Policies
+
+
+root@smbtest:~# more ppolicy.ldif 
+dn: cn=Default,ou=Policies,dc=cardiodx,dc=com
+objectClass: top
+objectClass: device
+objectClass: pwdPolicy
+cn: Default
+pwdAttribute: 2.5.4.35
+pwdMaxAge: 7516800
+pwdExpireWarning: 432000
+pwdInHistory: 6
+pwdCheckQuality: 1
+pwdMinLength: 8
+pwdMaxFailure: 4
+pwdLockout: TRUE
+pwdLockoutDuration: 1920
+pwdGraceAuthNLimit: 0
+pwdFailureCountInterval: 0
+pwdMustChange: TRUE
+pwdAllowUserChange: TRUE
+pwdSafeModify: FALSE
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/ldap/slapd.conf
+vi /etc/samba/smb.conf
+  smbpasswd -w LDAP_ADMIN_PASSWORD
+
+
+  zcat /usr/share/doc/smbldap-tools/examples/smbldap.conf.gz > \
+    /etc/smbldap-tools/smbldap.conf
+  cp /usr/share/doc/smbldap-tools/examples/smbldap_bind.conf \
+    /etc/smbldap-tools/smbldap_bind.conf
+
+  net getlocalsid
+
+vi /etc/smbldap-tools/smbldap.conf
+vi /etc/smbldap-tools/smbldap_bind.conf
+
+  chmod 0644 /etc/smbldap-tools/smbldap.conf
+  chmod 0600 /etc/smbldap-tools/smbldap_bind.conf
+
+smbldap-populate
+
+
+

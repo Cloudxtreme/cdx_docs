@@ -1,0 +1,6 @@
+<h1>Editing <%=@namespace%>::<%=@collection_name%></h1>
+
+<%%= render 'form' %>
+
+<%%= link_to 'Show', @object %> |
+<%%= link_to 'Back', <%=@namespace.downcase%>_<%=@collection_name.downcase.pluralize%>_path %>

@@ -1,0 +1,74 @@
+--
+-- Didn't do this on my machine: (had them installed already)
+--
+wajig install apache2 libcurl4-openssl-dev \
+ dpkg-dev build-essential apache2-prefork-dev libapr1-dev libaprutil1-dev \
+ ruby ruby1.8 linux-libc-dev libc6-dev ruby1.8-dev \
+ ri1.8 irb1.8 libldap-ruby1.8 libopenssl-ruby libopenssl-ruby1.8 \
+ libreadline-ruby1.8 libruby libruby1.8 libyaml-ruby libzlib-ruby
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- setup rails account
+--
+  502  cp -rp /home/cchou/hdrive/MacBookPro/CDX-Linux/ruby/proj/pg6/ .
+  509  chown -R rails pg6/
+
+  549  cp /home/cardiodx/.profile .
+  550  cp /home/cardiodx/.bashrc .
+
+vi .bashrc
+export PATH=$PATH:/usr/local/rvm/bin
+. /etc/profile.d/rvm.sh
+
+sudo su postgres
+createuser rails
+  Shall the new role be a superuser? (y/n) y
+
+su - rails
+$ psql pg6
+   44  vi database.yml 
+   46  rails server
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi Gemfile
+gem 'passenger'
+
+bundle install
+	Installing passenger (3.0.19) 
+
+passenger-install-apache2-module
+
+Please edit your Apache configuration file, and add these lines:
+
+cat > /etc/apache2/mods-available/passenger.conf<<EOF
+PassengerRoot /usr/local/rvm/gems/ruby-1.9.3-p194@rails32/gems/passenger-3.0.19
+PassengerRuby /usr/local/rvm/wrappers/ruby-1.9.3-p194@rails32/ruby
+EOF
+
+cat > /etc/apache2/mods-available/passenger.load<<EOF
+LoadModule passenger_module /usr/local/rvm/gems/ruby-1.9.3-p194@rails32/gems/passenger-3.0.19/ext/apache2/mod_passenger.so
+EOF
+
+
+cd /etc/apache2/sites-available/
+cp default default.orig
+vi default
+<VirtualHost *:80>
+   ServerName www.yourhost.com
+   DocumentRoot /home/rails/pg6/public
+   <Directory /home/rails/pg6/public>
+      AllowOverride all
+      Options -MultiViews
+   </Directory>
+</VirtualHost>
+
+
+a2enmod passenger
+/etc/init.d/apache2 restart
+
+^C on rails server
+
+
+http://cchoudesktop.cardiodx.com/books/
+

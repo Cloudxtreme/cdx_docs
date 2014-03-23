@@ -1,0 +1,39 @@
+
+http://www.sugarforge.org/search/?type_of_search=soft&group_id=248&words=zimbra&Search=Search
+
+Zimbra sugarCRM integration:
+http://www.sugarforge.org/projects/tyfresco/
+http://www.sugarforge.org/projects/ziger/
+
+http://www.sugarcrm.com/forums/showthread.php?p=82095#post82095
+
+
+
+We use SugarCRM and Zimbra internally, plus we are planning to offer implementation services for these solutions to local clients.
+
+We have the two applications working together using existing functionality, and it seems to work reasonably well. Here's how we do it.
+
+.: Login to Zimbra
+.: Create a folder named CRM
+.: Login to SugarCRM
+.: Go to My Account
+.: Edit your Account
+.: Scroll to the bottom and edit your settings using your Zimbra information and set the folder to CRM
+.: Click Test Settings
+.: If you'd like to leave the messages in the CRM folder within Zimbra, click the Advanced button and check the related box.
+
+Now try it out by moving a message to the CRM folder in Zimbra. You must ensure the message is marked Unread in order for SugarCRM to see it.
+.: Go to SugarCRM and click the Get Mail button from your SugarCRM Inbox.
+.: You should see the message there now. You'll see that there's a Quick Create drop-down that allows you to convert the item to a Case, or a project Task, plus a couple other less used options.
+.: You'll see when you create a case or task, the e-mail is attached to it; so you can modify the verbiage of the case and know that you'll maintain the connection with the original e-mail.
+
+This approach seems to work quite well. I'm sure you could trim a few seconds off the process by creating a zimlet. What other functionality did you have in mind for a zimlet? I do really like the idea of getting these packages better integrated.
+
+By the way, there is a script which will integrate your SugarCRM addresses with an external LDAP database for use in the GAL of Zimbra. We instead decided to extract the data from SugarCRM and then import it into a shared Zimbra address book so that the addresses are easy to browse. If someday the GAL allows for browsing, then we'd probably use the script.
+
+What other ideas do people have for zimlet functionality and integrating the two packages. I may be willing to either contribute programmer time or some money if the ideas are good.
+
+
+cheers,
+
+Darryl

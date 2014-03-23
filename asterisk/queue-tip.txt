@@ -1,0 +1,61 @@
+asterisk queue monitor report queue-tip
+
+http://queue-tip.rubyforge.org/install.html
+
+cd /etc/asterisk
+vi manager.conf
+[general]
+enabled = yes
+port = 5038
+bindaddr = 0.0.0.0
+displayconnects = yes
+
+[test]
+secret=footest
+deny=0.0.0.0/0.0.0.0
+permit=10.10.37.0/255.255.255.0
+read = system,call,log,verbose,command,agent,user
+write = system,call,log,verbose,command,agent,user
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ruby -v
+ruby 1.8.6 (2007-09-24 patchlevel 111) [x86_64-linux]
+
+gem list 
+rails (2.2.2, 2.1.0)
+
+gem install -r adhearsion --no-ri --no-rdoc
+gem install -r fastercsv --no-ri --no-rdoc
+
+
+wget http://queue-tip.rubyforge.org/files/queue-tip-0.9.2.tar.gz
+tar zxvf queue-tip-0.9.2.tar.gz
+
+cd /root/queue-tip/config
+vi startup.rb
+  config.asterisk.enable_ami :host => "astersk", :username => 'queuetip', :password => 'footest', :events => true
+
+
+cd ~/queue-tip
+ahn start bin/ami_proxy &
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gem install sqlite3-ruby --no-ri --no-rdoc
+
+wajig install build-essential -y
+--wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 libpgsql-ruby -y
+wajig install sqlite3
+install libsqlite3-dev
+
+gem install sqlite3-ruby --no-ri --no-rdoc
+
+rake db:create
+rake db:migrate
+
+./script/server
+
+
+
+
+

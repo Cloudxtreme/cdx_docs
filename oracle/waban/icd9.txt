@@ -1,0 +1,50 @@
+
+select LIMS_ATTR_UTIL.get_study_attr(2, 'CDX_INVALID_ICD9_CODES') from dual;
+
+414.02
+414.03
+414.04
+414.05
+414.06
+414.07
+414.1
+414.2
+410.0
+410.1
+410.2
+410.3
+410.4
+410.5
+410.6
+410.7
+410.8
+410.9
+411.0
+411.1
+411.8
+412.0
+250.0
+250.1
+250.2
+250.3
+250.4
+250.5
+250.6
+250.7
+250.8
+250.9
+
+
+SELECT v.variable_name, avf.value
+FROM accession_variable_fld avf, protocol_defined_variable pdv, variable v
+WHERE avf.protocol_defined_variable_id = pdv.protocol_defined_variable_id
+AND pdv.variable_id = v.variable_id
+AND pdv.attribute_level_id = 'A'
+AND upper(v.variable_name) LIKE 'ICD DIAGNOSIS CODE%'
+--AND avf.value LIKE p_invalid_code_array(i) || '%'
+AND avf.accession_id = 23351;
+
+ICD Diagnosis Code 1	       786.05
+ICD Diagnosis Code 2	       272.2
+ICD Diagnosis Code 3	       272.4
+

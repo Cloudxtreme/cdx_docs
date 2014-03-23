@@ -1,0 +1,83 @@
+http://www.vinodlive.com/2007/08/20/amazon-s3-storage-tools/
+http://developer.amazonwebservices.com/connect/thread.jspa?threadID=11975&start=0&tstart=0
+http://blog.eberly.org/2006/10/09/how-automate-your-backup-to-amazon-s3-using-s3sync/
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+download s3cmd from: http://sourceforge.net/projects/s3tools/files/s3cmd/#files
+
+tar zxvf s3cmd-0.9.9-rc3.tar.gz
+
+python setup.py install
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+1DNFS0MGDX4R7DK92QG2
+IK5Ss7fOZ/slyueFts8TzuMlRLm86NA0PO4Hc6Dx
+
+
+s3cmd la 
+
+s3cmd -P put out.wmv s3://cardiodx/
+
+
+# s3cmd --configure
+# more /home/cchou/.s3cfg
+
+
+For CORE lab:
+
+mencoder CORE_lab_film_submission.wmv -o out-1.wmv -of lavf  -oac mp3lame -lameopts abr:br=8 -srate 8000 -lavcopts vcodec=wmv2 -ovc lavc -vf scale=800:600 -lavfopts i_certify_that_my_video_stream_does_not_use_b_frames 
+
+s3cmd -P put CORE_lab_film_submission-030108.wmv s3://cardiodx/
+
+http://s3.amazonaws.com/cardiodx/CORE_lab_film_submission-030108.wmv
+
+s3cmd del s3://cardiodx/CORE_lab_film_submission-s.wmv
+
+
+
+
+zip -e CardioDxOverview100709.pdf.zip cdx.pdf 
+Enter password: dlevison
+
+./s3cmd -P put ./CardioDxOverview100709.pdf.zip s3://cardiodx/
+http://s3.amazonaws.com/cardiodx/CardioDxOverview100709.pdf.zip
+
+
+
+s3cmd -e -v sync s3 s3://cdxbackup/
+s3cmd -v -e put nautilus-debug-log.txt s3://cdxbackup
+
+-- restore
+s3cmd get s3://cardiodx/g2m_codec.exe
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+s3fs
+http://code.google.com/p/s3fs/wiki/FuseOverAmazon
+sudo apt-get install build-essential libcurl4-openssl-dev libxml2-dev libfuse-dev 
+s3cmd mb s3://cdxbackup
+vi /etc/passwd-s3fs
+1DNFS0MGDX4R7DK92QG2:IK5Ss7fOZ/slyueFts8TzuMlRLm86NA0PO4Hc6Dx
+s3fs s3://cdxbackup/ /mnt/s3
+s3fs s3://cdxbackup/ -o accessKeyId=1DNFS0MGDX4R7DK92QG2 -o secretAccessKey=IK5Ss7fOZ/slyueFts8TzuMlRLm86NA0PO4Hc6Dx /mnt/s3
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://swik.net/Ubuntu/Planet+Ubuntu/Steven+Harms:+Fun+with+Amazon+S3+in+Ubuntu+Hardy/b4v5e
+
+  114  wajig install python-fuse python-boto git-core
+  116  git clone git://git.fedorahosted.org/s3fs s3fs
+  118  wajig install s3cmd
+  121  s3cmd --configure
+
+  139  export AWS_ACCESS_KEY_ID="1DNFS0MGDX4R7DK92QG2"
+  140  export AWS_SECRET_ACCESS_KEY="IK5Ss7fOZ/slyueFts8TzuMlRLm86NA0PO4Hc6Dx"
+  149  ./s3fs -C -f cdxbucket
+  151  mkdir cdxbucket
+  153  ./s3fs -o bucket=cdxbucket cdxbucket
+  156  cd cdxbucket/

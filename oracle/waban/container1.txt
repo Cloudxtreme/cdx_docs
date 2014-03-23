@@ -1,0 +1,261 @@
+/u01/app/oracle/admin/ORCL/udump/orcl_ora_5738.trc
+Oracle Database 10g Enterprise Edition Release 10.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP and Data Mining options
+ORACLE_HOME = /u01/app/oracle/product/10.2.0/db_1
+System name:	Linux
+Node name:	desktop30
+Release:	2.6.24-24-server
+Machine:	x86_64
+Instance name: ORCL
+Redo thread mounted by this instance: 1
+Oracle process number: 22
+Unix process pid: 5738, image: oracleORCL@desktop30
+
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'REAGENT' AND column_name = 'CONTAINER_ID'
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'CONTAINER_REAGENT'
+select sam.sample_id,sam.sample_tube_id,acc.accession_id,acc.accession_number,sam.container_row,sam.container_column,nvl(sam.sample_status,'NONE') sample_status from sample sam, accession acc where sam.accession_id=acc.accession_id and sam.container_id='T1021232' and nvl(sam.sample_status,'NONE')<>'DISCARDED' Union SELECT rg.reagent_id, rg.reagent_barcode, rg.reagent_id, rg.reagent_name, rg.container_row, rg.container_column, rg.status sample_status FROM reagent rg WHERE rg.container_id = 'T1021232' Union SELECT ol.oligo_id, 'Oligo: ' || ol.oligo_name, cr.reagent_id, ol.oligo_name, cr.container_row, cr.container_column, '' sample_status FROM container_reagent cr, container_batch cb, plate_template_well ptw, oligo_design ol Where cr.container_batch_id = cb.container_batch_id AND cb.plate_template_id = ptw.plate_template_id AND cr.container_row = ptw.plate_row AND cr.container_column = ptw.plate_column AND ptw.oligo_id IS NOT NULL AND ptw.oligo_id = ol.oligo_id AND cr.container_id = 'T1021232'
+update container set checkout_by=user, date_checkout=sysdate where container_id = 'T1021232'
+SELECT USER FROM DUAL
+SELECT AUDIT_SEQUENCE.NEXTVAL FROM DUAL
+SELECT CHANGE_REASON_ID FROM CHANGE_REASON   WHERE CREATED_BY =  USER   AND IS_ACTIVE =  1  AND SESSION_ID =  SYS_CONTEXT('userenv' , 'sessionid' )    
+SELECT TABLE_NAME FROM CHANGE_TABLE   WHERE UPPER(AUDIT_TABLE )  =  :1   
+SELECT USER, SYSDATE FROM DUAL
+SELECT USER FROM DUAL
+SELECT SYSDATE FROM DUAL
+SELECT FREEZER_ID , DISCARDED , SHELF , RACK , COMPARTMENT FROM CONTAINER   WHERE CONTAINER_ID =  :1   
+SELECT N_OF_SHELVES , N_OF_RACKS_PER_SHELF , N_OF_BOXES_PER_RACK FROM FREEZER F   WHERE F.FREEZER_ID =  :1   
+SELECT URS.CONTACT_ID, OZ.ORGANIZATION_ID, OZ.COMPANY FROM USERS URS, CONTACT CT, ORGANIZATION OZ WHERE CT.CONTACT_ID = URS.CONTACT_ID AND OZ.ORGANIZATION_ID = CT.ORGANIZATION_ID AND upper(URS.USERNAME) = 'CCHOU'
+SELECT COMPANY, ORGANIZATION_ID FROM ORGANIZATION ORDER BY COMPANY
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SHIPMENT_AIRBILL' and atc.COLUMN_NAME = 'AIRBILL_NUMBER'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'ACCESSION' and atc.COLUMN_NAME = 'ACCESSION_NUMBER'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SHIPMENT_SAMPLE' and atc.COLUMN_NAME = 'QC_COMMENT'
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='SPEC_REC_LBL_SPECIMEN_ID' order by number_in_sequence
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='SPEC_REC_LBL_LAB_SAMP_TUBE_ID' order by number_in_sequence
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='SPEC_REC_LBL_ACCESSION_ID' order by number_in_sequence
+Select Study_protocol_id, Study_number from study_protocol order by Study_number
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='SPEC_RECEIPT_STUDY' order by number_in_sequence
+SELECT pdv.variable_label, NULL, pdv.variable_id, var.variable_type_id, var.min_value, var.max_value, NULL, pdv.protocol_defined_variable_id, pdv.number_in_sequence, var.variable_name, vt.screen_name, NULL, pdv.attribute_level_id FROM (SELECT UPPER (svf.VALUE) fldlist, svf.study_protocol_id FROM STUDY_VARIABLE_FLD svf,PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE Var WHERE UPPER (var.variable_name) = 'QC REVIEW' AND var.variable_id = pdv.variable_id AND pdv.protocol_defined_variable_id = svf.protocol_defined_variable_id) flds, PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE var,Variable_Type vt Where InStr(flds.fldlist, UPPER(Var.Variable_Name)) > 0 AND pdv.variable_id = var.variable_id AND var.variable_type_id = vt.variable_type_id AND flds.study_protocol_id = pdv.study_protocol_id AND pdv.attribute_level_id IN ('T', 'A') AND pdv.study_protocol_id =2 order by pdv.number_in_sequence
+select pdv.ATTRIBUTE_LEVEL_ID from PROTOCOL_DEFINED_VARIABLE pdv where pdv.PROTOCOL_DEFINED_VARIABLE_ID=237
+SELECT Limspackage.sample_att_value(svf.sample_variable_fld_id) value,NVL(svf.CONTACT_id,svf.ORGANIZATION_id) fKeyID, svf.SAMPLE_VARIABLE_FLD_ID varfldid FROM SAMPLE_VARIABLE_FLD svf WHERE svf.PROTOCOL_DEFINED_VARIABLE_ID=237 AND svf.SAMPLE_ID=-1
+select pdv.ATTRIBUTE_LEVEL_ID from PROTOCOL_DEFINED_VARIABLE pdv where pdv.PROTOCOL_DEFINED_VARIABLE_ID=238
+SELECT Limspackage.sample_att_value(svf.sample_variable_fld_id) value,NVL(svf.CONTACT_id,svf.ORGANIZATION_id) fKeyID, svf.SAMPLE_VARIABLE_FLD_ID varfldid FROM SAMPLE_VARIABLE_FLD svf WHERE svf.PROTOCOL_DEFINED_VARIABLE_ID=238 AND svf.SAMPLE_ID=-1
+select pdv.ATTRIBUTE_LEVEL_ID from PROTOCOL_DEFINED_VARIABLE pdv where pdv.PROTOCOL_DEFINED_VARIABLE_ID=249
+SELECT Limspackage.sample_att_value(svf.sample_variable_fld_id) value,NVL(svf.CONTACT_id,svf.ORGANIZATION_id) fKeyID, svf.SAMPLE_VARIABLE_FLD_ID varfldid FROM SAMPLE_VARIABLE_FLD svf WHERE svf.PROTOCOL_DEFINED_VARIABLE_ID=249 AND svf.SAMPLE_ID=-1
+select pdv.ATTRIBUTE_LEVEL_ID from PROTOCOL_DEFINED_VARIABLE pdv where pdv.PROTOCOL_DEFINED_VARIABLE_ID=5229
+SELECT Limspackage.sample_att_value(svf.sample_variable_fld_id) value,NVL(svf.CONTACT_id,svf.ORGANIZATION_id) fKeyID, svf.SAMPLE_VARIABLE_FLD_ID varfldid FROM SAMPLE_VARIABLE_FLD svf WHERE svf.PROTOCOL_DEFINED_VARIABLE_ID=5229 AND svf.SAMPLE_ID=-1
+select pdv.ATTRIBUTE_LEVEL_ID from PROTOCOL_DEFINED_VARIABLE pdv where pdv.PROTOCOL_DEFINED_VARIABLE_ID=5252
+SELECT Limspackage.sample_att_value(svf.sample_variable_fld_id) value,NVL(svf.CONTACT_id,svf.ORGANIZATION_id) fKeyID, svf.SAMPLE_VARIABLE_FLD_ID varfldid FROM SAMPLE_VARIABLE_FLD svf WHERE svf.PROTOCOL_DEFINED_VARIABLE_ID=5252 AND svf.SAMPLE_ID=-1
+select Accession_id from accession where accession_number='' and study_protocol_id =2
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='SPEC_RECEIPT_SOURCE_TYPE' order by number_in_sequence
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'ACCESSION_VARIABLE_FLD_TABLE' and atc.COLUMN_NAME = 'VALUE'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'CASE_VARIABLE_FLD_TABLE' and atc.COLUMN_NAME = 'VALUE'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'ACCESSION' and atc.COLUMN_NAME = 'GPI_CODE'
+Select Study_protocol_id, Study_number from study_protocol order by Study_number
+SELECT GPI_CODE FROM ACCESSION WHERE STUDY_PROTOCOL_ID = 2 and ACCESSION_ID = -1
+select pdv.variable_label,limspackage.accession_att_value(avf.accession_variable_fld_id) value,pdv.variable_id,var.variable_type_id,var.min_value,var.max_value,avf.accession_variable_fld_id,pdv.protocol_defined_variable_id,pdv.number_in_sequence, var.variable_name, vt.screen_name,nvl(avf.patient_id,nvl(avf.CONTACT_id,avf.ORGANIZATION_id)) from accession_variable_fld avf, protocol_defined_variable pdv,variable var, variable_type vt where pdv.study_protocol_id = 2 and pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and avf.protocol_defined_variable_id (+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'A' and avf.accession_id (+) = -1 order by pdv.number_in_sequence
+SELECT ORG.COMPANY FROM ACCESSION_VARIABLE_FLD AVF , ORGANIZATION ORG   WHERE ORG.ORGANIZATION_ID =  AVF.ORGANIZATION_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+SELECT CON.NAME ||  ' '  ||  CON.MNAME  ||  ' '  ||  CON.LNAME  FROM ACCESSION_VARIABLE_FLD AVF , CONTACT CON   WHERE CON.CONTACT_ID =  AVF.CONTACT_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+SELECT PAT.DISPLAY_ID FROM PATIENT PAT , ACCESSION_VARIABLE_FLD AVF   WHERE PAT.PATIENT_ID =  AVF.PATIENT_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+SELECT AVF.VALUE FROM ACCESSION_VARIABLE_FLD AVF   WHERE AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+
+select sample_tube_id, client_sample_tube_id, sample_status,location,source_type,nvl(s.sample_id,pending_sample_id),container_id,container_row, container_column, sample_condition, initial_volume,date_received, 0, sample_status, volume, concentration,final_storage_tube, number_in_acc_sequence,decode(s.sample_id,null,1,0) pending_status 
+from sample_display_view s 
+where accession_number='TRF55660' 
+order by pending_status, number_in_acc_sequence
+
+select get_testType(-1) from dual
+SELECT TS.TEST_TYPE FROM TEST_SETUP TS WHERE TS.TEST_SETUP_ID = :B1 
+ select pdv.variable_label, lims_kit_accession.case_att_value(cvf.case_variable_fld_id) value, pdv.variable_id,var.variable_type_id,var.min_value, var.max_value,cvf.case_variable_fld_id,pdv.protocol_defined_variable_id, pdv.number_in_sequence, var.variable_name, vt.screen_name, nvl(cvf.patient_id,nvl(cvf.CONTACT_id,cvf.ORGANIZATION_id)) from CASE_VARIABLE_FLD_TABLE cvf, protocol_defined_variable pdv, variable var, variable_type vt where pdv.study_protocol_id = 2 AND TRIM(UPPER(pdv.variable_label)) NOT IN ('CASE ID') and pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and cvf.protocol_defined_variable_id (+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'C' and cvf.TEST_ACCESSION_ID(+) = 0 order by pdv.number_in_sequence
+select sc.company,sp.study_title from study_protocol sp, CONTACT sr, ORGANIZATION sc where sp.study_protocol_id = 2 and sp.CONTACT_id = sr.CONTACT_id and sr.ORGANIZATION_id = sc.ORGANIZATION_id
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'CONTAINER' and atc.COLUMN_NAME = 'CONTAINER_ID'
+SELECT pdv.variable_label,limspackage.sample_att_value(svf.sample_variable_fld_id) value,pdv.variable_id, var.variable_type_id, var.min_value, var.max_value,svf.SAMPLE_VARIABLE_FLD_ID, pdv.protocol_defined_variable_id,pdv.number_in_sequence, Var.Variable_Name, vt.screen_name, nvl(svf.CONTACT_id,svf.ORGANIZATION_id) FROM SAMPLE_VARIABLE_FLD svf, PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE var, variable_type vt WHERE pdv.study_protocol_id = 2 AND pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and svf.PROTOCOL_DEFINED_VARIABLE_ID(+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'T' AND svf.SAMPLE_ID(+) = 0 order by pdv.number_in_sequence
+SELECT ORG.COMPANY FROM SAMPLE_VARIABLE_FLD MVF , ORGANIZATION ORG   WHERE ORG.ORGANIZATION_ID =  MVF.ORGANIZATION_ID  AND MVF.SAMPLE_VARIABLE_FLD_ID =  :1   
+SELECT CON.NAME ||  ' '  ||  CON.MNAME  ||  ' '  ||  CON.LNAME  FROM SAMPLE_VARIABLE_FLD MVF , CONTACT CON   WHERE CON.CONTACT_ID =  MVF.CONTACT_ID  AND MVF.SAMPLE_VARIABLE_FLD_ID =  :1   
+SELECT MVF.VALUE FROM SAMPLE_VARIABLE_FLD MVF   WHERE MVF.SAMPLE_VARIABLE_FLD_ID =  :1   
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'CONTAINER' and atc.COLUMN_NAME = 'CONTAINER_ID'
+SELECT pdv.variable_label,limspackage.sample_att_value(svf.sample_variable_fld_id) value,pdv.variable_id, var.variable_type_id, var.min_value, var.max_value,svf.SAMPLE_VARIABLE_FLD_ID, pdv.protocol_defined_variable_id,pdv.number_in_sequence, Var.Variable_Name, vt.screen_name, nvl(svf.CONTACT_id,svf.ORGANIZATION_id) FROM SAMPLE_VARIABLE_FLD svf, PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE var, variable_type vt WHERE pdv.study_protocol_id = 2 AND pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and svf.PROTOCOL_DEFINED_VARIABLE_ID(+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'T' AND svf.SAMPLE_ID(+) = 0 order by pdv.number_in_sequence
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='COPY_SAMPLE_LEVEL_ATTRIBUTE' order by number_in_sequence
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'SAMPLE_TABLE' and atc.COLUMN_NAME = 'CLIENT_SAMPLE_TUBE_ID'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'CONTAINER' and atc.COLUMN_NAME = 'CONTAINER_ID'
+SELECT pdv.variable_label,limspackage.sample_att_value(svf.sample_variable_fld_id) value,pdv.variable_id, var.variable_type_id, var.min_value, var.max_value,svf.SAMPLE_VARIABLE_FLD_ID, pdv.protocol_defined_variable_id,pdv.number_in_sequence, Var.Variable_Name, vt.screen_name, nvl(svf.CONTACT_id,svf.ORGANIZATION_id) FROM SAMPLE_VARIABLE_FLD svf, PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE var, variable_type vt WHERE pdv.study_protocol_id = 2 AND pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and svf.PROTOCOL_DEFINED_VARIABLE_ID(+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'T' AND svf.SAMPLE_ID(+) = -1 order by pdv.number_in_sequence
+Select Attribute_Value from Discrete_Attribute where upper(attribute_Name)='ACCESSION_REASON_ATTRIBUTE' order by number_in_sequence
+select ACCESSION_SEQUENCE.NEXTVAL key from DUAL
+Insert into accession (Accession_ID,ACCESSION_NUMBER,study_Protocol_ID,date_received, GPI_CODE) values (32410,'TRF55660',2,TO_DATE('09-29-2011', 'MM-DD-YYYY'),'')
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+SELECT USER  FROM DUAL   
+SELECT SUBSIDIARY_ID FROM USERS   WHERE USERNAME =  :1   
+SELECT ACC.ACCESSION_ID, SP.SUBSIDIARY_ID FROM ACCESSION ACC, STUDY_PROTOCOL SP WHERE ACC.STUDY_PROTOCOL_ID = SP.STUDY_PROTOCOL_ID AND ACC.SUBSIDIARY_ID <> SP.SUBSIDIARY_ID
+SELECT ACC.STUDY_PROTOCOL_ID, ACC.GPI_CODE FROM ACCESSION ACC WHERE ACC.ACCESSION_ID = :B1 
+INSERT INTO ACCESSION_PROCEDURE ( ACCESSION_ID , PROCEDURE_TEMPLATE_ID , TURN_AROUND_TIME ) SELECT :1 , P.PROCEDURE_TEMPLATE_ID , P.TURN_AROUND_TIME FROM PROTOCOL_PROCEDURE P   WHERE STUDY_PROTOCOL_ID =  :1   
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+SELECT ACCESSION_PROCEDURE_SEQUENCE.NEXTVAL FROM DUAL
+SELECT USER, SYSDATE FROM DUAL
+SELECT GR.GENE_RESULT_ID, ACC.SUBSIDIARY_ID FROM GENE_RESULT GR, ACCESSION ACC WHERE GR.ACCESSION_ID = ACC.ACCESSION_ID AND GR.SUBSIDIARY_ID <> ACC.SUBSIDIARY_ID
+INSERT INTO ALLELE_RESULT ( GENE_RESULT_ID , ALLELE_ID , RESULT ) SELECT GR.GENE_RESULT_ID , A.ALLELE_ID , 'TBD' FROM GENE_RESULT GR , ALLELE A   WHERE GR.ACCESSION_ID =  :1  AND A.GENE_ID =  GR.GENE_ID  AND A.ALLELE_ID IN (SELECT PA.ALLELE_ID FROM PROTOCOL_ALLELE PA   WHERE PA.STUDY_PROTOCOL_ID =  :1   )  
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+SELECT VALUE FROM NLS_DATABASE_PARAMETERS WHERE PARAMETER = 'NLS_NCHAR_CHARACTERSET' 
+BEGIN LIMSPACKAGE.CHECK_SAMPLE_DELETE(:1); END;
+delete from sample_variable_fld where sample_id in (select sample_id from sample sam where sam.accession_id = 32410 and number_in_acc_sequence IS NOT NULL)
+select table_name from all_tables where owner = 'DNALIMS' and table_name ='SHIPMENT_SAMPLE'
+delete from SHIPMENT_SAMPLE where sample_id in (select sample_id from sample sam where sam.accession_id = 32410 )
+UPDATE PENDING_SAMPLE SET ACCESSION_ID=NULL, SAMPLE_ID=NULL, PENDING=1 where sample_id in (select sample_id from sample sam where sam.accession_id = 32410 )
+delete from sample sam where sam.accession_id = 32410
+select sample_sequence.NEXTVAL key from DUAL
+
+Insert into sample (sample_id,Accession_ID,Sample_condition,SOURCE_TYPE,SAMPLE_TUBE_ID,client_sample_tube_id,INITIAL_VOLUME,number_in_acc_sequence,date_received,final_storage_tube,volume) 
+values (2821704,32410,'Acceptable','Blood','TRF55660A','','',0,TO_DATE('09-29-2011', 'MM-DD-YYYY'),1,NULL)
+
+SELECT NVL(DESTROYED,0) FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+SELECT SAM.SAMPLE_ID, ACC.SUBSIDIARY_ID FROM SAMPLE_TABLE SAM, ACCESSION ACC WHERE SAM.ACCESSION_ID = ACC.ACCESSION_ID AND SAM.SUBSIDIARY_ID <> ACC.SUBSIDIARY_ID
+SELECT CONTAINER_ID , CONTAINER_ROW , CONTAINER_COLUMN FROM SAMPLE   WHERE SAMPLE_ID =  :1   
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMSPACKAGE.PROCESS_EVENT(:1,:2,:3,:4,:5); END;
+SELECT SAM.SUBSIDIARY_ID FROM SAMPLE SAM   WHERE SAM.SAMPLE_ID =  :1   
+SELECT EVH.STORED_PROCEDURE , EVS.PRIORITY , EVS.WARNING , EVS.EVENT_SUBSCRIPTION_ID , EVH.OBJECT_TYPE FROM EVENT_SUBSCRIPTION EVS , EVENT_HANDLER EVH , EVENT EVN   WHERE EVN.EVENT_NAME =  :1  AND EVS.EVENT_ID =  EVN.EVENT_ID  AND NVL(EVS.STUDY_PROTOCOL_ID , -1 )  =  NVL(:1 , -1 )   AND EVS.EVENT_HANDLER_ID =  EVH.EVENT_HANDLER_ID  AND EVS.SUBSIDIARY_ID =  :1   ORDER BY EVS.PRIORITY 
+begin CDX_VALIDATION.CHECK_SAMPLE_STUDY(:oid, :errMsg); end;
+SELECT ACCESSION_ID FROM SAMPLE_TABLE WHERE SAMPLE_ID = :B1 
+SELECT STUDY_PROTOCOL_ID FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT ACCESSION_NUMBER FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT LIMSPACKAGE.STUDY_ATT_VALUE(SVF.STUDY_VARIABLE_FLD_ID) FROM STUDY_VARIABLE_FLD SVF, PROTOCOL_DEFINED_VARIABLE PDV, VARIABLE VAR WHERE SVF.PROTOCOL_DEFINED_VARIABLE_ID = PDV.PROTOCOL_DEFINED_VARIABLE_ID AND PDV.VARIABLE_ID = VAR.VARIABLE_ID AND UPPER (VAR.VARIABLE_NAME) = UPPER (:B2 ) AND SVF.STUDY_PROTOCOL_ID = :B1 
+SELECT ORG.COMPANY FROM STUDY_VARIABLE_FLD SVF , ORGANIZATION ORG   WHERE ORG.ORGANIZATION_ID =  SVF.ORGANIZATION_ID  AND SVF.STUDY_VARIABLE_FLD_ID =  :1   
+SELECT CON.NAME ||  ' '  ||  CON.MNAME  ||  ' '  ||  CON.LNAME  FROM STUDY_VARIABLE_FLD SVF , CONTACT CON   WHERE CON.CONTACT_ID =  SVF.CONTACT_ID  AND SVF.STUDY_VARIABLE_FLD_ID =  :1   
+SELECT SVF.VALUE FROM STUDY_VARIABLE_FLD SVF   WHERE SVF.STUDY_VARIABLE_FLD_ID =  :1   
+SELECT EVENT_PROCESS_SEQUENCE.NEXTVAL  FROM DUAL   
+INSERT INTO EVENT_PROCESS ( EVENT_PROCESS_ID , EVENT_SUBSCRIPTION_ID , OBJECT_ID , OBJECT_TYPE , PROCESSED_BY , DATE_PROCESSED , WARNING )  VALUES ( :1 , :1 , :1 , :1 , USER  , SYSDATE  , :1 ) 
+SELECT ES.EVENT_HANDLER_ID FROM EVENT_SUBSCRIPTION ES WHERE ES.EVENT_SUBSCRIPTION_ID = :B1 
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+begin VALIDATE_SAMPLE_PKG.VS_ACCESSION_EQUALS_LAB_TUBE(:oid, :errMsg); end;
+SELECT SAMPLE_TUBE_ID FROM SAMPLE WHERE SAMPLE_ID=:B1 
+SELECT ACC.ACCESSION_NUMBER FROM ACCESSION ACC, SAMPLE SAM WHERE SAM.SAMPLE_ID=:B1 AND ACC.ACCESSION_ID=SAM.ACCESSION_ID
+begin CDX_VALIDATION.VERIFY_SPEC_RECEIPT_ATTRS(:oid, :errMsg); end;
+SELECT NUMBER_IN_ACC_SEQUENCE FROM SAMPLE_TABLE WHERE SAMPLE_ID = :B1 
+SELECT SOURCE_TYPE FROM SAMPLE_TABLE WHERE SAMPLE_ID = :B1 
+SELECT LIMSPACKAGE.SAMPLE_ATT_VALUE(SVF.SAMPLE_VARIABLE_FLD_ID )  FROM SAMPLE_VARIABLE_FLD SVF , PROTOCOL_DEFINED_VARIABLE PDV , VARIABLE VAR   WHERE SVF.PROTOCOL_DEFINED_VARIABLE_ID =  PDV.PROTOCOL_DEFINED_VARIABLE_ID  AND PDV.VARIABLE_ID =  VAR.VARIABLE_ID  AND UPPER(VAR.VARIABLE_NAME )  =  UPPER(:1 )   AND SVF.SAMPLE_ID =  :1   
+SELECT ES.EVENT_HANDLER_ID FROM EVENT_SUBSCRIPTION ES WHERE ES.EVENT_SUBSCRIPTION_ID = :B1 
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+begin CDX_VALIDATION.SET_SAMP_COND_PROC_FURTHER(:oid, :errMsg); end;
+SELECT SAMPLE_CONDITION FROM SAMPLE_TABLE WHERE SAMPLE_ID = :B1 
+SELECT ACCESSION_ID FROM SAMPLE_TABLE WHERE SAMPLE_ID = :B1 
+SELECT PDV.PROTOCOL_DEFINED_VARIABLE_ID , VAR.VARIABLE_TYPE_ID FROM PROTOCOL_DEFINED_VARIABLE PDV , VARIABLE VAR , SAMPLE_TABLE SAM , ACCESSION ACC   WHERE SAM.SAMPLE_ID =  :1  AND SAM.ACCESSION_ID =  ACC.ACCESSION_ID  AND ACC.STUDY_PROTOCOL_ID =  PDV.STUDY_PROTOCOL_ID  AND PDV.VARIABLE_ID =  VAR.VARIABLE_ID  AND UPPER(VAR.VARIABLE_NAME )  =  UPPER(:1 )   AND PDV.ATTRIBUTE_LEVEL_ID =  'T'   
+UPDATE SAMPLE_VARIABLE_FLD SVF SET SVF.VALUE = TRIM(:1 )   WHERE SVF.PROTOCOL_DEFINED_VARIABLE_ID =  :1  AND SVF.SAMPLE_ID =  :1  
+INSERT INTO SAMPLE_VARIABLE_FLD SVF ( SVF.SAMPLE_ID , SVF.PROTOCOL_DEFINED_VARIABLE_ID , SVF.VALUE )  VALUES ( :1 , :1 , TRIM(:1 )  ) 
+INSERT INTO SAMPLE_VARIABLE_FLD_TBL( SAMPLE_VARIABLE_FLD_ID, SAMPLE_ID, ORGANIZATION_ID, CONTACT_ID, VALUE, CREATED_BY, DATE_CREATED, MODIFIED_BY, DATE_MODIFIED, SUBSIDIARY_ID, PROTOCOL_DEFINED_VARIABLE_ID) VALUES ( :B1 , :B2 , :B3 , :B4 , :B5 , :B6 , :B7 , :B8 , :B9 , :B10 , :B11 )
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+SELECT SAMLE_ATTRIBUTE_SEQUENCE.NEXTVAL FROM DUAL
+SELECT USER, SYSDATE FROM DUAL
+SELECT SVF.SAMPLE_VARIABLE_FLD_ID, SAM.SUBSIDIARY_ID FROM SAMPLE_VARIABLE_FLD SVF, SAMPLE_TABLE SAM WHERE SVF.SAMPLE_ID = SAM.SAMPLE_ID AND SVF.SUBSIDIARY_ID <> SAM.SUBSIDIARY_ID
+select warning from event_process where event_process_id=192860 and warning is not null
+select sample_sequence.NEXTVAL key from DUAL
+Insert into sample (sample_id,Accession_ID,Sample_condition,SOURCE_TYPE,SAMPLE_TUBE_ID,client_sample_tube_id,INITIAL_VOLUME,number_in_acc_sequence,date_received,final_storage_tube,volume) values (2821705,32410,'Acceptable','Blood','TRF55660B','','',1,TO_DATE('09-29-2011', 'MM-DD-YYYY'),1,NULL)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMSPACKAGE.PROCESS_EVENT(:1,:2,:3,:4,:5); END;
+begin CDX_VALIDATION.CHECK_SAMPLE_STUDY(:oid, :errMsg); end;
+begin VALIDATE_SAMPLE_PKG.VS_ACCESSION_EQUALS_LAB_TUBE(:oid, :errMsg); end;
+begin CDX_VALIDATION.VERIFY_SPEC_RECEIPT_ATTRS(:oid, :errMsg); end;
+begin CDX_VALIDATION.SET_SAMP_COND_PROC_FURTHER(:oid, :errMsg); end;
+select warning from event_process where event_process_id=192861 and warning is not null
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMSPACKAGE.PROCESS_EVENT(:1,:2,:3,:4,:5); END;
+SELECT ACC.SUBSIDIARY_ID FROM ACCESSION ACC   WHERE ACC.ACCESSION_ID =  :1   
+begin CDX_VALIDATION.CHECK_ACCESSION_STUDY(:oid, :errMsg); end;
+begin CDX_VALIDATION.CHECK_ACCESSION_AGE(:oid, :errMsg); end;
+SELECT LIMSPACKAGE.ACCESSION_ATT_VALUE(AVF.ACCESSION_VARIABLE_FLD_ID) FROM ACCESSION_VARIABLE_FLD AVF, PROTOCOL_DEFINED_VARIABLE PDV, VARIABLE VAR WHERE AVF.PROTOCOL_DEFINED_VARIABLE_ID = PDV.PROTOCOL_DEFINED_VARIABLE_ID AND PDV.VARIABLE_ID = VAR.VARIABLE_ID AND UPPER (VAR.VARIABLE_NAME) = UPPER (:B2 ) AND AVF.ACCESSION_ID = :B1 
+begin CDX_VALIDATION.CHECK_ACCESSION_PHONE_NUMBERS(:oid, :errMsg); end;
+SELECT DISTINCT(VARIABLE_LABEL) FROM PROTOCOL_DEFINED_VARIABLE WHERE ATTRIBUTE_LEVEL_ID = 'A' AND (UPPER(VARIABLE_LABEL) LIKE '%PHONE%' OR UPPER(VARIABLE_LABEL) LIKE '%FAX%') 
+begin CDX_VALIDATION.VERIFY_TRF_ATTRIBUTES(:oid, :errMsg); end;
+SELECT STUDY_PROTOCOL_ID FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT COUNT (VARIABLE_ID) FROM VARIABLE WHERE VARIABLE_NAME = :B1 
+SELECT ATTRIBUTE_LEVEL_ID FROM PROTOCOL_DEFINED_VARIABLE WHERE UPPER (VARIABLE_LABEL) = UPPER (:B2 ) AND STUDY_PROTOCOL_ID = :B1 
+SELECT VARIABLE_TYPE_ID FROM VARIABLE   WHERE VARIABLE_NAME =  :1   
+SELECT AVF.VALUE FROM ACCESSION_VARIABLE_FLD AVF , PROTOCOL_DEFINED_VARIABLE PDV   WHERE PDV.PROTOCOL_DEFINED_VARIABLE_ID =  AVF.PROTOCOL_DEFINED_VARIABLE_ID  AND AVF.ACCESSION_ID =  :1  AND PDV.VARIABLE_LABEL =  :1  AND PDV.STUDY_PROTOCOL_ID =  :1   
+SELECT C.NAME FROM ACCESSION_VARIABLE_FLD AVF , PROTOCOL_DEFINED_VARIABLE PDV , CONTACT C   WHERE AVF.CONTACT_ID =  C.CONTACT_ID  AND PDV.PROTOCOL_DEFINED_VARIABLE_ID =  AVF.PROTOCOL_DEFINED_VARIABLE_ID  AND PDV.VARIABLE_LABEL =  :1  AND AVF.ACCESSION_ID =  :1  AND PDV.STUDY_PROTOCOL_ID =  :1   
+SELECT O.COMPANY FROM ACCESSION_VARIABLE_FLD AVF , PROTOCOL_DEFINED_VARIABLE PDV , ORGANIZATION O   WHERE AVF.ORGANIZATION_ID =  O.ORGANIZATION_ID  AND PDV.PROTOCOL_DEFINED_VARIABLE_ID =  AVF.PROTOCOL_DEFINED_VARIABLE_ID  AND AVF.ACCESSION_ID =  :1  AND PDV.VARIABLE_LABEL =  :1  AND PDV.STUDY_PROTOCOL_ID =  :1   
+SELECT NVL (COUNT (PDV.PROTOCOL_DEFINED_VARIABLE_ID), 0) FROM ACCESSION_VARIABLE_FLD AVF, PROTOCOL_DEFINED_VARIABLE PDV WHERE PDV.PROTOCOL_DEFINED_VARIABLE_ID = AVF.PROTOCOL_DEFINED_VARIABLE_ID AND PDV.STUDY_PROTOCOL_ID = :B3 AND AVF.ACCESSION_ID = :B2 AND UPPER (PDV.VARIABLE_LABEL) = UPPER (:B1 )
+SELECT PDV.PROTOCOL_DEFINED_VARIABLE_ID FROM PROTOCOL_DEFINED_VARIABLE PDV, VARIABLE VAR WHERE VAR.VARIABLE_ID = PDV.VARIABLE_ID AND PDV.STUDY_PROTOCOL_ID = :B2 AND UPPER (VAR.VARIABLE_NAME) = UPPER (:B1 )
+INSERT INTO ACCESSION_VARIABLE_FLD (ACCESSION_ID, PROTOCOL_DEFINED_VARIABLE_ID, VALUE) VALUES (:B3 , :B2 , DECODE (:B1 , 0, 'Yes', 'No'))
+INSERT INTO ACCESSION_VARIABLE_FLD_TABLE AVF ( AVF.ACCESSION_VARIABLE_FLD_ID , AVF.ACCESSION_ID , AVF.PROTOCOL_DEFINED_VARIABLE_ID , AVF.VALUE , AVF.ORGANIZATION_ID , AVF.CONTACT_ID , AVF.PATIENT_ID )  VALUES ( :1 , :1 , :1 , :1 , :1 , :1 , :1 ) 
+SELECT ACC_VAR_FLD_SEQUENCE.NEXTVAL FROM DUAL
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+SELECT AVF.ACCESSION_VARIABLE_FLD_ID, ACC.SUBSIDIARY_ID FROM ACCESSION_VARIABLE_FLD_TABLE AVF, ACCESSION ACC WHERE AVF.ACCESSION_ID = ACC.ACCESSION_ID AND AVF.SUBSIDIARY_ID <> ACC.SUBSIDIARY_ID
+SELECT ES.EVENT_HANDLER_ID FROM EVENT_SUBSCRIPTION ES WHERE ES.EVENT_SUBSCRIPTION_ID = :B1 
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+begin CDX_VALIDATION.INVALIDATE_REPORT(:oid, :errMsg); end;
+SELECT STUDY_PROTOCOL_ID FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT COUNT(CP_RUN_REPORT_ID) FROM CDX_CURRENT_REPORT_VIEW WHERE ACCESSION_ID = :B1 AND DATE_FAXED IS NOT NULL
+begin CDX_VALIDATION.POSTPROCESS_ACCESSION_ATTRS(:oid, :errMsg); end;
+SELECT STUDY_PROTOCOL_ID FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT AVF.VALUE FROM ACCESSION_VARIABLE_FLD AVF, PROTOCOL_DEFINED_VARIABLE PDV, VARIABLE V WHERE AVF.PROTOCOL_DEFINED_VARIABLE_ID = PDV.PROTOCOL_DEFINED_VARIABLE_ID AND PDV.VARIABLE_ID = V.VARIABLE_ID AND PDV.ATTRIBUTE_LEVEL_ID = 'A' AND UPPER(V.VARIABLE_NAME) LIKE 'ICD DIAGNOSIS CODE%' AND AVF.VALUE LIKE :B1 || '%' AND AVF.ACCESSION_ID = :B2 
+begin VALIDATE_SAMPLE_PKG.ADDACCESSIONCOMMENTS(:oid, :errMsg); end;
+SELECT CHANGE_REASON_ID FROM CHANGE_REASON   WHERE CREATED_BY =  USER   AND IS_ACTIVE =  1  AND SESSION_ID =  SYS_CONTEXT('userenv' , 'sessionid' )    
+SELECT TABLE_NAME FROM CHANGE_TABLE   WHERE UPPER(AUDIT_TABLE )  =  :1   
+begin CDX_VALIDATION.CHECK_ACCESSION_POSCONTROL(:oid, :errMsg); end;
+SELECT ACCESSION_NUMBER FROM ACCESSION WHERE ACCESSION_ID = :B1 AND ACCESSION_NUMBER LIKE (SELECT ATTRIBUTE_VALUE || '%' FROM DISCRETE_ATTRIBUTE_TABLE WHERE ATTRIBUTE_NAME = 'CDX_POSC_ACC_PREFIX')
+select warning from event_process where event_process_id=192862 and warning is not null
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CHANGEREASONPACKAGE.RESETCHANGEREASON; END;
+UPDATE CHANGE_REASON SET IS_ACTIVE = 0  WHERE CREATED_BY =  USER   AND SESSION_ID =  SYS_CONTEXT('userenv' , 'sessionid' )   
+select sample_tube_id, client_sample_tube_id, sample_status,location,source_type,nvl(s.sample_id,pending_sample_id),container_id,container_row, container_column, sample_condition, initial_volume,date_received, 0, sample_status, volume, concentration,final_storage_tube, number_in_acc_sequence,decode(s.sample_id,null,1,0) pending_status from sample_display_view s where s.study_protocol_id = 2 and (accession_id=32410 or accession_number in (select sponsor_accession_id from pending_sample where accession_id=32410)) order by pending_status, number_in_acc_sequence
+SELECT CONTAINER_ID , CONTAINER_COLUMN , CONTAINER_ROW FROM SAMPLE   WHERE SAMPLE_ID =  :1   
+SELECT pdv.variable_label,limspackage.sample_att_value(svf.sample_variable_fld_id) value,pdv.variable_id, var.variable_type_id, var.min_value, var.max_value,svf.SAMPLE_VARIABLE_FLD_ID, pdv.protocol_defined_variable_id,pdv.number_in_sequence, Var.Variable_Name, vt.screen_name, nvl(svf.CONTACT_id,svf.ORGANIZATION_id) FROM SAMPLE_VARIABLE_FLD svf, PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE var, variable_type vt WHERE pdv.study_protocol_id = 2 AND pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and svf.PROTOCOL_DEFINED_VARIABLE_ID(+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'T' AND svf.SAMPLE_ID(+) = 2821704 order by pdv.number_in_sequence
+SELECT ORG.COMPANY FROM SAMPLE_VARIABLE_FLD MVF , ORGANIZATION ORG   WHERE ORG.ORGANIZATION_ID =  MVF.ORGANIZATION_ID  AND MVF.SAMPLE_VARIABLE_FLD_ID =  :1   
+SELECT CON.NAME ||  ' '  ||  CON.MNAME  ||  ' '  ||  CON.LNAME  FROM SAMPLE_VARIABLE_FLD MVF , CONTACT CON   WHERE CON.CONTACT_ID =  MVF.CONTACT_ID  AND MVF.SAMPLE_VARIABLE_FLD_ID =  :1   
+SELECT MVF.VALUE FROM SAMPLE_VARIABLE_FLD MVF   WHERE MVF.SAMPLE_VARIABLE_FLD_ID =  :1   
+SELECT pdv.variable_label,limspackage.sample_att_value(svf.sample_variable_fld_id) value,pdv.variable_id, var.variable_type_id, var.min_value, var.max_value,svf.SAMPLE_VARIABLE_FLD_ID, pdv.protocol_defined_variable_id,pdv.number_in_sequence, Var.Variable_Name, vt.screen_name, nvl(svf.CONTACT_id,svf.ORGANIZATION_id) FROM SAMPLE_VARIABLE_FLD svf, PROTOCOL_DEFINED_VARIABLE pdv,VARIABLE var, variable_type vt WHERE pdv.study_protocol_id = 2 AND pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and svf.PROTOCOL_DEFINED_VARIABLE_ID(+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'T' AND svf.SAMPLE_ID(+) = 2821705 order by pdv.number_in_sequence
+select pdv.variable_label,limspackage.accession_att_value(avf.accession_variable_fld_id) value,pdv.variable_id,var.variable_type_id,var.min_value,var.max_value,avf.accession_variable_fld_id,pdv.protocol_defined_variable_id,pdv.number_in_sequence, var.variable_name, vt.screen_name,nvl(avf.patient_id,nvl(avf.CONTACT_id,avf.ORGANIZATION_id)) from accession_variable_fld avf, protocol_defined_variable pdv,variable var, variable_type vt where pdv.study_protocol_id = 2 and pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and avf.protocol_defined_variable_id (+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'A' and avf.accession_id (+) = 32410 order by pdv.number_in_sequence
+SELECT ORG.COMPANY FROM ACCESSION_VARIABLE_FLD AVF , ORGANIZATION ORG   WHERE ORG.ORGANIZATION_ID =  AVF.ORGANIZATION_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+SELECT CON.NAME ||  ' '  ||  CON.MNAME  ||  ' '  ||  CON.LNAME  FROM ACCESSION_VARIABLE_FLD AVF , CONTACT CON   WHERE CON.CONTACT_ID =  AVF.CONTACT_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+SELECT PAT.DISPLAY_ID FROM PATIENT PAT , ACCESSION_VARIABLE_FLD AVF   WHERE PAT.PATIENT_ID =  AVF.PATIENT_ID  AND AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+SELECT AVF.VALUE FROM ACCESSION_VARIABLE_FLD AVF   WHERE AVF.ACCESSION_VARIABLE_FLD_ID =  :1   
+select get_testType(-1) from dual
+SELECT TS.TEST_TYPE FROM TEST_SETUP TS WHERE TS.TEST_SETUP_ID = :B1 
+ select pdv.variable_label, lims_kit_accession.case_att_value(cvf.case_variable_fld_id) value, pdv.variable_id,var.variable_type_id,var.min_value, var.max_value,cvf.case_variable_fld_id,pdv.protocol_defined_variable_id, pdv.number_in_sequence, var.variable_name, vt.screen_name, nvl(cvf.patient_id,nvl(cvf.CONTACT_id,cvf.ORGANIZATION_id)) from CASE_VARIABLE_FLD_TABLE cvf, protocol_defined_variable pdv, variable var, variable_type vt where pdv.study_protocol_id = 2 AND TRIM(UPPER(pdv.variable_label)) NOT IN ('CASE ID') and pdv.variable_id = var.variable_id and var.variable_type_id = vt.variable_type_id and cvf.protocol_defined_variable_id (+) = pdv.protocol_defined_variable_id and pdv.ATTRIBUTE_LEVEL_ID = 'C' and cvf.TEST_ACCESSION_ID(+) = 0 order by pdv.number_in_sequence
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'REAGENT' AND column_name = 'CONTAINER_ID'
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'CONTAINER_REAGENT'
+
+select sam.sample_id,sam.sample_tube_id,acc.accession_id,acc.accession_number,sam.container_row,sam.container_column,nvl(sam.sample_status,'NONE') sample_status from sample sam, accession acc where sam.accession_id=acc.accession_id and sam.container_id='T1021232' and nvl(sam.sample_status,'NONE')<>'DISCARDED' Union SELECT rg.reagent_id, rg.reagent_barcode, rg.reagent_id, rg.reagent_name, rg.container_row, rg.container_column, rg.status sample_status FROM reagent rg WHERE rg.container_id = 'T1021232' Union SELECT ol.oligo_id, 'Oligo: ' || ol.oligo_name, cr.reagent_id, ol.oligo_name, cr.container_row, cr.container_column, '' sample_status FROM container_reagent cr, container_batch cb, plate_template_well ptw, oligo_design ol Where cr.container_batch_id = cb.container_batch_id AND cb.plate_template_id = ptw.plate_template_id AND cr.container_row = ptw.plate_row AND cr.container_column = ptw.plate_column AND ptw.oligo_id IS NOT NULL AND ptw.oligo_id = ol.oligo_id AND cr.container_id = 'T1021232'
+
+update sample set container_id='T1021232', container_row=1, container_column=1 where sample_id=2821704
+
+SELECT NVL (DESTROYED, 0) FROM ACCESSION WHERE ACCESSION_ID = :B1 
+SELECT AUDIT_SEQUENCE.NEXTVAL FROM DUAL
+SELECT USER, SYSDATE FROM DUAL
+SELECT USER FROM DUAL
+SELECT SYSDATE FROM DUAL
+SELECT CONTAINER_ID , CONTAINER_ROW , CONTAINER_COLUMN FROM SAMPLE   WHERE SAMPLE_ID =  :1   
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'REAGENT' AND column_name = 'CONTAINER_ID'
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'CONTAINER_REAGENT'
+
+select sam.sample_id,sam.sample_tube_id,acc.accession_id,acc.accession_number,sam.container_row,sam.container_column,nvl(sam.sample_status,'NONE') sample_status from sample sam, accession acc where sam.accession_id=acc.accession_id and sam.container_id='T1021232' and nvl(sam.sample_status,'NONE')<>'DISCARDED' Union SELECT rg.reagent_id, rg.reagent_barcode, rg.reagent_id, rg.reagent_name, rg.container_row, rg.container_column, rg.status sample_status FROM reagent rg WHERE rg.container_id = 'T1021232' Union SELECT ol.oligo_id, 'Oligo: ' || ol.oligo_name, cr.reagent_id, ol.oligo_name, cr.container_row, cr.container_column, '' sample_status FROM container_reagent cr, container_batch cb, plate_template_well ptw, oligo_design ol Where cr.container_batch_id = cb.container_batch_id AND cb.plate_template_id = ptw.plate_template_id AND cr.container_row = ptw.plate_row AND cr.container_column = ptw.plate_column AND ptw.oligo_id IS NOT NULL AND ptw.oligo_id = ol.oligo_id AND cr.container_id = 'T1021232'
+
+update sample set container_id='T1021232', container_row=1, container_column=2 where sample_id=2821705
+
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'REAGENT' AND column_name = 'CONTAINER_ID'
+SELECT count(column_name) cnt FROM all_tab_cols WHERE owner = 'DNALIMS' AND table_name = 'CONTAINER_REAGENT'
+select sam.sample_id,sam.sample_tube_id,acc.accession_id,acc.accession_number,sam.container_row,sam.container_column,nvl(sam.sample_status,'NONE') sample_status from sample sam, accession acc where sam.accession_id=acc.accession_id and sam.container_id='T1021232' and nvl(sam.sample_status,'NONE')<>'DISCARDED' Union SELECT rg.reagent_id, rg.reagent_barcode, rg.reagent_id, rg.reagent_name, rg.container_row, rg.container_column, rg.status sample_status FROM reagent rg WHERE rg.container_id = 'T1021232' Union SELECT ol.oligo_id, 'Oligo: ' || ol.oligo_name, cr.reagent_id, ol.oligo_name, cr.container_row, cr.container_column, '' sample_status FROM container_reagent cr, container_batch cb, plate_template_well ptw, oligo_design ol Where cr.container_batch_id = cb.container_batch_id AND cb.plate_template_id = ptw.plate_template_id AND cr.container_row = ptw.plate_row AND cr.container_column = ptw.plate_column AND ptw.oligo_id IS NOT NULL AND ptw.oligo_id = ol.oligo_id AND cr.container_id = 'T1021232'
+begin
+ChangeReasonPackage.RESETCHANGEREASON;
+UPDATE CHECKLIST chk SET chk.LOCKED_BY = NULL, chk.DATE_LOCKED = NULL,chk.SESSION_ID=NULL
+   WHERE chk.LOCKED_BY = USER AND chk.SESSION_ID=sys_context('userenv','sessionid');
+end;
+UPDATE CHECKLIST CHK SET CHK.LOCKED_BY = NULL, CHK.DATE_LOCKED = NULL,CHK.SESSION_ID=NULL WHERE CHK.LOCKED_BY = USER AND CHK.SESSION_ID=SYS_CONTEXT('userenv','sessionid')
+

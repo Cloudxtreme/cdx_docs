@@ -1,0 +1,50 @@
+<%
+	# get field names
+  @mdata = ''
+
+	nsbase = @obj.class.to_s.split('::').first
+	children = @obj.class.reflect_on_all_associations.map{|m| m.class_name if m.macro==:has_many}
+	@columns = []
+	children.each do |child|
+  	klass = nsbase.nil? ? child.to_s : "#{nsbase}::#{child.to_s}"
+		klass.constantize.column_names.each do |column|
+			@columns << column
+		end
+	end
+
+	@columns = @columns - %w[ created_by modified_by modified_at ] #@@@@@
+	@columns.each { |key| @mdata += "{ 'mData': '#{key}' }," } 
+%>
+
+<!- --------------------------------------------------------------------------------------- -->
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#example').dataTable( {
+    bProcessing: true,
+    "bServerSide": true,
+    sAjaxSource: '/admin/fields/json/',
+    aoColumns: [ <%=@mdata.to_s%> ]
+  } );
+});
+</script>
+
+
+<h1>Live example</h1>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+  <thead>
+    <tr>
+      <% @columns.each do |column| %>
+        <th width="20%"><%=column.titleize%></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="5" class="dataTables_empty">Loading data from server</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+

@@ -1,0 +1,44 @@
+benchmark benchmarketing performance linux phoronix
+
+lmbench
+AIM Suite III
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.phoronix-test-suite.com/
+http://www.phoronix-test-suite.com/documentation/1.0/index.html
+
+  517  wajig install php5-cli
+  518  wajig isntall ./phoronix-test-suite_1.0.2_all.deb 
+mkdir -p /root/.phoronix-test-suite/installed-tests/
+  527  phoronix-test-suite install-all
+  528  phoronix-test-suite list-tests
+  529  phoronix-test-suite list-suites
+
+phoronix-test-suite batch-setup
+
+/root/.phoronix-test-suite/installed-tests
+
+phoronix-test-suite list-installed-tests
+phoronix-test-suite list-suites
+~~~~~~~~~~~~~~~~~~~~~~~
+phoronix-test-suite batch-benchmark build-apache
+   Enter a name to save these results: test_apache
+   Enter a unique identifier for distinguishing this series of tests: 2
+
+Results Saved To: /root/.phoronix-test-suite/test-results/test_apache/composite.xml
+
+
+MONITOR=all phoronix-test-suite benchmark encode-mp3
+~~~~~~~~~~~~~~~~~~~~~~~
+
+http://global.phoronix-test-suite.com/index.php?k=profile&u=michel-26280-28206-10114
+
+
+phoronix-test-suite list-results
+
+
+
+vi /usr/share/phoronix-test-suite/pts/distro-scripts/install-ubuntu-packages.sh 
+comment out everything and add
+/usr/bin/apt-get -y install $@
+

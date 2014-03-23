@@ -1,0 +1,90 @@
+  528  route delete default
+  529  route delete default
+  530  route -n
+  531  route add default gw 10.10.37.2 eth1
+  532  ping www.google.com
+
+
+eth0: addr:10.10.37.3
+eth1: addr:10.10.37.25
+
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+10.10.32.0      0.0.0.0         255.255.248.0   U     0      0        0 eth0
+10.10.32.0      0.0.0.0         255.255.248.0   U     0      0        0 eth1
+0.0.0.0         10.10.37.2      0.0.0.0         UG    100    0        0 eth1
+
+
+--
+-- test on natting
+--
+modprobe iptable_nat
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth1 -d 0/0 -j MASQUERADE
+iptables -A FORWARD -o eth1 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+on windows, the default gw will 10.10.37.3
+
+
+--
+-- config for squid
+--
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 10.10.37.3:3128
+iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j REDIRECT --to-port 3128
+
+
+vi firewall
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Firewall services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo -n "Starting Firewall... "
+
+        # for natting
+        modprobe iptable_nat
+        echo 1 > /proc/sys/net/ipv4/ip_forward
+        iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth1 -d 0/0 -j MASQUERADE
+        iptables -A FORWARD -o eth1 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+        iptables -A FORWARD -i eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+        # for squid3 transparent proxy
+        iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 10.10.37.3:3128
+        iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j REDIRECT --to-port 3128
+        ;;
+    stop)
+        echo -n "Shutdown down Firewall... "
+        iptables -t nat -F
+        iptables -F
+        ;;
+    reload|restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+chmod 755 firewall
+update-rc.d firewall start 20 2 3 4 5 . stop 99 0 1 6 .
+
+
+reboot
+
+
+
+

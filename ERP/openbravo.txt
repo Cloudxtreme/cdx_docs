@@ -1,0 +1,63 @@
+erp openbravo ubuntu 10.04 lucid installation
+
+http://wiki.openbravo.com/wiki/ERP/2.50/Openbravo_ERP_Installation/Ubuntu_Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /etc/apt
+vi sources.list
+
+#deb http://archive.canonical.com/ubuntu lucid partner
+#deb-src http://archive.canonical.com/ubuntu lucid partner
+deb http://archive.canonical.com/ lucid partner
+
+wajig update
+wajig install tomcat6-common ant postgresql openjdk-6-jdk openjdk-6-jre openbravo-erp -y
+
+
+Setting up apache2-mpm-worker (2.2.14-5ubuntu8) ...    [fail]
+ * Starting web server apache2   
+    Syntax error on line 1 of /etc/apache2/conf.d/openbravo-erp.conf:
+    Invalid command 'JkWorkersFile', perhaps misspelled or defined by a module 
+                not included in the server configuration
+
+Openbravo ERP PostgreSQL port: 5832 (username: tad; password: tad)
+Openbravo ERP PostgreSQL cluster configuration: /etc/postgresql/8.4/openbravo-erp/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/postgresql/8.4/openbravo-erp/postgresql.conf
+listen_addresses='*'
+
+vi /etc/postgresql/8.4/openbravo-erp/pg_hba.conf
+(if postgreSQL is on another machine...)
+#host    all         all         10.10.35.133/32          md5
+
+vi /opt/OpenbravoERP-2.50/openbravo-erp/config/Openbravo.properties
+bbdd.url=jdbc:postgresql://localhost:5832
+bbdd.systemPassword=postgres
+
+????
+su - openbravo
+cd /opt/OpenbravoERP-2.50/openbravo-erp/
+ant install.source
+
+
+http://openbravo.cardiodx.com/openbravo
+  Openbravo/openbravo
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- backup
+sudo /etc/init.d/openbravo-erp stop
+cd /opt
+tar cvzf OpenbravoERP-2.50.tar.gz OpenbravoERP-2.50
+
+-- restore
+sudo /etc/init.d/openbravo-erp stop
+cd /opt
+rm -r OpenbravoERP-2.50
+tar xvzpf OpenbravoERP-2.50.tar.gz
+sudo /etc/init.d/openbravo-erp start
+
+
+
+

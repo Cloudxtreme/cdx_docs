@@ -1,0 +1,45 @@
+asterisk flash operator panel
+
+http://www.asternic.org/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi manager.conf
+
+[flashop]
+secret = opsecret
+deny=0.0.0.0/0.0.0.0
+permit=127.0.0.1/255.255.255.0
+read = system,call,log,verbose,command,agent,user
+write = system,call,log,verbose,command,agent,user
+
+
+
+wget http://www.asternic.org/files/op_panel-0.30.tar.gz
+tar zxvf op_panel-0.30.tar.gz 
+cd op_panel-0.30/
+vi op_server.cfg 
+manager_host=asterisk.cardiodx.com
+manager_port=5038
+manager_user=flashop
+manager_secret=opsecret
+
+cp default flash-panel
+NameVirtualHost asterisk.cardiodx.com:8088
+<VirtualHost asterisk.cardiodx.com:8088>
+
+vi ports.conf
+Listen 8088
+
+
+mkdir /var/www/html
+mv op_panel-0.30 /var/www/html/panel
+
+
+root@aster64:/var/www/html/panel/flash# ln -s ../variables.txt .
+
+http://asterisk.cardiodx.com:8088/html/panel/flash/
+
+vi op_server.cfg 
+
+listen_port=4545
+flash_dir=/var/www/html/27xx
+

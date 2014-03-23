@@ -1,0 +1,40 @@
+virtualbox network bridging ubuntu
+
+http://samiux.wordpress.com/2007/07/11/bridge-network-interface-on-virtualbox/
+
+
+wajig install uml-utilities bridge-utils 
+sudo tunctl -t tap1 -u cchou
+sudo brctl addbr br0
+ifconfig eth0 0.0.0.0 promisc
+sudo brctl addif br0 eth0
+dhclient br0
+brctl addif br0 tap1
+ifconfig tap1 up
+chmod 0666 /dev/net/tun 
+
+Host Interface --> Interface Name: tap1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+wajig install uml-utilities bridge-utils
+
+brctl addbr internal
+ifconfig eth0:0 0.0.0.0 promisc
+brctl addif internal eth0:0
+
+
+
+sudo tunctl -t tap1 
+sudo brctl addbr br0
+ifconfig eth0 0.0.0.0 promisc
+sudo brctl addif br0 eth0
+dhclient br0
+brctl addif br0 tap1
+ifconfig tap1 up
+chmod 0666 /dev/net/tun
+
+
+
+

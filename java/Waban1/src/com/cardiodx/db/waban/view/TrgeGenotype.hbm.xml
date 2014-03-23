@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeGenotype" table="TRGE_GENOTYPE" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeGenotypeId">
+            <key-property name="genotypeId" type="big_decimal">
+                <column name="GENOTYPE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="genotype" type="string">
+                <column name="GENOTYPE" length="20" />
+            </key-property>
+            <key-property name="geneName" type="string">
+                <column name="GENE_NAME" length="100" />
+            </key-property>
+            <key-property name="classification" type="string">
+                <column name="CLASSIFICATION" length="100" />
+            </key-property>
+            <key-property name="allele1VariantId" type="big_decimal">
+                <column name="ALLELE_1_VARIANT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="allele2VariantId" type="big_decimal">
+                <column name="ALLELE_2_VARIANT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseId" type="string">
+                <column name="CASE_ID" length="4000" />
+            </key-property>
+            <key-property name="casePk" type="big_decimal">
+                <column name="CASE_PK" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

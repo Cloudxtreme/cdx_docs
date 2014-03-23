@@ -1,0 +1,48 @@
+ubuntu lucid 10.04 ldap
+
+https://help.ubuntu.com/10.04/serverguide/C/openldap-server.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+only work for example.com????
+  not for cardiodx.com or hello.com????
+
+--wajig install slapd ldap-utils migrationtools
+wajig install slapd ldap-utils 
+
+
+--ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/core.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/cosine.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/nis.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/inetorgperson.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/misc.ldif
+
+  SASL/EXTERNAL authentication started
+  SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+  SASL SSF: 0
+
+  1) adding new entry "cn=cosine,cn=schema,cn=config"
+  2) adding new entry "cn=nis,cn=schema,cn=config"
+  3) adding new entry "cn=inetorgperson,cn=schema,cn=config"
+
+~~~~~~
+vi backend.cardiodx.com.ldif (See file)
+  password: secret07 (olcRootPW: secret07)
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f backend.cardiodx.com.ldif 
+  4.1) adding new entry "cn=module,cn=config"
+  4.2) adding new entry "olcDatabase=hdb,cn=config"
+
+
+~~~~~~
+vi frontend.cardiodx.com.ldif (see file)
+
+ldapadd -x -D cn=admin,dc=cardiodx,dc=com -W -f frontend.cardiodx.com.ldif
+Enter LDAP Password: (secret07)
+
+
+~~~~~~
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" uid=john sn givenName cn
+
+ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b cn=config dn
+
+(Please read tls_wildcard.txt OR read tls_self-sign.txt)

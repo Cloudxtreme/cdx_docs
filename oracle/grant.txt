@@ -1,0 +1,56 @@
+
+----- "Barbara Lin" <blin@cardiodx.com> wrote:
+
+> thanks!! 
+> 
+> 
+> ----- Original Message -----
+> From: "Srikar Rao" <srikar@cardiodx.com>
+> To: "Barbara Lin" <blin@cardiodx.com>
+> Sent: Sunday, September 19, 2010 9:45:35 AM GMT -08:00 US/Canada
+> Pacific
+> Subject: Re: login for fast acc
+> 
+> Hi Barbara,
+> 
+> Here are the steps to get proxy authentication working:
+> - First create a super user - dnalims for e.g.
+> - use sqlplus to connect as admin to your copy of ccllims database and
+> execute the command
+>    ALTER USER blin GRANT CONNECT THROUGH dnalims
+>    This line has to be repeated for all users in the db (Chialin can
+> do this as part of the IQ for the production system
+> - In the application controller within rails
+> 1) use before_filter to check user login (blin) against ldap(like in
+> plims)
+> 2) if already authenticated, just get the username from the session 
+> 3) Then call
+>   ActiveRecord::Base.establish_connection with username as
+> dnalims[blin], password as dnalims_password
+> 4) Also use after_filter to create a funtion called
+> close_proxy_session with the line
+>   ActiveRecord::Base.close_connection
+> 
+> What this does is every time a use clicks a link or indirectly a
+> javascript call is made to the rails app, it will establish a
+> connection in to the db, perform the sql and then close the connection
+> for that user. 
+> That is very inefficient and I have other ideas on how to speed it up
+> if it has unacceptable performance.
+> 
+> HTH
+> Srikar
+> 
+> 
+> ----- "Barbara Lin" <blin@cardiodx.com> wrote:
+> 
+> > Hi Srikar,
+> > 
+> >   Hope you are having a good weekend with the family. I'm ready to
+> put
+> > login into Fast Accessioning. Can you send me the info how to do
+> the
+> > change user in Oracle?
+> > 
+> > Thanks!
+> > Barbara

@@ -1,0 +1,29 @@
+update accession_variable_fld_table avft
+set avft.value = ''
+where exists
+(
+  select '-'
+  from accession a, protocol_defined_variable pdv, variable v
+  where pdv.protocol_defined_variable_id = avft.protocol_defined_variable_id
+  and v.variable_id = pdv.variable_id
+  and avft.accession_id = a.accession_id
+  and v.variable_name in ('Name of Patient (Last)', 'Name of Patient (First)', 'Date of Birth','Gender', 'Medical Record/Patient Number', 'Patient Address', 'Patient City', 'Patient State', 'Patient Zip Code', 'Patient Phone', 'Name of Phlebotomist', 'Insured Member ID', 'Insured Group Number', 'Insured Relationship', 'Insurance Plan')
+);
+
+update AUD_ACCESSION_VARIABLE_FLD avft
+set avft.value = ''
+where exists
+(
+  select '-'
+  from accession a, protocol_defined_variable pdv, variable v
+  where pdv.protocol_defined_variable_id = avft.protocol_defined_variable_id
+  and v.variable_id = pdv.variable_id
+  and avft.accession_id = a.accession_id
+  and v.variable_name in ('Name of Patient (Last)', 'Name of Patient (First)', 'Date of Birth','Gender', 'Medical Record/Patient Number', 'Patient Address', 'Patient City', 'Patient State', 'Patient Zip Code', 'Patient Phone', 'Name of Phlebotomist', 'Insured Member ID', 'Insured Group Number', 'Insured Relationship', 'Insurance Plan')
+);
+
+
+update SCESCHEMA.versioneddocument
+set content = EMPTY_BLOB();
+
+

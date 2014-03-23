@@ -1,0 +1,167 @@
+
+cat > /etc/apt/apt.conf <<EOF
+Acquire::http::Proxy "http://aptcacher.cardiodx.com:3142";
+EOF
+
+
+mv sources.list sources.list.orig
+cat > sources.list << EOF
+deb http://mirrors.xmission.com/ubuntu/ jaunty main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ubuntu/ jaunty main restricted universe multiverse
+
+deb http://mirrors.xmission.com/ubuntu/ jaunty-updates main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ubuntu/ jaunty-updates main restricted universe multiverse
+
+deb http://mirrors.xmission.com/ubuntu/ jaunty-security main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ jaunty-security main restricted universe multiverse
+
+# deb http://us.archive.ubuntu.com/ubuntu/ jaunty-backports main restricted universe multiverse
+# deb-src http://us.archive.ubuntu.com/ubuntu/ jaunty-backports main restricted universe multiverse
+# deb http://archive.canonical.com/ubuntu jaunty partner
+# deb-src http://archive.canonical.com/ubuntu jaunty partner
+EOF
+
+
+wajig install openssh-server -y
+wajig install build-essential fakeroot deborphan subversion sysv-rc-conf 
+wajig install postgresql r-base sqlite3 scribus vim-gnome bioperl -y
+wajig install sun-java6-jdk -y
+wajig install lvm2 xfsprogs -y
+wajig install ntp -y
+
+
+-- for servers:
+wajig install vim-nox sysv-rc-conf lvm2 xfsprogs ntp -y
+
+
+linux-generic
+linux-headers-2.6.28-13
+linux-headers-2.6.28-13-generic
+linux-headers-2.6.28-13-server
+linux-image-2.6.28-13-generic
+linux-image-2.6.28-13-server
+linux-image-generic
+linux-image-server
+linux-restricted-modules-2.6.28-13-generic
+linux-restricted-modules-2.6.28-13-server
+linux-restricted-modules-common
+linux-restricted-modules-generic
+linux-restricted-modules-server
+
+cd /etc/dhcp3/
+vi dhclient.conf
+send host-name "<hostname>";
+
+Nvidia driver:
+  150  wajig install nvidia-glx-new
+  wajig install nvidia-glx-180
+  151  nvidia-xconfig
+  152  reboot
+
+vi /etc/vim/vimrc
+
+
+wajig install compizconfig-settings-manager -y
+wajig install gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse \
+        gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse -y gstreamer0.10-ffmpeg -y
+wajig install flashplugin-nonfree
+
+Virtualbox:
+  vi /etc/apt/sources.list.d/virtualbox.list
+    deb http://download.virtualbox.org/virtualbox/debian jaunty non-free
+
+   23  wget -q http://download.virtualbox.org/virtualbox/debian/sun_vbox.asc -O- | apt-key add -
+   21  wajig install virtualbox-ose
+
+    /etc/init.d/vboxdrv setup
+    # VirtualBox (NOT virtualbox)
+
+visudo
+%linuxusers ALL=(ALL) ALL
+
+
+----->>> ldap/ldap-client.txt
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+		pam_mount:
+~~~~~~~~~~~~~~~~~~~~~~~~~
+# wajig install libpam-mount -y
+# wajig install smbfs
+
+# vi /etc/security/pam_mount.conf.xml
+
+                <!-- Volume definitions -->
+<!-- sgrp="linuxusers" does not seem to work -->
+<volume pgrp="Domain Users" fstype="cifs" server="pdc" path="%(USER)" mountpoint="/home/%(USER)/hdrive" />
+<volume pgrp="Domain Users" fstype="cifs" server="pdc" path="groups" mountpoint="/home/%(USER)/gdrive" />
+<volume pgrp="Domain Users" fstype="cifs" server="pdc" path="public" mountpoint="/home/%(USER)/pdrive" />
+
+<cifsmount>mount -t cifs //%(SERVER)/%(VOLUME) %(MNTPT) -o user=%(USER)%(before=\",\" OPTIONS)</cifsmount>
+
+
+# cd /etc/pam.d
+# vi common-auth
+auth [success=done default=ignore] pam_unix.so
+auth [success=1 default=ignore] pam_ldap.so use_first_pass
+auth requisite pam_deny.so
+auth optional pam_mount.so
+
+# vi common-session
+session required pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional pam_mount.so
+session sufficient pam_ldap.so
+session required pam_unix.so
+session optional pam_foreground.so
+
+chmod +s /usr/sbin/pmvarruno
+
+ssh cchou@chialindesktop
+
+cat /var/run/pam_mount/cchou
+
+(NOTE: problems on 'su'!!!)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+		nx
+~~~~~~~~~~~~~~~~~~~~~~~~~
+S/W: http://www.nomachine.com/select-package-server.php?id=1&ids=2
+nxclient_3.3.0-6_x86_64.deb  
+nxnode_3.3.0-17_x86_64.deb  
+nxserver_3.3.0-22_x86_64.deb
+wajig install ./nx
+
+cd ~/gdrive/it/software/nx$ 
+sudo wajig install ./nxclient_3.3.0-6_i386.deb ./nxserver_3.3.0-22_i386.deb ./nxnode_3.3.0-17_i386.deb
+
+
+-- fix for nx
+# vi /usr/NX/bin/cdxusbss.sh
+#!/bin/bash
+
+/usr/sbin/pmvarrun -u $1
+
+# chmod 755 /usr/NX/bin/cdxusbss.sh
+
+vi /usr/NX/etc/server.cfg
+
+UserScriptBeforeSessionStart = "/usr/NX/bin/cdxusbss.sh"
+UserScriptBeforeSessionReconnect = "/usr/NX/bin/cdxusbss.sh"
+
+/etc/init.d/nxserver restart
+
+cat /var/run/pam_mount/cchou
+
+
+
+winbind
+	read samba-winbind.txt
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~
+
+/etc/rc0.d, /etc/rc6.d
+
+S10umountnfs.sh -> ../init.d/umountnfs.sh
+

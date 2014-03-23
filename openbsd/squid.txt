@@ -1,0 +1,47 @@
+openbsd squid 
+
+http://forums.bsdnexus.com/viewtopic.php?id=37
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+The local (OpenBSD) differences are:
+configuration files are in              /etc/squid
+sample configuration files are in       /usr/local/share/examples/squid
+error message files are in              /usr/local/share/squid/errors
+sample error message files are in       /usr/local/share/examples/squid/errors
+icons are in                            /usr/local/share/squid/icons
+sample icons are in                     /usr/local/share/examples/squid/icons
+the cache is in                         /var/squid/cache
+logs are stored in                      /var/squid/logs
+the ugid squid runs as is               _squid:_squid
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# pkg_add squid-2.7.STABLE6-snmp
+
+# squid -z
+
+
+# vi /etc/rc.local
+if [ -x /usr/local/sbin/squid ]; then
+  echo -n ' squid';       /usr/local/sbin/squid
+fi
+
+
+mv squid.conf squid.conf.orig
+grep -v "^#" squid.conf.orig | sed '/^$/d' > squid.conf
+
+
+# vi /etc/squid/squid.conf
+
+acl localnet src 10.0.32.0/21   
+
+http_access allow all
+http_port 3128 transparent
+
+/usr/local/sbin/squid
+
+
+vi /etc/pf.conf
+
+rdr on $internal inet proto tcp from any to any port www -> 127.0.0.1 port 3128 
+

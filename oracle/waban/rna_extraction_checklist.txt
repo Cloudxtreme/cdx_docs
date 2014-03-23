@@ -1,0 +1,31 @@
+
+
+total samples:
+select count(*) row_count from (select * from checklist_sample where checklist_id=17992)
+	22
+
+--select st.*,f.functional_step_name func_name,f.sample_ocx_name sample_ocx,f.batch_ocx_name batch_ocx, p.procedure_name 
+select functional_step_name func_name, p.procedure_name 
+from Step_Template st,checklist c,functional_step f, procedure_template p 
+where st.procedure_template_id=c.procedure_template_id 
+and p.procedure_template_id=c.procedure_template_id 
+and f.functional_step_id (+)=st.functional_step_id 
+and c.checklist_id=17992 
+order by number_in_sequence
+
+
+select --cs.*,
+			--s1.sample_tube_id currTube,a1.accession_number currAcc,
+			cs.checklist_col, limspackage.container_position(s1.sample_id) location
+			--s2.sample_tube_id origTube,a2.accession_number origAcc 
+from checklist_sample cs,sample s1,sample s2,accession a1,accession a2 
+where s1.Sample_ID=cs.Sample_ID 
+and s1.accession_id=a1.accession_id 
+and s2.Sample_ID=cs.orig_Sample_ID 
+and s2.accession_id=a2.accession_id 
+and checklist_ID=17992 
+order by checklist_col;
+
+
+
+

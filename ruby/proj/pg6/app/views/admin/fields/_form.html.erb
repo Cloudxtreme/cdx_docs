@@ -1,0 +1,133 @@
+<style scoped>
+	.required {
+		font-weight: bold;
+  }
+  .container-section {
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border-color: rgba(255,255,255,0.2);
+    background: -moz-linear-gradient(top,  rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.07) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.01)), color-stop(100%,rgba(0,0,0,0.07)));
+    background: -webkit-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: -o-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: -ms-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: linear-gradient(to bottom,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+	}
+</style>
+
+<%= form_for(@object, :html => {:id => "admin_field"}) do |f| %>
+  <% if @object.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@object.errors.count, "error") %> prohibited this object from being saved:</h2>
+      <ul>
+      <% @object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+	<% collection = Admin::Collection.find_by_name('Field') %>
+	<%	html_table_width = collection.html_table_width=='' ? 3: collection.html_table_width.to_i %>
+
+	<% fields = Admin::Field.includes(:dtype).joins(:collection, :dtype).where("admin_collections.name = 'Field'").order('display_order') %>
+	<div class="container-section">
+	<table width="100%">
+		<td align='right'> <label for="fullname" class="required">Name:</label></td>
+		<td align='left'>
+			<input id="admin_field_name" 
+							name="admin_field[name]" 
+							class='k-textbox' 
+							type="text" 
+							validationMessage="Name is required!" 
+							required 
+							value="<%=@object['name']%>"/> <br />
+			<span class="k-invalid-msg" data-for="admin_field[name]"></span>
+		</td>
+		<%(1..html_table_width-1).each do |i| %>
+			<td></td> <td></td>
+		<% end %>
+	<% fields.each do |field| %>
+		<% required='required' if field.html_required %>
+
+		<%=raw("<tr>") if field.display_order.to_i == 1 %>
+		<% if Admin::Field.is_lut_column?(field.name) %>
+			<td align='right'><%= f.label field.name, field.label, :class=>required %>:</td>
+  	  <td align='left'>
+				<%= f.select(field.name, Admin::Field.selection_data(field.name)) %>
+				<span class="k-invalid-msg" data-for="admin_field[<%=field.name%>]"></span>
+			</td>
+		<% elsif Admin::Field.is_foreign_key?(field.name) %>
+			<% if params[field.name] %>
+				<td><%= f.hidden_field field.name, :value => params[field.name] %></td>
+			<% elsif @object[field.name] %>
+				<td align='right'><%= f.label field.name %></td>
+				<td align='left'><%= f.select(field.name, Admin::Field.selection_data(field.name), :selected => @object[field.name]) %></td>
+			<% else %>
+				<td align='right'><%= f.label field.name %></td>
+				<td align='left'><%= f.select(field.name, Admin::Field.selection_data(field.name)) %></td>
+			<% end %>
+		<% else %>
+			<td align='right'><%= f.label field.name, field.label, :class=>required %>:</td>
+			<td align='left'>
+				<%= raw(field.html_input_string(Admin::Field.downcase_namespace_base, Admin::Field.downcase_name, @object[field.name])) %>
+				<span class="k-invalid-msg" data-for="admin_field[<%=field.name%>]"></span>
+			</td>
+		<% end %>
+		<%=raw("</tr>") if field.display_order.to_i%html_table_width == 0 %>
+	<% end %>
+
+	</table>
+	</div>
+  <br />
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script>
+	$(document).ready(function() {
+  	var validator = $("#admin_field").kendoValidator().data("kendoValidator"),
+  	status = $(".status");
+
+    <% fields = Admin::Field.includes(:dtype).joins(:collection, :dtype).where("admin_collections.name = 'Field'") %>
+    <% fields.each do |field| %>
+			<% if Admin::Field.is_foreign_key?(field.name) and params[field.name] %>
+				<% # do nothing - field is hidden %>
+			<% else %>
+      	<%=raw(field.widget_string(Admin::Field.downcase_namespace_base, Admin::Field.downcase_name)) \
+            if field.widget_string(Admin::Field.downcase_namespace_base, Admin::Field.downcase_name) -%>
+			<% end %>
+    <% end %>
+
+		//////////////////////////////////////////////////
+		$('#tag_name').hide();
+
+		var new_field_name = $('#tag_name');
+		var admin_field_name = $('#admin_field_name');
+
+		$('#admin_field_dtype_id').change(function() {
+			var selected = $(this).find('option:selected').text();
+			if (selected=='lookup' || selected=='masterdetail' || selected=='combobox' || selected=='multiselect' ) {
+				new_field_name.show();
+				$('#new_admin_field').find('#admin_field_name').replaceWith(new_field_name);
+			} else {
+				$('#new_admin_field').find('#tag_name').replaceWith(admin_field_name);
+			} 
+		});
+
+		$('#new_admin_field').submit(function() {
+				$('#tag_name').attr('id', 'admin_field_name');
+		});
+		
+	});
+</script>
+
+

@@ -1,0 +1,27 @@
+select distinct object_type, count(*) from event group by object_type;
+
+
+select stored_procedure
+from event_handler
+where event_handler_id in 
+  (select event_handler_id
+   from event_subscription
+   where study_protocol_id = 2
+   and event_id in 
+    (select event_id 
+     from event
+     where event_name = 'UPDATE_ACCESSION'))
+order by stored_procedure;
+
+
+
+col study_title for a40
+select study_title, event_name, stored_procedure
+from study_protocol s, event e, event_subscription es, event_handler eh
+where e.event_id = es.event_id
+and es.event_handler_id = eh.event_handler_id
+and es.study_protocol_id = s.study_protocol_id
+and event_name in ('UPDATE_ACCESSION', 'UPDATE_SAMPLE')
+order by study_title, event_name, stored_procedure;
+
+

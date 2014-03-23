@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AnonymizationStudySetup" table="ANONYMIZATION_STUDY_SETUP" schema="DNALIMS">
+        <comment>Anonymization Study Setup Table</comment>
+        <id name="anonymizationStudySetupId" type="big_decimal">
+            <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Study protocol identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="retentionPeriod" type="string">
+            <column name="RETENTION_PERIOD" length="20">
+                <comment>Retention period of the identified samples</comment>
+            </column>
+        </property>
+        <property name="encryptedStudyId" type="string">
+            <column name="ENCRYPTED_STUDY_ID" not-null="true">
+                <comment>Encyrpted Study Identifier</comment>
+            </column>
+        </property>
+        <set name="studyVariableRoles" table="STUDY_VARIABLE_ROLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0">
+                    <comment>Anonymization Study Setup ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyVariableRole" />
+        </set>
+        <set name="anonymizationBusinessRules" table="ANONYMIZATION_BUSINESS_RULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Anonymization Study Setup ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationBusinessRule" />
+        </set>
+        <set name="sampleIdentificationKeies" table="SAMPLE_IDENTIFICATION_KEY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ANONYMIZATION_STUDY_SETUP_ID" precision="22" scale="0">
+                    <comment>Anonymization Study Setup ID and primary Key</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleIdentificationKey" />
+        </set>
+    </class>
+</hibernate-mapping>

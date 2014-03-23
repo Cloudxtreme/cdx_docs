@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.WorklistSample" table="WORKLIST_SAMPLE" schema="DNALIMS">
+        <comment>Listing of samples included in worklists.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.WorklistSampleId">
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="worklistId" type="big_decimal">
+                <column name="WORKLIST_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="worklist" class="com.cardiodx.db.waban.table.Worklist" update="false" insert="false" fetch="select">
+            <column name="WORKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>Worklist identifier. Part of the primary key and foreign key to the WORKLIST table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" update="false" insert="false" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>Sample identifier used by the lab. Part of the primary key and foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

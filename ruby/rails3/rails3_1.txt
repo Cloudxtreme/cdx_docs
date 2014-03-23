@@ -1,0 +1,36 @@
+
+
+wajig install ntp sysstat build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config libgdbm-dev libffi-dev
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- rvm
+--
+curl -L get.rvm.io | bash -s stable
+
+  416  vi .bashrc 
+export PATH=$PATH:/usr/local/rvm/bin
+
+  417  rvm list
+  418  rvm install 1.9.3
+
+rvm get head
+rvm requirements run
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gem install rails --no-rdoc --no-ri
+
+rails new test32
+
+vi Gemfile
+gem 'execjs'
+gem 'therubyracer'
+
+bundle install
+
+rails server
+
+
+
+

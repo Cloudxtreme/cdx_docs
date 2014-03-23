@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.GelMarker" table="GEL_MARKER" schema="DNALIMS">
+        <comment>Information about markers used in gels.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.GelMarkerId">
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="containerRow" type="big_decimal">
+                <column name="CONTAINER_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumn" type="big_decimal">
+                <column name="CONTAINER_COLUMN" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="reagent" class="com.cardiodx.db.waban.table.Reagent" fetch="select">
+            <column name="REAGENT_ID" precision="22" scale="0">
+                <comment>Reagent identifier used as a marker and foreign key to the REAGENT table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" update="false" insert="false" fetch="select">
+            <column name="CONTAINER_ID" length="20" not-null="true">
+                <comment>Container (gel) identifier. Part of the primary key and foreign key to the CONTAINER table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

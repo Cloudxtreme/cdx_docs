@@ -1,0 +1,163 @@
+ubuntu xen
+
+http://blogs.linbit.com/florian/2007/09/03/drbd-806-brings-full-live-migration-for-xen-on-drbd/
+
+http://wiki.xensource.com/xenwiki/HowTos
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~```
+ubuntu xen:
+https://help.ubuntu.com/community/Xen
+http://www.howtoforge.com/ubuntu-8.04-server-install-xen-from-ubuntu-repositories
+
+
+**** enable VM on BIOS
+wajig install ubuntu-xen-server vncviewer xterm xauth -y
+
+xm dmesg | grep VMX
+
+--vi /etc/modules
+--loop max_loop=64
+reboot
+
+~~~~~~~~~~~~~~~~~~~~
+mkdir /home/xen
+
+# vi /etc/xen-tools/xen-tools.conf
+mirror=http://archive.ubuntu.com/ubuntu
+kernel      = /boot/vmlinuz-`uname -r`
+initrd      = /boot/initrd.img-`uname -r`
+dir = /home/xen
+size   = 4Gb      
+memory = 128Mb    
+swap   = 128Mb    
+fs     = ext3     
+dist   = hardy     
+image  = sparse   
+dhcp = 1 
+passwd = 1 
+xfs_options    = defaults
+# boot = 1
+# disk_device = sda
+disk_device = xvda  
+
+# lvm = skx-vg
+# install-method = [ debootstrap | rinse | rpmstrap | copy | tar ]
+
+~~~~~~~~~~~~~~~~~~~~~~
+xen-create-image --hostname=xen1
+
+Log: /var/log/xen-tools/xen1.log
+vi /etc/xen/xen1
+    'tap:aio:/home/xen/domains/xen1/swap.img,xvda1,w',
+    'tap:aio:/home/xen/domains/xen1/disk.img,xvda2,w',
+vcpus       = '2'
+
+xm create /etc/xen/xen1.cfg
+xm console xen1
+Ctrl+]
+
+# cat /etc/xen/xen1.cfg
+kernel      = '/boot/vmlinuz-2.6.24-19-xen'
+ramdisk     = '/boot/initrd.img-2.6.24-19-xen'
+memory      = '128'
+vcpus       = '2'
+root        = '/dev/xvda2 ro'
+disk        = [
+                  'tap:aio:/home/xen/domains/xen1/swap.img,xvda1,w',
+                  'tap:aio:/home/xen/domains/xen1/disk.img,xvda2,w',
+              ]
+name        = 'xen1'
+dhcp        = 'dhcp'
+vif         = [ 'mac=00:16:3E:B2:52:4D' ]
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+extra = '2 console=xvc0'
+
+
+xm list
+xm shutdown xen1
+ln -s /etc/xen/xen1.cfg /etc/xen/auto
+xm destroy xen1
+xen-list-images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.virtuatopia.com/index.php/Virtualizing_Windows_Server_2008_with_Xen
+Windows on xen:
+
+cd /home/xen/
+mkdir win32
+cd win32/
+dd if=/dev/zero of=win32.img bs=1G count=4
+
+cd /etc/xen 
+# vi win32.cfg
+kernel      = '/usr/lib/xen/boot/hvmloader'
+builder     = 'hvm'
+memory      = '128'
+vcpus       = '2'
+disk        = [
+                  'tap:aio:/home/xen/domains/win32/win32.img,ioemu:hda,w',
+                  'phy:/dev/cdrom,ioemu:hdc:cdrom,r',
+              ]
+device_model = '/usr/lib/xen/bin/qemu-dm'
+name        = 'win32'
+dhcp        = 'dhcp'
+#vif         = [ 'mac=00:16:3E:B2:52:4E' ]
+vif = [ 'type=ioemu, bridge=eth0' ]
+on_poweroff = 'destroy'
+on_reboot   = 'restart'
+on_crash    = 'restart'
+
+#extra = '2 console=xvc0'
+boot        = 'd'
+vnc         = 1
+sdl=0
+vncviewer=1
+vncpasswd=''
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+xm create /etc/xen/win32.cfg
+vncviewer localhost:0
+vncviewer -geometry 1024x768 localhost:0
+rdesktop -g 1400x1050 xenxp32
+
+**** Don't forget to comment the boot device!!!
+#boot       = 'd'
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~```
+# loop setup (for bootable CD-ROM):
+
+losetup -a
+losetup /dev/loop1 /home/xen/iso/vista32.iso
+
+iso image is not working for zen?????
+
+vi vista32.cfg
+                  'phy:/dev/loop1,ioemu:hdc:cdrom,r',
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+single user mode, add the following line to *.cfg
+extra = '-s'
+
+fsck.ext3 disk.img
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Using lvm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# vi /etc/xen-tools/xen-tools.conf
+#dir = /home/xen
+lvm = vg_xen
+
+Creating swap on /dev/vg_xen/xen2-swap
+Creating ext3 filesystem on /dev/vg_xen/xen2-disk
+
+ root        = '/dev/xvda2 ro'
+                  'phy:/dev/vg_xen/xen2-swap,xvda1,w',
+                  'phy:/dev/vg_xen/xen2-disk,xvda2,w',
+
+
+
+

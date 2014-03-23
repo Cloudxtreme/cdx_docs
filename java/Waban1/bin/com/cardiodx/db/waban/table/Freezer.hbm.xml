@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Freezer" table="FREEZER" schema="DNALIMS">
+        <comment>Information about freezers.</comment>
+        <id name="freezerId" type="big_decimal">
+            <column name="FREEZER_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="testingFacility" class="com.cardiodx.db.waban.table.TestingFacility" fetch="select">
+            <column name="TESTING_FACILITY_ID" precision="22" scale="0">
+                <comment>Test facility identifier and foreign key to TESTING_FACILITY.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="building" type="string">
+            <column name="BUILDING" length="20">
+                <comment>The building the freezer is in.</comment>
+            </column>
+        </property>
+        <property name="room" type="string">
+            <column name="ROOM" length="20">
+                <comment>The room the freezer is in.</comment>
+            </column>
+        </property>
+        <property name="freezerNumber" type="string">
+            <column name="FREEZER_NUMBER" length="20">
+                <comment>The freezer number found on the freezer.</comment>
+            </column>
+        </property>
+        <property name="NOfShelves" type="big_decimal">
+            <column name="N_OF_SHELVES" precision="22" scale="0" not-null="true">
+                <comment>The number of shelves the freezer contains.</comment>
+            </column>
+        </property>
+        <property name="NOfRacksPerShelf" type="big_decimal">
+            <column name="N_OF_RACKS_PER_SHELF" precision="22" scale="0" not-null="true">
+                <comment>The number of racks the freezer contains.</comment>
+            </column>
+        </property>
+        <property name="NOfBoxesPerRack" type="big_decimal">
+            <column name="N_OF_BOXES_PER_RACK" precision="22" scale="0" not-null="true">
+                <comment>The number of boxes the freezer contains.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="containers" table="CONTAINER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FREEZER_ID" precision="22" scale="0">
+                    <comment>Freezer identifier and foreign key to the FREEZER table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Container" />
+        </set>
+    </class>
+</hibernate-mapping>

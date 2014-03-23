@@ -1,0 +1,10 @@
+
+wajig install qemu
+
+# qemu-img convert -f qcow2 -O raw disk0.qcow2 disk0.img
+# dd if=disk0.img bs=64k | pv > /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.karmic64-lun-0 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+qemu-img info -f qcow2 disk0.qcow2 
+

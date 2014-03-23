@@ -1,0 +1,61 @@
+
+  647  lvcreate -L+15G -n 910 vg0
+  648  mkfs.xfs /dev/vg0/910 
+
+  653  mkdir 910
+  655  mount /dev/vg0/910 910/
+
+  658  cd 910/
+  661  tar zxvf ubuntu910-64_server.tar.gz 
+
+  663  rm ubuntu910-64_server.tar.gz 
+
+  667  vi hostname 
+  675  vi 70-persistent-net.rules 
+       vi fstab
+
+  679  mount -o bind /dev 910/dev
+  680  mount -t proc /proc/ 910/proc/
+  681  chroot 910 bash
+
+
+wajig:
+  ssmtp
+  mdadm
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /boot
+
+  695  cp /root/910/boot/abi-2.6.31-17-server .
+  696  cp /root/910/boot/config-2.6.31-17-server .
+  697  cp /root/910/boot/initrd.img-2.6.31-17-server .
+  698  cp /root/910/boot/System.map-2.6.31-17-server .
+  699  cp /root/910/boot/vmlinuz-2.6.31-17-server .
+
+cd /boot/grub
+
+title           Ubuntu 9.10, kernel 2.6.31-17-server
+root            (hd0,0)
+kernel          /vmlinuz-2.6.31-17-server root=/dev/mapper/vg0-910 ro quiet splash
+initrd          /initrd.img-2.6.31-17-server
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install syslog-ng -y
+wajig install smartmontools
+wajig install ntp sysstat
+wajig install ganglia-monitor (Not working!!!)
+
+configure bridge interface (read: virtualbox/vg3.txt)
+
+cd /etc/libvirt/qemu/
+cd networks/
+cp default.xml bridge.xml
+
+ssh-keygen -t rsa
+vi bridge.xml 
+vi id_rsa.pub
+vi authorized_keys2
+vi validate-rsync
+
+iscsi

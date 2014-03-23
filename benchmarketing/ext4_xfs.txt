@@ -1,0 +1,59 @@
+
+http://www.t2-project.org/zine/1/
+
+root@cchoudesktop:~# bonnie++ -u 0 -d ext4/
+Using uid:0, gid:0.
+Writing a byte at a time...done
+Writing intelligently...done
+Rewriting...done
+Reading a byte at a time...done
+Reading intelligently...done
+start 'em...done...done...done...done...done...
+Create files in sequential order...done.
+Stat files in sequential order...done.
+Delete files in sequential order...done.
+Create files in random order...done.
+Stat files in random order...done.
+Delete files in random order...done.
+Version  1.96       ------Sequential Output------ --Sequential Input- --Random-
+Concurrency   1     -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+cchoudesktop  7664M   374  99 106100  10 42402   7  3294  84 115634   6 244.8   1
+Latency             28087us    5754ms    2176ms   34357us     217ms     260ms
+Version  1.96       ------Sequential Create------ --------Random Create--------
+cchoudesktop        -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
+              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+                 16 17472  25 +++++ +++ 27040  26 25674  37 +++++ +++ 27615  28
+Latency               627us    1084us     415us     826us      41us      53us
+1.96,1.96,cchoudesktop,1,1282753103,7664M,,374,99,106100,10,42402,7,3294,84,115634,6,244.8,1,16,,,,,17472,25,+++++,+++,27040,26,25674,37,+++++,+++,27615,28,28087us,5754ms,2176ms,34357us,217ms,260ms,627us,1084us,415us,826us,41us,53us
+root@cchoudesktop:~# 
+root@cchoudesktop:~# 
+root@cchoudesktop:~# 
+root@cchoudesktop:~# 
+root@cchoudesktop:~# bonnie++ -u 0 -d xfs/
+Using uid:0, gid:0.
+Writing a byte at a time...done
+Writing intelligently...done
+Rewriting...done
+Reading a byte at a time...done
+Reading intelligently...done
+start 'em...done...done...done...done...done...
+Create files in sequential order...done.
+Stat files in sequential order...done.
+Delete files in sequential order...done.
+Create files in random order...done.
+Stat files in random order...done.
+Delete files in random order...done.
+Version  1.96       ------Sequential Output------ --Sequential Input- --Random-
+Concurrency   1     -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+cchoudesktop  7664M   531  98 102737   7 48749   8  2131  66 106011   6 241.6   2
+Latency             20619us    2786ms    2252ms     197ms     525ms     232ms
+Version  1.96       ------Sequential Create------ --------Random Create--------
+cchoudesktop        -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
+              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+                 16   355   1 +++++ +++   298   1   361   1 +++++ +++   312   0
+Latency               126ms     158us     469ms     160ms      36us     259ms
+1.96,1.96,cchoudesktop,1,1282760532,7664M,,531,98,102737,7,48749,8,2131,66,106011,6,241.6,2,16,,,,,355,1,+++++,+++,298,1,361,1,+++++,+++,312,0,20619us,2786ms,2252ms,197ms,525ms,232ms,126ms,158us,469ms,160ms,36us,259ms
+root@cchoudesktop:~# 
+

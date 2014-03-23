@@ -1,0 +1,113 @@
+EXTENT MANAGEMENT LOCAL SEGMENT
+SPACE MANAGEMENT  AUTO;
+
+
+sqlplus sys
+SQL> create user rman identified by rman;
+SQL> alter user rman default tablespace tools temporary tablespace temp;
+SQL> alter user rman quota unlimited on tools;
+SQL> grant connect, resource, recovery_catalog_owner to rman;
+SQL> exit;
+
+
+rman catalog rman/rman@ORCL
+RMAN> create catalog tablespace tools;
+RMAN> exit;
+
+
+cd /u01/app/oracle/product/10.2.0/db_1/network/admin
+vi tnsnames.ora 
+
+BARBARA22 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = barbara22.cardiodx.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCL)
+    )
+  )
+
+MAYANK22 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = mayank22.cardiodx.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCL)
+    )
+  )
+
+SRIKAR22 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = srikar22.cardiodx.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCL)
+    )
+  )
+
+
+rman target sys/barbara22sys246@BARBARA22 catalog rman/rman@RMAN
+register database;
+
+
+~~~~~~~~~
+sqlplus system/test22sys246
+--alter system set db_recovery_file_dest_size=100G;
+alter system set db_recovery_file_dest_size=100G scope=both;
+
+~~~~~~~~~
+
+backup database;
+list backup;   
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- cold backup
+--
+
+# make sure database is shutdown cleanly
+shutdown immediate;
+startup force dba;
+shutdown immediate;
+
+startup mount;
+backup database include current controlfile;
+
+alter database open;
+
+# Archive all logfiles including current
+sql 'ALTER SYSTEM ARCHIVE LOG CURRENT'; 
+
+# Backup outdated archlogs and delete them
+backup archivelog until time 'Sysdate-2' all delete input;
+
+# Backup remaining archlogs
+backup archivelog all;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

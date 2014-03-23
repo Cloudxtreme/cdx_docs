@@ -1,0 +1,54 @@
+
+
+wajig install ssmtp
+vi /etc/ssmtp/ssmtp.conf
+
+wajig install mdadm
+
+
+   35  cat /proc/mdstat
+   36  mdadm -Cv -l 1 -n 2 /dev/md0 /dev/sda1 /dev/sdb1
+   37  mdadm -Cv -l 1 -n 2 /dev/md1 /dev/sda2 /dev/sdb2
+
+   38  pvcreate /dev/md1
+   39  vgcreate vg0 /dev/md1
+   40  lvcreate -L+10G -n root vg0
+   41  lvcreate -L+4G -n swap vg0
+
+   42  mkfs.xfs -f /dev/vg0/root
+   43  mkswap /dev/vg0/swap
+   44  mkfs.ext4 /dev/md0
+
+
+       mkdir newroot
+   47  mount /dev/vg0/root newroot
+   48  cd newroot
+   50  mkdir boot
+   51  mount /dev/md0 boot
+
+   54  tar zxvf ../ubuntu910-s.tar.gz
+
+% mount -o bind /dev /root/newroot/dev
+% mount -t proc /proc /root/newroot/proc
+
+% chroot newroot bash
+
+   21  cat /etc/mdadm/mdadm.conf 
+   22  mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+
+   25  cd /boot/
+   27  update-initramfs -k 2.6.31-17-server -u -v
+
+/etc# vi fstab 
+# exit
+
+~~~~~~~~~~~~~~~~~~~~~~
+cd /root/newroot/boot/grub 
+vi device.map 
+(hd0)   /dev/sda
+(hd1)   /dev/sdb
+
+
+grub2-install --root-directory=/root/newroot /dev/sda
+grub2-install --root-directory=/root/newroot /dev/sdb
+

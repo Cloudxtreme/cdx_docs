@@ -1,0 +1,37 @@
+wolverine post-boot fwmark load balancing
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# For machines in DMZ:
+ip rule | grep fwmark
+if [ $? != 0 ]; then
+  ip rule add fwmark 4 table 4
+  ip rule add fwmark 5 table 5
+fi
+
+# routing table for Comcast (4)
+ip route add table 4 default via 173.13.158.190 dev eth4
+ip route add table 4 10.10.32.0/21 via 10.10.37.2 dev eth1
+
+# routing table for XO (5)
+ip route add table 5 default via 67.95.201.193 dev eth5
+ip route add table 5 10.10.32.0/21 via 10.10.37.2 dev eth1
+
+
+# fwmark for mail
+iptables -t mangle -A PREROUTING -s 67.95.201.200/32 -j MARK --set-mark 5
+
+
+#
+# load balancing (comcast and xo)
+#
+
+# Both Comcast and XO are up and running:
+ip route add default scope global nexthop via 173.13.158.190 dev eth4 weight 5 nexthop via 67.95.201.193 dev eth5 weight 1
+
+# If Comcast goes down:
+# ip route replace default scope global via 67.95.201.193 dev eth5
+
+# If XO goes down:
+# ip route replace default scope global via 173.13.158.190 dev eth4
+

@@ -1,0 +1,368 @@
+/* ************************************************************************************************** */
+/*                       CSS by Norm Douglas                                                          */
+/*                         Netreach                                                                   */
+/*																									  */
+/*																									  */
+/* ************************************************************************************************** */
+/* CONTENT CSS 																						  */
+/* ************************************************************************************************** */
+div {
+	border:0 solid red;
+}
+
+body {
+	font-family:Arial,Helvetica,sans-serif;
+	font-size:12px;
+	margin:0;
+	padding:0;
+}
+
+img {
+	border:medium none;
+}
+
+.clear {
+	clear:both;
+	line-height:0;
+	margin:0;
+	padding:0;
+}
+
+
+#container {
+	margin:0 auto;
+	width:965px;
+}
+
+#theater {
+	margin:0 auto;
+	position:relative;
+	top:-7px;
+}
+
+#search {
+}
+
+#ticker {
+	float: left;
+	height: 20px;
+	padding-top: 2px;
+	width: 100%;
+}
+
+a.Gloss {
+	border-bottom:1px double;
+	line-height:1.7em;
+}
+
+h1 {
+	color:#423132;
+	font-weight:bold;
+	margin-left:107px;
+	text-transform:uppercase;
+}
+
+h2 {
+
+#topmenu {
+	height:20px;
+}
+
+#left {
+	float:left;
+	width:150px;
+	background-color:#CCCCCC;
+}
+
+#right {
+	float:right;
+	width:150px;
+	background-color:#CCCCCC;
+}
+
+#mainbody {
+	margin-left:155px;
+	margin-right:155px;
+}
+
+#theater {
+}
+
+#footer {
+	height:5px;
+	background-image:url(../images/footer_line.gif);
+	background-repeat:no-repeat;
+}
+
+p {
+}
+a:link,
+a:active,
+a:visited {
+}
+a:hover {
+
+}
+a img {
+
+}
+
+/* ************************************************************************************************** */
+/* TEMPLATE LAYOUT CSS - DEFINE YOUR OWN TEMPLATE STYLES HERE										  */
+/* ************************************************************************************************** */
+
+/* ************************************************************************************************** */
+/* JOOMLA SPECIFIC CSS 																				  */
+/* ************************************************************************************************** */
+
+.adminform {
+}
+.article_seperator {
+}
+.back_button {
+}
+.blog {
+}
+.blog_more {
+}
+.blogsection {
+}
+.button {
+}
+.buttonheading {
+}
+.category {
+}
+.clip {
+}
+.componentheading {
+}
+.contact_email {
+}
+.content_rating {
+}
+.content_vote {
+}
+.contentdescription {
+}
+.contentheading {
+}
+.contentpagetitle {
+}
+.contentpane {
+}
+.contentpaneopen {
+}
+.contenttoc {
+}
+.createdate {
+}
+.dtree {
+}
+.dTreeNode {
+}
+.editlinktip {
+}
+.expander {
+}
+.form{
+}
+.highlight {
+}
+.inputbox {
+}
+.item {
+}
+.latestnews {
+}
+.message {
+}
+.message {
+}
+.modifydate {
+}
+.module {
+}
+.module h3 {
+}
+.module div {
+}
+.module div div {
+}
+.module div div div {
+}
+.module div div div div {
+}
+.moduletable {
+}
+.moduletable h3 {
+}
+.mosimage {
+}
+.mosimage_caption {
+}
+.mostread {
+}
+.newsfeed {
+}
+.node {
+}
+.pagenav {
+}
+.pagenav_next {
+}
+.pagenav_prev {
+}
+.pagenavbar {
+}
+.pagenavcounter {
+}
+.paramlist {
+}
+.pathway {
+}
+.poll {
+}
+.pollstableborder {
+}
+.profiler {
+}
+.readon {
+}
+.row1 {
+}
+.row2 {
+}
+.search {
+}
+.searchintro {
+}
+.sectiontableentry1 {
+}
+.sectiontableentry2 {
+}
+.sectiontablefooter {
+}
+.sectiontableheader {
+}
+.small {
+}
+.smalldark {
+}
+.syndicate {
+}
+.syndicate_text {
+}
+.tab {
+}
+.tabclass1 {
+}
+.tabclass2 {
+}
+.tab-page {
+}
+.text_area {
+}
+.toclink {
+}
+.toolbar {
+}
+.tooltip {
+}
+.wrapper {
+}
+iframe.wrapper {
+}
+
+/* ************************************************************************************************** */
+/* JOOMLA MENU CSS 																					  */
+/* ************************************************************************************************** */
+
+ul#mainlevel {
+}
+ul#mainlevel li {
+}
+
+a.mainlevel:link,
+a.mainlevel:active,
+a.mainlevel:visited {
+}
+a.mainlevel:hover {
+}
+a.mainlevel#active_menu {
+}
+
+a.sublevel:link,
+a.sublevel:active,
+a.sublevel:visited {
+}
+a.sublevel:hover {
+}
+a.sublevel#active_menu {
+}
+
+/* ************************************************************************************************** */
+/* OTHER MODULES AND COMPONENTS																		  */
+/* ************************************************************************************************** */
+/* Components and modules that should be part of every setup you do!								  */
+/* Add your own custom css for modules and components you install here!								  */
+/*																									  */
+/* ************************************************************************************************** */
+/* JOOMLA EXT MENU MODULE 																			  */
+/* ************************************************************************************************** */
+
+
+
+/* ************************************************************************************************** */
+/* JOOMLA DISPLAY NEWS BY BK MODULE																	  */
+/* ************************************************************************************************** */
+
+.dn-whole {
+}
+.dn-each {
+}
+span.dn-section {
+}
+a.dn-section {
+}
+span.dn-category {
+}
+a.dn-category {
+}
+span.dn-title {
+}
+a.dn-title{
+}
+span.dn-author {
+}
+span.dn-date {
+}
+span.dn-introtext {
+}
+
+/* ************************************************************************************************** */
+/* JOOMLA MINI FRONTPAGE MODULE	- NOTE THIS MODULE ALSO CONTAINS IT's OWN CSS FILE					  */
+/* ************************************************************************************************** */
+
+table.minifp {
+}
+td.minifp {
+}
+span.minifp-anotherlinks {
+}
+span.minifp-introtitle a {
+}
+span.minifp-date {
+}
+.minifp-full-link {
+}
+ul.minifp {
+}
+li.minifp {
+}
+li.minifp a{
+}
+.mceContentBody {
+	background:white;
+	height:100%
+}

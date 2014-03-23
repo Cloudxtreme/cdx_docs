@@ -1,0 +1,85 @@
+--
+-- local login/passsword
+--
+  312  mv passwd.dav humana/
+  314  chown -R www-data *
+
+  320  vi humana 
+
+<VirtualHost *:443>
+    ServerAdmin webmaster@localhost
+    ServerName webdav.cardiodx.com
+    SSLEngine on
+    SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+
+    Alias /docs /var/www/payers/humana
+
+    <Location /docs>
+      DAV On
+      AuthName "humana"
+      AuthType Basic
+      AuthUserFile /var/www/payers/passwd.dav
+      Require valid-user
+    </Location>
+
+</VirtualHost>
+
+  321  a2dissite default
+  322  a2ensite humana
+  323  /etc/init.d/apache2 restart
+
+
+--
+-- pam+ldap
+--
+wajig install libapache2-mod-auth-pam
+wajig install libapache2-mod-auth-sys-group
+
+
+vi envvars
+export APACHE_RUN_USER=payers
+export APACHE_RUN_GROUP=payersgrp
+
+
+vi humana
+<VirtualHost humana.cardiodx.com:80>
+  NameVirtualHost humana.cardiodx.com
+  ServerName humana.cardiodx.com
+  Redirect permanent / https://humana.cardiodx.com/
+</VirtualHost>
+
+<VirtualHost humana.cardiodx.com:443>
+    NameVirtualHost humana.cardiodx.com
+    ServerAdmin admin@cardiodx.com
+    ServerName humana.cardiodx.com
+    DocumentRoot /var/www/payers/humana
+    SSLEngine on
+    SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+
+    ErrorLog "|/usr/bin/logger -p local0.err"
+    LogFormat "%h %u \"%r\" %>s %b" privacy_format
+    CustomLog "|/usr/bin/logger -p local1.info" privacy_format
+    LogLevel warn
+
+    Alias /docs /var/www/payers/humana
+
+    <Location /docs>
+           DAV On
+           AuthName "Please enter the provided login and password"
+           AuthUserFile /dev/null
+           AuthBasicAuthoritative off
+           AuthPAM_Enabled on
+           AuthType Basic
+           require valid-user
+           require group "humanagrp"
+
+           Options Indexes FollowSymLinks MultiViews
+           Order allow,deny
+           allow from all
+
+    </Location>
+
+</VirtualHost>
+

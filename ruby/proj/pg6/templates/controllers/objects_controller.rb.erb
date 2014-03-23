@@ -1,0 +1,83 @@
+class <%=@namespace%>::<%=@collection_name.pluralize%>Controller < ApplicationController
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>.json
+  def index
+    @objects = <%=@namespace%>::<%=@collection_name%>.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @objects }
+    end
+  end
+
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1.json
+  def show
+    @object = <%=@namespace%>::<%=@collection_name%>.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @object }
+    end
+  end
+
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/new
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/new.json
+  def new
+    @object = <%=@namespace%>::<%=@collection_name%>.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @object }
+    end
+  end
+
+  # GET /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1/edit
+  def edit
+    @object = <%=@namespace%>::<%=@collection_name%>.find(params[:id])
+  end
+
+  # POST /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>
+  # POST /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>.json
+  def create
+    @object = <%=@namespace%>::<%=@collection_name%>.new(params[:<%=@namespace.downcase%>_<%=@collection_name.downcase%>])
+
+    respond_to do |format|
+      if @object.save
+        format.html { redirect_to @object, notice: '<%=@collection_name%> was successfully created.' }
+        format.json { render json: @object, status: :created, location: @object }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @object.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1
+  # PUT /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1.json
+  def update
+    @object = <%=@namespace%>::<%=@collection_name%>.find(params[:id])
+
+    respond_to do |format|
+      if @object.update_attributes(params[:<%=@namespace.downcase%>_<%=@collection_name.downcase%>])
+        format.html { redirect_to @object, notice: '<%=@collection_name%> was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @object.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1
+  # DELETE /<%=@namespace.downcase%>/<%=@collection_name.downcase.pluralize%>/1.json
+  def destroy
+    @object = <%=@namespace%>::<%=@collection_name%>.find(params[:id])
+    @object.destroy
+
+    respond_to do |format|
+      format.html { redirect_to <%=@namespace.downcase%>_<%=@collection_name.downcase.pluralize%>_url }
+      format.json { head :no_content }
+    end
+  end
+end

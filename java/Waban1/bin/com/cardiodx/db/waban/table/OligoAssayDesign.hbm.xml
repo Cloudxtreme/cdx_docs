@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.OligoAssayDesign" table="OLIGO_ASSAY_DESIGN" schema="DNALIMS">
+        <comment>Table is used to store Oligo and Assay information</comment>
+        <id name="oligoAssayId" type="big_decimal">
+            <column name="OLIGO_ASSAY_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="oligoDesign" class="com.cardiodx.db.waban.table.OligoDesign" fetch="select">
+            <column name="OLIGO_ID" precision="22" scale="0" not-null="true">
+                <comment>FK - Oligo table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="container" class="com.cardiodx.db.waban.table.Container" fetch="select">
+            <column name="CONTAINER_ID" length="20">
+                <comment>Container identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="assayName" type="string">
+            <column name="ASSAY_NAME" length="50">
+                <comment>Name of the Oligo Assay.</comment>
+            </column>
+        </property>
+        <property name="assayOwner" type="string">
+            <column name="ASSAY_OWNER" length="30">
+                <comment>Owner of Oligo Assay</comment>
+            </column>
+        </property>
+        <property name="assayCondition" type="string">
+            <column name="ASSAY_CONDITION" length="1000">
+                <comment>Assay conditions like Cycling parameters,buffers used,concentration of oligos.</comment>
+            </column>
+        </property>
+        <property name="assayType" type="string">
+            <column name="ASSAY_TYPE" length="50">
+                <comment>Assay Type</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>Created By User</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>Modified by User</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date the record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

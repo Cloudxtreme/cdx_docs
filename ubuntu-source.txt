@@ -1,0 +1,11 @@
+ubuntu build from source package pkg
+
+
+http://www.cyberciti.biz/faq/rebuilding-ubuntu-debian-linux-binary-package/
+
+
+wajig source asterisk
+wajig build-depend asterisk
+fakeroot debian/rules binary
+
+wajig install .....deb

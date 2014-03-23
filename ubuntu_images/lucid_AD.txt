@@ -1,0 +1,67 @@
+3. install new ldap packages, check nsswitch.conf (files ldap)
+
+wajig install libpam-ldap libnss-ldap nscd (defaults for all prompts)
+mv /etc/ldap.conf /etc/ldap.conf.orig
+
+cat > /etc/ldap.conf << EOF
+uri ldaps://pdc.cardiodx.com
+base dc=cardiodx,dc=com
+start_tls
+ssl on
+tls_checkpeer no
+
+scope sub
+#timelimit 30
+
+pam_filter objectclass=User
+pam_login_attribute sAMAccountName
+pam_lookup_policy yes
+pam_password ad
+
+# Modify cn=User,dc=e... to your container with your users.
+nss_base_passwd cn=Users,dc=cardiodx,dc=com?sub
+nss_base_shadow cn=Users,dc=cardiodx,dc=com?sub
+nss_base_group  cn=Users,dc=cardiodx,dc=com?sub
+
+nss_map_objectclass posixAccount User
+nss_map_objectclass shadowAccount User
+nss_map_objectclass posixGroup Group
+nss_map_attribute uid sAMAccountName
+nss_map_attribute uniqueMember member
+nss_map_attribute uidNumber uidNumber
+nss_map_attribute gidNumber gidNumber
+nss_map_attribute homedirectory unixHomeDirectory
+nss_map_attribute loginshell loginShell
+nss_map_attribute gecos displayName
+#nss_map_attribute userPassword msSFU30Password
+#nss_map_attribute cn sAMAccountName
+EOF
+
+vi /etc/nsswitch.conf
+  passwd: files ldap
+  group: files ldap
+  shadow: files ldap
+
+/etc/init.d/libnss-ldap restart
+/etc/init.d/nscd restart
+
+4. configure pam
+
+pam-auth-update
+    checked: ldap authentication, unix, mount volumes, gnome keyring, consolekit
+
+vi /etc/pam.d/common-session
+add this at the bottom:
+session optional    pam_mkhomedir.so skel=/etc/skel/ umask=0022
+
+5. configure pam_mount (if necessary)
+
+vi /etc/security/pam_mount.conf.xml
+
+remove all 4 old lines under 'Volume Definitions' and insert the lines below:
+
+<volume user="*" fstype="cifs" server="filesrv" path="%(USER)" mountpoint="/home/%(USER)/hdrive" options="domain=CDX" />
+<volume user="*" fstype="cifs" server="filesrv" path="groups" mountpoint="/home/%(USER)/gdrive" options="domain=CDX" />
+<volume user="*" fstype="cifs" server="filesrv" path="public" mountpoint="/home/%(USER)/pdrive" options="domain=CDX" />
+<cifsmount>mount -t cifs //%(SERVER)/%(VOLUME) %(MNTPT) -o "user=%(USER),%(OPTIONS)"</cifsmount>
+

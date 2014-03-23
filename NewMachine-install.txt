@@ -1,0 +1,75 @@
+if [ "$1" == "" ] 
+then
+echo "Usage: $0 hostname"
+exit -1
+fi
+
+mdadm --stop /dev/md0
+mdadm --remove /dev/md0
+mdadm --stop /dev/md1
+mdadm --remove /dev/md1
+
+for i in /dev/sda /dev/sdb
+do
+dd if=/dev/zero of=$i bs=512 count=1
+fdisk $i <<EOF
+n
+p
+1
+
++100M
+t
+fd
+n
+p
+2
+
+
+t
+2
+fd
+a
+1
+w
+q
+EOF
+done
+
+
+mdadm -C -v -f /dev/md0 -l 1 -n 2 /dev/sda1 /dev/sdb1
+mdadm -C -v -f /dev/md1 -l 1 -n 2 /dev/sda2 /dev/sdb2
+
+pvcreate -ff /dev/md1
+vgcreate vg0 /dev/md1
+lvcreate -L 5G -n root vg0
+lvcreate -L 2G -n swap vg0
+
+mkfs.ext3 /dev/md0
+mkfs.xfs -f /dev/vg0/root
+mkswap /dev/vg0/swap
+
+mkdir newroot
+mount /dev/vg0/root newroot
+mkdir newroot/boot
+mount /dev/md0 newroot/boot
+cd newroot
+ssh root@srikardesktop 'cat /mnt/backups/images/server/root.tar.new' | tar --numeric-owner -xvf -
+
+cd etc
+sed -i "s/zxcvbv/$1/g" hostname
+sed -i "s/zxcvbv/$1/g" hosts
+ssh-keygen -t rsa -N '' -C root@$1 -f ssh/ssh_host_rsa_key
+ssh-keygen -t dsa -N '' -C root@$1 -f ssh/ssh_host_dsa_key
+
+grub --batch <<EOF
+device (hd0) /dev/sda
+root (hd0,0)
+setup (hd0)
+EOF
+
+grub --batch <<EOF
+device (hd0) /dev/sdb
+root (hd0,0)
+setup (hd0)
+EOF
+

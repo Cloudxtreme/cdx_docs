@@ -1,0 +1,93 @@
+gluster cluster file system
+
+http://www.gluster.org/docs/index.php/GlusterFS
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+wget http://ftp.zresearch.com/pub/gluster/glusterfs/1.4/glusterfs-1.4.0rc7.tar.gz
+
+-- 
+-- building the package for hardy
+--
+wajig install build-essential flex bison db4.5-util libdb4.5-dev checkinstall -y
+wajig install libfuse-dev libibverbs1 libibverbs-dev -y
+
+./reconfigure
+make 
+make install
+ldconfig
+glusterfs --version
+
+checkinstall make install
+scp glusterfs_1.4.0rc7-1_amd64.deb cchou@cchoudesktop:~/downloads
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+scp cchou@cchoudesktop:~/downloads/glusterfs_1.4.0rc7-1_amd64.deb .
+wajig install ./glusterfs_1.4.0rc7-1_amd64.deb 
+ldconfig
+glusterfs --version
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- server
+--
+mkdir glusterfs
+cd glusterfs/
+vi glusterfs-server.vol
+volume brick
+  type storage/posix
+  option directory /tmp/export
+end-volume
+
+volume server
+  type protocol/server
+  subvolumes brick
+  option transport-type tcp
+  option auth.addr.brick.allow 10.10.36.*
+end-volume
+
+mkdir -p /usr/local/var/log/glusterfs/
+
+glusterfsd -f /etc/glusterfs/glusterfs-server.vol
+
+
+--
+-- client
+--
+?? not needed for fuse client???
+#wajig install libfuse-dev libibverbs1 libibverbs-dev -y
+
+mkdir /mnt/glusterfs
+cd /etc
+mkdir glusterfs
+cd glusterfs/
+vi glusterfs-client.vol
+volume client
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster
+  option remote-subvolume brick
+end-volume
+
+mkdir -p /usr/local/var/log/glusterfs/
+
+#glusterfs --debug -f /etc/glusterfs/glusterfs-client.vol /mnt/glusterfs
+glusterfs -f /etc/glusterfs/glusterfs-client.vol /mnt/glusterfs &
+
+
+vi /etc/fstab
+/etc/glusterfs/glusterfs-client.vol  /mnt/glusterfs  glusterfs  defaults  0  0
+
+
+http://gluster-tmp.enix.org/docs/index.php/GlusterFS_Configuration_Example_for_Four_Bricks
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mod_glusterfs:
+http://www.gluster.org/docs/index.php/Mod_glusterfs_for_lighttpd
+
+
+
+

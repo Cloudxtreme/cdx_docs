@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Accession" table="ACCESSION" schema="DNALIMS">
+        <comment>Information used to accession samples into the database.</comment>
+        <id name="accessionId" type="big_decimal">
+            <column name="ACCESSION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>The protocol identifier for the sample(s) being accessioned and foreign key to the STUDY_PROTOCOL table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="accessionNumber" type="string">
+            <column name="ACCESSION_NUMBER" length="25" not-null="true" unique="true">
+                <comment>A unique alternate key used in house by laboratory personnel.</comment>
+            </column>
+        </property>
+        <property name="dateReceived" type="date">
+            <column name="DATE_RECEIVED" length="7" not-null="true">
+                <comment>Date the sample(s) were received in house.</comment>
+            </column>
+        </property>
+        <property name="resultStatus" type="string">
+            <column name="RESULT_STATUS" length="20">
+                <comment>Status of the results for the entire accession (closed, open, etc.).</comment>
+            </column>
+        </property>
+        <property name="destroyed" type="java.lang.Boolean">
+            <column name="DESTROYED" precision="1" scale="0">
+                <comment>Indicates whether or not the sample(s) involved have been destroyed.</comment>
+            </column>
+        </property>
+        <property name="dateShipped" type="date">
+            <column name="DATE_SHIPPED" length="7">
+                <comment>Date the sample was sent back to the originator (sponsor).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <property name="gpiCode" type="string">
+            <column name="GPI_CODE" length="1000" />
+        </property>
+        <set name="cdxFaxAttempts" table="CDX_FAX_ATTEMPT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CdxFaxAttempt" />
+        </set>
+        <set name="pendingSampleTables" table="PENDING_SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0">
+                    <comment>Accession identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PendingSampleTable" />
+        </set>
+        <set name="roiSelections" table="ROI_SELECTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0">
+                    <comment>Accession identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiSelection" />
+        </set>
+        <set name="anonymizedLabAccessionNos" table="ANONYMIZED_LAB_ACCESSION_NO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0">
+                    <comment>ACCESSION_ID in Accession TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizedLabAccessionNo" />
+        </set>
+        <set name="cpRunReports" table="CP_RUN_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRunReport" />
+        </set>
+        <set name="sampleTables" table="SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0">
+                    <comment>Accession identifier and foreign key to the ACCESSION table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleTable" />
+        </set>
+        <set name="accessionProcedures" table="ACCESSION_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0" not-null="true">
+                    <comment>Accession identifier and foreign key to the ACCESSION table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionProcedure" />
+        </set>
+        <set name="geneResults" table="GENE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0" not-null="true">
+                    <comment>Accession identifier and foreign key to the ACCESSION table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneResult" />
+        </set>
+        <set name="accessionVariableFldTables" table="ACCESSION_VARIABLE_FLD_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0" not-null="true">
+                    <comment>Accession identifier and foreign key to the ACCESSION table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionVariableFldTable" />
+        </set>
+        <set name="accessionComments" table="ACCESSION_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0" not-null="true">
+                    <comment>Accession identifier. Part of the primary key and foreign key to the ACCESSION table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionComment" />
+        </set>
+        <set name="testAccessions" table="TEST_ACCESSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ACCESSION_ID" precision="22" scale="0">
+                    <comment>Accession identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestAccession" />
+        </set>
+    </class>
+</hibernate-mapping>

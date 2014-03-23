@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AnonymizedCrfId" table="ANONYMIZED_CRF_ID" schema="DNALIMS">
+        <id name="anonymizedCrfId" type="big_decimal">
+            <column name="ANONYMIZED_CRF_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="patient" class="com.cardiodx.db.waban.table.Patient" fetch="select">
+            <column name="PATIENT_ID" precision="22" scale="0">
+                <comment>PATIENT_ID FK to PATIENT table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="crfId" type="string">
+            <column name="CRF_ID" length="30">
+                <comment>CRF_ID is the DISPLAY_ID in PATIENT table.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

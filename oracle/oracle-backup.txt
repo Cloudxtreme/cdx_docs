@@ -1,0 +1,155 @@
+ubuntu oracle waban backup restore
+
+http://download.oracle.com/docs/cd/B19306_01/backup.102/b14192/toc.htm
+
+--
+-- drop SCE_CONTENT SCE_DATA INDX
+--
+SQL> drop tablespace SCE_CONTENT;
+SQL> drop tablespace SCE_DATA;
+SQL> drop tablespace INDX;
+
+cd /u01/app/oracle/oradata/ORCL/
+rm sec_data_01.dbf sec_content_01.dbf indx01.dbf
+
+CREATE TABLESPACE "TOOLS" LOGGING
+DATAFILE '/u01/app/oracle/oradata/ORCL/tools01.dbf' 
+SIZE 100M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT
+SPACE MANAGEMENT  AUTO;
+
+
+
+--
+-- preparation
+--
+sqlplus sys
+SQL> create user rman identified by rman;
+SQL> alter user rman default tablespace tools temporary tablespace temp;
+SQL> alter user rman quota unlimited on tools;
+SQL> grant connect, resource, recovery_catalog_owner to rman;
+SQL> exit;
+
+
+rman catalog rman/rman@ORCL
+RMAN> create catalog tablespace tools;
+RMAN> exit;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rman catalog rman/rman@ORCL target sys/waban123@test25417
+RMAN> register database;
+RMAN> exit;
+
+
+
+$ rman catalog rman/rman@ORCL
+RMAN> connect target sys/waban123@test25417;
+
+show all;
+report schema;
+
+backup database;
+sql 'alter system archive log current';
+backup current controlfile;
+
+find . -type f -mtime +7 -name \*.dbf -print -exec mv {} ../BAK \;
+backup current controlfile tag=cntlbak;
+
+backup files location:
+  on target machine: test25417
+  /u01/app/oracle/flash_recovery_area/ORCL/backupset/
+
+list backup;
+list backup of database;
+list backup of database summary;
+list backup of controlfile;
+
+
+delete backupset 113;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+--restore db:
+--
+
+Have the backupsets copied over
+  scp * oracle@restore:/u01/app/oracle/archive
+
+Have the archive logs copied over:
+  scp * oracle@restore:/u01/app/oracle/flash_recovery_area/ORCL/backupset/2009_04_10
+
+
+--on target machine:
+sqlplus sys as sysdba
+startup mount;
+
+--on rman:
+rman catalog rman/rman@ORCL
+connect target sys/waban123@restore
+
+
+restore database;
+recover database;
+alter database open;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi tnsnames.ora
+BACKUPSRV =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = backupsrv.cardiodx.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCL)
+    )
+  )
+
+rman catalog rman/rman@backupsrv
+connect target sys/waban123@orcl
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sqlplus system/waban123 as sysdba
+
+SQL> shutdown abort;
+ORACLE instance shut down.
+
+SQL> startup nomount
+ORACLE instance started.
+
+Total System Global Area  545259520 bytes
+Fixed Size		    2022184 bytes
+Variable Size		  163579096 bytes
+Database Buffers	  373293056 bytes
+Redo Buffers		    6365184 bytes
+SQL> quit
+
+
+rman target sys/waban123 catalog rman/rman@backupsrv
+
+connected to target database: ORCL (not mounted)
+connected to recovery catalog database
+
+RMAN> restore controlfile;
+
+Starting restore at 10-APR-09
+allocated channel: ORA_DISK_1
+channel ORA_DISK_1: sid=157 devtype=DISK
+
+channel ORA_DISK_1: starting datafile backupset restore
+channel ORA_DISK_1: restoring control file
+channel ORA_DISK_1: reading from backup piece /u01/app/oracle/flash_recovery_area/ORCL/backupset/2009_04_10/o1_mf_ncnnf_CNTLBAK_4xz5hw75_.bkp
+channel ORA_DISK_1: restored backup piece 1
+piece handle=/u01/app/oracle/flash_recovery_area/ORCL/backupset/2009_04_10/o1_mf_ncnnf_CNTLBAK_4xz5hw75_.bkp tag=CNTLBAK
+channel ORA_DISK_1: restore complete, elapsed time: 00:00:03
+output filename=/u01/app/oracle/oradata/ORCL/control01.ctl
+output filename=/u01/app/oracle/oradata/ORCL/control02.ctl
+output filename=/u01/app/oracle/oradata/ORCL/control03.ctl
+Finished restore at 10-APR-09
+
+RMAN> 
+
+
+

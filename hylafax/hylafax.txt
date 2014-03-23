@@ -1,0 +1,4 @@
+
+
+wajig install hylafax-client hylafax-server
+

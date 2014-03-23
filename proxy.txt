@@ -1,0 +1,6 @@
+
+
+  501  export http_proxy=http://proxy.cardiodx.com
+  502  wget http://mirrors.xmission.com/ubuntu-cd/9.10/ubuntu-9.10-alternate-amd64.iso
+
+

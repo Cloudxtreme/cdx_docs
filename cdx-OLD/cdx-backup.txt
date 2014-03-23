@@ -1,0 +1,54 @@
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				backup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ddns
+
+service dhcpd stop
+service named stop
+
+cp /etc/bogon_acl.conf ~cchou
+cp /etc/dhcpd.conf ~cchou
+cp /etc/named.conf ~cchou
+cp /var/named/cardiodx.reversed ~cchou
+cp /var/named/cardiodx.zone ~cchou
+
+service dhcpd start
+service named start
+
+
+tar cvf 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# samba-ldap
+
+service smb stop
+service ldap stop
+
+cp -rp /etc/openldap ~cchou
+cp -rp /etc/samba ~cchou
+cp /etc/pam.d/system-auth ~cchou
+cp -rp /var/lib/ldap ~cchou
+
+tar cvf samba-ldap.tar ldap openldap samba system-auth
+
+service ldap start
+service smb start
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				restore
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+service ldap stop
+
+cp -rp /var/lib/ldap /var/lib/ldap.1
+cp -rp /var/lib/ldap.sav /var/lib/ldap
+
+service ldap start

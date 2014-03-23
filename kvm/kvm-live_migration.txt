@@ -1,0 +1,13 @@
+
+http://ubuntuforums.org/archive/index.php/t-1206848.html
+
+
+
+--wajig install virt-manager
+
+
+sudo /etc/init.d/libvirt-bin stop
+ps aux | grep virt
+  (get the process id of the "libvirtd -d" process)
+sudo kill -KILL <pid>
+sudo /etc/init.d/libvirt-bin start

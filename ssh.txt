@@ -1,0 +1,13 @@
+Protocol 2...PermitRootLogin no...AllowUsers jane John
+
+
+-- disable root login:
+#PermitRootLogin no
+PermitRootLogin forced-commands-only
+
+/etc/init.d/ssh restart
+
+
+AllowGroups linuxusers linuxadmins root
+AllowGroups linuxadmins root
+

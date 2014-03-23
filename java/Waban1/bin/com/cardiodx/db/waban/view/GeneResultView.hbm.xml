@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.GeneResultView" table="GENE_RESULT_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.GeneResultViewId">
+            <key-property name="geneName" type="string">
+                <column name="GENE_NAME" length="100" />
+            </key-property>
+            <key-property name="geneInterpretation" type="string">
+                <column name="GENE_INTERPRETATION" length="100" />
+            </key-property>
+            <key-property name="finalGt" type="string">
+                <column name="FINAL_GT" length="50" />
+            </key-property>
+            <key-property name="geneStatus" type="string">
+                <column name="GENE_STATUS" length="20" />
+            </key-property>
+            <key-property name="geneId" type="big_decimal">
+                <column name="GENE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneWho" type="string">
+                <column name="GENE_WHO" length="30" />
+            </key-property>
+            <key-property name="geneWhen" type="date">
+                <column name="GENE_WHEN" length="7" />
+            </key-property>
+            <key-property name="geneResultId" type="big_decimal">
+                <column name="GENE_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleName" type="string">
+                <column name="ALLELE_NAME" length="50" />
+            </key-property>
+            <key-property name="allResult" type="string">
+                <column name="ALL_RESULT" length="50" />
+            </key-property>
+            <key-property name="allWho" type="string">
+                <column name="ALL_WHO" length="30" />
+            </key-property>
+            <key-property name="allWhen" type="date">
+                <column name="ALL_WHEN" length="7" />
+            </key-property>
+            <key-property name="alleleId" type="big_decimal">
+                <column name="ALLELE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleResultId" type="big_decimal">
+                <column name="ALLELE_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

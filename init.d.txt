@@ -1,0 +1,21 @@
+       Insert links using the defaults:
+          update-rc.d foobar defaults
+       Equivalent command using explicit argument sets:
+          update-rc.d foobar start 20 2 3 4 5 . stop 20 0 1 6 .
+       Insert links for a service that should be running during multi-user mode, but that does not need to be explicitly stopped on shutdown:
+          update-rc.d foobar multiuser
+       Equivalent command using explicit argument sets:
+          update-rc.d foobar start 20 2 3 4 5 . stop 20 1 .
+       More typical command using explicit argument sets:
+          update-rc.d foobar start 30 2 3 4 5 . stop 70 0 1 6 .
+       Remove all links for a script (assuming foobar has been deleted already):
+          update-rc.d foobar remove
+       Example of disabling a service:
+          update-rc.d -f foobar remove
+          update-rc.d foobar stop 20 2 3 4 5 .
+       Example of a command for installing a system initialization-and-shutdown script:
+          update-rc.d foobar start 45 S . start 31 0 6 .
+       Example of a command for disabling a system initialization-and-shutdown script:
+          update-rc.d -f foobar remove
+          update-rc.d foobar stop 45 S .
+

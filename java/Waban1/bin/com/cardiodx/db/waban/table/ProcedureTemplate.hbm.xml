@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ProcedureTemplate" table="PROCEDURE_TEMPLATE" schema="DNALIMS">
+        <comment>Information about procedures.</comment>
+        <id name="procedureTemplateId" type="big_decimal">
+            <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="procedureName" type="string">
+            <column name="PROCEDURE_NAME" length="120">
+                <comment>Procedure name.</comment>
+            </column>
+        </property>
+        <property name="sopNumber" type="string">
+            <column name="SOP_NUMBER" length="20">
+                <comment>Procedure SOP identifier.</comment>
+            </column>
+        </property>
+        <property name="sopVersion" type="string">
+            <column name="SOP_VERSION" length="10">
+                <comment>Procedure SOP version.</comment>
+            </column>
+        </property>
+        <property name="procedureType" type="string">
+            <column name="PROCEDURE_TYPE" length="30">
+                <comment>The type of procedure.</comment>
+            </column>
+        </property>
+        <property name="procedureMode" type="string">
+            <column name="PROCEDURE_MODE" length="30">
+                <comment>The mode of procedure.</comment>
+            </column>
+        </property>
+        <property name="procedureStatus" type="string">
+            <column name="PROCEDURE_STATUS" length="30">
+                <comment>Status of the procedure (approved, obsolete, etc.). Only approved procedures can be run.</comment>
+            </column>
+        </property>
+        <property name="procedureDescription" type="string">
+            <column name="PROCEDURE_DESCRIPTION" length="400">
+                <comment>Description of the procedure.</comment>
+            </column>
+        </property>
+        <property name="procedureUrl" type="string">
+            <column name="PROCEDURE_URL" length="400">
+                <comment>URL associated with the procedure</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="checklists" table="CHECKLIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Procedure identifier and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Checklist" />
+        </set>
+        <set name="procedureTemplateResults" table="PROCEDURE_TEMPLATE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateResult" />
+        </set>
+        <set name="procedureTemplateAlleles" table="PROCEDURE_TEMPLATE_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Procedure identifier. Part of the primary key and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateAllele" />
+        </set>
+        <set name="protocolProcedures" table="PROTOCOL_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Procedure identifier and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolProcedure" />
+        </set>
+        <set name="accessionProcedures" table="ACCESSION_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Procedure identifier and foreign key to PROCEDURE_TEMPLATE.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AccessionProcedure" />
+        </set>
+        <set name="procedureTemplateGenes" table="PROCEDURE_TEMPLATE_GENE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Procedure identifier. Part of the primary key and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateGene" />
+        </set>
+        <set name="stepTemplates" table="STEP_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROCEDURE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>The procedure identifier and foreign key to the PROCEDURE_TEMPLATE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplate" />
+        </set>
+    </class>
+</hibernate-mapping>

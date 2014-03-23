@@ -1,0 +1,208 @@
+
+
+-- restore database from dev
+./bin/mysql -u root -S /tmp/mysqltest.sock -p -A < /usr/backup/etqdevel.dump
+
+--
+-- drop and create dbs
+--
+cd /usr/mysql# 
+./bin/mysql -uroot -S /tmp/mysqltest.sock -p
+
+
+SET foreign_key_checks = 0;
+
+drop database `ASPECTS`;
+drop database `ASPECTSARC`;         
+drop database `AUDITS`;             
+drop database `AUDITSARC`;          
+drop database `CALIB`;              
+drop database `CHANGE`;             
+drop database `COMPLAINTS`;         
+drop database `CORRACT`;            
+drop database `DELEGATION`;         
+drop database `DEVIATION`;          
+drop database `DOCARC`;             
+drop database `DOCWORK`;            
+drop database `EMERGENCY`;          
+drop database `EMERGENCYARC`;       
+drop database `EVALIDATOR`;         
+drop database `EVALIDATORARC`;      
+drop database `INCIDENTS`;          
+drop database `MATRET`;             
+drop database `MEETINGS`;           
+drop database `MONITORING`;         
+drop database `MONITORINGARC`;      
+drop database `MSDS`;               
+drop database `MSDSARC`;            
+drop database `NCMR`;               
+drop database `PROJECT`;            
+drop database `QUALRECS`;           
+drop database `QUALRECSARC`;        
+drop database `REGULATORY`;         
+drop database `REGULATORYARC`;      
+drop database `REPORTING`;          
+drop database `RISK`;               
+drop database `TRAINING`;           
+drop database `VACATION1`;          
+drop database `VACATION2`;          
+drop database `VACATION3`;          
+drop database `VACATION4`;          
+drop database `VACATION5`;          
+drop database `VACATION6`;          
+drop database `VACATION7`;          
+drop database `VACATION8`;          
+drop database `VALIDATION`;         
+drop database `VALIDATIONARC`;      
+
+SET foreign_key_checks = 1;
+
+
+create database `ASPECTS`;
+create database `ASPECTSARC`;        
+create database `AUDITS`;
+create database `AUDITSARC`;
+create database `CALIB`;
+create database `CHANGE`;
+create database `COMPLAINTS`;
+create database `CORRACT`;
+create database `DELEGATION`;
+create database `DEVIATION`;
+create database `DOCARC`;
+create database `DOCWORK`;
+create database `EMERGENCY`;
+create database `EMERGENCYARC`;
+create database `EVALIDATOR`;
+create database `EVALIDATORARC`;
+create database `INCIDENTS`;
+create database `MATRET`;
+create database `MEETINGS`;
+create database `MONITORING`;
+create database `MONITORINGARC`;
+create database `MSDS`;
+create database `MSDSARC`;
+create database `NCMR`;
+create database `PROJECT`;
+create database `QUALRECS`;
+create database `QUALRECSARC`;
+create database `REGULATORY`;
+create database `REGULATORYARC`;
+create database `REPORTING`;
+create database `RISK`;
+create database `TRAINING`;
+create database `VACATION1`;
+create database `VACATION2`;
+create database `VACATION3`;
+create database `VACATION4`;
+create database `VACATION5`;
+create database `VACATION6`;
+create database `VACATION7`;
+create database `VACATION8`;
+create database `VALIDATION`;
+create database `VALIDATIONARC`;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Go to Reliance Engine
+  Applications
+  By Name
+
+ASPECTS
+ASPECTSARC
+AUDITS
+AUDITSARC
+CALIB    -------> CALIBRATION
+CHANGE
+COMPLAINTS
+CORRACT
+DELEGATION
+DEVIATION
+DOCARC
+DOCWORK
+EMERGENCY
+EMERGENCYARC
+EVALIDATOR
+EVALIDATORARC
+INCIDENTS
+MATRET
+MEETINGS
+MONITORING
+MONITORINGARC
+MSDS
+MSDSARC
+NCMR
+PROJECT
+QUALRECS
+QUALRECSARC
+REGULATORY
+REGULATORYARC
+REPORTING
+RISK
+TRAINING
+VACATION1
+VACATION2
+VACATION3
+VACATION4
+VACATION5
+VACATION6
+VACATION7
+VACATION8
+VALIDATION
+VALIDATIONARC
+
+
+Click (Application Name)
+  Advanced
+  Export Schema and Control
+  Click Execute at 'Are you sure you want to run this SQL script?' 
+
+For VACATION2, VACATION3, VACATION4, VACATION5, VACATION6, VACATION7, VACATION8
+ Click Access Control, put 'etqAdministration' as Application Manager before clicking 'Export Schema and Control'
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Delete all users from the following groups:
+
+Automation
+Bioinformatics
+Biostatistics
+CCLOperations
+ClinicalDevelopment
+ClinicalOperations
+CustomerService
+EtQ-TestGroup555
+EtQ-TestGroup66666
+EtQ-TestGroup777
+EtQ-TestGroup888
+EtQ-TestGroup999
+ExecutiveManagement
+Finance
+GenomicResearch
+HumanResources
+InformationTechnology
+Marketing
+Operations_MaterialsManagement
+ProcessDevelopment
+ProcessDevelopmentGroup
+QualityAssuranceManager
+RegulatoryAffairs
+Reimbursement
+Sales
+SoftwareEngineering
+TerritoryManagement
+
+Data Center --> User Profiles --> By Group
+  Click the name of the group
+  Group Members
+  Remove members
+
+
+
+
+
+
+
+
+
+
+
+

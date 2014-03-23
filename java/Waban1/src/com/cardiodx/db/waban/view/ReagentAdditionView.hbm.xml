@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.ReagentAdditionView" table="REAGENT_ADDITION_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.ReagentAdditionViewId">
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="aliquotAction" type="string">
+                <column name="ALIQUOT_ACTION" length="16" />
+            </key-property>
+            <key-property name="reagentId" type="big_decimal">
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="stepId" type="big_decimal">
+                <column name="STEP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="procName" type="string">
+                <column name="PROC_NAME" length="120" />
+            </key-property>
+            <key-property name="stepDesc" type="string">
+                <column name="STEP_DESC" length="120" />
+            </key-property>
+            <key-property name="dateCompleted" type="date">
+                <column name="DATE_COMPLETED" length="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

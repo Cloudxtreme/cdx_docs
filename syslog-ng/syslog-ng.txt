@@ -1,0 +1,95 @@
+--
+-- server
+--
+options { sync (0);
+          time_reopen (10);
+          log_fifo_size (1000);
+          long_hostnames (off);
+          use_dns (yes);
+          use_fqdn (no);
+          create_dirs (no);
+          keep_hostname (yes);
+        };
+
+source sys      { unix-stream ("/dev/log"); internal(); };
+source remote   { udp(); };
+
+destination std { file( "/data/log/$HOST/$YEAR$MONTH/$FACILITY" create_dirs(yes)); };
+
+log { source(sys); destination(std); };
+log { source(remote); destination(std); };
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- client
+--
+
+wajig install syslog-ng -y
+
+cd /etc/syslog-ng
+mv syslog-ng.conf syslog-ng.conf.orig
+
+vi syslog-ng.conf
+options { sync (0);
+          time_reopen (10);
+          log_fifo_size (1000);
+          long_hostnames (off);
+          use_dns (no);
+          use_fqdn (no);
+          create_dirs (no);
+          keep_hostname (yes);
+        };
+
+source sys      { unix-stream ("/dev/log"); internal(); };
+destination loghost     { udp("syslog" port(514)); };
+
+log { source(sys); destination(loghost); };
+
+
+--/etc/init.d/syslog-ng restart
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- configure upstart config
+--
+
+update-rc.d -f syslog-ng remove
+
+cd /etc/init
+vi syslog-ng.conf
+
+# syslog-ng  
+#
+
+description "Syslog-ng daemon"
+
+#start on (local-filesystems and net-device-up IFACE!=lo)
+#start on (local-filesystems and net-device-up IFACE=eth0)
+start on (local-filesystems and net-device-up IFACE=br0)
+stop on runlevel [!2345]
+
+expect fork
+respawn
+
+pre-start script
+    test -x /usr/sbin/syslog-ng || { stop; exit 0; }
+    mkdir -p -m0755 /var/run/syslog-ng
+end script
+
+exec /usr/sbin/syslog-ng -p /var/run/syslog-ng/syslog-ng.pid
+
+
+start syslog-ng
+status syslog-ng
+
+logger -t test -p local0.info "test on syslog-ng"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+not working!!!
+update-rc.d -f syslog-ng remove
+update-rc.d syslog-ng start 99 2 3 4 5 . stop 99 0 1 6 .
+
+
+
+

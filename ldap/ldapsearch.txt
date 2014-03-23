@@ -1,0 +1,2 @@
+ldapsearch -x -b "dc=cardiodx,dc=com" "(uidNumber=1098)" -ZZ
+

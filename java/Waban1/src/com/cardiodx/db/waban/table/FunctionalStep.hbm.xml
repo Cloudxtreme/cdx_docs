@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.FunctionalStep" table="FUNCTIONAL_STEP" schema="DNALIMS">
+        <comment>Describes the type of step used in a procedure.</comment>
+        <id name="functionalStepId" type="big_decimal">
+            <column name="FUNCTIONAL_STEP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ocxLoad" class="com.cardiodx.db.waban.table.OcxLoad" fetch="select">
+            <column name="OCX_LOAD_ID" precision="22" scale="0">
+                <comment>Foreign key to OCX information</comment>
+            </column>
+        </many-to-one>
+        <property name="functionalStepName" type="string">
+            <column name="FUNCTIONAL_STEP_NAME" length="50" not-null="true" unique="true">
+                <comment>The name of the procedure step.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="100">
+                <comment>Description of the step (transfer, dilution, etc.).</comment>
+            </column>
+        </property>
+        <property name="sampleOcxName" type="string">
+            <column name="SAMPLE_OCX_NAME" length="100" not-null="true">
+                <comment>Name of the control used to execute the functional step in single sample mode.</comment>
+            </column>
+        </property>
+        <property name="batchOcxName" type="string">
+            <column name="BATCH_OCX_NAME" length="100" not-null="true">
+                <comment>Name of the control used to execute the functional step in batch sample mode.</comment>
+            </column>
+        </property>
+        <property name="viewName" type="string">
+            <column name="VIEW_NAME" length="30" />
+        </property>
+        <set name="stepTemplates" table="STEP_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FUNCTIONAL_STEP_ID" precision="22" scale="0">
+                    <comment>The type of step identifier and foreign key to the FUNCTIONAL_STEP table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StepTemplate" />
+        </set>
+        <set name="functionalStepParameters" table="FUNCTIONAL_STEP_PARAMETER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FUNCTIONAL_STEP_ID" precision="22" scale="0" not-null="true">
+                    <comment>The type of step identifier and foreign key to the FUNCTIONAL_STEP table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.FunctionalStepParameter" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+
+wajig isntall awstats
+
+
+  497  cd /etc/awstats/
+  502  cp awstats.conf awstats.portal.conf
+
+vi awstats.portal.conf
+LogFile="/home/cchou/apache/portal"
+#LogFormat="%time3 %host %host_r %virtualname %url"
+SiteDomain="portal.cardiodx.com"
+HostAliases="portal"
+
+/usr/lib/cgi-bin/awstats.pl -config=portal -update
+
+NOT working!!!!!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+cchou@cchoudesktop:~$ date "+%b %e %H:%M:%S"
+
+

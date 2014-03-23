@@ -1,0 +1,11 @@
+image convert resize
+
+http://www.imagemagick.org/Usage/resize/
+http://www.win.tue.nl/~aeb/linux/misc/convert/convert-draw-text.html
+
+wajig install imagemagick
+
+convert CompanyLogo.jpg -resize 1500x200 -size 1500x200 xc:white +swap -gravity west -composite foo.jpg 
+
+nautilus .
+

@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudStaarAnonRequest" table="AUD_STAAR_ANON_REQUEST" schema="DNALIMS">
+        <comment>STAAR Anonymization Request Table</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="staarAnonymizationRequestId" type="big_decimal">
+            <column name="STAAR_ANONYMIZATION_REQUEST_ID" precision="22" scale="0">
+                <comment>Staar Anonymization Request Id</comment>
+            </column>
+        </property>
+        <property name="studyProtocolId" type="big_decimal">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Study Protocol Id</comment>
+            </column>
+        </property>
+        <property name="requestStatus" type="string">
+            <column name="REQUEST_STATUS" length="20">
+                <comment>Request Status</comment>
+            </column>
+        </property>
+        <property name="requestMessage" type="string">
+            <column name="REQUEST_MESSAGE" length="2000">
+                <comment>Request Message</comment>
+            </column>
+        </property>
+        <property name="checklistId" type="big_decimal">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist Id</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date Created</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>Created By</comment>
+            </column>
+        </property>
+        <property name="samplesReaccessioned" type="string">
+            <column name="SAMPLES_REACCESSIONED" length="1">
+                <comment>Samples Reaccessioned</comment>
+            </column>
+        </property>
+        <property name="reaccessionedBy" type="string">
+            <column name="REACCESSIONED_BY" length="30">
+                <comment>Reaccessioned By</comment>
+            </column>
+        </property>
+        <property name="dateReaccessioned" type="date">
+            <column name="DATE_REACCESSIONED" length="7">
+                <comment>Date Reaccessioned</comment>
+            </column>
+        </property>
+        <property name="clinicalDataImported" type="string">
+            <column name="CLINICAL_DATA_IMPORTED" length="1">
+                <comment>Clinical Data Imported</comment>
+            </column>
+        </property>
+        <property name="clinicalDataImportedBy" type="string">
+            <column name="CLINICAL_DATA_IMPORTED_BY" length="30">
+                <comment>Clinical Data Imported By</comment>
+            </column>
+        </property>
+        <property name="dateClinicalDataImported" type="date">
+            <column name="DATE_CLINICAL_DATA_IMPORTED" length="7">
+                <comment>Date Clinical Data Imported</comment>
+            </column>
+        </property>
+        <property name="isStudyClosed" type="string">
+            <column name="IS_STUDY_CLOSED" length="1">
+                <comment>Is Study Closed</comment>
+            </column>
+        </property>
+        <property name="studyClosedBy" type="string">
+            <column name="STUDY_CLOSED_BY" length="30">
+                <comment>Study Closed By</comment>
+            </column>
+        </property>
+        <property name="dateStudyClosed" type="date">
+            <column name="DATE_STUDY_CLOSED" length="7">
+                <comment>Date Study Closed</comment>
+            </column>
+        </property>
+        <property name="researchStudyProtocolId" type="big_decimal">
+            <column name="RESEARCH_STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Research Study Protocol Id</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

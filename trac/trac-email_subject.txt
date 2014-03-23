@@ -1,0 +1,6 @@
+
+Test 3 #?type=task&Priority=Major&Version=Linux&Component=IT
+
+
+egrep -v 'aud|trc|admin' $LOG | mailx -s "Backup - `hostname`#?type=Task&Priority=Standard&Version=Backup&Component=IT" it_support@cardiodx.com
+

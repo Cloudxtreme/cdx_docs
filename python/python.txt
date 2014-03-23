@@ -1,0 +1,25 @@
+
+http://docs.python.org/lib/csv-examples.html
+http://mrtopf.de/blog/python_zope/a-small-introduction-to-python-eggs/
+http://trac.edgewall.org/wiki/TracPlugins
+
+wget http://peak.telecommunity.com/dist/ez_setup.py
+
+vi setup.py
+#!/usr/bin/env python
+
+from distutils.core import setup
+
+setup(
+    name='eventlet',
+    version='0.1',
+    description='Coroutine-based networking library',
+    author='Chialin Chou',
+    author_email='cchou@cardiodx.com',
+    url='http://www.cardiodx.com/',
+    packages=[''])
+
+python setup.py --help-commands
+python setup.py --help
+python setup.py bdist
+

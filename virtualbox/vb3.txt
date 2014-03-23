@@ -1,0 +1,43 @@
+
+newest update
+
+
+configure birdge interface
+
+wajig install uml-utilities bridge-utils -y
+
+vi /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_maxwait 0
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install xterm xauth -y
+
+wajig install linux-headers-2.6.24-26-server
+wajig install build-essential 
+
+
+vi sources.list
+deb http://download.virtualbox.org/virtualbox/debian hardy non-free
+
+
+gpg --recv-keys DCF9F87B6DFBCBAE
+gpg --armor --export DCF9F87B6DFBCBAE | apt-key add -
+wajig update
+
+
+wajig install virtualbox-3.1
+
+

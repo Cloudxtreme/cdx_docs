@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudPgxSetupTemplate" table="AUD_PGX_SETUP_TEMPLATE" schema="DNALIMS">
+        <comment>PGx Setup Template</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change_reason table</comment>
+            </column>
+        </property>
+        <property name="setupTemplateId" type="big_decimal">
+            <column name="SETUP_TEMPLATE_ID" precision="22" scale="0">
+                <comment>PK FOR TABLE</comment>
+            </column>
+        </property>
+        <property name="setupTemplateName" type="string">
+            <column name="SETUP_TEMPLATE_NAME" length="100">
+                <comment>NAME OF SETUP TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="200">
+                <comment>DESCRIPTION OF TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="fileName" type="string">
+            <column name="FILE_NAME">
+                <comment>FILENAME OF THE TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="reportCategory" type="string">
+            <column name="REPORT_CATEGORY" length="100" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>SETUP TEMPLATE CREATED BY</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>SETUP TEMPLATE CREATED DATE</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>SETUP TEMPLATE MODIFIED BY</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>SETUP TEMPLATE MODIFIED DATE</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

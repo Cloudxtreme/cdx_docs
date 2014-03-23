@@ -1,0 +1,8 @@
+
+
+wajig install sendfax
+
+sendfax -n -d 16504752721 -h asterisk orig.pdf 
+
+faxstat -h asterisk
+

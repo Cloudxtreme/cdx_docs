@@ -1,0 +1,151 @@
+set line 3000
+set pagesize 1000
+
+--
+-- find the RNA Extractions for the day
+--
+col checklist_name for a10
+select distinct c.checklist_id, c.checklist_name,
+		to_char(c.date_created, 'HH24:MI:SS') created,
+		to_char(c.date_completed, 'HH24:MI:SS') completed
+from checklist_sample cs, checklist c, procedure_template p
+where cs.checklist_id = c.checklist_id 
+  and c.procedure_template_id = p.procedure_template_id
+  and p.PROCEDURE_NAME = 'RNA Extraction'
+  and to_char(c.date_created) = '19-APR-11'
+order by created;
+
+we have 3 batches
+------------
+       19270
+       19284
+       19286
+
+select c.checklist_id, count(sample_id)
+from checklist c, checklist_sample s
+where c.checklist_id = s.checklist_id
+and c.checklist_id in (19270,19284,19286)
+group by c.checklist_id;
+
+--------------------------------------
+-- ok, let's work on checklist 19286
+--------------------------------------
+--
+-- print the sample location map:
+--
+col location for a10
+select substr(limspackage.container_position(s1.sample_id),9) location, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2
+where s1.Sample_ID = cs.Sample_ID
+and s2.Sample_ID = cs.orig_Sample_ID
+and checklist_ID = 19286
+order by location;
+
+--------------------------------------
+-- POS CONTROL
+--------------------------------------
+-- find the PC tube id (should be same as B1 above)
+select s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2
+where s1.Sample_ID=cs.Sample_ID
+and s2.Sample_ID=cs.orig_Sample_ID
+and substr(limspackage.container_position(s1.sample_id),9) = '(B1)'
+and checklist_ID=19286;
+
+-- OK, let's find the status of PC incubation.......
+col status for a20
+select distinct c.checklist_id, to_char(c.date_completed, 'HH24:MI:SS') date_completed, cs.status
+from checklist_sample cs, checklist c, procedure_template p
+where cs.checklist_id = c.checklist_id
+   and c.procedure_template_id = p.procedure_template_id
+   and c.checklist_id in (
+	 	-- there will be 2 checklists: 
+    --    "Bubble Removal/Volume Check" & "Positive Control Incubation"
+		select checklist_id from checklist_sample where sample_id in (
+			select sample_id from sample where sample_tube_id = 'T1043233'
+		)
+	)
+and p.PROCEDURE_NAME = 'Positive Control Incubation'
+and p.procedure_status = 'APPROVED';
+
+--------------------------------------------------------------
+-- OK, let's find the status of the sample incubation......
+-- checklist_id for sample incubation...
+--------------------------------------------------------------
+select distinct cs.checklist_id, to_char(c.date_completed, 'HH24:MI:SS') completed, cs.status
+from checklist c, procedure_template pt, checklist_sample cs
+where c.procedure_template_id = pt.procedure_template_id
+and c.checklist_id = cs.checklist_id
+and to_char(c.date_completed) = '19-APR-11' 
+and sample_id in ( select orig_sample_id from checklist_sample where checklist_id = 19286 )
+and procedure_name = 'Sample Incubation'
+and procedure_status = 'APPROVED'
+order by cs.checklist_id;
+
+------------------------
+-- Quantification
+------------------------
+select distinct c.checklist_name || ' (' || cs.checklist_id || ')' checklist_name, sample_id, cs.status
+from checklist c, procedure_template pt, checklist_sample cs
+where c.procedure_template_id = pt.procedure_template_id
+and c.checklist_id = cs.checklist_id
+and to_char(c.date_completed) = '19-APR-11'
+and procedure_name = 'RNA Quantitation'
+and procedure_status = 'APPROVED'
+and c.checklist_name = 'C' -- C batch????
+;
+
+------------------------
+-- Normalization
+------------------------
+col checklist_name for a10;
+col entered_value for a30;
+select distinct c.checklist_name || ' (' || cs.checklist_id || ')' checklist_name, cs.sample_id, cs.status
+from checklist c, procedure_template pt, checklist_sample cs
+where c.procedure_template_id = pt.procedure_template_id
+and c.checklist_id = cs.checklist_id
+and to_char(c.date_completed) = '19-APR-11'
+and procedure_name = 'RNA Normalization/RT Prep'
+and procedure_status = 'APPROVED'
+and c.checklist_name = 'C' -- C batch????
+;
+
+select distinct cc.checklist_col, cc.entered_value, cs.status
+from checklist c, checklist_content cc, procedure_template pt, checklist_sample cs
+where c.checklist_id = cs.checklist_id
+and c.checklist_id = cc.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and (cc.checklist_col <> 0 and cc.checklist_row = 1)
+and c.checklist_id in (
+  select checklist_id
+  from checklist c, procedure_template pt
+  where c.procedure_template_id = pt.procedure_template_id
+  and to_char(c.date_completed) = '19-APR-11'
+  and procedure_name = 'RNA Normalization/RT Prep'
+  and procedure_status = 'APPROVED'
+  and c.checklist_name = 'C' -- C batch????
+)
+order by cc.checklist_col;
+
+
+------------------------
+-- Checklists
+------------------------
+select distinct procedure_name
+from procedure_template 
+where PROCEDURE_STATUS = 'APPROVED'
+order by procedure_name;
+
+------------------------
+col procedure_name for a40;
+select checklist_id, c.checklist_name, pt.procedure_name, to_char(c.date_completed) cdate, to_char(c.date_completed, 'HH24:MI:SS') ctime
+from checklist c, procedure_template pt
+where c.procedure_template_id = pt.procedure_template_id
+and procedure_status = 'APPROVED'
+and c.checklist_id in (19312,19313,19314,19315,19342,19343,19344,19345,19346,19347)
+order by checklist_id;
+
+
+
+
+

@@ -1,0 +1,30 @@
+
+
+set service nat rule 20
+set service nat rule 20 description OpenVPN
+set service nat rule 20 type destination
+set service nat rule 20 protocol udp
+set service nat rule 20 inbound-interface eth1
+set service nat rule 20 destination port 1194
+set service nat rule 20 inside-address address 10.10.37.22
+
+delete service nat rule 20
+
+
+set service nat rule 40
+set service nat rule 40 description imaps
+set service nat rule 40 type destination
+set service nat rule 40 protocol tcp
+set service nat rule 40 inbound-interface eth1
+set service nat rule 40 destination port 993
+set service nat rule 40 inside-address address 10.10.37.27
+
+
+set service nat rule 60
+set service nat rule 60 description LMS_https
+set service nat rule 60 type destination
+set service nat rule 60 protocol tcp
+set service nat rule 60 inbound-interface eth1
+set service nat rule 60 destination port 443
+set service nat rule 60 inside-address address 10.10.37.36
+

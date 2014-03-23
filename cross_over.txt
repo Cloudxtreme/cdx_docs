@@ -1,0 +1,7 @@
+cross over install office 2007 on linux
+
+http://down.codeweavers.com/ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+install-crossover-pro-7.1.0.sh
+crossover-pro-7.1.0.dmg

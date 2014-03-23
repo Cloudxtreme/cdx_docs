@@ -1,0 +1,95 @@
+apache nutch 1.2
+
+http://rohitkhatkar.com/blog/?p=389
+http://wiki.apache.org/nutch/GettingNutchRunningWithUbuntu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Have java installed:
+  wajig install sun-java6-jdk -y
+  java -version
+    java version "1.6.0_22"
+
+
+Tomcat:
+  See tomcat/tomcat6_1.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nutch:
+
+** should run as a 'nutch' user!!
+
+wget http://apache.ziply.com//nutch/apache-nutch-1.2-bin.tar.gz
+tar zxvf apache-nutch-1.2-bin.tar.gz 
+
+cd conf
+vi crawl-urlfilter.txt
+#-[?*!@=]
++[?*!@=]
+
+#+^http://([a-z0-9]*\.)*MY.DOMAIN.NAME/
+#+^http://([a-z0-9]*\.)cardiodx.com/
++^http://([a-z0-9]*\.)*cardiodx.com/
+
+vi nutch-default.xml 
+http.agent.name 					cardiodx
+http.robots.agents				*
+http.agent.description		CDX Agent
+http.agent.url						http://www.cardiodx.com
+http.agent.email					cchou@cardiodx.com
+http.agent.version				Nutch-1.2
+http.agent.host						cchoudesktop
+
+plugin.includes
+
+mkdir urls
+cd urls/
+vi nutch
+http://cchoudesktop.cardiodx.com/
+http://www.cardiodx.com/
+
+--
+-- start crawling...
+--
+export JAVA_HOME=/usr/lib/jvm/java-6-sun
+bin/nutch crawl urls -dir crawl -depth 3 -topN 50
+
+bin/nutch org.apache.nutch.searcher.NutchBean cardiodx
+
+bin/nutch readdb crawl/crawldb -stats
+
+
+--
+-- tomcat ???
+--
+Deploy nutch-1.2.war file through:
+  http://cchoudesktop.cardiodx.com:8080/manager/html/
+
+cd /var/lib/tomcat6
+ln -s /home/cchou/nutch/nutch-1.2/crawl .
+
+http://cchoudesktop.cardiodx.com:8080/nutch-1.2
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- re-crawl (http://wiki.apache.org/nutch/Crawl)
+--
+bin/nutch inject crawl/crawldb urls
+for i in `seq 1 3`; do bin/nutch generate crawl/crawldb crawl/segments $i -adddays 5; done
+SEG=`ls -d crawl/segments/* | tail -1`
+bin/nutch updatedb crawl/crawldb $SEG
+bin/nutch mergesegs crawl/MERGEDsegments crawl/segments/*
+rm -rf crawl/segments/
+mv crawl/MERGEDsegments crawl/segments
+???bin/nutch  invertlinks crawl/linkdb crawl/segments/*
+
+
+
+
+
+
+
+
+
+
+
+

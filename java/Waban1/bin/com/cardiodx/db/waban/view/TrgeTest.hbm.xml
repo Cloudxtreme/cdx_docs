@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeTest" table="TRGE_TEST" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeTestId">
+            <key-property name="testId" type="big_decimal">
+                <column name="TEST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="testName" type="string">
+                <column name="TEST_NAME" length="30" />
+            </key-property>
+            <key-property name="testType" type="string">
+                <column name="TEST_TYPE" length="30" />
+            </key-property>
+            <key-property name="testClass" type="string">
+                <column name="TEST_CLASS" length="30" />
+            </key-property>
+            <key-property name="testNumber" type="string">
+                <column name="TEST_NUMBER" length="30" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

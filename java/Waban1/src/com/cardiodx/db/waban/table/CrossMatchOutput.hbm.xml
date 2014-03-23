@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CrossMatchOutput" table="CROSS_MATCH_OUTPUT" schema="DNALIMS">
+        <id name="crossMatchOutputId" type="big_decimal">
+            <column name="CROSS_MATCH_OUTPUT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="traceTransferId" type="big_decimal">
+            <column name="TRACE_TRANSFER_ID" precision="22" scale="0">
+                <comment>Trace transfer identifier</comment>
+            </column>
+        </property>
+        <property name="regionFrom" type="big_decimal">
+            <column name="REGION_FROM" precision="22" scale="0">
+                <comment>Starting position of matching sequence</comment>
+            </column>
+        </property>
+        <property name="regionTo" type="big_decimal">
+            <column name="REGION_TO" precision="22" scale="0">
+                <comment>End position of matching sequence</comment>
+            </column>
+        </property>
+        <property name="matchLength" type="big_decimal">
+            <column name="MATCH_LENGTH" precision="22" scale="0">
+                <comment>Number of matching sequences</comment>
+            </column>
+        </property>
+        <property name="segmentFrom" type="big_decimal">
+            <column name="SEGMENT_FROM" precision="22" scale="0">
+                <comment>Start position of segment</comment>
+            </column>
+        </property>
+        <property name="segmentTo" type="big_decimal">
+            <column name="SEGMENT_TO" precision="22" scale="0">
+                <comment>position of segment</comment>
+            </column>
+        </property>
+        <property name="segmentLength" type="big_decimal">
+            <column name="SEGMENT_LENGTH" precision="22" scale="0">
+                <comment>Length of segment</comment>
+            </column>
+        </property>
+        <property name="segmentId" type="big_decimal">
+            <column name="SEGMENT_ID" precision="22" scale="0">
+                <comment>Segment identifier</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

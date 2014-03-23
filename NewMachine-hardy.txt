@@ -1,0 +1,100 @@
+ubuntu server hardy installation 
+
+http://kennywest.blogspot.com/2007/04/pamccreds-howto.html
+
+wajig install libpam-ldap libnss-ldap libnss-db -y
+
+
+-- 
+-- wajig install libpam-ldap libnss-ldap libnss-db libpam-mount libpam-ccreds libpam-foreground libpam-smbpass nss-updatedb -y
+--
+
+cd /etc
+mv /etc/ldap.conf /etc/ldap.conf.orig
+cat > /etc/ldap.conf << EOF
+host ldap
+base dc=cardiodx,dc=com
+ldap_version 3
+pam_password md5
+ssl start_tls
+ssl on
+tls_checkpeer no
+#bind_policy soft
+EOF
+
+
+???????
+ync,sys,syslog,uucp,www-data
+bind_timelimit 1
+timelimit 1
+
+cat > /etc/pam_ldap.conf << EOF
+host ldap.cardiodx.com
+base dc=cardiodx,dc=com
+ldap_version 3
+pam_password crypt
+ssl start_tls
+tls_checkpeer no
+bind_timelimit 1
+timelimit 1
+EOF
+
+wajig install nss-updatedb -y
+
+/usr/sbin/nss_updatedb ldap
+
+vi /etc/nsswitch.conf
+passwd:         files db
+group:          files db
+shadow:         files db
+
+
+getent passwd 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install libpam-mount libpam-ccreds libpam-foreground libpam-smbpass -y
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Use nssdb for caching
+  - in nsswitch, only have 'files db' (remove ldap from it)
+  - in /etc/pam.d/common-auth, use 'pam_exec.so ldap' to update nss db after a succeffsul login
+  - use pam_ccreds.so to cache credential locally
+
+
+cd /etc/pam.d
+mv common-auth common-auth.orig
+cat > common-auth << EOF
+auth sufficient pam_unix.so
+auth [authinfo_unavail=ignore success=1 default=4] pam_ldap.so use_first_pass
+auth [default=done] pam_ccreds.so action=validate use_first_pass
+auth [default=ignore] pam_mount.so use_first_pass
+auth [default=ignore] pam_exec.so /usr/sbin/nss_updatedb ldap
+auth [default=done] pam_ccreds.so action=store use_first_pass
+auth [default=bad] pam_ccreds.so action=update use_first_pass
+EOF
+
+mv common-account common-account.orig
+cat > common-account << EOF
+account sufficient pam_unix.so nullok_secure
+account required pam_permit.so
+EOF
+
+
+mv common-password common-password.orig
+cat > common-password << EOF
+password   required   pam_unix.so nullok obscure md5
+password   optional   pam_smbpass.so nullok use_authtok use_first_pass
+EOF
+
+mv common-session common-session.orig
+cat > common-session << EOF
+session required        pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional        pam_mount.so use_first_pass
+session optional        pam_foreground.so
+session required        pam_unix.so
+EOF
+
+visudo

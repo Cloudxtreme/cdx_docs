@@ -1,0 +1,51 @@
+scan to file sane brother printer
+
+http://solutions.brother.com/linux/sol/printer/linux/sane_drivers.html
+
+    *  wajig install libsane (requirement)
+
+    * Install brscan2-0.2.4-0.i386.deb & brscan-skey-0.2.1-1.i386.deb from gdrive/it/drivers/brother/linux
+
+    * wajig install sane-utils (for scanimage)
+
+    * wajig install libtiff-tools (for tiffcp & tiff2pdf)
+
+    * Add a scanner as follows
+          o brsaneconfig2 -a name=brotherscanner_front model=MFC-8860DN ip=10.10.37.93
+          o brsaneconfig2 -q gives the list of scanners added
+
+    * Use of brscan-skey described on Brother website
+
+    * Edit config file /usr/local/Brother/sane/brscan-skey-0.2.1-1.cfg and comment all the features not needed. We enable only the ?scan to file? feature
+
+    * Contents of the file ?scantofile-0.2.1-1.sh?
+
+#! /bin/sh
+set +o noclobber
+#
+#   $1 = scanner device
+#   $2 = friendly name
+#
+
+#   
+#       100,200,300,400,600
+#
+resolution=100
+device=$1
+if [ "`which usleep`" != '' ];then
+    usleep 10000
+else
+    sleep  0.01
+fi
+output_dir="/tmp/brscan" 
+mkdir -p $output_dir
+cd $output_dir
+output_file=`mktemp brscan.XXXXXX`
+#chmod 644 $output_file
+echo "scan from $2($device) to $output_file" 
+scanimage --device-name "$device" --resolution $resolution --format=tiff --batch="${output_file}%d.tif" 
+tiffcp ${output_file}*.tif ${output_file}_all.tif
+tiff2pdf ${output_file}_all.tif > ${output_file}.pdf
+rm -f ${output_file} ${output_file}*.tif
+
+

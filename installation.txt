@@ -1,0 +1,164 @@
+
+??security level - higher
+
+
+expert mode
+
+sda1 /boot xfs 100m, primary
+sda2 linux raid, rest, primary
+
+sdb1 (no mount) xfs 100m, primary
+sdb2 linux raid, rest, primary
+
+sda/sdb --> add to raid
+
+raid --> type --> linux logical volume manager
+
+add to lvm  --> cdslvm
+
+cdxlvm --> create --> 
+	5g / xfs root
+	2g swap swap
+
+
+custom package --> add sshd
+
+change timezone
+
+change ip address --> static
+
+lilo with text menu
+
+disable services: (7/26 running)
+
+
+--network computer (client)
+openssh-server
+--samba-server
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /etc/sysconfig
+vi network
+
+NETWORKING=yes
+HOSTNAME=mylinux
+GATEWAY=10.10.37.1
+
+
+cd /etc/sysconfig/network-scripts
+vi ifcfg-eth0
+
+DEVICE=eth0
+*BOOTPROTO=static
+*IPADDR=10.10.37.2
+NETMASK=255.255.255.0
+*NETWORK=10.10.37.0
+*BROADCAST=10.10.37.255
+ONBOOT=yes
+TYPE=Ethernet
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sshd: 
+	disk1 /mnt/cdrom/media/main
+	openssh-server-3.9p1-3mdk.i586.rpm
+	openssl-client-3.9p1-3mdk.i586.rpm 
+	
+disk1: /mnt/cdrom/media/main
+	dhcp-server-3.0.1-5mdk.i586.rpm
+
+disk2: /mnt/cdrom/media/main2
+	bind-utils-9.3.0-3mdk.i586.rpm
+	bind-9.3.0-3mdk.i586.rpm
+
+
+** please read ddns.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/proc/sys/dev/raid/speed_limit_max
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+disk2:
+
+bash_complition  
+. /etc/bash_complition
+
+/etc/xinit??
+
+msec?
+
+
+drakconnect
+
+urpmi gpm  (mouse)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# vi /etc/host.allow
+ALL:10.10.37.:ALLOW
+ALL:.cardiodx.com:ALLOW
+ALL:LOCAL:ALLOW
+
+
+# vi /etc/lilo.conf
+
+default="linux"
+boot=/dev/md0
+raid-extra-boot=mbr-only
+map=/boot/map
+install=menu
+keytable=/boot/us.klt
+prompt
+nowarn
+timeout=100
+message=/boot/message
+menu-scheme=wb:bw:wb:bw
+image=/boot/vmlinuz
+        label="linux"
+        root=/dev/vg0/root
+        initrd=/boot/initrd.img
+        read-only
+image=/boot/vmlinuz
+        label="failsafe"
+        root=/dev/vg0/root
+        initrd=/boot/initrd.img
+        append="failsafe devfs=nomount"
+        read-only
+
+
+# lilo
+
+
+sfdisk -d /dev/sda
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+urpmi.removemedia -a
+
+urpmi.addmedia intPWD ftp://10.10.37.148/mandrake with_hdlist hdlist.cz
+
+
+
+vi /etc/urpmi/urpmi.cfg
+
+# generated Wed Mar 30 21:35:32 2005
+cdxinternal ftp://10.10.37.148/mandrake {
+  hdlist: hdlist.cdxinternal.cz
+  list: list.cdxinternal
+  with_hdlist: hdlist.cz
+}
+
+
+
+

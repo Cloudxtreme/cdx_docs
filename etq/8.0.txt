@@ -1,0 +1,79 @@
+
+--
+-- create mySQL db
+--
+cd /usr/mysql
+cp my3307.cnf my3306.cnf
+vi my3306.cnf
+  change 3307 to 3306
+  chnage /tmp/mysqldev.sock to /tmp/mysql80.sock
+
+mkdir mysql3306
+cp -rp mysql3307/mysql mysql3306
+chown mysql:mysql mysql3306
+
+su mysql -c "cd /usr/mysql; ./bin/mysqld_safe --defaults-file=/usr/mysql/my3306.cnf" &
+
+
+--
+-- restore EtQ backup
+--
+cd /root/8.0/DB/
+vi CardioDX80Dev.sql.sql
+    SET FOREIGN_KEY_CHECKS = 0;
+      :
+      : (all other sql statements)
+      :
+    SET FOREIGN_KEY_CHECKS = 1;
+
+cd /usr/mysql
+./bin/mysql -u root -p -S /tmp/mysql80.sock -A < /root/8.0/DB/CardioDX80Dev.sql.sql
+
+
+
+  598  cd /usr/tomcat/webapps/
+  601  mkdir reliance_dev80
+  606  mv /root/8.0/War/* .
+  613  cd reliance_dev80/
+  616  cd WEB-INF/
+  618  cd props/
+  621  vi database.properties
+change 3309 to 3306
+password=A09913D107DED3EF3E2BA9C3080F3EF92762B573117BE50E8DC92EA7BB0EDF999E742F3954858B45B05EB0DD7480F86FCA2B955ECB6C7BD9
+
+vi log4j.properties
+  change _prod to _dev80
+
+vi config.properties
+licenseKey=AB511777F0A0584C6DFB6D34C47DD8F57F18A42DA57D0044CE791980E9CE8ADE09AA6E69EA91D248FF2C5B8A62E8AA68C34AB65C640A1170EC67BCDF6CC9340318020814F5823C77EE45171825B24D00F69D810813D2D20C54D3625C22CE2DFAF64F54360AE43A779EEBD871DE647BF6293EAD6464FCF7477198DDBBB6B11224B448E45073C912A7EAD50209282CDF2BAEEF2E2878CE95084FB942B7C119F3926EE785D01763513B43AD6973BACF47C06E037F93AEC3C3C377C1A177E61C8727095C704D8003AE45271343AD9DEC044D4B049F1E842AB9CF095430B7BFCA08810A28E7ECB337CE530C9D9DFB79D46252C9D1BD6EFD4D1127CB755227D5DCB2BC91DA4E0011C8C27FBDC2E0DF57189214EA399A5260AD6C786FC88785CA5D11FB7B37242639FD4E71651044050E6F9213D170543F2B8D5B81266658FC45DF0B6051E3AC1024A1EAE2041BC77099ECFDA76F9870925FB5D554241741233F6B83A209236AEB8C4E9620EE2570F8E93EAF82029EA61F1A33A775
+
+ldapUnavailable=0
+indexRoot=/usr/index/reliance_dev80
+attachmentRoot=/usr/files/reliance_dev80
+ 
+  627  cd /usr/files/
+  629  ls reliance_dev
+  630  mkdir reliance_dev80
+  632  cd reliance_dev80/
+  635  mv /root/8.0/attachment/* .
+
+
+  638  /etc/init.d/tomcat stop
+  639  tail -20f /usr/tomcat/logs/catalina.out &
+  640  killall java
+
+  642  cd /usr/tomcat/work/
+  644  cd Catalina/localhost/
+  646  rm -rf *
+
+  647  /etc/init.d/tomcat start
+
+
+https://etqdevel.cardiodx.com/reliance_dev80/reliance
+etqadministrator/123
+
+enterprise configuration center
+etq administrator
+reset password
+
+

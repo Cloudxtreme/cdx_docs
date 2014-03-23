@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ConfigReagent" table="CONFIG_REAGENT" schema="DNALIMS">
+        <comment>To store the details of Config Reagent tab in Schema Manager</comment>
+        <id name="configReagentId" type="big_decimal">
+            <column name="CONFIG_REAGENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Subsidiary Identifier.</comment>
+            </column>
+        </many-to-one>
+        <property name="reagentPfx" type="string">
+            <column name="REAGENT_PFX" length="50">
+                <comment>Reagent Prefix</comment>
+            </column>
+        </property>
+        <property name="reagentName" type="string">
+            <column name="REAGENT_NAME" length="50">
+                <comment>Reagent Name</comment>
+            </column>
+        </property>
+        <property name="targetAmt" type="big_decimal">
+            <column name="TARGET_AMT" precision="22" scale="0">
+                <comment>Target Amount</comment>
+            </column>
+        </property>
+        <property name="purpose" type="string">
+            <column name="PURPOSE" length="50">
+                <comment>Purpose</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

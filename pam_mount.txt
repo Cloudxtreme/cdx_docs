@@ -1,0 +1,66 @@
+pam samba mount 
+
+wajig install smbfs
+mount -t smbfs //PDC/groups /mnt/smb/pdc_groups -o username=cchou
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for gutsy image
+
+- wajig install smbfs libpam-mount
+- Modify /etc/security/pam_mount and the following lines at the end:
+volume @@linuxusers cifs pdc public /home/&/pdrive - - -
+volume @@linuxusers cifs pdc groups /home/&/gdrive - - -
+volume @@linuxusers cifs pdc & /home/&/hdrive - - -
+
+
+- Modify /etc/pam.d/common-auth to have the following:
+auth    optional      pam_mount.so
+auth    sufficient      pam_ldap.so use_first_pass
+auth    required        pam_unix.so use_first_pass
+
+
+- Modify /etc/pam.d/common-session to have the following:
+session    required     /lib/security/pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional        pam_mount.so use_first_pass
+session sufficient      pam_ldap.so
+session required        pam_unix.so
+session optional        pam_foreground.so 
+
+
+NOTE: after logging out, the mounted dirs don't umount correctly (because of some errors (suid to 0, user is still have an open session????) 
+
+  The problem is because the user can't umount the directories (something wrong /w suid???)
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for hardy image
+
+wajig install libpam-mount
+
+vi /etc/security/pam_mount.conf.xml
+*** Find: volume fstype="smbfs" (around line 270) and add the following line 
+<volume fstype="smbfs" server="pdc" path="%(USER)" mountpoint="/home/%(USER)/hdrive" />
+<volume fstype="smbfs" server="pdc" path="groups" mountpoint="/home/%(USER)/gdrive" />
+<volume fstype="smbfs" server="pdc" path="public" mountpoint="/home/%(USER)/pdrive" />
+
+--on ccdesktop (hardy)
+passwd:         files ldap 
+group:          files ldap 
+shadow:         files ldap
+
+root@cdxdesktop:/etc/pam.d# more common-auth
+auth [success=done default=ignore] pam_unix.so
+auth [success=1 default=ignore] pam_ldap.so use_first_pass
+auth requisite pam_deny.so
+auth optional pam_mount.so use_first_pass
+
+root@cdxdesktop:/etc/pam.d# more common-session
+session required        pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional   pam_mount.so
+session sufficient      pam_ldap.so
+session required        pam_unix.so
+session optional        pam_foreground.so
+
+
+

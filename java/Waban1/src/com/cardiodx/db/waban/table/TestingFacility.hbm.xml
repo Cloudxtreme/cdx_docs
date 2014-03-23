@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.TestingFacility" table="TESTING_FACILITY" schema="DNALIMS">
+        <comment>Information about the lab doing the testing.</comment>
+        <id name="testingFacilityId" type="big_decimal">
+            <column name="TESTING_FACILITY_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="50">
+                <comment>Name of the test facility.</comment>
+            </column>
+        </property>
+        <property name="address1" type="string">
+            <column name="ADDRESS1" length="40">
+                <comment>The first line of the test facility's (street) address.</comment>
+            </column>
+        </property>
+        <property name="address2" type="string">
+            <column name="ADDRESS2" length="40">
+                <comment>The second line of the test facility's (street) address.</comment>
+            </column>
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="30">
+                <comment>The testing facility's city.</comment>
+            </column>
+        </property>
+        <property name="state" type="string">
+            <column name="STATE" length="30">
+                <comment>The testing facility's state.</comment>
+            </column>
+        </property>
+        <property name="zipCode" type="string">
+            <column name="ZIP_CODE" length="10">
+                <comment>The testing facility's zip code.</comment>
+            </column>
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" length="30">
+                <comment>The testing facility's country.</comment>
+            </column>
+        </property>
+        <property name="phone" type="string">
+            <column name="PHONE" length="30">
+                <comment>The testing facility's full phone number.</comment>
+            </column>
+        </property>
+        <property name="fax" type="string">
+            <column name="FAX" length="30">
+                <comment>The testing facility's full fax number.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="freezers" table="FREEZER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TESTING_FACILITY_ID" precision="22" scale="0">
+                    <comment>Test facility identifier and foreign key to TESTING_FACILITY.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Freezer" />
+        </set>
+        <set name="instruments" table="INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TESTING_FACILITY_ID" precision="22" scale="0">
+                    <comment>Test facility identifier and foreign key to the TESTING_FACILITY table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Instrument" />
+        </set>
+    </class>
+</hibernate-mapping>

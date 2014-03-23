@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ProtocolAllele" table="PROTOCOL_ALLELE" schema="DNALIMS">
+        <comment>Listing of possible alleles available for use in a study protocol.</comment>
+        <id name="protocolAlleleId" type="big_decimal">
+            <column name="PROTOCOL_ALLELE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="allele" class="com.cardiodx.db.waban.table.Allele" fetch="select">
+            <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                <comment>Allele identifier</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>Protocol identifier</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="mandatory" type="java.lang.Boolean">
+            <column name="MANDATORY" precision="1" scale="0">
+                <comment>Indicator is allele is mandatory to be tested in study.</comment>
+            </column>
+        </property>
+        <property name="displaySequence" type="big_decimal">
+            <column name="DISPLAY_SEQUENCE" precision="22" scale="0">
+                <comment>Sequence used to order alleles on screens</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was modified</comment>
+            </column>
+        </property>
+        <set name="protocolAlleleValues" table="PROTOCOL_ALLELE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROTOCOL_ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to PROTOCOL_ALLELE table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolAlleleValue" />
+        </set>
+    </class>
+</hibernate-mapping>

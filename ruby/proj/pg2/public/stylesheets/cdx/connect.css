@@ -1,0 +1,620 @@
+
+body {padding:22px 0 0 0; margin:0; font-family: Arial, Helvetica, sans-serif; font-size:12px;}
+img {border:none;}
+#h1 {color:#423132; font-family:Verdana; text-transform:uppercase;margin-left:107px; /*font-weight:bold;*/}
+h1 { color:#423132; text-transform:uppercase; margin-left:107px; font-weight:bold; }
+h2 {color:#c42032; font-size:12px;padding-bottom:15px;margin-top:0px;padding-top:0px;}
+h3 {color:#c42032; font-size:12px;margin-bottom:0px;padding-bottom:0px;/* margin-left:0px; padding-left:0px;*/}
+h4 {color:#423132; font-size:12px;margin-bottom:0px;padding-bottom:0px;}
+#login_name {color:#c42032}
+
+#hmain p {margin-top:0px;padding-top:3px; color:#423132; padding-bottom:8px; line-height:18px;}
+#hmain a {color:#423132; text-decoration:underline;}
+#hmain a:hover {color:#c42032;}
+#footer p, #footer a {color:#423132; font-size:10px;}
+.nounderline { text-decoration:underline;}
+blockquote {color:#423132;}
+#hmain {width:756px; float:left;/*border:1px solid orange;*/ padding-bottom:20px; padding-left:23px; padding-top: 5px;margin:0px;}
+
+#hmain #minheight {height:0px; width:1px; float:right;}
+#hmain #hcontent {float:left;width:100%; padding-left:2px; margin-top:5px; padding-right:2px; color:#423132;}
+#hmain #hcontent p {line-height:18px;color:#423132; padding-left:0px; margin-left:0px;}
+#hmain #content_right {float:right;width:158px; margin-top:5px; padding-top:27px;}
+
+/*#hmain #title {width:575px; float:left; padding-top:0px; margin-top:0px;}
+#hmain #title h2 {margin:0px; padding:35px 0px 15px 0px; padding-left:2px;}*/
+h2 {padding-left:2px; padding-bottom:5px;}
+
+#push {height: 25px;}
+#footer {background:url(/images/footer_line.gif) top center no-repeat; width:965px; padding-left:3px; color:#c42032; height: 25px; display: block; margin-left: auto; margin-right:auto}
+#footer p {color:#c42032;}
+#footer #copyright {float:left; padding-top:20px; margin-top:0px;}
+#footer #copyright p {color:#423132; padding-top:0px; margin-top:0px;}
+#footer #footer_nav {float:right; padding-top:20px; margin-top:0px;}
+#footer #footer_nav p { padding-top:0px; margin-top:0px;}
+#footer #footer_nav a {text-decoration:none; padding-left:3px; padding-right:3px; padding-top:0px; margin-top:0px;}
+#footer #footer_nav a:hover {color:#c42032;}
+
+#replyform { display: inline; }
+#deleteform { display: inline; }
+#archiveform { display: inline; }
+
+table.datatable {
+  float: left;
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  border-width: 0px 0px 0px 0px;
+  border-style: solid solid solid solid;
+  border-color: #CCCCCC;
+  border-collapse:collapse;
+}
+table.datatable td {
+  border-width: 0px 0px 0px 0px;
+  padding: 3px 1px 3px 1px;
+  border-color: black black black black;
+  border-style: solid solid solid solid;
+}
+table.datatable th {
+  height: 1em;
+  border-width: 0px 1px 0px 0px;
+  padding: 3px 3px 3px 3px;
+  border-color: #CCCCCC;
+  border-style: solid solid solid solid;
+}
+
+.ui-icon {
+  float:right;
+}
+tr.row_highlight td {
+  background-color: #D9E0D8;
+}
+
+/* tr.unread td {font-weight : bold !important; font-size: 12px;} */
+tr.new td {font-weight : bold !important; font-size: 12px;}
+tr.viewed td {font-weight : normal !important}
+
+#new_only_div {
+  float: left;
+  width: 65px;
+  margin-top: 2px;
+  margin-left: 0px;
+  margin-right: 15px;
+  border-width: 0px 1px 0px 0px;
+  border-color: #CCCCCC;
+  border-style: solid;
+  vertical-align: top;
+}
+
+#new_only {
+  margin-left: 20px;
+}
+
+.ui-button .ui-button-text {
+    padding: 1px 2px 1px 2px;
+    font-size: 12px;
+}
+
+#patient_report_table_paginate {
+    margin-top: 0.4em;
+}
+
+.ui-multiselect {
+    font-size: 12px;
+    background-color: #FFFFFF;
+    height: 22px;
+}
+
+.ui-daterangepicker {
+    font-size: 10px;
+}
+.ui-daterangepicker ul {
+    width: 12em;
+}
+.ui-daterangepicker .ranges{
+    font-size: 9px;
+    margin-left: 5px;
+}
+  
+#patient_report_table_filter {
+    width:165px;
+    margin-right: 15px;
+    margin-left: 0px;
+    border-width: 0px 1px 0px 0px;
+    border-color: #CCCCCC;
+    border-style: solid;
+}
+  
+#patient_report_table_filter input {
+    width:145px; 
+}
+
+#patient_report_table_info {
+  width: 55%;
+}
+
+#date_div {
+  width:165px;
+  float:left;
+    margin-right: 15px;
+    border-width: 0px 1px 0px 0px;
+    border-color: #CCCCCC;
+    border-style: solid;
+}
+
+#date_range {
+  width: 145px;
+}
+
+#clinician_div {
+  width: 240px;
+  float: left;
+    border-width: 0px 1px 0px 0px;
+    border-color: #CCCCCC;
+    border-style: solid;
+}
+
+#clear_button_div{
+  float: left;
+  margin-left: 10px;
+  margin-top: 16px;
+}
+
+#inbox_paginate {
+    margin-top: 0.4em;
+}
+  
+#inbox_filter {
+    width:255px;
+    margin-right: 20px;
+    margin-left: 0px;
+}
+#inbox_info {
+  width: 55%;
+}
+
+.message_header {
+  margin-left: 15px;
+}
+.message_actions {
+  float: left;
+  margin-top:15px;
+  margin-left:5px;
+}
+.message_content {
+  border-width: 1px;
+  border-style: solid;
+  width: 96%;
+  margin-left: 1%;
+  margin-top: 5px;
+  padding: 8px 8px 8px 8px;
+  border-color: #CCCCCC;
+  float: left;
+}
+
+.message_form_element {
+ float: left;
+ width: 100%;
+}
+.message_form_label {
+  float: left;
+  width: 9em;
+  font-weight: bold;
+  padding: 3px;
+}
+.message_form_input {
+  float: left;
+  width: 18em;
+  padding: 3px;
+}
+.message_body_input {
+  float: left;
+  width: 80em;
+}
+
+.view_form_element {
+  float: left;
+  width: 100%;
+}
+.view_form_label {
+  float: left;
+  width: 17em;
+  font-weight: bold;
+  padding: 3px;
+}
+.view_form_input {
+  float: left;
+  width: 18em;
+  padding: 3px;
+  margin-left:3em;
+}
+
+
+
+#container {width:965px; min-height: 100%; height: 100%; display:block; margin-left: auto; margin-right: auto}
+#theater {margin:0 auto; position:relative; top:-7px;/*margin-top:20px; border:1px solid red; padding:0px; width:965px; height:423px; background:red;*/}
+.clear {clear:both; margin:0px; padding:0px; line-height:0px;}
+
+#header {height:109px; overflow:hidden;}
+#logo {float:left; width:130px; height:87px;padding-left:27px;}
+#logo a { outline:none;}
+
+#banner {position:relative;}
+#navigation {float:right; width:800px; height:45px; background:url(/images/nav_bg.jpg) no-repeat top right; margin-right:3px;}
+#header-right {float:right;}
+
+#search {float:right; /*width:174px;*/text-align:right; height:40px; padding-top:0px;}
+
+#subnav {width:182px; float:left;padding-left:0;margin-left:0;/*border:1px solid blue;*/ height:auto;}
+#subnav_spacer { width: 102px; float: left; height: 600px; }
+#subnav a {outline:none;}
+#subnav_main {width:inherit; background:url(/images/subnav_top.jpg) top left no-repeat #d9e0d8; padding-top:24px;}
+#subnav_main ul {width:170px;padding:0px; margin:0px;}
+/* #subnav_main ul ul {display:none;} */
+#subnav_main ul li {list-style-type:none;padding:0 0 0 7px;  margin-left:5px;border-top:1px solid #c1c9c0;}
+#subnav_main ul li a {text-decoration:none; color:#493b3b; display:block; padding-top:6px; padding-bottom:6px; padding-left:30px; margin-left:5px;}
+#subnav_main ul li a:active, #subnav_main ul li a:hover  {
+   padding-left:30px; 
+   background:url(/images/subnav_arrow.gif) top left no-repeat; 
+   color:#c42032; 
+/* font-weight:bold; */
+}
+
+#subnav_main li.parent-open a.subnav-menu-top {padding-left:30px; background:url(/images/subnav_arrow.gif) top left no-repeat; color:#c42032; font-weight:bold; }
+#subnav_main li.parent-open ul {display:block;}
+#subnav_main li.parent-open ul li ul {display:none;}
+#subnav_main li.parent-open ul ul {display:none;}
+#subnav_main li.parent-open li a {color:#423132;width:114px;  padding-top:0px; padding-bottom:5px; padding-left:10px; background:none;}
+#subnav_main li.parent-open li:hover a {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:25px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; font-weight:bold; }
+#subnav_main li.parent-open li.active-nav a {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:25px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat;  font-weight:bold; }
+
+#subnav_main li.active-nav ul {display:block;}
+#subnav_main li.active-nav ul ul {display:none;}
+#subnav_main ul li.active-nav a {padding-left:30px; background:url(/images/subnav_arrow.gif) top left no-repeat; color:#c42032; font-weight:bold;}
+#subnav_main ul li.active-nav ul li a {color:#423132;width:120px;  padding-top:0px; padding-bottom:5px; padding-left:10px; margin-left:22px; background:none; }
+#subnav_main ul li.active-nav ul li a:hover {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:22px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; /* font-weight:bold;*/}
+#subnav_main ul li ul li.active-nav a {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:22px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat;}
+
+#subnav_main li.team ul {display:none;}
+#subnav_main li ul ul{ display:none;}
+#subnav_main ul ul {padding:0 0 0 10px; margin:0; background-image:none; width:135px;}
+#subnav_main ul ul li {border:none;padding:0px;margin:0px;}
+#subnav_main ul ul li a {color:#423132;width:114px;  padding-top:0px; padding-bottom:5px; padding-left:10px;}
+#subnav_main ul ul li a:hover {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat;}
+#subnav_main ul li ul li a {color:#423132;width:114px;  padding-top:0px; padding-bottom:5px;/* margin-left:10px;*/ padding-left:10px; margin-left:22px; background:none; }
+#subnav_main ul li ul li a:hover {color:#c42032; padding:0px; padding-bottom:5px;  padding-left:10px; margin:0px; margin-left:22px;/* margin-left:10px;*/ background:url(/images/subnav_ul_arrow_hover.gif) top left no-repeat; /* font-weight:bold; */}
+
+#subnav_bot {width:inherit;  background:url(/images/subnav_bot.jpg) bottom left no-repeat #d9e0d8; height:30px;}
+/* Sub Nav Hover Styles */
+
+/* .subnav-menu-top {font-weight: bold} */
+.subnav-menu-sub-li {font-weight: normal}
+
+
+#main {width:965px;}
+#main #headbanner {width:757px; float:left;padding:0 0 0 23px;}
+#main .company {background:url(/images/banner_sub_company.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .company h1 {font-size:17px; margin-top:22px;}
+#main .diagnostic-programs {background:url(/images/banner_sub_diagnostic.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .diagnostic-programs h1 {font-size:17px; margin-top:22px;}
+#main .for-patients {background:url(/images/banner_sub_patients.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .for-patients h1 {font-size:17px; margin-top:22px;}
+#main .clinical-studies {background:url(/images/banner_sub_clinical.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .clinical-studies h1 {font-size:17px; margin-top:22px;}
+#main .news-and-resources {background:url(/images/banner_sub_news.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .news-and-resources h1 {font-size:17px; margin-top:22px;}
+
+#main .corus-cad {background:url(/images/banner_sub_corus.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .corus-cad h1 {font-size:17px; margin-top:22px;}
+
+#main .else {background:url(/images/else.jpg) no-repeat right top; height:64px; width:757px; float:left;padding:0 0 0 23px;}
+#main .else h1 {font-size:17px; margin-top:22px;}
+#main .else-main {background:url(/images/banner_company.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .else-main h1 {font-size:2em; margin-top:40px;}
+
+/* Main Theme */
+#main .company-main {background:url(/images/banner_company.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .company-main h1 {font-size:2em; margin-top:40px;}
+#main .diagnostic-programs-main {background:url(/images/banner_diagnostic.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .diagnostic-programs-main h1 {font-size:2em; margin-top:40px;}
+#main .for-patients-main {background:url(/images/banner_patients.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .for-patients-main h1 {font-size:2em; margin-top:40px;}
+#main .clinical-studies-main {background:url(/images/banner_clinical.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .clinical-studies-main h1 {font-size:2em; margin-top:40px;}
+#main .news-and-resources-main {background:url(/images/banner_news.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .news-and-resources-main h1 {font-size:2em; margin-top:40px;}
+
+#main .corus-cad-main {background:url(/images/banner_corus.jpg) no-repeat right top; height:105px; width:757px; float:left;padding:0 0 0 23px;}
+#main .corus-cad-main h1 {font-size:2em; margin-top:40px;}
+
+.fg-button {
+  padding: 2px 4px 2px 4px;
+  margin: 0 2px 0 2px;
+}
+
+.front_page_link {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  background-color: #ECF0EC;
+  float: left;
+}
+
+.front_page_link a {
+  padding-left:30px; 
+  padding-top: 6px; 
+  color:#c42032; 
+  font-weight:bold;
+}
+
+.patient_search_div {
+  margin-top: 25px;
+/*
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+*/
+  margin-left:25px;
+}
+
+.patient_search_desc {
+  font-size: 10px;
+  margin-top:10px;
+  margin-left:35px;
+}
+
+.ui-menu-item {
+  font-size: 11px;
+  width: 300px;
+}
+.ui-autocomplete {
+  width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+* html .ui-autocomplete {
+   height: 200px;
+ }
+
+.welcome_links_div {
+  margin-top: 30px;
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tests_link {
+  float: left;
+}
+
+.bold_tests_link {
+  font-weight: bold;
+}
+
+.tests_count {
+  float: left;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+.login_form_div{
+  margin-left: 0px;
+}
+
+#breadcrumbs {
+  margin-bottom: 15px;
+}
+
+.clinic_graph {
+  width:450px; 
+  height: 400px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.clinic_graph_wide {
+  width:100%; 
+  height: 400px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+#send {
+  margin-top: 10px;
+}
+
+a.ui-dialog-titlebar-close { display: none; }
+
+.formError {
+  color: #c42032;
+  display: inline;
+  margin: 0px;
+  padding: 0px;
+}
+
+.account_info_input {
+  width: 220px;
+}
+
+/*
+.password {
+  font-size: 12px;
+  border: 1px solid #cc9933;
+  width: 200px;
+  font-family: arial, sans-serif;
+}
+*/
+.pstrength-minchar {
+  display: none;
+}
+.pstrength-info {
+  display: block;
+  width:220px;
+  font-size: 10px;
+}
+.pstrength-bar {
+  display: block;
+  width:220px;
+  font-size: 10px;
+}
+
+.password_form_entry {
+  width: 220px;
+  margin-bottom: 5px;
+}
+
+.resource_image {
+  float: left;
+  margin-right: 5px;
+}
+
+.resource_description {
+  float: left;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+ul.resource_ul {
+  width: 100%;
+}
+ul.resource_ul li {
+  width: 100%;
+}
+
+table { font-size: 1.0em; }
+.tableNoBorder { font-size: 1.0em; border: 0; }
+
+table.tableSingleBorder { border: 1px solid #000000; }
+table.tableSingleBorder td { border: 1px solid #000000; }
+
+table.tableDoubleBorder { border: 2px solid #000000; }
+table.tableDoubleBorder td { border: 2px solid #000000; }
+
+.clickToEnlarge { font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #000000; font-style: normal; font-weight: normal; }
+
+#pt_rep_actions {
+  margin-top: 6px;
+  margin-bottom: 0;
+  float: left;
+}
+
+#inbox_actions {
+  margin-top: 6px;
+  margin-bottom: 0;
+  float: left;
+}
+
+.pt_button {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+div.hidden_table {
+  display: none;
+}
+div.unhidden_table {
+  display: block;
+}
+div.filter_text {
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Custom styles for breadcrumbs */
+.xbreadcrumbs LI A.home {
+    background: url("/images/IconHome.gif") no-repeat left top;
+    padding-left: 20px;
+}
+ 
+.xbreadcrumbs {
+    background: none;
+    width:100%;
+} 
+.xbreadcrumbs li a {
+    text-decoration: underline;
+}
+.xbreadcrumbs li a:hover, .xbreadcrumbs li.hover a { text-decoration: none; color: #c42032 }
+.xbreadcrumbs LI.current A {
+    text-decoration: none;
+}
+.xbreadcrumbs LI {
+    border-right: none;
+    background: url("/images/Chevron.gif") no-repeat right center;
+    padding-right: 15px;
+    padding-left: 10px;
+}
+.xbreadcrumbs LI.current { background: none; }
+
+.xbreadcrumbs LI UL LI { background: none; padding: 0;  }
+.xbreadcrumbs LI UL LI A { display: block; padding: 4px; border-bottom: 1px dotted #423132; }
+
+#chart_list li {
+  margin-bottom: 6px;
+}
+
+#chart_intro {
+  font-weight: bold;
+  margin-left:12px;
+}
+    
+#help {
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-left: 00px;
+}
+
+
+#current_password_entry {
+  margin-bottom: 15px;
+}
+
+#user_email_notifications {
+  margin-top:20px;
+}
+
+#current_info {
+  margin-top: 5px;
+  font-weight: bold;
+  display: block;
+}
+
+.resource_thumbnail {
+  height: 4em;
+}
+
+#nojs {
+  float: left;
+  height: 2em;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid #c42032;
+  color: #c42032;
+  margin-bottom: 20px;
+}
+
+#nojs span {
+  float: left;
+  height: 100%;
+  width: 680px;
+  margin-left: 39px;
+  margin-right: 39px;
+  margin-top: 7px;
+}
+
+.js_only {
+  display:none;
+}
+
+.footnote {
+  float:left;
+  margin-top:15px;
+}
+
+.admin_nav_links {
+  float: left;
+  margin-left: 10px;
+  margin-top: 40px;
+}

@@ -1,0 +1,5 @@
+~/tomcat/webapps/service/zimlet/com_zimbra_asterisk
+
+NOTE: If you change any config inside the xml file, you'll need to redeploy it!!!
+
+

@@ -1,0 +1,68 @@
+gluster hash
+
+http://www.gluster.org/docs/index.php/Hash_Across_Four_Storage_Servers
+
+--
+-- server
+--
+volume posix
+  type storage/posix
+  option directory /home/ha1
+end-volume
+
+volume brick
+  type performance/io-threads
+  option thread-count 8
+  subvolumes posix
+end-volume
+
+volume server
+  type protocol/server
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  subvolumes brick
+end-volume
+
+
+--
+-- client
+--
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume remote3
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster3
+  option remote-subvolume brick
+end-volume
+
+volume hash
+  type cluster/dht
+  subvolumes remote1 remote2 remote3
+end-volume
+
+volume wb
+  type performance/write-behind
+  option aggregate-size 128KB
+  option window-size 1MB
+  subvolumes hash
+end-volume
+
+volume ioc
+  type performance/io-cache
+  option cache-size 512MB
+  subvolumes wb
+end-volume
+

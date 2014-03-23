@@ -1,0 +1,22 @@
+
+You need to run this on the same machine!!!
+
+
+#!/usr/bin/perl -w
+
+use strict;
+
+chomp (my $uptime = `cat /proc/uptime`);
+$uptime =~ s/^([\d\.]+)\s+.*/$1/;
+my $event = scalar(localtime(time - ($uptime - $ARGV[0])));
+print "$event\n";
+
+
+Not working!!!!!
+~~~~~~~~~~~~~~~~~~~~
+root@pdc:/tmp# ./test.pl 14230654.214974
+Sun Aug  1 06:58:32 2010
+
+root@pdc:/tmp# date
+Mon Sep 13 19:00:24 PDT 2010
+

@@ -1,0 +1,10 @@
+
+mount kvm image
+
+http://dailypackage.fedorabook.com/index.php?/archives/161-System-Recovery-Week-Dealing-with-Disk-Images.html
+
+
+
+lvcreate -s -n gluster2 -L2G /dev/vg0/ubuntu804 
+
+

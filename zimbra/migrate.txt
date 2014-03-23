@@ -1,0 +1,109 @@
+zimbra migrate migration
+
+http://wiki.zimbra.com/index.php?title=Network_Edition:_Moving_from_32-bit_to_64-bit_Server
+
+old machine:
+
+su - zimbra
+mkdir /tmp/ldap-backup
+/opt/zimbra/libexec/zmslapcat /tmp/ldap-backup
+
+Mysql passwords:
+  <key name="zimbra_mysql_password">
+    <value>Vz.s0QWnM2nVp0ptPUkKtPL2L63WO</value>
+
+  <key name="mysql_root_password">
+    <value>cSdXYFiBSvmKYDNHIBifrtaAHJ7</value>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+new machine:
+
+license file:
+/root/ZCSLicense-75.xml
+
+domain, hostname, password
+
+spam training accounts:
+  dulm2hjj
+  mlw4wb8ak
+Global Document Account
+  6pbajcndi
+
+~~~~~~~~~~~
+zmcontrol stop
+
+copy ldap.bak over
+chown zimbra:zimbra ldap.bak
+
+rm -rf openldap-data/*
+openldap/sbin/slapadd -f conf/slapd.conf -cv < ldap.bak 
+
+cd /config
+vi localconfig.xml
+  mocify zimbra_mysql_password and mysql_root_password
+
+cd /opt/zimbra/db/data
+rsync -av --delete root@10.10.37.27:/opt/zimbra/db/data/* .
+
+cd /opt/zimbra/store
+rsync -av --delete root@10.10.37.27:/opt/zimbra/store/* .
+
+cd /opt/zimbra/index
+rsync -av --delete root@10.10.37.27:/opt/zimbra/index/* .
+
+
+Keystore
+zmlocalconfig -s | grep tomcat_keystore_password 
+zmlocalconfig -e tomcat_keystore_password=zimbra
+keytool -list -keystore keystore -storepass zimbra
+
+6TK.S2hWeu
+--zmlocalconfig -e ldap_root_password=utVbyoBo
+--zmlocalconfig -e zimbra_ldap_password=utVbyoBo
+cd conf
+vi localconfig.xml
+
+
+
+(root) copy /opt/zimbra/java/jre/lib/security/cacerts
+
+/opt/zimbra/conf/smtpd.crt and smtpd.key
+
+rm -rf /opt/zimbra/redolog
+
+zmcontrol start
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+zimbra@webmail:~/tomcat/conf$ mkdir /opt/zimbra/apache-tomcat-5.5.15/server/webapps/host-manager
+zimbra@webmail:~/tomcat/conf$ mkdir /opt/zimbra/apache-tomcat-5.5.15/server/webapps/manager
+
+
+zmsshkeygen 
+zmupdateauthkeys 
+ssh -i .ssh/zimbra_identity -o strictHostKeyChecking=no zimbra@webmail.cardiodx.com -p 22
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+problem upgrading from 502 to 505!!!
+
+zmlocalconfig -s zimbra_ldap_password
+
+vi main.cf
+debug_peer_list=127.0.0.1
+
+./ldapsearch -h webmail -x | grep -i postfix
+./ldapsearch -D  uid=zmpostfix,cn=appaccts,cn=zimbra -h webmail -w zmpostfix -ZZ -x
+
+./sbin/postmap -q - ldap:/opt/zimbra/conf/ldap-scm.cf < /tmp/scm
+
+** http://www.zimbra.com/forums/administrators/11620-all-messages-deferred-cant-see-messages-admin-ui.html
+to=<cchou@cardiodx.com>, relay=none, delay=11, delays=11/0.01/0/0, dsn=4.3.0, status=deferred (mail transport unavailable)
+# postfix upgrade-configuration
+# postfix reload
+
+** disable ldap from amavis
+relay=127.0.0.1[127.0.0.1]:10024, ....... status=deferred (lost connection with 127.0.0.1[127.0.0.1] while sending RCPT TO)
+vi amavisd.conf.in
+$enable_ldap = 0;
+

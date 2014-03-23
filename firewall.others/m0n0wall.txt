@@ -1,0 +1,38 @@
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wget http://m0n0.ch/wall/download.php?file=embedded-1.32.img
+
+
+--
+-- for Soekris
+--
+http://doc.m0n0.ch/quickstartsoekris/
+gunzip -c embedded-1.32.img | dd of=/dev/sdc bs=16k
+
+picocom -b 19200 /dev/ttyS0
+Press 'control + p' when seing the following:
+  N Seconds to automatic boot.   Press Ctrl-P for entering Monitor.
+show
+set ConSpeed=38400
+
+picocom -b 38400 /dev/ttyS0
+  ^a ^x (quit)
+
+Enter the new LAN IP address: 10.10.37.3
+Enter the new LAN subnet bit count: 21
+
+http://10.10.37.3/
+  admin/mono
+
+
+--
+-- DMZ: http://doc.m0n0.ch/handbook/examples.html#id11643441
+--
+
+Click "(assign)" next to Interfaces
+
+
+
+
+Problems:
+  IPSec still doesn't work for eRT.  Will go down in a minute or two.

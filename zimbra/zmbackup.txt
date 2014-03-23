@@ -1,0 +1,67 @@
+http://www.zimbra.com/docs/ne/latest/administration_guide/A_app-command-line.14.1.html
+zimbra backup zmprov localhost 
+
+zmbackup -f -a all -t /var/tmp/zmbackup 
+zmbackupquery  -lb incr-20070228.090004.401
+zmbackupquery -l 20070515120000 (newer than this datetime)
+zmbackup -del  2007/01/26  (delete backup before this day - but not this day)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://bugs.cardiodx.com/it/issue116
+
+Find out old backup (The old backup will be at the end of the list):
+zmbackupquery
+
+[zimbra@webmail ~]$ du -sk /opt/zimbra/backup/sessions/full-20070601.080004.203
+21214604        /opt/zimbra/backup/sessions/full-20070601.080004.203
+
+Delete the old backup:
+df -k 
+ls -ld /backup/*/webmail/opt/zimbra/backup/sessions/full* 
+ls -ld /backup/*/webmail/opt/zimbra/backup/sessions/full* | awk '{print "du -sk", $8}' > /tmp/checkspace.sh 
+
+chmod 755 checkspace.sh 
+./checkspace.sh 
+
+# run a manual full backup: 
+zmbackup -f -a all 
+
+# abort the backup
+zmbackupabort -lb full-20071001.174118.265
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+old
+$ zmschedulebackup -q
+Current Schedule:
+
+        f 0 1 1 * * -a all
+        i 0 1 2-31 * * -a all
+        d 7d 0 0 7 * * 
+
+new
+~$ zmschedulebackup
+Current Schedule:
+
+        f 0 1 * * 6 -a all
+        i 0 1 * * 0-5 -a all
+        d 1m 0 0 * * * 
+
+
+--
+-- New Hardy (zimbra 6.0.8):
+--
+
+old:
+0 1 * * 6 /opt/zimbra/bin/zmbackup -f   -a all 
+0 1 * * 0-5 /opt/zimbra/bin/zmbackup -i  
+0 0 * * * /opt/zimbra/bin/zmbackup -del 1m
+
+new:
+0 1 1 * * /opt/zimbra/bin/zmbackup -f   -a all 
+0 1 2-31 * * /opt/zimbra/bin/zmbackup -i  
+0 0 * * * /opt/zimbra/bin/zmbackup -del 1m
+
+
+
+
+

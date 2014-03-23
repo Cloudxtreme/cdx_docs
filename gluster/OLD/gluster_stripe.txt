@@ -1,0 +1,50 @@
+gluster stripe
+
+http://www.gluster.org/docs/index.php/Striping_Across_Four_Storage_Servers
+
+--
+-- server
+--
+volume brick
+  type storage/posix
+  option directory /home/stripe
+end-volume
+
+volume server
+  type protocol/server
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  subvolumes brick
+end-volume
+
+
+--
+-- client
+--
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume remote3
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster3
+  option remote-subvolume brick
+end-volume
+
+volume stripe0
+  type cluster/stripe
+  option block-size 1MB
+  subvolumes remote1 remote2 remote3
+end-volume
+

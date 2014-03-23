@@ -1,0 +1,201 @@
+--
+-- Query AR001661
+--
+select * From all_tables where TABLE_NAME = 'ACCESSION_VARIABLE_FLD_TABLE'
+select atc.DATA_LENGTH from all_tab_cols atc where atc.TABLE_NAME = 'ACCESSION_VARIABLE_FLD_TABLE' and atc.COLUMN_NAME = 'VALUE'
+
+select study_protocol_id, study_number from study_protocol where study_number is not null order by study_number
+select GENE_INTERPR_DEFINITION_id, gene_interpretation from GENE_INTERPR_DEFINITION order by gene_interpretation
+select LIMS_VPD.GetDefaultSubsidiary from dual
+select distinct 1,gt.username from gt_sce_user_role gt,users u where gt.username=u.username and role_name='LIMS_STUDY_DIRECTOR' and u.subsidiary_id=1 order by gt.username
+select procedure_template_id,procedure_name || ' (' || sop_version || ')' proc_name from procedure_template order by proc_name
+SELECT tf.testing_facility_id,tf.NAME FROM TESTING_FACILITY tf order by tf.name
+select 0, da.attribute_value from discrete_attribute da where da.attribute_name = 'SOURCE_TYPE' order by da.attribute_value
+select 0, da.attribute_value from discrete_attribute da where da.attribute_name = 'PROC_DEFAULT_RESULT' union select distinct 0, pr.VALUE from procedure_template_result pr
+select da.ATTRIBUTE_VALUE, count(var.VARIABLE_ID) from discrete_attribute da, variable var, (select distinct ATTRIBUTE_LEVEL_ID, VARIABLE_ID from protocol_defined_variable) pdv where da.ATTRIBUTE_NAME = 'SAMPLE_SEARCH' and da.ATTRIBUTE_VALUE = var.VARIABLE_NAME (+) and var.VARIABLE_ID = pdv.VARIABLE_ID (+) group by da.ATTRIBUTE_VALUE Having Count(Var.VARIABLE_ID) <> 1
+select count(*) row_count from (SELECT distinct var.variable_id, var.variable_name, var.variable_type_id, da.number_in_sequence FROM discrete_attribute da,VARIABLE var, variable_value vv,(SELECT DISTINCT attribute_level_id, variable_id FROM protocol_defined_variable) pdv WHERE da.attribute_name = 'SAMPLE_SEARCH' AND da.attribute_value = var.variable_name AND var.variable_id = pdv.variable_id AND var.variable_id = vv.variable_id(+) order by number_in_sequence )
+
+SELECT distinct var.variable_id, var.variable_name, var.variable_type_id, da.number_in_sequence FROM discrete_attribute da,VARIABLE var, variable_value vv,(SELECT DISTINCT attribute_level_id, variable_id FROM protocol_defined_variable) pdv WHERE da.attribute_name = 'SAMPLE_SEARCH' AND da.attribute_value = var.variable_name AND var.variable_id = pdv.variable_id AND var.variable_id = vv.variable_id(+) order by number_in_sequence
+
+select ATTRIBUTE_VALUE from DISCRETE_ATTRIBUTE_TABLE WHERE ATTRIBUTE_NAME='SEARCH_TAB_CAPTION' order by NUMBER_IN_SEQUENCE
+select limspackage.CheckCase('AR011661','CONTAINER','CONTAINER_ID') txt from dual
+select * from ATTRIBUTE_LEVEL
+
+select var.VARIABLE_ID, var.VARIABLE_NAME, var.VARIABLE_TYPE_ID, pdv.ATTRIBUTE_LEVEL_ID, da.NUMBER_IN_SEQUENCE, count(vv.VARIABLE_VALUE_ID) list_count from discrete_attribute da, variable var, variable_value vv, (select distinct ATTRIBUTE_LEVEL_ID, VARIABLE_ID from protocol_defined_variable) pdv where da.ATTRIBUTE_NAME = 'SAMPLE_SEARCH' and da.ATTRIBUTE_VALUE = var.VARIABLE_NAME and var.VARIABLE_ID = pdv.VARIABLE_ID and var.VARIABLE_ID = vv.VARIABLE_ID (+) group by var.VARIABLE_ID, var.VARIABLE_NAME, var.VARIABLE_TYPE_ID, pdv.ATTRIBUTE_LEVEL_ID, da.NUMBER_IN_SEQUENCE Having Count(Var.VARIABLE_ID) = 1 order by da.NUMBER_IN_SEQUENCE
+
+SELECT distinct acc.* FROM accession_display_view acc,(select * from sample s) s where s.accession_id(+)=acc.accession_id and nvl(s.sample_status,'none') != 'DISCARDED' and s.Container_ID='AR011661'
+
+select g.gene_name,gid.gene_interpretation,gr.final_gt,gr.status gene_status,gr.gene_id,gr.modified_by gene_who,gr.date_modified gene_when,gr.gene_result_id,a.allele_name,ar.result all_result,ar.modified_by all_who,ar.date_modified all_when,ar.allele_id,ar.allele_result_id,g.number_in_sequence,a.number_in_sequence,pg.display_sequence,pa.display_sequence from gene_result gr,gene g,gene_interpr_definition gid,allele_result ar,allele a,protocol_gene pg,protocol_allele pa where gr.gene_id=g.gene_id and g.gene_id=pg.gene_id and pg.study_protocol_id=gr.study_protocol_id and pa.allele_id=a.allele_id and pa.study_protocol_id=gr.study_protocol_id and gr.gene_interpr_definition_id=gid.gene_interpr_definition_id and ar.allele_id=a.allele_id and ar.gene_result_id = gr.gene_result_id and gr.ACCESSION_ID=26169 order by pg.display_sequence,g.number_in_sequence,gr.gene_id,pa.display_sequence,a.number_in_sequence,ar.allele_id
+
+select gr.gene_id,ar.allele_id,ar.allele_result_id,p.procedure_name,p.sop_version,aar.result ass_result,aar.status ass_status,asr.checklist_ID,s.Sample_ID,s.sample_tube_id,aar.comments,aar.assay_result_id,limspackage.container_position(s.sample_id) location,aar.modified_by ass_who,aar.date_modified ass_when,asr.created_by,asr.date_created,limspackage.lastfinalstoragetube(s.sample_id) lasttube from gene_result gr,allele_result ar,procedure_template p,checklist c,assay_result asr,sample s,assay_allele_result aar where ar.gene_result_id = gr.gene_result_id and ar.allele_result_id=aar.allele_result_id and asr.assay_result_id=aar.assay_result_id and c.checklist_ID = asr.checklist_ID and p.procedure_template_ID=c.procedure_template_ID and s.Sample_ID=asr.Sample_ID And gr.ACCESSION_ID=26169 order by gr.gene_id,ar.allele_id,ar.allele_result_id desc
+
+select tdv.*, sam.sample_status,nvl(tdv.sample_tube_id_from,limspackage.container_position(tdv.sample_id_from)) from_tube,nvl(tdv.sample_tube_id_to,limspackage.container_position(tdv.sample_id_to)) to_tube from sample sam, transfer_detail_view tdv where sam.sample_id = tdv.sample_id_to and tdv.ACCESSION_ID_FROM = 26169 order by tdv.transfer_ID
+
+SELECT s.sample_tube_id, (NVL (s.volume, 0) * d.latest_calculation) volume, (s.yield * d.latest_calculation) yield, d.* 
+FROM dna_spec d, SAMPLE s, measurement meas, instrument inst 
+Where s.Sample_ID = d.Sample_ID 
+AND d.measurement_id = meas.measurement_id 
+AND meas.instrument_id = inst.instrument_id 
+AND UPPER (inst.TYPE) = 'SPECTRAMAX INSTRUMENT' 
+AND s.accession_id =26169 
+AND NVL (s.sample_status, 'none') != 'DISCARDED' ORDER BY d.sample_id
+
+SELECT * FROM cp_run_view WHERE Accession_ID=26169
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+----------------------------------------------------------------------------------------
+
+--
+-- Click CP and Assay Details 
+--
+SELECT * FROM NCP_VIEW WHERE cp_run_id=30908
+SELECT * FROM CP_SAMPLE_VIEW WHERE cp_run_id=30908
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'ENABLE_BLESS_BUTTON' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'ENABLE_BLESS_BUTTON' AND ROWNUM = 1)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CDX_VALIDATION.ENABLE_BLESS_BUTTON(:1,:2); END;
+XCTEND rlbk=0, rd_only=1
+select * from all_tab_privs atp where atp.TABLE_NAME = 'CP_RUN' and atp.PRIVILEGE = 'UPDATE'
+select count(*) row_count from (SELECT cpr.cp_run_id FROM cp_run cpr, sample_table sam, instrument inst WHERE cpr.sample_id = sam.sample_id AND inst.instrument_id = cpr.instrument_id AND sam.accession_id = 26169 AND cpr.status = 'BLESSED' AND cpr.cp_run_id = 30908)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'RESTRICT_CP_RUN_REPORT' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'RESTRICT_CP_RUN_REPORT' AND ROWNUM = 1)
+select count(*) row_count from (SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 26169 AND cp_run_id=30908))
+----------------------------------------------------------------------------------------
+
+--
+-- Click TRF51476
+--
+(select pgr.RESULT, pgr.GENE_ID, pgr.NUMBER_IN_SEQUENCE, 0 priority from protocol_gene_result pgr where pgr.result is not null and pgr.study_protocol_id = 2 Union select ptg.RESULT, ptg.GENE_ID, ptg.NUMBER_IN_SEQUENCE, 1 priority from procedure_template_gene ptg where ptg.result is not null and ptg.PROCEDURE_TEMPLATE_ID in (select pp.PROCEDURE_TEMPLATE_ID from protocol_procedure pp where pp.study_protocol_id = 2) Union select gv.RESULT, gv.GENE_ID, gv.NUMBER_IN_SEQUENCE, 2 priority from gene_value gv where gv.result is not null) order by gene_id, priority, number_in_sequence
+(select par.RESULT, par.allele_ID, par.NUMBER_IN_SEQUENCE, 0 priority from protocol_allele_result par where par.result is not null and par.study_protocol_id = 2 Union select pta.RESULT, pta.allele_ID, pta.NUMBER_IN_SEQUENCE, 1 priority from procedure_template_allele pta where pta.result is not null and pta.PROCEDURE_TEMPLATE_ID in (select pp.PROCEDURE_TEMPLATE_ID from protocol_procedure pp where pp.study_protocol_id = 2) Union select av.RESULT, av.allele_ID, av.NUMBER_IN_SEQUENCE, 2 priority from allele_value av where av.result is not null) order by allele_id, priority, number_in_sequence
+select g.gene_name,gid.gene_interpretation,gr.final_gt,gr.status gene_status,gr.gene_id,gr.modified_by gene_who,gr.date_modified gene_when,gr.gene_result_id,a.allele_name,ar.result all_result,ar.modified_by all_who,ar.date_modified all_when,ar.allele_id,ar.allele_result_id,g.number_in_sequence,a.number_in_sequence,pg.display_sequence,pa.display_sequence from gene_result gr,gene g,gene_interpr_definition gid,allele_result ar,allele a,protocol_gene pg,protocol_allele pa where gr.gene_id=g.gene_id and g.gene_id=pg.gene_id and pg.study_protocol_id=gr.study_protocol_id and pa.allele_id=a.allele_id and pa.study_protocol_id=gr.study_protocol_id and gr.gene_interpr_definition_id=gid.gene_interpr_definition_id and ar.allele_id=a.allele_id and ar.gene_result_id = gr.gene_result_id and gr.ACCESSION_ID=28093 order by pg.display_sequence,g.number_in_sequence,gr.gene_id,pa.display_sequence,a.number_in_sequence,ar.allele_id
+select gr.gene_id,ar.allele_id,ar.allele_result_id,p.procedure_name,p.sop_version,aar.result ass_result,aar.status ass_status,asr.checklist_ID,s.Sample_ID,s.sample_tube_id,aar.comments,aar.assay_result_id,limspackage.container_position(s.sample_id) location,aar.modified_by ass_who,aar.date_modified ass_when,asr.created_by,asr.date_created,limspackage.lastfinalstoragetube(s.sample_id) lasttube from gene_result gr,allele_result ar,procedure_template p,checklist c,assay_result asr,sample s,assay_allele_result aar where ar.gene_result_id = gr.gene_result_id and ar.allele_result_id=aar.allele_result_id and asr.assay_result_id=aar.assay_result_id and c.checklist_ID = asr.checklist_ID and p.procedure_template_ID=c.procedure_template_ID and s.Sample_ID=asr.Sample_ID And gr.ACCESSION_ID=28093 order by gr.gene_id,ar.allele_id,ar.allele_result_id desc
+select tdv.*, sam.sample_status,nvl(tdv.sample_tube_id_from,limspackage.container_position(tdv.sample_id_from)) from_tube,nvl(tdv.sample_tube_id_to,limspackage.container_position(tdv.sample_id_to)) to_tube from sample sam, transfer_detail_view tdv where sam.sample_id = tdv.sample_id_to and tdv.ACCESSION_ID_FROM = 28093 order by tdv.transfer_ID
+SELECT s.sample_tube_id, (NVL (s.volume, 0) * d.latest_calculation) volume, (s.yield * d.latest_calculation) yield, d.* FROM dna_spec d, SAMPLE s, measurement meas, instrument inst Where s.Sample_ID = d.Sample_ID AND d.measurement_id = meas.measurement_id AND meas.instrument_id = inst.instrument_id AND UPPER (inst.TYPE) = 'SPECTRAMAX INSTRUMENT' AND s.accession_id =28093 AND NVL (s.sample_status, 'none') != 'DISCARDED' ORDER BY d.sample_id
+SELECT * FROM cp_run_view WHERE Accession_ID=28093
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+SELECT * FROM NCP_VIEW WHERE cp_run_id=4351
+SELECT * FROM CP_SAMPLE_VIEW WHERE cp_run_id=4351
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'ENABLE_BLESS_BUTTON' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'ENABLE_BLESS_BUTTON' AND ROWNUM = 1)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CDX_VALIDATION.ENABLE_BLESS_BUTTON(:1,:2); END;
+XCTEND rlbk=0, rd_only=1
+select * from all_tab_privs atp where atp.TABLE_NAME = 'CP_RUN' and atp.PRIVILEGE = 'UPDATE'
+select count(*) row_count from (SELECT cpr.cp_run_id FROM cp_run cpr, sample_table sam, instrument inst WHERE cpr.sample_id = sam.sample_id AND inst.instrument_id = cpr.instrument_id AND sam.accession_id = 28093 AND cpr.status = 'BLESSED' AND cpr.cp_run_id = 4351)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'RESTRICT_CP_RUN_REPORT' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'RESTRICT_CP_RUN_REPORT' AND ROWNUM = 1)
+select count(*) row_count from (SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 28093 AND cp_run_id=4351))
+----------------------------------------------------------------------------------------
+--
+-- View existing report
+--
+SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 28093)
+SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 28093 AND cp_run_id=4351)
+select count(*) row_count from (SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 28093 AND cp_run_id=4351))
+SELECT short_file_name, content FROM gt_versioneddocument WHERE versioned_document_id=688385
+
+
+
+--
+-- Choose TRF36175
+--
+select g.gene_name,gid.gene_interpretation,gr.final_gt,gr.status gene_status,gr.gene_id,gr.modified_by gene_who,gr.date_modified gene_when,gr.gene_result_id,a.allele_name,ar.result all_result,ar.modified_by all_who,ar.date_modified all_when,ar.allele_id,ar.allele_result_id,g.number_in_sequence,a.number_in_sequence,pg.display_sequence,pa.display_sequence from gene_result gr,gene g,gene_interpr_definition gid,allele_result ar,allele a,protocol_gene pg,protocol_allele pa where gr.gene_id=g.gene_id and g.gene_id=pg.gene_id and pg.study_protocol_id=gr.study_protocol_id and pa.allele_id=a.allele_id and pa.study_protocol_id=gr.study_protocol_id and gr.gene_interpr_definition_id=gid.gene_interpr_definition_id and ar.allele_id=a.allele_id and ar.gene_result_id = gr.gene_result_id and gr.ACCESSION_ID=28095 order by pg.display_sequence,g.number_in_sequence,gr.gene_id,pa.display_sequence,a.number_in_sequence,ar.allele_id
+select text from view$ where rowid=:1
+select gr.gene_id,ar.allele_id,ar.allele_result_id,p.procedure_name,p.sop_version,aar.result ass_result,aar.status ass_status,asr.checklist_ID,s.Sample_ID,s.sample_tube_id,aar.comments,aar.assay_result_id,limspackage.container_position(s.sample_id) location,aar.modified_by ass_who,aar.date_modified ass_when,asr.created_by,asr.date_created,limspackage.lastfinalstoragetube(s.sample_id) lasttube from gene_result gr,allele_result ar,procedure_template p,checklist c,assay_result asr,sample s,assay_allele_result aar where ar.gene_result_id = gr.gene_result_id and ar.allele_result_id=aar.allele_result_id and asr.assay_result_id=aar.assay_result_id and c.checklist_ID = asr.checklist_ID and p.procedure_template_ID=c.procedure_template_ID and s.Sample_ID=asr.Sample_ID And gr.ACCESSION_ID=28095 order by gr.gene_id,ar.allele_id,ar.allele_result_id desc
+select text from view$ where rowid=:1
+select text from view$ where rowid=:1
+select text from view$ where rowid=:1
+select text from view$ where rowid=:1
+select text from view$ where rowid=:1
+select u.name, o.name, a.interface_version#, o.obj#      from association$ a, user$ u, obj$ o                     where a.obj# = :1                                          and a.property = :2                                      and a.statstype# = o.obj#                                and u.user# = o.owner#
+select a.default_cpu_cost, a.default_io_cost             from association$ a                                      where a.obj# = :1                                          and a.property = :2
+select u.name, o.name, a.interface_version#, o.obj#      from association$ a, user$ u, obj$ o                     where a.obj# = :1                                          and a.property = :2                                      and a.statstype# = o.obj#                                and u.user# = o.owner#
+select a.default_cpu_cost, a.default_io_cost             from association$ a                                      where a.obj# = :1                                          and a.property = :2
+select u.name, o.name, a.interface_version#, o.obj#      from association$ a, user$ u, obj$ o                     where a.obj# = :1                                          and a.property = :2                                      and a.statstype# = o.obj#                                and u.user# = o.owner#
+select a.default_cpu_cost, a.default_io_cost             from association$ a                                      where a.obj# = :1                                          and a.property = :2
+select u.name, o.name, a.interface_version#, o.obj#      from association$ a, user$ u, obj$ o                     where a.obj# = :1                                          and a.property = :2                                      and a.statstype# = o.obj#                                and u.user# = o.owner#
+select a.default_cpu_cost, a.default_io_cost             from association$ a                                      where a.obj# = :1                                          and a.property = :2
+select tdv.*, sam.sample_status,nvl(tdv.sample_tube_id_from,limspackage.container_position(tdv.sample_id_from)) from_tube,nvl(tdv.sample_tube_id_to,limspackage.container_position(tdv.sample_id_to)) to_tube from sample sam, transfer_detail_view tdv where sam.sample_id = tdv.sample_id_to and tdv.ACCESSION_ID_FROM = 28095 order by tdv.transfer_ID
+select text from view$ where rowid=:1
+SELECT s.sample_tube_id, (NVL (s.volume, 0) * d.latest_calculation) volume, (s.yield * d.latest_calculation) yield, d.* FROM dna_spec d, SAMPLE s, measurement meas, instrument inst Where s.Sample_ID = d.Sample_ID AND d.measurement_id = meas.measurement_id AND meas.instrument_id = inst.instrument_id AND UPPER (inst.TYPE) = 'SPECTRAMAX INSTRUMENT' AND s.accession_id =28095 AND NVL (s.sample_status, 'none') != 'DISCARDED' ORDER BY d.sample_id
+select text from view$ where rowid=:1
+SELECT * FROM cp_run_view WHERE Accession_ID=28095
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+select text from view$ where rowid=:1
+SELECT * FROM NCP_VIEW WHERE cp_run_id=24310
+select text from view$ where rowid=:1
+SELECT * FROM CP_SAMPLE_VIEW WHERE cp_run_id=24310
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'ENABLE_BLESS_BUTTON' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'ENABLE_BLESS_BUTTON' AND ROWNUM = 1)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CDX_VALIDATION.ENABLE_BLESS_BUTTON(:1,:2); END;
+XCTEND rlbk=0, rd_only=1
+select * from all_tab_privs atp where atp.TABLE_NAME = 'CP_RUN' and atp.PRIVILEGE = 'UPDATE'
+select count(*) row_count from (SELECT cpr.cp_run_id FROM cp_run cpr, sample_table sam, instrument inst WHERE cpr.sample_id = sam.sample_id AND inst.instrument_id = cpr.instrument_id AND sam.accession_id = 28095 AND cpr.status = 'BLESSED' AND cpr.cp_run_id = 24310)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'RESTRICT_CP_RUN_REPORT' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'RESTRICT_CP_RUN_REPORT' AND ROWNUM = 1)
+select count(*) row_count from (SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 28095 AND cp_run_id=24310))
+
+
+--
+-- click blassed
+--
+select * from change_table where table_name='CP_RUN'
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CHANGEREASONPACKAGE.SETCHANGEREASON(:1); END;
+INSERT INTO CHANGE_REASON ( REASON )  VALUES ( :1 ) 
+SELECT CHANGE_REASON_SEQUENCE.NEXTVAL FROM DUAL
+UPDATE CHANGE_REASON SET IS_ACTIVE = 0 WHERE CREATED_BY = USER AND SESSION_ID = SYS_CONTEXT('userenv','sessionid')
+SELECT USER, SYSDATE, SYS_CONTEXT('userenv','sessionid') FROM DUAL
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+SELECT AUDIT_SEQUENCE.NEXTVAL FROM DUAL
+SELECT CHANGE_REASON_ID FROM CHANGE_REASON   WHERE CREATED_BY =  USER   AND IS_ACTIVE =  1  AND SESSION_ID =  SYS_CONTEXT('userenv' , 'sessionid' )    
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.SET_DATA_READY(:1); END;
+SELECT COUNT (*) FROM ACCESSION_VARIABLE_FLD_TABLE   WHERE ACCESSION_VARIABLE_FLD_TABLE.ACCESSION_VARIABLE_FLD_ID IN (SELECT AVF.ACCESSION_VARIABLE_FLD_ID FROM ACCESSION_VARIABLE_FLD_TABLE AVF , PROTOCOL_DEFINED_VARIABLE PDV , VARIABLE V , ACCESSION ACC   WHERE AVF.PROTOCOL_DEFINED_VARIABLE_ID =  PDV.PROTOCOL_DEFINED_VARIABLE_ID  AND PDV.VARIABLE_ID =  V.VARIABLE_ID  AND PDV.STUDY_PROTOCOL_ID =  ACC.STUDY_PROTOCOL_ID  AND AVF.ACCESSION_ID =  ACC.ACCESSION_ID  AND ACC.ACCESSION_ID =  :1  AND UPPER(V.VARIABLE_NAME )  =  'DATA READY'   )  
+SELECT PROTOCOL_DEFINED_VARIABLE_ID FROM PROTOCOL_DEFINED_VARIABLE   WHERE VARIABLE_LABEL =  'Data Ready'  AND STUDY_PROTOCOL_ID IN (SELECT STUDY_PROTOCOL_ID FROM ACCESSION   WHERE ACCESSION_ID =  :1   )  
+INSERT INTO ACCESSION_VARIABLE_FLD_TABLE ( ACCESSION_VARIABLE_FLD_ID , ACCESSION_ID , PROTOCOL_DEFINED_VARIABLE_ID , VALUE )  VALUES ( ACC_VAR_FLD_SEQUENCE.NEXTVAL  , :1 , :1 , 'Yes' ) 
+SELECT ACC_VAR_FLD_SEQUENCE.NEXTVAL FROM DUAL
+SELECT USER, SYSDATE FROM DUAL
+SELECT LIMS_VPD.GETDEFAULTSUBSIDIARY FROM DUAL
+SELECT AVF.ACCESSION_VARIABLE_FLD_ID, ACC.SUBSIDIARY_ID FROM ACCESSION_VARIABLE_FLD_TABLE AVF, ACCESSION ACC WHERE AVF.ACCESSION_ID = ACC.ACCESSION_ID AND AVF.SUBSIDIARY_ID <> ACC.SUBSIDIARY_ID
+DELETE FROM cp_run_report WHERE accession_id=28095
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CHANGEREASONPACKAGE.RESETCHANGEREASON; END;
+UPDATE CHANGE_REASON SET IS_ACTIVE = 0  WHERE CREATED_BY =  USER   AND SESSION_ID =  SYS_CONTEXT('userenv' , 'sessionid' )   
+XCTEND rlbk=0, rd_only=0
+SELECT * FROM cp_run_view WHERE Accession_ID=28095
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+SELECT * FROM NCP_VIEW WHERE cp_run_id=24310
+SELECT * FROM CP_SAMPLE_VIEW WHERE cp_run_id=24310
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'ENABLE_BLESS_BUTTON' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'ENABLE_BLESS_BUTTON' AND ROWNUM = 1)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN CDX_VALIDATION.ENABLE_BLESS_BUTTON(:1,:2); END;
+XCTEND rlbk=0, rd_only=1
+select * from all_tab_privs atp where atp.TABLE_NAME = 'CP_RUN' and atp.PRIVILEGE = 'UPDATE'
+select count(*) row_count from (SELECT cpr.cp_run_id FROM cp_run cpr, sample_table sam, instrument inst WHERE cpr.sample_id = sam.sample_id AND inst.instrument_id = cpr.instrument_id AND sam.accession_id = 28095 AND cpr.status = 'BLESSED' AND cpr.cp_run_id = 24310)
+BEGIN DBMS_DESCRIBE.DESCRIBE_PROCEDURE(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15);                           END;
+BEGIN LIMS_RESULT_REVIEW.ENABLE_PREVIEW_BUTTON(:1,:2,:3); END;
+XCTEND rlbk=0, rd_only=1
+ SELECT attribute_value FROM discrete_attribute WHERE UPPER(attribute_name) = 'RESTRICT_CP_RUN_REPORT' AND number_in_sequence = (SELECT MIN (number_in_sequence) FROM discrete_attribute WHERE attribute_name = 'RESTRICT_CP_RUN_REPORT' AND ROWNUM = 1)
+select count(*) row_count from (SELECT versioned_document_id FROM cp_run_report WHERE cp_run_report_id IN (SELECT MAX (cp_run_report_id) FROM cp_run_report WHERE accession_id = 28095 AND cp_run_id=24310))
+
+
+--
+-- click preview new report
+--
+Got an error!!!!!
+
+
+
+

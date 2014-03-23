@@ -1,0 +1,48 @@
+
+myorigin = cardiodx.com
+
+myhostname = mail.cardiodx.com
+mydomain = cardiodx.com
+mydestination =
+local_recipient_maps =
+local_transport = error:local mail delivery is disabled
+virtual_alias_maps = hash:/etc/postfix/virtual
+
+# CDX internal, CDX Comcast and XO, Salesforce
+# SF.com: 173.13.158.176/28 67.95.201.192/27 204.14.234.0/23 204.14.232.65/32 204.14.234.65/32 202.129.242.65/32
+# eProsper: 198.245.241.61/32 198.245.241.71/32 208.80.233.10/32
+# evolvelearningmanager.com 208.38.180.219
+mynetworks = 127.0.0.0/8 10.10.32.0/21 173.13.158.176/28 67.95.201.192/27 204.14.234.0/23 204.14.232.65/32 204.14.234.65/32 202.129.242.65/32 198.245.241.61/32 198.245.241.71/32 208.80.233.10/32 208.38.180.219/32 12.238.241.96/28
+#mynetworks = 127.0.0.0/8 10.10.32.0/21 204.14.234.0/23
+masquerade_domains = $mydomain
+masquerade_classes = envelope_recipient, header_recipient, envelope_sender, header_sender
+masquerade_exceptions = sampletest
+relay_domains = cardiodx.com
+smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination, check_sender_access hash:/etc/postfix/stopspoofing
+relay_recipient_maps =
+transport_maps = hash:/etc/postfix/transport
+
+mailbox_size_limit = 70240000
+message_size_limit = 70240000
+
+# sasl authentication
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+
+# tls
+smtpd_enforce_tls = no
+smtpd_use_tls = yes
+smtpd_tls_auth_only = yes
+#smtpd_tls_key_file = /etc/postfix/ssl/smtp.key
+#smtpd_tls_cert_file = /etc/postfix/ssl/smtp.crt
+smtpd_tls_key_file = /etc/postfix/ssl/wildcard.cardiodx.com.key
+smtpd_tls_cert_file = /etc/postfix/ssl/wildcard.cardiodx.com.crt
+smtpd_tls_CAfile = /etc/postfix/ssl/ca.crt
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
+
+
+#defer_transports = smtp, relay
+

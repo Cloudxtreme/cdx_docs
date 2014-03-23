@@ -1,0 +1,155 @@
+
+http://www.datatables.net/blog/Getting_started_with_DataTables%3A_First_steps
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+
+cd public/
+wget http://www.datatables.net/releases/DataTables-1.9.4.zip
+unzip DataTables-1.9.4.zip 
+rm DataTables-1.9.4.zip
+
+vi application.html.erb
+  <script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.js"></script>
+  <script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.dataTables.js"></script>
+
+	<style type="text/css" title="currentStyle">
+  	<script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.js"></script>
+  	<script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.dataTables.js"></script>
+	</style>
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+vi index.html
+
+<script type="text/javascript">
+$(document).ready( function () {
+    $('#example').dataTable();
+} );
+</script>
+
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+	<thead>
+		<tr>
+			<th>Rendering engine</th>
+			<th>Browser</th>
+			<th>Platform(s)</th>
+			<th>Engine version</th>
+			<th>CSS grade</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="odd gradeX">
+			<td>Trident</td>
+			<td>Internet
+				 Explorer 4.0</td>
+			<td>Win 95+</td>
+			<td class="center"> 4</td>
+			<td class="center">X</td>
+		</tr>
+		<tr class="even gradeC">
+			<td>Trident</td>
+			<td>Internet
+				 Explorer 5.0</td>
+			<td>Win 95+</td>
+			<td class="center">5</td>
+			<td class="center">C</td>
+		</tr>
+		<tr class="odd gradeA">
+			<td>Trident</td>
+			<td>Internet
+				 Explorer 5.5</td>
+			<td>Win 95+</td>
+			<td class="center">5.5</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="even gradeA">
+			<td>Trident</td>
+			<td>Internet
+				 Explorer 6</td>
+			<td>Win 98+</td>
+			<td class="center">6</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="odd gradeA">
+			<td>Trident</td>
+			<td>Internet Explorer 7</td>
+			<td>Win XP SP2+</td>
+			<td class="center">7</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="even gradeA">
+			<td>Trident</td>
+			<td>AOL browser (AOL desktop)</td>
+			<td>Win XP</td>
+			<td class="center">6</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Firefox 1.0</td>
+			<td>Win 98+ / OSX.2+</td>
+			<td class="center">1.7</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Firefox 1.5</td>
+			<td>Win 98+ / OSX.2+</td>
+			<td class="center">1.8</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Firefox 2.0</td>
+			<td>Win 98+ / OSX.2+</td>
+			<td class="center">1.8</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Firefox 3.0</td>
+			<td>Win 2k+ / OSX.3+</td>
+			<td class="center">1.9</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Camino 1.0</td>
+			<td>OSX.2+</td>
+			<td class="center">1.8</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Camino 1.5</td>
+			<td>OSX.3+</td>
+			<td class="center">1.8</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Netscape 7.2</td>
+			<td>Win 95+ / Mac OS 8.6-9.2</td>
+			<td class="center">1.7</td>
+			<td class="center">A</td>
+		</tr>
+		<tr class="gradeA">
+			<td>Gecko</td>
+			<td>Netscape Browser 8</td>
+			<td>Win 98SE+</td>
+			<td class="center">1.7</td>
+			<td class="center">A</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<th>Rendering engine</th>
+			<th>Browser</th>
+			<th>Platform(s)</th>
+			<th>Engine version</th>
+			<th>CSS grade</th>
+		</tr>
+	</tfoot>
+</table>
+

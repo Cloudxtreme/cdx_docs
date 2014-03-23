@@ -1,0 +1,39 @@
+
+
+ACTIVE   Original '/dev/vg1/hello'     [100.01 GB] inherit
+ACTIVE   Snapshot '/dev/vg1/hellosnap' [50.00 GB] inherit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+-- without snapshot
+# dd if=/dev/zero bs=10M count=1024 | pv > /dev/vg1/hello
+10737418240 bytes (11 GB) copied, 29.6211 s, 362 MB/s
+
+-- with snapshot
+# lvcreate -L+50G -s -n hellosnap -i 3 /dev/vg1/hello
+# dd if=/dev/zero bs=10M count=1024 | pv > /dev/vg1/hello
+10737418240 bytes (11 GB) copied, 2154.02 s, 5.0 MB/s
+
+# dd if=/dev/zero bs=10M count=1024 | pv > /dev/vg1/hellosnap 
+10737418240 bytes (11 GB) copied, 41.0024 s, 262 MB/s
+
+
+-- no snapshot, through iscsi on iscsi image
+root@hardy64:/data# dd if=/dev/zero bs=3M count=1024 | pv > testfile
+3221225472 bytes (3.2 GB) copied, 127.962 s, 25.2 MB/s
+3221225472 bytes (3.2 GB) copied, 135.462 s, 23.8 MB/s
+
+
+-- (kvmsrv3) no snapshot, through iscsi on real machine
+# dd if=/dev/zero bs=3M count=1024 | pv > testfile
+3221225472 bytes (3.2 GB) copied, 18.7151 s, 172 MB/s
+10737418240 bytes (11 GB) copied, 96.0389 s, 112 MB/s
+
+-- local vg0 on kvmsrv3
+
+--
+-- original
+--
+dd if=/dev/zero bs=10M count=1024 | pv > /dev/vg1/hello 
+
+

@@ -1,0 +1,12 @@
+
+dhcp problem fix
+
+call-dhclient-script permission denied
+
+cd /lib/dhcp3-client
+
+
+chown root:dhcp call-dhclient-script
+chmod u+s call-dhclient-script
+
+

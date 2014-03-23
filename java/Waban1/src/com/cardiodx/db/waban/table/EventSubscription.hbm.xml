@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.EventSubscription" table="EVENT_SUBSCRIPTION" schema="DNALIMS">
+        <comment>Table used to link event handlers to an event</comment>
+        <id name="eventSubscriptionId" type="big_decimal">
+            <column name="EVENT_SUBSCRIPTION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="eventHandler" class="com.cardiodx.db.waban.table.EventHandler" fetch="select">
+            <column name="EVENT_HANDLER_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign key to the event handler that will be executed when the event is processed</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                <comment>Optional foreign key for validation event handlers that are specific to each study protocol</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="event" class="com.cardiodx.db.waban.table.Event" fetch="select">
+            <column name="EVENT_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign key to the event that is being subscribed</comment>
+            </column>
+        </many-to-one>
+        <property name="warning" type="java.lang.Boolean">
+            <column name="WARNING" precision="1" scale="0">
+                <comment>Indicator field if set to 1 will treat return message as a warning. Otherwise return message will be treated as an error.</comment>
+            </column>
+        </property>
+        <property name="locked" type="java.lang.Boolean">
+            <column name="LOCKED" precision="1" scale="0">
+                <comment>Indicator field used to lock a subscribed event that can only be changed by the DBA or Administrator use.</comment>
+            </column>
+        </property>
+        <property name="priority" type="big_decimal">
+            <column name="PRIORITY" precision="22" scale="0">
+                <comment>Field used to order the event handlers to be processed in a certain order</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User that has subscribed to the event</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date when record has been created</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

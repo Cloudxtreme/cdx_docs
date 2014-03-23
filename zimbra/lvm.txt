@@ -1,0 +1,13 @@
+
+need to extend the space on zimbra for zimbra
+
+
+pvcreate /dev/sdb1
+vgextend VolGroup00 /dev/sdb1
+# pvscan
+  PV /dev/sda2   VG VolGroup00   lvm2 [9.88 GB / 32.00 MB free]
+  PV /dev/sdb1   VG VolGroup00   lvm2 [19.97 GB / 19.97 GB free]
+lvextend -L+20G /dev/VolGroup00/LogVol00
+e2fsck -f /dev/mydatavg/myvolt 
+resize2fs /dev/mydatavg/myvolt
+

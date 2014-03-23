@@ -1,0 +1,101 @@
+config version 2.00
+hardware autodetect
+authentication ppp local
+clock timezone PST
+clock server ntp.ubuntu.com
+password admin $1$$lFHDZzSaH5XyQJIWi/fl4. encrypted
+password debug $1$$lFHDZzSaH5XyQJIWi/fl4. encrypted
+fixup ftp
+hostname firewall
+domain-name cardiodx.com
+name-server 65.106.1.196
+name-server 65.106.7.196
+interface eth0 address 67.95.201.194/27
+interface eth0 address 67.95.201.195/27 secondary
+interface eth0 address 67.95.201.197/27 secondary
+interface eth1 address 10.10.37.1/21
+interface eth2 address 10.10.43.1/24
+route 0.0.0.0/0 67.95.201.193
+port-forward 67.95.201.194 10.10.37.22 udp 1194 1194
+port-forward 67.95.201.194 10.10.37.27 tcp 443 443
+port-forward 67.95.201.194 10.10.37.27 tcp 993 993
+port-forward 67.95.201.194 67.95.201.196 tcp 80 80
+port-forward 67.95.201.194 10.10.37.36 tcp 3389 3389
+port-forward 67.95.201.197 10.10.37.36 tcp 443 443
+proxyarp eth0 host 67.95.201.196 eth2
+icmp permit any echo-request eth0
+icmp permit any echo-request eth1
+icmp limit 100
+access-list inout permit all 10.10.32.0/21 any
+access-list outin permit tcp any 10.10.37.27 443
+access-list outin permit tcp any 10.10.37.27 993
+access-list outin permit udp any 10.10.37.22 1194
+access-list outin permit tcp any 10.10.37.36 443
+access-list outdmz permit tcp any 67.95.201.196 25
+access-list outdmz permit tcp any 67.95.201.196 80
+access-list outdmz permit tcp any 67.95.201.196 465
+access-list outdmz permit tcp any 67.95.201.196 443
+access-list dmzin permit tcp 67.95.201.196 10.10.37.21 389
+access-list dmzin permit udp 67.95.201.196 10.10.37.21 53
+access-list dmzin permit udp 67.95.201.196 10.10.37.22 514
+access-list dmzout permit tcp 67.95.201.196 any 25
+access-list dmzout permit tcp 67.95.201.196 any 80
+access-list dmzout permit udp 67.95.201.196 any 123
+access-list inert deny tcp 10.10.32.0/21 170.224.10.121 any
+access-list inert deny tcp 10.10.32.0/21 170.224.10.106 any
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.12 any
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.96 any
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.97 any
+access-list inert2 permit tcp 10.10.32.0/21 12.3.153.5 any
+access-list clinix permit tcp 10.10.32.0/21 66.18.106.160/27 any
+access-list clinix permit tcp 66.18.106.160/27 10.10.36.42 any
+access-list clinix permit icmp 66.18.106.160/27 any
+access-list clinix permit tcp 66.18.106.160/27 10.10.37.106 9100
+access-list infuse permit tcp 70.58.37.37 10.10.37.36 3389
+access-list infuse permit tcp 24.10.180.184 10.10.37.36 3389
+access-list infuse permit tcp 71.199.56.195 10.10.37.36 3389
+access-list infuse permit tcp 206.71.69.92 10.10.37.36 3389
+nat eth0 10.10.32.0/21
+pptp server enable
+pptp proxyarp
+pptp local-address 10.10.37.251
+pptp address-pool 10.10.37.252 10.10.37.253
+pptp dns-server 10.10.37.21
+pptp user srikar srwelcome
+pptp user cchou cchou1200
+ssh server enable 22
+ssh 10.10.32.0/21
+http server enable
+http 10.10.32.0/21
+logging host 10.10.37.22
+ipsec tunnel eRT 10.10.32.0/21 170.224.10.96/27 via 170.224.6.180
+ipsec tunnel eRT auth psk CDX2eResearch
+ipsec tunnel eRT ike cipher 3des
+ipsec tunnel eRT ike hash sha1
+ipsec tunnel eRT ike lifetime 3600
+ipsec tunnel eRT ike dh-group 2
+ipsec tunnel eRT esp cipher 3des
+ipsec tunnel eRT esp hash hmac_sha1
+ipsec tunnel eRT esp lifetime 3600
+ipsec tunnel eRT esp pfs-group 2
+ipsec tunnel eRT-2 10.10.32.0/21 12.3.153.0/24 via 12.149.54.90
+ipsec tunnel eRT-2 auth psk CDX2eResearch
+ipsec tunnel eRT-2 ike cipher 3des
+ipsec tunnel eRT-2 ike hash sha1
+ipsec tunnel eRT-2 ike lifetime 3600
+ipsec tunnel eRT-2 ike dh-group 2
+ipsec tunnel eRT-2 esp cipher 3des
+ipsec tunnel eRT-2 esp hash hmac_sha1
+ipsec tunnel eRT-2 esp lifetime 3600
+ipsec tunnel eRT-2 esp pfs-group 2
+ipsec tunnel clinix 10.10.32.0/21 66.18.106.160/27 via 66.18.99.68
+ipsec tunnel clinix auth psk cadx6795201194
+ipsec tunnel clinix ike cipher 3des
+ipsec tunnel clinix ike hash md5
+ipsec tunnel clinix ike lifetime 3600
+ipsec tunnel clinix ike dh-group 2
+ipsec tunnel clinix esp cipher 3des
+ipsec tunnel clinix esp hash hmac_md5
+ipsec tunnel clinix esp lifetime 28800
+ipsec tunnel clinix esp pfs-group 0
+

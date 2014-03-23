@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AccessionComment" table="ACCESSION_COMMENT" schema="DNALIMS">
+        <comment>Comments about a given accession. Multiple records per accession number are allowed.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.AccessionCommentId">
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="accession" class="com.cardiodx.db.waban.table.Accession" update="false" insert="false" fetch="select">
+            <column name="ACCESSION_ID" precision="22" scale="0" not-null="true">
+                <comment>Accession identifier. Part of the primary key and foreign key to the ACCESSION table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="comments" type="string">
+            <column name="COMMENTS" length="500">
+                <comment>Text field for comments about an accession. Multiple comments per accession number are allowed.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

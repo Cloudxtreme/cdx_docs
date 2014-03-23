@@ -1,0 +1,9 @@
+
+
+apt-get install apt-proxy
+
+vi /etc/apt-proxy/apt-proxy-v2.conf
+
+/etc/init.d/apt-proxy restart
+
+install_mirror = http://127.0.0.1:9999/ubuntu

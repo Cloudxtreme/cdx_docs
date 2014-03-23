@@ -1,0 +1,11 @@
+wajig update hash sum mismatch
+
+W: Failed to fetch http://mirror.anl.gov/ubuntu/dists/hardy-updates/main/source/Sources.bz2  Hash Sum mismatch
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It's because proxy has been caching the old files.......
+
+apt-get update -o Acquire::http::No-Cache=True
+wajig update
+wajig upgrade

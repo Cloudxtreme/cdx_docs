@@ -1,0 +1,153 @@
+install vm on kvmsrv2
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install sysv-rc-conf 
+
+s/w we need:
+  apache-ant-1.7.0
+  jdk1.5.0_10
+  mysql
+  tomcat
+
+Directories needed under /usr
+  apache-ant-1.7.0  
+  backup  
+  files  
+  index  
+  jdk1.5.0_10  
+  mysql  
+  mysql3307  
+  mysql3308  
+  tomcat  
+
+cd /usr
+tar czvf /root/etqdevel.tar.gz apache-ant-1.7.0 backup files index jdk1.5.0_10 mysql mysql3307 mysql3308 tomcat
+
+copy and untar the file to /usr
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi .bashrc
+
+export JAVA_HOME=/usr/jdk1.5.0_10
+export PATH=$JAVA_HOME/bin:$PATH
+export ANT_HOME=/usr/apache-ant-1.7.0
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+export PATH=$PATH:/usr/jdk1.5.0_10/bin:/usr/mysql/bin
+
+useradd mysql
+chown -R mysql:mysql mysql*
+
+cd /usr/mysql
+./bin/mysqld_safe --defaults-file=/usr/mysql/my3307.cnf &
+
+./bin/mysql -uroot -S/tmp/mysqldev.sock -p
+podhe9e
+
+rename host, configure network interface
+
+
+install apache according to etq-apache.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+init script:
+
+cd /etc/init.d
+vi tomcat
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Tomcat services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo -n "Starting Tomcat... "
+        /usr/tomcat/bin/startup.sh &
+        echo "OK"
+        ;;
+    stop)
+        echo -n "Stoping Tomcat... "
+        /usr/tomcat/bin/shutdown.sh &
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+chmod 755 tomcat
+
+vi mysql
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Mysql services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo -n "Starting MySQL... "
+        su mysql -c "cd /usr/mysql; ./bin/mysqld_safe --defaults-file=/usr/mysql/my3307.cnf" &
+        su mysql -c "cd /usr/mysql; ./bin/mysqld_safe --defaults-file=/usr/mysql/my3308.cnf" &
+        echo "OK"
+        ;;
+    stop)
+				/usr/mysql/bin/mysqladmin --defaults-file=/usr/mysql/my3307.cnf -S/tmp/mysqldev.sock -ppodhe9e shutdown &
+				/usr/mysql/bin/mysqladmin --defaults-file=/usr/mysql/my3308.cnf -S/tmp/mysqltest.sock -ppodhe9e shutdown &
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+chmod 700 mysql
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+rsync /root
+
+wajig install smbfs -y
+
+vi /etc/fstab
+//easypdf/easyPDFTest   /mnt/easyPDF cifs credentials=/root/smbcredentials 0 3
+
+vi /root/smbcredentials
+username=easyPDFUser
+password=welcome2PDF
+
+chmod 600 /root/smbcredentials
+
+mkdir -p /mnt/easyPDF
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install ganglia-monitor
+
+
+on cdx servers:
+name  "server"
+mcast_port    8679
+setuid     ganglia
+host_dmax 43200
+
+
+
+
+
+

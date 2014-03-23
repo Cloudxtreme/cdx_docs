@@ -1,0 +1,6 @@
+
+/etc/x11/xorg.conf   ???
+
+Restricted-manager cannot be used with customized configurations.
+
+dpkg-reconfigure -phigh xserver-xorg to switch back to automatic configuration handling

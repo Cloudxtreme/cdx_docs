@@ -1,0 +1,14 @@
+
+wajig install jxplorer xterm xauth
+????
+
+wajig install luma
+
+  ldaptest
+  389
+
+  Simple
+  cn=admin,dc=cardiodx,dc=com
+  secret07
+
+

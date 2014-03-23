@@ -1,0 +1,9 @@
+"Batch","Plate","Samples","Males","Females","Clinical","Pooled","Sample failures","Sample plate failures","Plate status","PAX ctrls","PAX failures","Negctrl count","Negctrl failures","Waters","Water failures","Sex failures","Well NAs","Well NA warnings","Well NA failures","Gdna warnings","Gdna failures","Gene NA failures","Expression mean warnings","Expression mean failures","Sd warnings","Sd failures","Sd 90 warnings","Sd 90 failures","Sd 100 failures","Truncation warnings","Truncation failures","Expression warnings","Expression failures","Warning failures"
+"A/35429","AR016019",8,2,5,7,1,0,0,"Pass",1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"A/35429","AR016020",8,4,3,7,1,0,0,"Pass",1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"A/35429","AR016022",8,2,5,7,1,0,0,"Pass",1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"A/35429","AR016023",8,4,4,8,0,0,0,"Pass",0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0
+"A/35429","AR016024",8,7,1,8,0,0,0,"Pass",0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"A/35429","AR016025",8,5,3,8,0,1,1,"Pass",0,0,4,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0
+"A/35429","AR016026",8,4,4,8,0,0,0,"Pass",0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+"A/35429","AR016027",2,1,0,1,1,0,0,"Pass",1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

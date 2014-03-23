@@ -1,0 +1,33 @@
+UPDATE checklist_sample  SET sample_id = :1  WHERE checklist_id = :2  AND orig_sample_id = :3
+SELECT NVL(CHK.LOCKED_BY,'none') FROM CHECKLIST CHK WHERE CHK.CHECKLIST_ID = :B1 
+BEGIN LIMS_ATTR_UTIL.SET_SAMPLE_ATTR(:1,:2,:3); END;
+update seq$ set increment$=:2,minvalue=:3,maxvalue=:4,cycle#=:5,order$=:6,cache=:7,highwater=:8,audit$=:9,flags=:10 where obj#=:1
+SELECT st.step_template_id  FROM step_template st, checklist c  WHERE c.checklist_id = :1  AND c.procedure_template_id = st.procedure_template_id  AND st.number_in_sequence = :2
+
+------> Transfer object sourceID=2821042 destExists?=false destID=0 destBarcode=1053724897
+		 destContainerBarcode(col, row)=T1063435(3, 8) 
+		 volRemoved=800.0 volAdded=66.0
+		 checklistID, stepID=25064, 644
+		 tcpTime=0
+
+BEGIN limspackage.TAD_TRANSFER(:1,:2,:3,:4,:5,:6,:7,:8,:9,:10,:11,:12,:13,:14,:15,:16) ; END;
+UPDATE sample_table SET sample_tube_id = :1  WHERE sample_id = :2 
+  SELECT NVL (DESTROYED, 0) FROM ACCESSION WHERE ACCESSION_ID = :B1 
+  SELECT AUDIT_SEQUENCE.NEXTVAL FROM DUAL
+  SELECT USER, SYSDATE FROM DUAL
+  SELECT USER FROM DUAL
+  SELECT SYSDATE FROM DUAL
+UPDATE sample_table SET source_type = :1  WHERE sample_id = :2 
+  SELECT NVL (DESTROYED, 0) FROM ACCESSION WHERE ACCESSION_ID = :B1 
+  SELECT AUDIT_SEQUENCE.NEXTVAL FROM DUAL
+  SELECT USER, SYSDATE FROM DUAL
+  SELECT USER FROM DUAL
+  SELECT SYSDATE FROM DUAL
+
+------> Transfer object sourceID=2821042 destExists?=false destID=0 destBarcode=1053724897
+		 destContainerBarcode(col, row)=T1063435(3, 8) 
+		 volRemoved=800.0 volAdded=66.0
+		 checklistID, stepID=25064, 644
+		 tcpTime=910
+
+

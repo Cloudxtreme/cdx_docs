@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.OrganizationAttribute" table="ORGANIZATION_ATTRIBUTE" schema="DNALIMS">
+        <comment>Information about the attributes types for a organization</comment>
+        <id name="orgAttributeId" type="big_decimal">
+            <column name="ORG_ATTRIBUTE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="typeList" class="com.cardiodx.db.waban.table.TypeList" fetch="select">
+            <column name="TYPE_LIST_ID" precision="22" scale="0">
+                <comment>FK - Identifier to Type_List table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="variable" class="com.cardiodx.db.waban.table.Variable" fetch="select">
+            <column name="VARIABLE_ID" precision="22" scale="0">
+                <comment>FK - Identifier to variable table</comment>
+            </column>
+        </many-to-one>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>No. in sequence for variable</comment>
+            </column>
+        </property>
+        <property name="variableLabel" type="string">
+            <column name="VARIABLE_LABEL" length="100">
+                <comment>Label to Variable Name</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

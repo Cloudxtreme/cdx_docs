@@ -1,0 +1,46 @@
+initramfs 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install initramfs-tools
+
+
+mdadm --detail --scan >> /etc/mdadm/mdadm.conf
+
+mkinitramfs -d /etc/initramfs-tools/ -k -o myinit.img
+
+Reboot and test the image
+
+cd /boot
+
+mv init.... init.sav
+
+mv myinit init....
+
+reboot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+On target machine:
+mdadm --detail --scan
+ARRAY /dev/md1 level=raid1 num-devices=2 UUID=0f34c2fb:35835770:6275d50e:e0918b00
+ARRAY /dev/md0 level=raid1 num-devices=2 UUID=0ba671ca:55c08823:dcbcc868:d0e617f0
+
+
+On initramfs machine:
+cd /etc
+cp -rp initramfs-tools/ initramfs-tools.orig
+cd initramfs-tools
+cp ~/init/conf/modules .
+rm -r scripts/
+cp -rp ~/init/scripts/ .
+cd
+
+vi /etc/mdadm/mdadm.conf 
+
+mkinitramfs -d /etc/initramfs-tools/ -k -o myinit.img 
+
+vi /etc/mdadm/mdadm.conf 
+(remove the UUID devices)
+

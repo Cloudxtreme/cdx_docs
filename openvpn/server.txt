@@ -1,0 +1,75 @@
+cchou@backup:/etc/openvpn$ more server.conf 
+port 1194
+proto udp
+
+dev tap0
+
+ca ca.crt
+cert openvpnserver.crt
+key openvpnserver.key  # This file should be kept secret
+dh dh2048.pem
+
+plugin /usr/lib/openvpn/openvpn-auth-pam.so login
+username-as-common-name
+
+ifconfig-pool-persist ipp.txt
+
+server-bridge 10.10.37.22 255.255.255.0 10.10.37.221 10.10.37.250
+
+push "route 170.224.10.121 255.255.255.255 10.10.37.1"
+push "route 170.224.10.106 255.255.255.255 10.10.37.1"
+
+;push "redirect-gateway"
+push "dhcp-option DOMAIN cardiodx.com"
+push "dhcp-option DNS 10.10.37.21"
+push "dhcp-option WINS 10.10.37.21"
+
+
+;duplicate-cn
+
+keepalive 10 120
+
+;cipher BF-CBC        # Blowfish (default)
+comp-lzo
+persist-key
+persist-tun
+
+status openvpn-status.log
+
+;chroot /data/openvpn-chroot
+
+verb 4
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cchou@backup:/etc/network$ more interfaces 
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet manual
+
+auto tap0
+iface tap0 inet manual
+        pre-up /usr/sbin/openvpn --mktun --dev tap0
+        post-down /usr/sbin/openvpn --rmtun --dev tap0
+
+auto br0
+iface br0 inet static
+        bridge_ports eth0 tap0
+        address 10.10.37.22
+        netmask 255.255.255.0
+        network 10.10.37.0
+        broadcast 10.10.37.255
+        gateway 10.10.37.1
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers 10.10.37.21
+        dns-search cardiodx.com
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

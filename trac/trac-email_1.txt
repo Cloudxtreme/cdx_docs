@@ -1,0 +1,126 @@
+
+adding email support to CLIA LIMS (clia_lims)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+create an account on pdc
+smbldap-useradd -c "CLIA Tracker" -M clia_tracker@cardiodx.com -m -P -N CLIA -S Tracker clia_tracker
+smbldap-useradd -c "QA Support" -M qa_support@cardiodx.com -m -P -N QA -S Support qa_support
+
+create a zimbra account clia_tracker@cardiodx.com
+
+vi fetchmailrc.clia
+poll webmail.cardiodx.com proto imap: username clia_tracker password CardioDx12#$
+mda "cat | /usr/bin/email2trac --project=clia_lims"
+idle
+
+
+fetchmail -f ./fetchmailrc -v --ssl
+
+fetchmail -f fetchmailrc.clia --pidfile fetchmail_clia.pid -v --ssl
+
+~~~~~~~~~~~~~~~~
+vi /etc/email2trac.conf
+[clia_lims]
+project: /var/lib/trac/clia_lims
+spam_level: 1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+root@trac:~# vi /etc/email2trac.conf 
+[DEFAULT]
+project: /var/lib/trac/it
+debug: 0
+umask: 022
+spam_level: 5
+reply_all : 0
+mailto_link: 0
+umask: 022
+email_header: 0
+trac_version: 0.11
+enable_syslog : 1
+alternate_notify_template :
+drop_spam : 0
+verbatim_format: 1
+strip_signature: 1
+email_quote: >
+strip_quotes: 0
+ignore_trac_user_settings: 0
+ticket_update: 1
+
+[it]
+project: /var/lib/trac/it
+
+[clia_lims]
+project: /var/lib/trac/clia_lims
+
+[commercial]
+project: /var/lib/trac/commercial
+
+
+
+# more fetchmailrc.cbs 
+poll 10.10.37.27 proto imap: username trac_cbs password CardioDx12#$
+mda "cat | /usr/bin/email2trac --project=commercial"
+#mda "cat "
+idle
+
+
+
+# cd /etc/init.d/
+
+# Required-Start:    $syslog $time $local_fs $remote_fs
+# Required-Stop:     $syslog $time $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: Deferred execution scheduler
+# Description:       fetchmail for trac
+### END INIT INFO
+#
+# Author:	Chialin Chou <cchou@cardiodx.com>
+#
+set -e
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/atd
+
+
+test -x $DAEMON || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+	log_daemon_msg "Starting fetchmail for Trac IT Project" 
+	fetchmail -f /root/fetchmailrc.it --pidfile /var/run/fetchmail_it.pid --ssl  --syslog & 
+
+	log_daemon_msg "Starting fetchmail for Trac CLIA LIMS Project"
+	fetchmail -f /root/fetchmailrc.clia --pidfile /var/run/fetchmail_clia.pid --ssl  --syslog & 
+
+        log_daemon_msg "Starting fetchmail for Trac CLIA LIMS Project"
+        fetchmail -f /root/fetchmailrc.clia --pidfile /var/run/fetchmail_clia.pid --ssl  --syslog &
+
+        log_daemon_msg "Starting fetchmail for Trac Commercial Project"
+        fetchmail -f /root/fetchmailrc.cbs --pidfile /var/run/fetchmail_cbs.pid --ssl  --syslog &
+    ;;
+  stop)
+	kill `cat /var/run/fetchmail_it.pid`
+	kill `cat /var/run/fetchmail_clia.pid`
+	kill `cat /var/run/fetchmail_cbs.pid`
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/atd {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
+root@trac:/etc/init.d# 
+
+
+
+

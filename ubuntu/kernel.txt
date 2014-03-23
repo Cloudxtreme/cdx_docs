@@ -1,0 +1,14 @@
+  494  wajig dist-upgrade
+  501  coretemp
+  502  wajig update
+  503  wajig upgrade
+  504  wajig install kernel-package 
+
+  512  wajig install libncurses5-dev 
+  513  wajig install libqt3-mt-dev
+
+  448  make xconfig
+  449  make-kpkg --initrd --append-to-version=-cchou.2.6.20.3 kernel_image kernel_headers
+
+  483  wajig install ./linux-image-2.6.20.3-cchou.2.6.20.3_2.6.20.3-cchou.2.6.20.3-10.00.Custom_i386.deb 
+

@@ -1,0 +1,133 @@
+body {  
+	background: #FFFFFF;  
+	color: #000000; 
+	}  
+
+
+H1 { font-family: Arial, Helvetica, sans-serif; font-size: 20pt; font-style: normal; font-weight: normal; color: #FFFFFF; background: #004080; text-align: center; margin: 10pt 2.5%}
+H2 { font-family: Arial, Helvetica, sans-serif; font-size: 18pt; font-style: normal; font-weight: normal; color: #004080; background: #F0F0FF} /* */
+
+H2.index { font-family: Arial, Helvetica, sans-serif; font-size: 18pt; font-style: normal; font-weight: normal; color: #FFFFFF; background: #F0F0FF; margin: 10pt 5%}
+H3 { font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-style: normal; font-weight: bold; color: #004080  }
+H4 { font-family: T, Helvetica, sans-serif; font-size: 10pt; font-style: normal; font-weight: bold; color: #000000; line-height: 16pt}
+
+LI { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+
+A { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt ;text-decoration:none}
+
+#subtitle { font-size:normal }
+
+.caption{font-style:italic}
+.title2{ font-family: Arial, Helvetica, sans-serif; font-size: 14pt; font-style: normal; font-weight: bold; color: #004080  }
+
+
+P { 
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight:normal
+}
+
+/* 
+
+span.summary { color: #0F0 }
+*/
+
+.number { color: #606 }
+
+.break { page-break-before: always; }
+
+.command {
+	font-family : verdana, arial;
+	color:red
+}
+.function{
+	font-family : verdana, arial;
+	color:blue
+}
+.partitle{
+	font-family : verdana, arial;
+	font-weight:bold
+}
+
+
+XMP{font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
+.function{font-family:courier; color:blue; font-size: 10pt }
+
+
+TR{font-family: Arial, Helvetica,Times, Helvetica, sans-serif; font-size: 10pt; font-style: normal  ; padding:0 0}
+TR.firstline, th{color: #FFFFFF; background: #A0A0A0;text-align:center;font-weight: bold}
+
+TR.ListBackTitle{color: #FFFFFF; background: #000000;text-align:left;font-weight: bold}
+
+
+
+TD{background:#FFFFFF; padding:0 }
+TD.ListBackMain{background: #E0E0E0; padding:0 }
+TD.firstcolumn, col{padding:5px ;background:#C0C0E0;text-align:left}
+TD.cellinside, td{padding:5px ;background:#F0F0F0;text-align:center}
+col{padding:5px ;background:#C0C0E0;text-align:left}
+
+span.Fail { color:red }
+span.Warn { color:orange }
+span.NA   { color:magenta }
+span.fail { color:red }
+span.warn { color:orange }
+
+.caption { font-size: 11pt  }
+
+table.intro td { background: #EEE }
+
+a.table { color:#040 }
+
+/*
+ .test {background-color:#b0e0e6; border: solid green; margin:0}
+*/
+
+/* this centers the image and the caption of the form
+   <img class="image" src="path" title="title"/>
+   <span class="image_caption">Caption here</span>
+
+  this code is produced by 'html_insert_plot'
+*/
+img.image { position: relative; 
+	    top:      auto; 
+	    display:  block; 
+	    margin:   auto; 
+	    /* border: solid black; */
+	    /* max-width: 600px;    */
+	 }
+.image_caption { display:    block; 
+	         text-align: center; 
+	         margin:     0 0 0;
+		 font-style: italic;
+		 font-size:  large;}
+
+/* to right justify image and caption:
+   <div class=".image_right">
+   <img class="image" src="path" title="title"/>
+   <span class="image_caption">Caption here</span>
+   </div>
+
+ **** you must set the width below !!!!
+      this sets the width of the box containing both
+      the image and the caption, which you want to go
+      left, center, or right together
+
+      if there's no caption then it's easier
+      just set the margin in img.image above
+         margin-left: auto;    //  to right justify
+         margin-right: auto;   //  to left justify
+ */
+.image_right {
+    position:     relative;
+    width:        700px; // adjust this to the width of the image
+    margin-left:  auto; 
+//    border:       solid red;
+}
+.image_left {
+    position:     relative;
+    width:        600px; // adjust this to the width of the image
+    margin-right:  auto; 
+//    border:       solid red;
+}
+

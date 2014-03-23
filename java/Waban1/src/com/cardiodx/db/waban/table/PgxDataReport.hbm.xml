@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PgxDataReport" table="PGX_DATA_REPORT" schema="DNALIMS">
+        <comment>PGx Data Report</comment>
+        <id name="pgxDataId" type="big_decimal">
+            <column name="PGX_DATA_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>STUDY_ID idetifier to Study no from STUDY_PROTOCOL</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="checklistId" type="big_decimal">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>CHECKLIST ID FROM CHECKLIST TABLE</comment>
+            </column>
+        </property>
+        <property name="reportName" type="string">
+            <column name="REPORT_NAME" length="100" not-null="true">
+                <comment>NAME OF THE SAVED REPORT</comment>
+            </column>
+        </property>
+        <property name="reportUrl" type="string">
+            <column name="REPORT_URL" length="200" not-null="true">
+                <comment>URL FOR THAT SAVED REPORT</comment>
+            </column>
+        </property>
+        <property name="reportDescription" type="string">
+            <column name="REPORT_DESCRIPTION" length="500">
+                <comment>SAVEDREPORT DESCRIPTION</comment>
+            </column>
+        </property>
+        <property name="modified" type="big_decimal">
+            <column name="MODIFIED" precision="22" scale="0">
+                <comment>REPORT MODIFIED OR NOT</comment>
+            </column>
+        </property>
+        <property name="reportType" type="string">
+            <column name="REPORT_TYPE" length="20" not-null="true">
+                <comment>TYPE OF THE REPORT i.e INTERIM, FINAL, REVISED</comment>
+            </column>
+        </property>
+        <property name="reportStatus" type="string">
+            <column name="REPORT_STATUS" length="20">
+                <comment>Report Status</comment>
+            </column>
+        </property>
+        <property name="setupTemplateId" type="big_decimal">
+            <column name="SETUP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>TEMPLATE ID FOR MAKING REPORT</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30">
+                <comment>Used to mark a report as invalid</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>Created By</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date Created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>Modified By</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date Modified</comment>
+            </column>
+        </property>
+        <set name="pgxGeneDataReports" table="PGX_GENE_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PGX_DATA_ID" precision="22" scale="0" not-null="true">
+                    <comment>FOREIGN KEY FROM PGX_DATA_REPORT</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxGeneDataReport" />
+        </set>
+        <set name="pgxPatientLists" table="PGX_PATIENT_LIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PGX_DATA_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign Key for PGX_STUDY_REPORT</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxPatientList" />
+        </set>
+        <set name="pgxModifiedGeneTemplates" table="PGX_MODIFIED_GENE_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PGX_DATA_ID" precision="22" scale="0" not-null="true">
+                    <comment>PGX Data Report ID Foreign Key to PGX_DATA_REPORT Table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifiedGeneTemplate" />
+        </set>
+        <set name="pgxPatientDataReports" table="PGX_PATIENT_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PGX_DATA_ID" precision="22" scale="0" not-null="true">
+                    <comment>FOREIGN KEY FROM PGX_DATA_REPORT</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxPatientDataReport" />
+        </set>
+    </class>
+</hibernate-mapping>

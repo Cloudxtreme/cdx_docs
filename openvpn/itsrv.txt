@@ -1,0 +1,81 @@
+pkg installed:
+  openssl-blacklist openvpn-blacklist
+  bridge-utils
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install openvpn
+
+configure pam-ldap 
+	ldap/ldap-client.txt
+
+Copy the followings over:
+
+/etc/openvpn# 
+ca.crt
+crl.pem
+dh2048.pem
+ipp.txt
+openvpnserver.crt
+openvpnserver.csr
+openvpnserver.key
+openvpn-status.log
+server.conf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install bridge-utils
+
+# vi interfaces
+auto eth0
+iface eth0 inet manual
+
+
+#auto eth1
+#iface eth1 inet dhcp
+auto eth1
+iface eth1 inet static
+        address 10.10.37.25
+        netmask 255.255.248.0
+        network 10.10.32.0
+        broadcast 10.10.39.255
+        gateway 10.10.37.1
+        dns-nameservers 10.10.37.21
+        dns-search cardiodx.com
+
+auto tap0
+iface tap0 inet manual
+        pre-up /usr/sbin/openvpn --mktun --dev tap0
+        post-down /usr/sbin/openvpn --rmtun --dev tap0
+
+auto br0
+iface br0 inet static
+        bridge_ports eth0 tap0
+        address 10.10.37.3
+        netmask 255.255.248.0
+        network 10.10.32.0
+        broadcast 10.10.39.255
+        gateway 10.10.37.1
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers 10.10.37.21
+        dns-search cardiodx.com
+        
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+If you start openvpn using '/etc/init.d/openvpn start' from a terminal, you'll
+see the following messages from the terminal!!!!!!!
+
+AUTH-PAM: BACKGROUND: received command code: 0
+AUTH-PAM: BACKGROUND: USER/PASS: cchou/(mypassword????)
+AUTH-PAM: BACKGROUND: my_conv[0] query='Password: ' style=1
+
+
+vi /etc/init.d/openvpn
+
+      $DAEMON --writepid /var/run/openvpn.$NAME.pid \
+              $DAEMONARG $STATUSARG --cd $CONFIG_DIR \
+              --config $CONFIG_DIR/$NAME.conf < /dev/null > /dev/null 2>&1 || STATUS="FAILED"
+																											 add ^^^^^^^^^^^^^^^^
+
+
+
+

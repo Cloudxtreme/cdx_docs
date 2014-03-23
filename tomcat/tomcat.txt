@@ -1,0 +1,111 @@
+
+http://my.opera.com/subjam/blog/install-tomcat-5-5-in-debian-and-ubuntu
+
+wajig install tomcat5.5 tomcat5.5-admin tomcat5.5-webapps
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /etc/tomcat5.5 
+vi tomcat-users.xml 
+  <user username="admin" password="secret" roles="manager,admin"/>
+
+/etc/init.d/tomcat5.5 restart
+
+http://cchoudesktop:8180/manager/html/
+http://localhost:8180/host-manager/html/
+http://localhost:8180/admin
+
+http://cchoudesktop:8180/
+
+vi /usr/share/tomcat5.5/conf/tomcat-users.xml
+<role rolename="admin"/>
+<user username="admin" password="tomcat123" roles="tomcat,admin"/>
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+webapps: /usr/share/tomcat5.5-webapps/
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Self signed certificate:
+
+http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html
+
+
+vi server.xml 
+uncomment 8443 section
+
+    <Connector port="8443" maxHttpHeaderSize="8192"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" disableUploadTimeout="true"
+               acceptCount="100" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS"
+                keystoreFile="/usr/share/tomcat5.5/.keystore"
+                keystorePass="changeit"/>
+
+????java.security.AccessControlException:
+   /etc/tomcat5.5/logging.properties 
+   /usr/share/tomcat5.5-webapps/jsp-examples/WEB-INF/classes/logging.properties
+
+keytool -genkey -alias tomcat -keyalg RSA
+password: changeit (use default password for now)
+
+cd /root
+ls .keystore 
+
+
+mv .keystore /usr/share/tomcat5.5/.keystore
+
+https://localhost:8443/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://certs.godaddy.com/Tomcat.go
+
+cd /etc/tomcat5.5
+mkdir ssl
+cd ssl
+copy 
+  wildcard.cardiodx.com.crt 
+  wildcard.cardiodx.com.key
+  gd_intermediate.crt
+  gd_cross_intermediate.crt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://certs.godaddy.com/Tomcat.go
+
+openssl pkcs12 -export -chain -CAfile gd_bundle.crt -in wildcard.cardiodx.com.crt \
+  -inkey wildcard.cardiodx.com.key -out keystore.tomcat -name tomcat -passout pass:cdxSecret
+
+vi /etc/tomcat5.5/server.xml
+
+    <Connector port="443" maxHttpHeaderSize="8192"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" disableUploadTimeout="true"
+               acceptCount="100" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS" 
+                keystoreFile="/etc/tomcat5.5/ssl/commercial.keystore"
+		keystoreType="PKCS12" 
+                keystorePass="cdxSecret"/>
+
+/etc/init.d/tomcat5.5 restart
+
+https://cchoudesktop.cardiodx.com
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- Exception: No available certificate or key corresponds to the SSL cipher suites which are enabled.?????
+--
+keytool -import -alias intermed -keystore commercial.keystore  -trustcacerts -file gd_intermediate.crt
+keytool -import -alias cross -keystore commercial.keystore  -trustcacerts -file gd_cross_intermediate.crt
+keytool -import -alias tomcat -keystore commercial.keystore -trustcacerts -file wildcard.cardiodx.com.crt
+keytool -list -keystore commercial.keystore
+  (For more detail info: keytool -list -v -keystore commercial.keystore)
+
+keytool -import -alias root -keystore tomcat.keystore -trustcacerts -file valicert_class2_root.crt
+keytool -import -alias cross -keystore tomcat.keystore -trustcacerts -file gd_cross_intermediate.crt
+keytool -import -alias intermed -keystore tomcat.keystore -trustcacerts -file gd_intermediate.crt
+keytool -import -alias tomcat -keystore tomcat.keystore -trustcacerts -file wildcard.cardiodx.com.crt
+
+chmod 644 *
+

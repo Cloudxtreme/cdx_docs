@@ -1,0 +1,37 @@
+
+wajig install tomcat6 tomcat6-common  tomcat6-admin tomcat6-user tomcat6-examples 
+
+/var/lib/tomcat6/webapps/ROOT/index.html
+
+CATALINA_HOME in /usr/share/tomcat6 
+CATALINA_BASE in /var/lib/tomcat6
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+Eclipse 3.52 & tomcat6
+
+http://www.vogella.de/articles/EclipseWTP/article.html
+
+install WTP
+  Galileo - http://download.eclipse.org/releases/galileo
+
+cd /usr/share/tomcat6
+ln -s /var/lib/tomcat6/conf conf
+
+ Select Windows -> Preferences -> Server -> Runtime Environments to configure WTP to use Tomcat Press Add.
+
+Apache Tomcat 6
+  Name: Apache Tomcat v6.0
+  Tomcat installation dir: /usr/share/tomcat6
+  Jre: java-6-openjdk
+  
+
+File --> New --> Other --> Web --> Dynamic web project
+  Name: dweb1
+
+
+???????
+??
+?
+?

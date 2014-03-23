@@ -1,0 +1,18 @@
+
+wajig install ruby rdoc irb libyaml-ruby ri 
+wajig install libmysqlclient15-dev
+
+--
+-- gems:
+--
+  142  wget http://rubyforge.org/frs/download.php/29548/rubygems-1.0.1.tgz
+  144  mv rubygems-1.0.1.tgz ~
+  146  tar xzvf rubygems-1.0.1.tgz
+  147  cd rubygems-1.0.1
+  148  ruby setup.rb
+  149  ln -s /usr/bin/gem1.8 /usr/bin/gem
+
+gem update --system
+gem install activerecord
+gem install mysql
+

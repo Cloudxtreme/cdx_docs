@@ -1,0 +1,2 @@
+wajig install youtube-dl
+

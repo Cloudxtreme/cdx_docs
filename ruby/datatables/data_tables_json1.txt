@@ -1,0 +1,111 @@
+http://xzheng.net/blogs/rails-and-datatables/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+see..... rails3_pgsql.txt
+
+rails generate controller hello world
+
+http://cchoudesktop:3000/hello/world/
+
+--
+-- datatables
+--
+cp -rp ../../pg4/public/DataTables-1.9.4/ .
+
+cd app/views/layouts
+vi application.html.erb 
+
+<style type="text/css" title="currentStyle">
+    @import "/DataTables-1.9.4/media/css/demo_page.css";
+    @import "/DataTables-1.9.4/media/css/demo_table.css";
+</style>
+
+  <script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.js"></script>
+  <script type="text/javascript" language="javascript" src="/DataTables-1.9.4/media/js/jquery.dataTables.js"></script>
+
+
+--
+-- text based resource
+--
+cd pg5/app/assets/javascripts
+vi application.js 
+
+$(document).ready(function() {
+  $('#example').dataTable( {
+    bProcessing: true, 
+  	sAjaxSource: 'http://cchoudesktop:3000/arrays.txt/'
+  } );
+});
+
+vi public/arrays.txt 
+{"sEcho":1,"iTotalRecords":"57","iTotalDisplayRecords":"57","aaData":[["Gecko","Firefox 1.0","Win 98+ / OSX.2+","1.7","A"],["Gecko","Firefox 1.5","Win 98+ / OSX.2+","1.8","A"],["Gecko","Firefox 2.0","Win 98+ / OSX.2+","1.8","A"],["Gecko","Firefox 3.0","Win 2k+ / OSX.3+","1.9","A"],["Gecko","Camino 1.0","OSX.2+","1.8","A"],["Gecko","Camino 1.5","OSX.3+","1.8","A"],["Gecko","Netscape 7.2","Win 95+ / Mac OS 8.6-9.2","1.7","A"],["Gecko","Netscape Browser 8","Win 98SE+","1.7","A"],["Gecko","Netscape Navigator 9","Win 98+ / OSX.2+","1.8","A"],["Gecko","Mozilla 1.0","Win 95+ / OSX.1+","1","A"]]}
+
+vi world.html.erb
+<h1>Live example</h1>
+<div id="dynamic">
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+  <thead>
+    <tr>
+      <th width="20%">Rendering engine</th>
+      <th width="25%">Browser</th>
+      <th width="25%">Platform(s)</th>
+      <th width="15%">Engine version</th>
+      <th width="15%">CSS grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="5" class="dataTables_empty">Loading data from server</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+http://cchoudesktop:3000/hello/world/
+
+--
+-- JSON
+--
+vi routes.rb 
+Pg5::Application.routes.draw do
+	get "hello/datatable"
+
+
+vi hello_controller.rb
+
+	def datatable
+		json = { 	
+			"sEcho" => 1, 
+			"iTotalRecords" => "57", 
+			"iTotalDisplayRecords" => "57",
+			"aaData" => [ 
+				[ "Gecko", "Firefox 1.0", "Win 98+ / OSX.2+", "1.7", "A" ],
+				[ "Gecko", "Firefox 1.5", "Win 98+ / OSX.2+", "1.8", "A" ],
+				[ "Gecko", "Firefox 2.0", "Win 98+ / OSX.2+", "1.8", "A" ],
+				[ "Gecko", "Firefox 3.0", "Win 2k+ / OSX.3+", "1.9", "A" ],
+				[ "Gecko", "Camino 1.0", "OSX.2+", "1.8", "A" ],
+				[ "Gecko", "Camino 1.5", "OSX.3+", "1.8", "A" ],
+				[ "Gecko", "Netscape 7.2", "Win 95+ / Mac OS 8.6-9.2", "1.7", "A" ],
+				[ "Gecko", "Netscape Browser 8", "Win 98SE+", "1.7", "A" ],
+				[ "Gecko", "Netscape Navigator 9", "Win 98+ / OSX.2+", "1.8", "A" ],
+				[ "Gecko", "Mozilla 1.0", "Win 95+ / OSX.1+", "1", "A" ]
+			]
+		}
+		render :json=>json
+	end
+
+$(document).ready(function() {
+  $('#example').dataTable( {
+    bProcessing: true,
+    //sAjaxSource: 'http://cchoudesktop:3000/arrays.txt/'
+    sAjaxSource: 'http://cchoudesktop:3000/hello/datatable/'
+  } );
+});
+
+
+http://cchoudesktop:3000/hello/world/
+
+
+
+

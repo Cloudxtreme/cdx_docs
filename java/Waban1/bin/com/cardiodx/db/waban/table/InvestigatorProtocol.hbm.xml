@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.InvestigatorProtocol" table="INVESTIGATOR_PROTOCOL" schema="DNALIMS">
+        <comment>Investigators and their assigned protocols.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.InvestigatorProtocolId">
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="contactId" type="big_decimal">
+                <column name="CONTACT_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="contact" class="com.cardiodx.db.waban.table.Contact" update="false" insert="false" fetch="select">
+            <column name="CONTACT_ID" precision="22" scale="0" not-null="true">
+                <comment>Representative identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" update="false" insert="false" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>Study protocol identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="investigatorNumber" type="string">
+            <column name="INVESTIGATOR_NUMBER" length="30">
+                <comment>Protocol specific number of the investigator</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

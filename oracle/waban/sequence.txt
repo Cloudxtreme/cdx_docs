@@ -1,0 +1,36 @@
+CREATE SEQUENCE my_test_seq
+  MINVALUE 1
+  MAXVALUE 999999999999999999999999999
+  INCREMENT BY 1
+  START WITH 28704
+  CACHE 20
+  NOORDER
+  NOCYCLE;
+
+select my_test_seq.nextval from dual;
+   NEXTVAL
+----------
+     28704
+
+select my_test_seq.currval from dual;
+   CURRVAL
+----------
+     28704
+
+
+drop sequence my_test_seq;
+
+create SEQUENCE my_test_seq
+  MINVALUE -65436
+  MAXVALUE 0
+  INCREMENT BY 1
+  START WITH -65436
+  CACHE 20
+  NOORDER
+  NOCYCLE;
+
+select my_test_seq.nextval from dual;
+
+select my_test_seq.currval from dual;
+
+

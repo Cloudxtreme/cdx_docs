@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.SearchAttributeView" table="SEARCH_ATTRIBUTE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.SearchAttributeViewId">
+            <key-property name="variableName" type="string">
+                <column name="VARIABLE_NAME" length="30" />
+            </key-property>
+            <key-property name="controlType" type="string">
+                <column name="CONTROL_TYPE" length="5" />
+            </key-property>
+            <key-property name="listSql" type="string">
+                <column name="LIST_SQL" length="333" />
+            </key-property>
+            <key-property name="useId" type="big_decimal">
+                <column name="USE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="joinTable" type="string">
+                <column name="JOIN_TABLE" length="68" />
+            </key-property>
+            <key-property name="joinField" type="string">
+                <column name="JOIN_FIELD" length="190" />
+            </key-property>
+            <key-property name="compareField" type="string">
+                <column name="COMPARE_FIELD" length="59" />
+            </key-property>
+            <key-property name="attributeLevelId" type="string">
+                <column name="ATTRIBUTE_LEVEL_ID" length="1" />
+            </key-property>
+            <key-property name="numberInSequence" type="big_decimal">
+                <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

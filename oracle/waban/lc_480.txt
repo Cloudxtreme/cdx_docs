@@ -1,0 +1,106 @@
+------------------------------------------
+-- oracle/CDX_MAIN.sql
+------------------------------------------
+CREATE OR REPLACE
+PACKAGE BODY CDX_MAIN AS
+  PROCEDURE CLOSE_LC480_CHECKLISTS
+  AS
+    CURSOR opench IS
+      SELECT DISTINCT ch.checklist_id
+      FROM checklist ch, procedure_template pt, checklist_content cc
+      WHERE ch.completed = 0
+      AND ch.procedure_template_id = pt.procedure_template_id
+      AND pt.procedure_name = 'Roche LC480 Data Extraction'
+      AND cc.checklist_id = ch.checklist_id
+      AND cc.checklist_content_id NOT IN (
+        select checklist_content_id
+        from checklist_content
+        where checklist_id = ch.checklist_id
+        and entered_value is null
+        and checklist_col >= 0
+      );
+  BEGIN
+    FOR checklist IN opench LOOP
+      CLEAR_CHECKLIST_LOCK(checklist.checklist_id);
+      LIMSPACKAGE.LOCK_CHECKLIST(checklist.checklist_id);
+      LIMSPACKAGE.SET_CHECKLIST_STATUS(checklist.checklist_id, 0, 'Passed');
+      LIMSPACKAGE.UNLOCK_CHECKLIST(checklist.checklist_id);
+    END LOOP;
+  END;
+END CDX_MAIN;
+/
+
+
+------------------------------------------
+-- oracle/loaders/2_2_4/load_jobs.sql
+------------------------------------------
+BEGIN
+DBMS_SCHEDULER.CREATE_JOB (
+    job_name   =>  'CLOSE_LC480_CHECKLISTS',
+    job_type   =>  'STORED_PROCEDURE',
+    job_action =>  'DNALIMS.CDX_MAIN.CLOSE_LC480_CHECKLISTS',
+    repeat_interval =>  'FREQ=MINUTELY; INTERVAL=480'
+);
+
+dbms_scheduler.enable('CLOSE_LC480_CHECKLISTS');
+
+END;
+/
+commit;
+exit;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set linesize 1000
+set pagesize 1000
+
+col program_name for a25;
+select owner, job_name, state, run_count, program_name, start_date
+from dba_scheduler_jobs;
+
+dnalims 		       close_lc480_checklists	      scheduled 	    1107			   03-jun-10 02.40.09.153169 pm america/los_angeles
+dnalims 		       load_trf_scan_files	      scheduled 	  201875			   14-jun-09 03.00.51.608585 pm america/los_angeles
+dnalims 		       delete_report_previews	      scheduled 	   17215			   14-jun-09 03.00.51.605038 pm america/los_angeles
+dnalims 		       check_fax_status 	      scheduled 	  201910			   14-jun-09 03.00.51.595242 pm america/los_angeles
+dnalims 		       send_submitted_faxes	      scheduled 	  201910			   14-jun-09 03.00.51.601460 pm america/los_angeles
+
+col program_name for a25;
+col start_date for a50
+col repeat_interval for a30
+select job_name, state, run_count, start_date, repeat_interval
+from user_scheduler_jobs;
+
+select distinct owner, job_name from user_scheduler_job_log;
+dnalims 		       send_submitted_faxes
+dnalims 		       load_trf_scan_files
+dnalims 		       check_fax_status
+dnalims 		       delete_report_previews
+dnalims 		       close_lc480_checklists
+
+
+col log_date for a35
+col run_duration for a20
+select job_name, log_date, run_duration, status
+from user_scheduler_job_run_details
+where job_name = 'CLOSE_LC480_CHECKLISTS'
+order by log_date;
+
+CLOSE_LC480_CHECKLISTS						  05-JUN-11 06.40.09.618689 AM -07:00 +000 00:00:01	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  05-JUN-11 02.40.09.302980 PM -07:00 +000 00:00:00	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  05-JUN-11 10.40.09.313754 PM -07:00 +000 00:00:00	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  06-JUN-11 06.40.09.351530 AM -07:00 +000 00:00:00	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  06-JUN-11 04.35.54.983575 PM -07:00 +000 01:55:46	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  07-JUN-11 12.39.16.642257 AM -07:00 +000 01:59:08	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  07-JUN-11 09.55.06.319072 AM -07:00 +000 03:14:57	   SUCCEEDED
+CLOSE_LC480_CHECKLISTS						  07-JUN-11 02.40.09.327434 PM -07:00 +000 00:00:00	   SUCCEEDED
+
+col job_name for a30
+select job_name, log_date, run_duration, status
+from user_scheduler_job_run_details
+where job_name = 'CLOSE_LC480_CHECKLISTS'
+and run_duration != '+000 00:00:00'
+order by log_date;
+
+
+
+

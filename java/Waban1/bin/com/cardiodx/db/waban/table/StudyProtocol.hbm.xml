@@ -1,0 +1,325 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.StudyProtocol" table="STUDY_PROTOCOL" schema="DNALIMS">
+        <comment>Information about study protocols.</comment>
+        <id name="studyProtocolId" type="big_decimal">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ocxLoadByStudyVarOcx" class="com.cardiodx.db.waban.table.OcxLoad" fetch="select">
+            <column name="STUDY_VAR_OCX" precision="22" scale="0">
+                <comment>Used to store the name of the OCX control used to display attributes for the accession.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="ocxLoadByPatientVarOcx" class="com.cardiodx.db.waban.table.OcxLoad" fetch="select">
+            <column name="PATIENT_VAR_OCX" precision="22" scale="0">
+                <comment>Used to store the name of the OCX control used to display attributes for the accession.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="contact" class="com.cardiodx.db.waban.table.Contact" fetch="select">
+            <column name="CONTACT_ID" precision="22" scale="0">
+                <comment>The sponsor representative's identifier and foreign key to the SPONSOR_REPRESENTATIVE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ocxLoadByAccessionVarOcx" class="com.cardiodx.db.waban.table.OcxLoad" fetch="select">
+            <column name="ACCESSION_VAR_OCX" precision="22" scale="0">
+                <comment>Used to store the name of the OCX control used to display attributes for the accession.</comment>
+            </column>
+        </many-to-one>
+        <property name="studyNumber" type="string">
+            <column name="STUDY_NUMBER" length="20">
+                <comment>A unique study identifier used in house by laboratory personnel.</comment>
+            </column>
+        </property>
+        <property name="sponsorStudyNumber" type="string">
+            <column name="SPONSOR_STUDY_NUMBER" length="20">
+                <comment>The sponsor's study identifier.</comment>
+            </column>
+        </property>
+        <property name="studyTitle" type="string">
+            <column name="STUDY_TITLE" length="200">
+                <comment>A unique protocol identifier used in house by laboratory personnel.</comment>
+            </column>
+        </property>
+        <property name="studyDirector" type="string">
+            <column name="STUDY_DIRECTOR" length="30" not-null="true">
+                <comment>Person in charge of this study.</comment>
+            </column>
+        </property>
+        <property name="sponsorStudyTitle" type="string">
+            <column name="SPONSOR_STUDY_TITLE" length="200">
+                <comment>The sponsor's protocol identifier.</comment>
+            </column>
+        </property>
+        <property name="cascadeAccessionNumber" type="java.lang.Boolean">
+            <column name="CASCADE_ACCESSION_NUMBER" precision="1" scale="0">
+                <comment>Flag indicating whether or not the sample tube ids are to be automatically generated based upon the accession number.</comment>
+            </column>
+        </property>
+        <property name="barcodeLength" type="big_decimal">
+            <column name="BARCODE_LENGTH" precision="22" scale="0">
+                <comment>Length of the sponsor's barcodes.</comment>
+            </column>
+        </property>
+        <property name="finalTubeBarcodeLowValue" type="string">
+            <column name="FINAL_TUBE_BARCODE_LOW_VALUE" length="20">
+                <comment>Beginning barcode for a range of sample tubes sent back to the sponsor.</comment>
+            </column>
+        </property>
+        <property name="finalTubeBarcodeHighValue" type="string">
+            <column name="FINAL_TUBE_BARCODE_HIGH_VALUE" length="20">
+                <comment>Ending barcode for a range of sample tubes sent back to the sponsor.</comment>
+            </column>
+        </property>
+        <property name="studyClosed" type="java.lang.Boolean">
+            <column name="STUDY_CLOSED" precision="1" scale="0">
+                <comment>Flag to indicate whether or not a study is complete.</comment>
+            </column>
+        </property>
+        <property name="shipDnaBack" type="java.lang.Boolean">
+            <column name="SHIP_DNA_BACK" precision="1" scale="0">
+                <comment>Flag indicating whether or not DNA samples are to be shipped back to the sponsor.</comment>
+            </column>
+        </property>
+        <property name="studyUrl" type="string">
+            <column name="STUDY_URL" length="400">
+                <comment>URL associated with the STUDY</comment>
+            </column>
+        </property>
+        <property name="studyType" type="string">
+            <column name="STUDY_TYPE" length="50">
+                <comment>Type of Study</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="testAccessions" table="TEST_ACCESSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestAccession" />
+        </set>
+        <set name="vendorProjectAssaies" table="VENDOR_PROJECT_ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foriegn key refrencing Study table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.VendorProjectAssay" />
+        </set>
+        <set name="studyVariableFlds" table="STUDY_VARIABLE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to study protocol table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyVariableFld" />
+        </set>
+        <set name="dnaDestructionRequests" table="DNA_DESTRUCTION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Identifier Study Protocol ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.DnaDestructionRequest" />
+        </set>
+        <set name="outboundRequests" table="OUTBOUND_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Study Identifier and Foreign key to Study_Protocol</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OutboundRequest" />
+        </set>
+        <set name="geneResults" table="GENE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Protocol identifier and foreign key to the STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneResult" />
+        </set>
+        <set name="protocolProcedures" table="PROTOCOL_PROCEDURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Protocol identifier and foreign key to the STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolProcedure" />
+        </set>
+        <set name="protocolTests" table="PROTOCOL_TEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Study identifier and foreign key to STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolTest" />
+        </set>
+        <set name="protocolDefinedVariables" table="PROTOCOL_DEFINED_VARIABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Protocol identifier and foreign key to the STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolDefinedVariable" />
+        </set>
+        <set name="staarAnonymizationRequestsForStudyProtocolId" table="STAAR_ANONYMIZATION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Study protocol identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StaarAnonymizationRequest" />
+        </set>
+        <set name="pgxModifyTemplateComments" table="PGX_MODIFY_TEMPLATE_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign KEY for STUDY_PROTOCOL</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifyTemplateComment" />
+        </set>
+        <set name="pendingSampleTables" table="PENDING_SAMPLE_TABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Study protocol identifier and foreign key to the STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PendingSampleTable" />
+        </set>
+        <set name="eventSubscriptions" table="EVENT_SUBSCRIPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Optional foreign key for validation event handlers that are specific to each study protocol</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.EventSubscription" />
+        </set>
+        <set name="pgxDataReports" table="PGX_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>STUDY_ID idetifier to Study no from STUDY_PROTOCOL</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxDataReport" />
+        </set>
+        <set name="sampleReceptions" table="SAMPLE_RECEPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>STUDY_PROTOCOL_ID FK to STUDY_PROTOCOL TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleReception" />
+        </set>
+        <set name="accessions" table="ACCESSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>The protocol identifier for the sample(s) being accessioned and foreign key to the STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Accession" />
+        </set>
+        <set name="anonymizationStudySetups" table="ANONYMIZATION_STUDY_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Study protocol identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AnonymizationStudySetup" />
+        </set>
+        <set name="staarAnonymizationRequestsForResearchStudyProtocolId" table="STAAR_ANONYMIZATION_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RESEARCH_STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Research Study Protocol Id</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StaarAnonymizationRequest" />
+        </set>
+        <set name="patients" table="PATIENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>The protocol identifier for the sample(s) being accessioned and foreign key to the STUDY_PROTOCOL table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Patient" />
+        </set>
+        <set name="protocolAlleles" table="PROTOCOL_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Protocol identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolAllele" />
+        </set>
+        <set name="autoaccessionColumns" table="AUTOACCESSION_COLUMN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AutoaccessionColumn" />
+        </set>
+        <set name="protocolGenes" table="PROTOCOL_GENE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Protocol identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolGene" />
+        </set>
+        <set name="pgxModifyDataRptComments" table="PGX_MODIFY_DATA_RPT_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign KEY for STUDY_PROTOCOL</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifyDataRptComment" />
+        </set>
+        <set name="genotypingVendProjDtlses" table="GENOTYPING_VEND_PROJ_DTLS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>reference key for study protocol</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypingVendProjDtls" />
+        </set>
+        <set name="sampleIdentificationKeies" table="SAMPLE_IDENTIFICATION_KEY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0">
+                    <comment>Study protocol identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleIdentificationKey" />
+        </set>
+        <set name="investigatorProtocols" table="INVESTIGATOR_PROTOCOL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                    <comment>Study protocol identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InvestigatorProtocol" />
+        </set>
+    </class>
+</hibernate-mapping>

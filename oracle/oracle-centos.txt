@@ -1,0 +1,451 @@
+http://download.oracle.com/docs/cd/E11081_01/welcome.html
+http://www.oracle.com/technology/pub/articles/smiley_10gdb_install.html
+
+oracle vmware
+
+http://www.oracle-base.com/articles/10g/OracleDB10gR2RACInstallationOnCentos4UsingVMware.php
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+install centos 52 on a dell machine w/ lvm
+dd a device on kvm
+mount the device on hardy32
+create lvm on the device
+tar and copy files over to the lvm device
+configure grub
+start the virtual machine
+
+vi /etc/sysconfig/network
+HOSTNAME=oracle
+DHCP_HOSTNAME=oracle
+
+vi /etc/hosts
+
+yum install xfsprogs kmod-xfs.x86_64
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# rpm -Uvh http://download.fedora.redhat.com/pub/epel/5/i386/epel-release-5-3.noarch.rpm
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.akadia.com/services/ora_linux_install_10g.html
+http://www.oracle-base.com/articles/10g/OracleDB10gR2InstallationOnRHEL5.php
+
+
+Packages:
+    * Administration Tools
+    * Base
+    * Development Libraries
+    * Development Tools
+    * Editors
+    * GNOME Desktop Environment
+    * Graphical Internet
+    * Legacy Software Development
+    * Legacy Software Support
+    * Server Configuration Tools
+    * System Tools
+    * Text-based Internet
+    * X Window System
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--vi /etc/redhat-release
+--Red Hat Enterprise Linux Server release 5 (Tikanga)
+
+vi /etc/sysctl.conf
+#kernel.shmall = 2097152
+#kernel.shmmax = 2147483648
+kernel.shmmni = 4096
+# semaphores: semmsl, semmns, semopm, semmni
+kernel.sem = 250 32000 100 128
+#fs.file-max = 65536
+net.ipv4.ip_local_port_range = 1024 65000
+net.core.rmem_default=262144
+net.core.rmem_max=262144
+net.core.wmem_default=262144
+net.core.wmem_max=262144
+
+/sbin/sysctl -p
+
+vi /etc/security/limits.conf
+*               soft    nproc   2047
+*               hard    nproc   16384
+*               soft    nofile  1024
+*               hard    nofile  65536
+
+--vi /etc/pam.d/login
+--session    required     /lib/security/pam_limits.so
+
+vi /etc/selinux/config
+SELINUX=disabled
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /media/cdrom/CentOS
+rpm -Uvh setarch-2*
+rpm -Uvh make-3*
+rpm -Uvh glibc-2*
+rpm -Uvh libaio-0*
+rpm -Uvh compat-libstdc++-33-3*
+rpm -Uvh compat-gcc-34-3*
+rpm -Uvh compat-gcc-34-c++-3*
+rpm -Uvh gcc-4*
+rpm -Uvh libXp-1*
+rpm -Uvh openmotif-2*
+rpm -Uvh compat-db-4*
+rpm -Uvh libXmu-1.0.2-5.i386.rpm 
+rpm -Uvh openmotif-2.3.0-0.5.el5.i386.rpm 
+rpm -Uvh openmotif-2*
+
+groupadd oinstall
+groupadd dba
+groupadd oper
+
+useradd -g oinstall -G dba oracle
+passwd oracle
+
+mkdir -p /u01/app/oracle/product/10.2.0/db_1
+chown -R oracle.oinstall /u01
+
+vi /etc/redhat-release
+redhat-4
+
+vi .bash_profile
+
+# Oracle Settings
+TMP=/tmp; export TMP
+TMPDIR=$TMP; export TMPDIR
+
+ORACLE_BASE=/u01/app/oracle; export ORACLE_BASE
+ORACLE_HOME=$ORACLE_BASE/product/10.2.0/db_1; export ORACLE_HOME
+ORACLE_SID=ORCL; export ORACLE_SID
+ORACLE_TERM=xterm; export ORACLE_TERM
+PATH=/usr/sbin:$PATH; export PATH
+PATH=$ORACLE_HOME/bin:$PATH; export PATH
+
+LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib; export LD_LIBRARY_PATH
+CLASSPATH=$ORACLE_HOME/JRE:$ORACLE_HOME/jlib:$ORACLE_HOME/rdbms/jlib; export CLASSPATH
+
+if [ $USER = "oracle" ]; then
+  if [ $SHELL = "/bin/ksh" ]; then
+    ulimit -p 16384
+    ulimit -n 65536
+  else
+    ulimit -u 16384 -n 65536
+  fi
+fi
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gunzip 10201_database_linux_x86_64.cpio.gz
+cpio -idmv < 10201_database_linux_x86_64.cpio
+
+gzip 10201_database_linux_x86_64.cpio.gz
+cpio -idmv < 10201_database_linux_x86_64.cpio
+
+./runInstaller
+--./runInstaller -ignoreSysPrereqs
+
+log: /u01/app/oracle/product/10.2.0/db_1/cfgtoollogs/dbca/orcl/
+
+
+root:
+cd /u01/app/oracle/oraInventory
+./orainstRoot.sh
+
+cd /u01/app/oracle/product/10.2.0/db_1
+./root.sh
+
+dbca ???
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /etc/pam.d
+vi login
+#session    required     /lib/security/pam_limits.so
+
+sqlplus system as sysdba
+
+CentOS release 5.2 (Final)
+
+http://ora01:5560/isqlplus
+http://ora01:5560/isqlplus/dba
+http://ora01:1158/em
+
+
+cd /u01/app/oracle/product/10.2.0/db_1/dbs
+ln -s init.ora initORCL.ora
+
+sqlplus system as sysdba
+
+
+
+show parameters
+O7_DICTIONARY_ACCESSIBILITY	     boolean	 FALSE
+asm_power_limit 		     integer	 1
+audit_file_dest 		     string	 /u01/app/oracle/admin/orcl/adump
+audit_sys_operations		     boolean	 FALSE
+audit_trail			     string	 NONE
+background_core_dump		     string	 partial
+background_dump_dest		     string	 /u01/app/oracle/admin/orcl/bdump
+backup_tape_io_slaves		     boolean	 FALSE
+bitmap_merge_area_size		     integer	 1048576
+blank_trimming			     boolean	 FALSE
+cluster_database		     boolean	 FALSE
+cluster_database_instances	     integer	 1
+commit_point_strength		     integer	 1
+compatible			     string	 10.2.0.1.0
+control_file_record_keep_time	     integer	 7
+control_files			     string	 /u01/app/oracle/oradata/orcl/control01.ctl, 
+						/u01/app/oracle/oradata/orcl/control02.ctl, 
+						/u01/app/oracle/oradata/orcl/control03.ctl
+core_dump_dest			     string	 /u01/app/oracle/admin/orcl/cdump
+cpu_count			     integer	 4
+create_bitmap_area_size 	     integer	 8388608
+cursor_sharing			     string	 EXACT
+cursor_space_for_time		     boolean	 FALSE
+db_block_checking		     string	 FALSE
+db_block_checksum		     string	 TRUE
+db_block_size			     integer	 8192
+db_cache_advice 		     string	 ON
+db_file_multiblock_read_count	     integer	 16
+db_files			     integer	 200
+db_flashback_retention_target	     integer	 1440
+db_name 			     string	 orcl
+db_recovery_file_dest		     string	 /u01/app/oracle/flash_recovery_area
+db_recovery_file_dest_size	     big integer 2G
+db_unique_name			     string	 orcl
+db_writer_processes		     integer	 1
+ddl_wait_for_locks		     boolean	 FALSE
+dg_broker_config_file1		     string	 /u01/app/oracle/product/10.2.0/db_1/dbs/dr1orcl.dat
+dg_broker_config_file2		     string	 /u01/app/oracle/product/10.2.0/db_1/dbs/dr2orcl.dat
+dg_broker_start 		     boolean	 FALSE
+disk_asynch_io			     boolean	 TRUE
+dispatchers			     string	 (PROTOCOL=TCP) (SERVICE=orclXDB)
+distributed_lock_timeout	     integer	 60
+dml_locks			     integer	 748
+fast_start_parallel_rollback	     string	 LOW
+file_mapping			     boolean	 FALSE
+filesystemio_options		     string	 none
+global_names			     boolean	 FALSE
+hash_area_size			     integer	 131072
+hs_autoregister 		     boolean	 TRUE
+instance_name			     string	 orcl
+instance_type			     string	 RDBMS
+job_queue_processes		     integer	 10
+ldap_directory_access		     string	 NONE
+lock_sga			     boolean	 FALSE
+log_archive_dest_state_1	     string	 enable
+log_archive_dest_state_10	     string	 enable
+log_archive_dest_state_2	     string	 enable
+log_archive_dest_state_3	     string	 enable
+log_archive_dest_state_4	     string	 enable
+log_archive_dest_state_5	     string	 enable
+log_archive_dest_state_6	     string	 enable
+log_archive_dest_state_7	     string	 enable
+log_archive_dest_state_8	     string	 enable
+log_archive_dest_state_9	     string	 enable
+log_archive_format		     string	 %t_%s_%r.dbf
+log_archive_local_first 	     boolean	 TRUE
+log_archive_max_processes	     integer	 2
+log_archive_min_succeed_dest	     integer	 1
+log_archive_start		     boolean	 FALSE
+log_buffer			     integer	 6171648
+log_checkpoint_timeout		     integer	 1800
+log_checkpoints_to_alert	     boolean	 FALSE
+logmnr_max_persistent_sessions	     integer	 1
+max_dump_file_size		     string	 UNLIMITED
+max_enabled_roles		     integer	 150
+nls_language			     string	 AMERICAN
+nls_length_semantics		     string	 BYTE
+nls_nchar_conv_excp		     string	 FALSE
+nls_territory			     string	 AMERICA
+object_cache_max_size_percent	     integer	 10
+object_cache_optimal_size	     integer	 102400
+open_cursors			     integer	 300
+open_links			     integer	 4
+open_links_per_instance 	     integer	 4
+optimizer_dynamic_sampling	     integer	 2
+optimizer_features_enable	     string	 10.2.0.1
+optimizer_index_cost_adj	     integer	 100
+optimizer_mode			     string	 ALL_ROWS
+optimizer_secure_view_merging	     boolean	 TRUE
+os_authent_prefix		     string	 ops$
+os_roles			     boolean	 FALSE
+parallel_adaptive_multi_user	     boolean	 TRUE
+parallel_automatic_tuning	     boolean	 FALSE
+parallel_execution_message_size      integer	 2152
+parallel_max_servers		     integer	 80
+parallel_server 		     boolean	 FALSE
+parallel_server_instances	     integer	 1
+parallel_threads_per_cpu	     integer	 2
+pga_aggregate_target		     big integer 187M
+plsql_code_type 		     string	 INTERPRETED
+plsql_compiler_flags		     string	 INTERPRETED, NON_DEBUG
+plsql_debug			     boolean	 FALSE
+plsql_optimize_level		     integer	 2
+plsql_v2_compatibility		     boolean	 FALSE
+plsql_warnings			     string	 DISABLE:ALL
+pre_page_sga			     boolean	 FALSE
+processes			     integer	 150
+query_rewrite_enabled		     string	 TRUE
+query_rewrite_integrity 	     string	 enforced
+read_only_open_delayed		     boolean	 FALSE
+recyclebin			     string	 on
+remote_archive_enable		     string	 true
+remote_dependencies_mode	     string	 TIMESTAMP
+remote_login_passwordfile	     string	 EXCLUSIVE
+remote_os_authent		     boolean	 FALSE
+remote_os_roles 		     boolean	 FALSE
+replication_dependency_tracking      boolean	 TRUE
+resource_limit			     boolean	 FALSE
+serial_reuse			     string	 disable
+service_names			     string	 orcl
+session_cached_cursors		     integer	 20
+session_max_open_files		     integer	 10
+sessions			     integer	 170
+sga_max_size			     big integer 564M
+sga_target			     big integer 564M
+shadow_core_dump		     string	 partial
+shared_pool_reserved_size	     big integer 7759462
+shared_servers			     integer	 1
+skip_unusable_indexes		     boolean	 TRUE
+sort_area_size			     integer	 65536
+spfile				     string	 /u01/app/oracle/product/10.2.0/db_1/dbs/spfileorcl.ora
+sql92_security			     boolean	 FALSE
+sql_trace			     boolean	 FALSE
+sql_version			     string	 NATIVE
+sqltune_category		     string	 DEFAULT
+standby_archive_dest		     string	 ?/dbs/arch
+standby_file_management 	     string	 MANUAL
+star_transformation_enabled	     string	 FALSE
+statistics_level		     string	 TYPICAL
+tape_asynch_io			     boolean	 TRUE
+timed_statistics		     boolean	 TRUE
+trace_enabled			     boolean	 TRUE
+transactions			     integer	 187
+transactions_per_rollback_segment    integer	 5
+undo_management 		     string	 AUTO
+undo_retention			     integer	 900
+undo_tablespace 		     string	 UNDOTBS1
+use_indirect_data_buffers	     boolean	 FALSE
+user_dump_dest			     string	 /u01/app/oracle/admin/orcl/udump
+workarea_size_policy		     string	 AUTO
+
+
+[oracle@ora01 ~]$ ps -ef | grep oracle
+root      6513  6056  0 16:47 ?        00:00:00 sshd: oracle [priv]
+oracle    6515  6513  0 16:47 ?        00:00:03 sshd: oracle@pts/0
+oracle    6516  6515  0 16:47 pts/0    00:00:00 -bash
+oracle   21830     1  0 16:56 pts/0    00:00:00 /u01/app/oracle/product/10.2.0/db_1/perl/bin/perl /u01/app/oracle/product/10.2.0/db_1/bin/emwd.pl dbconsole /u01/app/oracle/product/10.2.0/db_1/ora01_orcl/sysman/log/emdb.nohup
+oracle   24136 21830  0 16:57 pts/0    00:00:00 /u01/app/oracle/product/10.2.0/db_1/bin/emagent
+oracle   24789     1  0 17:05 pts/0    00:00:03 /u01/app/oracle/product/10.2.0/db_1/jdk/bin/java -Djava.awt.headless=true -Doracle.oc4j.localhome=/u01/app/oracle/product/10.2.0/db_1/sqlplus -Djava.security.properties=/u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/home/config/jazn.security.props -jar /u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/home/oc4j.jar -config /u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/isqlplus/config/server.xml
+oracle   25215 21830  3 17:13 pts/0    00:00:11 /u01/app/oracle/product/10.2.0/db_1/jdk/bin/java -server -Xmx256M -XX:MaxPermSize=96m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -DORACLE_HOME=/u01/app/oracle/product/10.2.0/db_1 -Doracle.home=/u01/app/oracle/product/10.2.0/db_1/oc4j -Doracle.oc4j.localhome=/u01/app/oracle/product/10.2.0/db_1/ora01_orcl/sysman -DEMSTATE=/u01/app/oracle/product/10.2.0/db_1/ora01_orcl -Doracle.j2ee.dont.use.memory.archive=true -Djava.protocol.handler.pkgs=HTTPClient -Doracle.security.jazn.config=/u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/OC4J_DBConsole_ora01_orcl/config/jazn.xml -Djava.security.policy=/u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/OC4J_DBConsole_ora01_orcl/config/java2.policy -Djava.security.properties=/u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/home/config/jazn.security.props -DEMDROOT=/u01/app/oracle/product/10.2.0/db_1/ora01_orcl -Dsysman.md5password=true -Drepapi.oracle.home=/u01/app/oracle/product/10.2.0/db_1 -Ddisable.checkForUpdate=true -Djava.awt.headless=true -jar /u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/home/oc4j.jar -config /u01/app/oracle/product/10.2.0/db_1/oc4j/j2ee/OC4J_DBConsole_ora01_orcl/config/server.xml
+root     25391  6056  0 17:18 ?        00:00:00 sshd: oracle [priv]
+oracle   25395 25391  0 17:18 ?        00:00:00 sshd: oracle@pts/1
+oracle   25396 25395  0 17:18 pts/1    00:00:00 -bash
+oracle   25444 25396  0 17:18 pts/1    00:00:00 sqlplus        as sysdba
+oracle   25445 25444  0 17:18 ?        00:00:00 oracleorcl (DESCRIPTION=(LOCAL=YES)(ADDRESS=(PROTOCOL=beq)))
+oracle   25468     1  0 17:19 ?        00:00:00 /u01/app/oracle/product/10.2.0/db_1/bin/tnslsnr LISTENER -inherit
+oracle   25487  6516  0 17:19 pts/0    00:00:00 ps -ef
+oracle   25488  6516  0 17:19 pts/0    00:00:00 grep oracle
+
+
+
+[oracle@ora01 ~]$ netstat -nap
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name   
+tcp        0      0 0.0.0.0:3938                0.0.0.0:*                   LISTEN      24136/emagent       
+tcp        0      0 0.0.0.0:41828               0.0.0.0:*                   LISTEN      25548/ora_d000_orcl 
+tcp        0      0 0.0.0.0:1158                0.0.0.0:*                   LISTEN      25215/java          
+tcp        0      0 0.0.0.0:5580                0.0.0.0:*                   LISTEN      24789/java          
+tcp        0      0 0.0.0.0:111                 0.0.0.0:*                   LISTEN      -                   
+tcp        0      0 0.0.0.0:5520                0.0.0.0:*                   LISTEN      25215/java          
+tcp        0      0 0.0.0.0:1521                0.0.0.0:*                   LISTEN      25468/tnslsnr       
+tcp        0      0 0.0.0.0:5560                0.0.0.0:*                   LISTEN      24789/java          
+tcp        0      0 127.0.0.1:6010              0.0.0.0:*                   LISTEN      -                   
+tcp        0      0 127.0.0.1:6011              0.0.0.0:*                   LISTEN      -                   
+tcp        0      0 127.0.0.1:36355             127.0.0.1:1158              TIME_WAIT   -                   
+tcp        0      0 127.0.0.1:61401             127.0.0.1:1521              ESTABLISHED 24136/emagent       
+tcp        0      0 127.0.0.1:61395             127.0.0.1:1521              ESTABLISHED 25526/ora_pmon_orcl 
+tcp        0      0 127.0.0.1:61393             127.0.0.1:1521              TIME_WAIT   -                   
+tcp        1      0 127.0.0.1:43669             127.0.0.1:1521              CLOSE_WAIT  24136/emagent       
+tcp        0      0 127.0.0.1:21713             127.0.0.1:1521              ESTABLISHED 25215/java          
+tcp        0      0 127.0.0.1:1521              127.0.0.1:21713             ESTABLISHED 25581/oracleorcl    
+tcp        0      0 127.0.0.1:1521              127.0.0.1:61395             ESTABLISHED 25468/tnslsnr       
+tcp        0      0 127.0.0.1:1521              127.0.0.1:61401             ESTABLISHED 25587/oracleorcl    
+tcp        0      0 :::22                       :::*                        LISTEN      -                   
+tcp        0      0 ::1:6010                    :::*                        LISTEN      -                   
+tcp        0      0 ::1:6011                    :::*                        LISTEN      -                   
+tcp        0      0 ::ffff:10.10.36.3:22        ::ffff:10.10.36.42:40059    ESTABLISHED -                   
+tcp        0      0 ::ffff:10.10.36.3:22        ::ffff:10.10.36.42:53183    ESTABLISHED -                   
+udp        0      0 0.0.0.0:1024                0.0.0.0:*                               -                   
+udp        0      0 127.0.0.1:1071              0.0.0.0:*                               24136/emagent       
+udp        0      0 127.0.0.1:1075              0.0.0.0:*                               25526/ora_pmon_orcl 
+udp        0      0 127.0.0.1:1076              0.0.0.0:*                               25548/ora_d000_orcl 
+udp        0      0 127.0.0.1:1077              0.0.0.0:*                               25550/ora_s000_orcl 
+udp        0      0 127.0.0.1:1082              0.0.0.0:*                               24136/emagent       
+udp        0      0 0.0.0.0:68                  0.0.0.0:*                               -                   
+udp        0      0 0.0.0.0:5353                0.0.0.0:*                               -                   
+udp        0      0 0.0.0.0:111                 0.0.0.0:*                               -                   
+udp        0      0 :::1025                     :::*                                    -                   
+udp        0      0 :::5353                     :::*                                    -                   
+Active UNIX domain sockets (servers and established)
+Proto RefCnt Flags       Type       State         I-Node PID/Program name    Path
+unix  2      [ ACC ]     STREAM     LISTENING     9637   -                   @/var/run/hald/dbus-P3isGeLI5U
+unix  2      [ ACC ]     STREAM     LISTENING     11482  -                   @/tmp/fam-root-
+unix  11     [ ]         DGRAM                    8735   -                   /dev/log
+unix  2      [ ]         DGRAM                    1470   -                   @/org/kernel/udev/udevd
+unix  2      [ ]         DGRAM                    9646   -                   @/org/freedesktop/hal/udev_event
+unix  2      [ ACC ]     STREAM     LISTENING     9638   -                   @/var/run/hald/dbus-K9GrsZvnpX
+unix  2      [ ACC ]     STREAM     LISTENING     8670   -                   /var/run/audispd_events
+unix  2      [ ACC ]     STREAM     LISTENING     9407   -                   /dev/gpmctl
+unix  2      [ ACC ]     STREAM     LISTENING     9103   -                   /var/run/dbus/system_bus_socket
+unix  2      [ ACC ]     STREAM     LISTENING     9205   -                   /var/run/pcscd.comm
+unix  2      [ ACC ]     STREAM     LISTENING     9594   -                   /var/run/avahi-daemon/socket
+unix  2      [ ACC ]     STREAM     LISTENING     117912 25468/tnslsnr       /var/tmp/.oracle/sEXTPROC1
+unix  2      [ ACC ]     STREAM     LISTENING     117914 25468/tnslsnr       /var/tmp/.oracle/s#25468.1
+unix  2      [ ACC ]     STREAM     LISTENING     117917 25468/tnslsnr       /var/tmp/.oracle/s#25468.2
+unix  3      [ ]         STREAM     CONNECTED     117606 -                   
+unix  3      [ ]         STREAM     CONNECTED     117605 -                   
+unix  2      [ ]         DGRAM                    117598 -                   
+unix  3      [ ]         STREAM     CONNECTED     15830  -                   
+unix  3      [ ]         STREAM     CONNECTED     15829  -                   
+unix  2      [ ]         DGRAM                    15822  -                   
+unix  3      [ ]         STREAM     CONNECTED     11490  -                   /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED     11489  -                   
+unix  3      [ ]         STREAM     CONNECTED     11485  -                   @/tmp/fam-root-
+unix  3      [ ]         STREAM     CONNECTED     11484  -                   
+unix  3      [ ]         STREAM     CONNECTED     11475  -                   /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED     11474  -                   
+unix  3      [ ]         STREAM     CONNECTED     11455  -                   @/var/run/hald/dbus-P3isGeLI5U
+unix  3      [ ]         STREAM     CONNECTED     11454  -                   
+unix  3      [ ]         STREAM     CONNECTED     11290  -                   @/var/run/hald/dbus-P3isGeLI5U
+unix  3      [ ]         STREAM     CONNECTED     11289  -                   
+unix  3      [ ]         STREAM     CONNECTED     11271  -                   @/var/run/hald/dbus-P3isGeLI5U
+unix  3      [ ]         STREAM     CONNECTED     11270  -                   
+unix  3      [ ]         STREAM     CONNECTED     11259  -                   @/var/run/hald/dbus-P3isGeLI5U
+unix  3      [ ]         STREAM     CONNECTED     11229  -                   
+unix  3      [ ]         STREAM     CONNECTED     9641   -                   @/var/run/hald/dbus-K9GrsZvnpX
+unix  3      [ ]         STREAM     CONNECTED     9640   -                   
+unix  3      [ ]         STREAM     CONNECTED     9597   -                   /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED     9596   -                   
+unix  3      [ ]         STREAM     CONNECTED     9591   -                   
+unix  3      [ ]         STREAM     CONNECTED     9590   -                   
+unix  2      [ ]         DGRAM                    9588   -                   
+unix  2      [ ]         DGRAM                    9449   -                   
+unix  2      [ ]         DGRAM                    9412   -                   
+unix  2      [ ]         DGRAM                    9375   -                   
+unix  2      [ ]         DGRAM                    9257   -                   
+unix  2      [ ]         DGRAM                    9200   -                   
+unix  3      [ ]         STREAM     CONNECTED     9106   -                   
+unix  3      [ ]         STREAM     CONNECTED     9105   -                   
+unix  3      [ ]         STREAM     CONNECTED     9043   -                   
+unix  3      [ ]         STREAM     CONNECTED     9042   -                   
+unix  2      [ ]         DGRAM                    8743   -                   
+unix  3      [ ]         STREAM     CONNECTED     8665   -                   
+unix  3      [ ]         STREAM     CONNECTED     8664   -                   
+
+
+
+
+

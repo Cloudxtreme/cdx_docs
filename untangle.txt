@@ -1,0 +1,5 @@
+
+eth0: external
+eth1: internal
+eth2: dmz
+eth3: eth3

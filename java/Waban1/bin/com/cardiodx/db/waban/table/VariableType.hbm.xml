@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.VariableType" table="VARIABLE_TYPE" schema="DNALIMS">
+        <comment>Used to restrict the types of variables</comment>
+        <id name="variableTypeId" type="string">
+            <column name="VARIABLE_TYPE_ID" length="1" />
+            <generator class="assigned" />
+        </id>
+        <property name="variableType" type="string">
+            <column name="VARIABLE_TYPE" length="30" not-null="true">
+                <comment>Description of the variable type</comment>
+            </column>
+        </property>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Used to order the records at display time</comment>
+            </column>
+        </property>
+        <property name="screenName" type="string">
+            <column name="SCREEN_NAME" length="100">
+                <comment>External screen to be loaded for this variable type</comment>
+            </column>
+        </property>
+        <set name="variables" table="VARIABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_TYPE_ID" length="1">
+                    <comment>Character used as a foreign key to restrict the type of a variable</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Variable" />
+        </set>
+    </class>
+</hibernate-mapping>

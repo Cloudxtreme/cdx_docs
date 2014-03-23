@@ -1,0 +1,345 @@
+http://trac.edgewall.org/wiki/0.11/TracOnUbuntu
+http://trac.edgewall.org/wiki/TracOnUbuntu
+
+http://www.trac-hacks.org/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install trac apache2 libapache2-mod-python libapache2-svn python-setuptools subversion python-subversion build-essential graphviz
+
+wajig install python-pygments
+
+
+Read Also: apache2_auth_pam.txt
+
+
+mkdir /var/lib/trac
+chown www-data:www-data /var/lib/trac
+
+
+vi /etc/apache2/sites-available/trac
+
+<VirtualHost *>
+        ServerAdmin webmaster@localhost
+        ServerName trac.cardiodx.com
+        DocumentRoot /var/www
+        ErrorLog /var/log/apache2/error.trac.log
+        CustomLog /var/log/apache2/access.trac.log combined
+
+        <Location /projects>
+                SetHandler mod_python
+                PythonInterpreter main_interpreter
+                PythonHandler trac.web.modpython_frontend
+                PythonOption TracEnvParentDir /var/lib/trac
+                PythonOption TracUriRoot /projects
+                #SetEnv PYTHON_EGG_CACHE /tmp
+                PythonOption PYTHON_EGG_CACHE /tmp
+        </Location>
+
+        # use the following for one authorization for all projects (names containing "-" are not detected):
+        <LocationMatch "/projects/[[:alnum:]]+/login">
+            AuthType Basic
+            AuthName "trac"
+            AuthUserFile /etc/apache2/dav_svn.passwd
+            Require valid-user
+        </LocationMatch>
+
+</VirtualHost>
+
+
+a2dissite default
+a2ensite trac
+/etc/init.d/apache2 reload 
+
+mkdir /var/lib/svn
+svnadmin create /var/lib/svn/it
+
+chown -R www-data /var/lib/svn
+chown -R www-data /usr/share/trac
+
+/etc/init.d/apache2 restart
+
+
+mkdir /var/lib/trac
+trac-admin /var/lib/trac/it initenv
+chown -R www-data /var/lib/trac
+
+-- http://trac/projects
+
+
+See also: http://trac.edgewall.org/wiki/TracModPython
+
+
+vi /etc/apache2/mods-available/dav_svn.conf
+
+<Location /svn>
+    # Uncomment this to enable the repository,
+    DAV svn
+
+    # Set this to the path to your repository
+    SVNParentPath /var/lib/svn
+</Location>
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://trac.edgewall.org/wiki/TracPlugins
+
+easy_install http://svn.edgewall.org/repos/genshi/trunk/
+easy_install http://trac-hacks.org/svn/accountmanagerplugin/trunk
+easy_install http://trac-hacks.org/svn/customfieldadminplugin/0.11
+#easy_install http://trac-hacks.org/svn/eclipsetracplugin/tracrpcext/0.10
+easy_install http://trac-hacks.org/svn/iniadminplugin/0.11
+easy_install http://trac-hacks.org/svn/masterticketsplugin/0.11
+easy_install http://trac-hacks.org/svn/ticketdeleteplugin/0.11
+easy_install http://trac-hacks.org/svn/tracwysiwygplugin/0.11
+easy_install http://wikinotification.ufsoft.org/svn/trunk
+
+To un-instaall:
+easy_install -m [plugin name]
+easy_install 
+
+
+vi /var/lib/trac/it/conf/trac.ini
+[components]
+customfieldadmin.* = enabled
+iniadmin.iniadmin.iniadminplugin = enabled
+mastertickets.* = enabled
+tracwysiwyg.* = enabled
+wikinotification.* = enabled
+
+trac-admin /var/lib/trac/it upgrade
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+GraphvizPlugin
+???
+easy_install http://trac-hacks.org/svn/progressmetermacro/0.11
+easy_install http://trac-hacks.org/svn/pagetopdfplugin/0.10/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+touch /etc/apache2/dav_svn.passwd
+chown www-data /etc/apache2/dav_svn.passwd 
+ 
+chown -R www-data:www-data /var/lib/trac
+trac-admin /var/lib/trac/it upgrade
+
+trac-admin /var/lib/trac/it initenv it sqlite:db/trac.db svn /var/lib/svn/it 
+
+/var/lib/trac/it/conf/trac.ini
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://trac.edgewall.org/wiki/TracCgi#AddingAuthentication
+
+htpasswd -c dav_svn.passwd admin
+htpasswd dav_svn.passwd cchou
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://trac.edgewall.org/wiki/TracPermissions
+
+trac-admin /var/lib/trac/it/ permission list
+
+trac-admin /var/lib/trac/it/ permission add cchou tracadmin
+trac-admin /var/lib/trac/it/ permission add tracadmin TRAC_ADMIN
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See apache2_auth_pam.txt for user authentication through apache_pam
+
+<VirtualHost *>
+        ServerAdmin cchou@cardiodx.com
+        ServerName trac.cardiodx.com
+        DocumentRoot /var/www
+        ErrorLog /var/log/apache2/error.trac.log
+        CustomLog /var/log/apache2/access.trac.log combined
+
+        <Location /projects>
+                SetHandler mod_python
+                PythonInterpreter main_interpreter
+                PythonHandler trac.web.modpython_frontend
+                PythonOption TracEnvParentDir /var/lib/trac
+                PythonOption TracUriRoot /projects
+                SetEnv PYTHON_EGG_CACHE /tmp
+        </Location>
+
+        # use the following for one authorization for all projects (names containing "-" are not detected):
+        <LocationMatch "/projects/[[:alnum:]]+/login">
+		AuthBasicAuthoritative off
+		AuthPAM_Enabled on
+		AuthType Basic
+		AuthName "PAM"
+		require valid-user
+		require group linuxusers
+#            AuthType Basic
+#            AuthName "trac"
+#            AuthUserFile /etc/apache2/dav_svn.passwd
+#            Require valid-user
+        </LocationMatch>
+
+
+</VirtualHost>
+
+
+To test: (problems with macros????)
+Help/Guide --> TrackWiki --> WikiMacros
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- create a new trac project
+--
+svnadmin create /var/lib/svn/clia_lims
+trac-admin /var/lib/trac/clia_lims initenv
+   Project Name [My Project]> clia_lims
+   Database connection string [sqlite:db/trac.db]> 
+   Repository type [svn]> 
+   Path to repository [/path/to/repos]> /var/lib/svn/clia_lims
+chown -R www-data /var/lib/trac/clia_lims
+
+cd /var/lib/trac/clia_lims/conf
+vi trac.ini
+[attachment]
+max_size = 10485760
+
+[header_logo]
+link = http://trac.cardiodx.com/projects/clia_lims/wiki
+src = CardioDx_Logo.PNG
+
+Note: local location:
+   trac:/usr/lib/python2.5/site-packages/Trac-0.11.1-py2.5.egg/trac/htdocs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://weblion.psu.edu/trac/weblion/wiki/TracPermissions
+
+trac-admin /var/lib/trac/clia_lims/ permission list
+trac-admin /var/lib/trac/clia_lims/ permission add cchou tracadmin
+trac-admin /var/lib/trac/clia_lims/ permission add tracadmin TRAC_ADMIN
+
+trac-admin /var/lib/trac/clia_lims/ permission add tracuser REPORT_ADMIN
+trac-admin /var/lib/trac/clia_lims/ permission add tracuser TICKET_ADMIN
+trac-admin /var/lib/trac/clia_lims/ permission add tracuser WIKI_ADMIN
+
+trac-admin /var/lib/trac/clia_lims/ permission add srikar tracadmin
+trac-admin /var/lib/trac/clia_lims/ permission add ashao tracuser
+trac-admin /var/lib/trac/clia_lims/ permission add mayank tracuser
+trac-admin /var/lib/trac/clia_lims/ permission add barbara tracuser
+trac-admin /var/lib/trac/clia_lims/ permission add mmorris tracuser
+trac-admin /var/lib/trac/clia_lims/ permission add bbeller tracuser
+trac-admin /var/lib/trac/clia_lims/ permission add hiten tracuser
+
+trac-admin /var/lib/trac/clia_lims/ permission remove cgmail tracuser
+
+create distribution list on Zimbra 
+   mmorris@cardiodx --> mmorris@waban.com
+
+
+-- for ccl lims
+trac-admin /var/lib/trac/clia_lims/ permission add anonymous WIKI_VIEW
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated TICKET_CREATE
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated TICKET_MODIFY
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated TICKET_VIEW
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated WIKI_CREATE
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated WIKI_MODIFY
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated WIKI_VIEW
+trac-admin /var/lib/trac/clia_lims/ permission add authenticated REPORT_VIEW
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Backup database
+trac-admin /var/lib/trac/etq hotcopy ~/track_backup/etq
+trac-admin /var/lib/trac/it hotcopy ~/track_backup/it
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Batch Modify:
+easy_install http://trac-hacks.org/svn/batchmodifyplugin/0.11/
+
+
+[components]
+batchmod.* = enabled
+
+trac-admin /var/lib/trac/it/ permission add tracadmin TICKET_BATCH_MODIFY
+trac-admin /var/lib/trac/it/ permission list
+
+Custom Query: http://trac.edgewall.org/wiki/TracQuery
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Drop-Down List:
+http://trac.edgewall.org/wiki/TracTickets#Assign-toasDrop-DownList
+
+[ticket]
+restrict_owner = true
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://trac.edgewall.org/wiki/TracIni
+
+Email notification:
+http://trac.edgewall.org/wiki/TracNotification
+
+smtp_enabled = true
+admit_domains = cardiodx.com
+always_notify_reporter = false
+always_notify_updater = false
+smtp_always_cc = msoneh@cardiodx.com,cchou@cardiodx.com
+smtp_default_domain = cardiodx.com
+smtp_from = trac@cardiodx.com
+smtp_replyto = trac@cardiodx.com
+smtp_server = mail.cardiodx.com
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+GridModify???:
+easy_install http://trac-hacks.org/svn/gridmodifyplugin/0.11/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LDAP????:
+http://trac-hacks.org/wiki/LdapPlugin
+
+wajig install python-ldap
+easy_install http://trac-hacks.org/svn/ldapplugin/
+
+[components]
+ldapplugin.* = enabled
+
+[trac]
+permission_store = LdapPermissionStore
+
+[ldap]
+enable = true
+basedn = ou=Groups,dc=cardiodx,dc=com
+
+/usr/lib/python2.5/site-packages/LdapPlugin-0.5.1dev_r1611-py2.5.egg
+
+trac-admin /var/lib/trac/it/ permission add @linuxusers TRAC_ADMIN
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+easy_install http://trac-hacks.org/svn/tracticketstatsplugin/0.11
+easy_install http://trac-hacks.org/svn/tracpygmentsplugin/0.10
+easy_install http://trac-hacks.org/svn/ganttchartplugin/0.11
+
+
+wajig install python-yaml python-dateutil python-imaging
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Import cvs tickets:
+more newtickets.csv 
+type,time,changetime,component,severity,priority,owner,reporter,cc,url,version,milestone,status,resolution,summary,description,keywords
+enhancement,,,,Urgent,cchou,cchou,,,,,open,,test2,anoterh test,,
+
+python csv2trac.2.py newtickets.csv /var/lib/trac/it
+
+
+Calendar: ???
+http://trac-hacks.org/wiki/WikiCalendarMacro
+http://macgeek.dyndns.org/software/Trac_WikiTicketCalendar
+
+
+http://plumi.org/wiki/WikiMacros
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+System files:
+/usr/share/trac/wiki-macros
+/usr/share/trac/plugins
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+plug ins:
+http://base-art.net/Articles/64/
+

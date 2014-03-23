@@ -1,0 +1,138 @@
+---------------------------------------------------
+-- create the checklist (procedure)
+---------------------------------------------------
+Start Waban Client
+
+Lab Setup --> Procedure
+  procedure: Chialin Test-1
+  SOP Ver: 1
+  SOP #: GXP-000351 (fake)
+  APPROVE
+  SAMPLE
+
+Create steps (for the checklist/procedure):
+  Desc: My Step-1
+  Type: Functional
+  Step: Process Rule
+  Level: Batch
+    Params: 
+			Rule Name: CHIALIN_PROC1
+			Desc: Chialin's 1st stored procedure
+      FALSE
+      FALSE
+
+---------------------------------------------------
+-- Create backend handler entries
+---------------------------------------------------
+vi event_loader.sql
+DECLARE
+  handler_id NUMBER;
+  event_id NUMBER;
+BEGIN
+  handler_id := UTH_LIMS.REGISTER_EVENT_HANDLER('CDX_MAIN.CHIALIN_PROC1', 'Process Nanodrop output file', 'CHECKLIST');
+  event_id := UTH_LIMS.REGISTER_EVENT('CHIALIN_PROC1', 'Chialin 1st test stored procedure', 'CHECKLIST');
+  UTH_LIMS.SUBSCRIBE(event_id, handler_id, NULL, 0, NULL);
+END;
+/
+exit
+
+rlwrap sqlplus dnalims/mayank22dna
+SQL> @load_event.sql
+
+
+SQL> select event_id from event where event_name like 'CHIA%';
+
+  EVENT_ID
+----------
+       132
+
+SQL> select event_subscription_id, event_id, event_handler_id from event_subscription where event_id = 132;
+
+EVENT_SUBSCRIPTION_ID	EVENT_ID EVENT_HANDLER_ID
+--------------------- ---------- ----------------
+		  841	     132	      156
+
+SQL> select stored_procedure from event_handler where event_handler_id = 156;
+
+STORED_PROCEDURE
+----------------------------------------------------------------------------------------------------
+CDX_MAIN.CHIALIN_PROC1
+
+
+
+---------------------------------------------------
+-- create the stored procedure
+---------------------------------------------------
+vi CDX_MAIN.sql
+
+  PROCEDURE CHIALIN_PROC1(
+    idstring in VARCHAR2,
+    errstr out VARCHAR2
+  )
+  as language java
+    name 'com.cardiodx.clims.mytest.Chialin.chialinStep1(java.lang.String, java.lang.String[])';
+
+
+rlwrap sqlplus dnalims/mayank22dna
+SQL> @CDX_MAIN.sql
+
+cd ~/svn/ccllims_v3_0_5/src/oracle/java/com/cardiodx/clims
+mkdir mytest
+cd mytest
+vi Chialin.java
+package com.cardiodx.clims.mytest;
+
+public class Chialin {
+
+    public static void chialinStep1(String idList, String[] errmsg) {
+        System.err.println("message from mytest.Chialin.chialinStep1");
+    }
+}
+
+
+cd ~/svn/ccllims_v3_0_5/src/oracle/java
+vi Makefile
+PACKAGES = \
+    com.cardiodx.clims.rna \
+    com.cardiodx.clims.mytest \
+
+com.cardiodx.clims.rna : $(call PACKAGE_OBJS,com.cardiodx.clims.rna)
+com.cardiodx.clims.mytest : $(call PACKAGE_OBJS,com.cardiodx.clims.mytest)
+
+make
+make install
+
+---------------------------------------------------
+-- upload the java jar file
+---------------------------------------------------
+cp java_stored_procedures.jar oracle@mayank22:~
+cd ~/ccllims_v3_0_4/jar 
+mv /home/oracle/java_stored_procedures.jar .
+
+cd ~/ccllims_v3_0_4/src/oracle/loaders/3_0_4 
+./load_waban.sh dnalims mayank22dna mayank22sys246
+
+Loading Java classes
+  :
+creating : class com/cardiodx/clims/mytest/Chialin
+loading  : class com/cardiodx/clims/mytest/Chialin
+  :
+resolving: class com/cardiodx/clims/mytest/Chialin
+
+---------------------------------------------------
+-- Check the output
+---------------------------------------------------
+cd /u01/app/oracle/admin/ORCL/udump$ 
+more orcl_ora_22022.trc
+  :
+*** 2011-06-06 17:15:00.464
+*** SERVICE NAME:(ORCL) 2011-06-06 17:15:00.454
+*** SESSION ID:(144.44821) 2011-06-06 17:15:00.454
+message from mytest.Chialin.chialinStep1
+
+
+
+
+
+
+

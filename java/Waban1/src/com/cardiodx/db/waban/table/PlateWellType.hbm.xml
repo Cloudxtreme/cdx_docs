@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PlateWellType" table="PLATE_WELL_TYPE" schema="DNALIMS">
+        <comment>Information about the types of wells that templates can use.</comment>
+        <id name="plateWellTypeId" type="big_decimal">
+            <column name="PLATE_WELL_TYPE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="typeName" type="string">
+            <column name="TYPE_NAME" length="50">
+                <comment>Description text of the type of well on the plate.</comment>
+            </column>
+        </property>
+        <property name="templateType" type="string">
+            <column name="TEMPLATE_TYPE" length="20" not-null="true" />
+        </property>
+        <set name="plateTemplateWells" table="PLATE_TEMPLATE_WELL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLATE_WELL_TYPE_ID" precision="22" scale="0">
+                    <comment>Foreign key to plate_well_type for the current well.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PlateTemplateWell" />
+        </set>
+    </class>
+</hibernate-mapping>

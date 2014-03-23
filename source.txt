@@ -1,0 +1,70 @@
+ubuntu debian build source package
+
+http://ubuntuforums.org/showthread.php?t=323939
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig source squid3
+
+wajig build-depend squid3
+cd squid3-3.0.STABLE1/
+debian/rules binary
+debian/rules clean
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+wajig source winbind
+  (it downloaded the whole samba source)
+
+wajig build-depend winbind
+cd samba-3.3.2/
+debian/rules binary
+
+vi ./source/nsswitch/pam_winbind.c
+
+
+ll ./debian/samba-dbg/usr/lib/debug/lib/security/pam_winbind.so
+
+
+  565  cd samba-3.3.2/
+  566  debian/rules binary
+  567  cd ..
+  568  wajig purge winbind
+  569  wajig install ./winbind_3.3.2-1ubuntu3.1_i386.deb 
+
+
+vi ./source/nsswitch/pam_winbind.c
+
+	frozen!!!!
+	around line 2419:
+        if (logon.blobs) {
+             //   wbcFreeMemory(logon.blobs);
+        }
+
+./source/nsswitch/libwbclient/wbclient.c
+	void wbcFreeMemory(void *p)
+
+./source/lib/talloc/talloc.c
+	static inline int _talloc_free(void *ptr)
+
+./source/lib/talloc/talloc.c
+	int talloc_free(void *ptr)
+
+
+
+root@chialindesktop:~# lsof | grep pam_win
+COMMAND     PID       USER   FD      TYPE     DEVICE    SIZE       NODE NAME
+gdm        2834       root  mem       REG        8,2   50808  201962472 /lib/security/pam_winbind.so.orig
+sshd       5711       root  DEL       REG        8,2          201938627 /lib/security/pam_winbind.so
+sshd      24482       root  mem       REG        8,2   50808  201962472 /lib/security/pam_winbind.so.orig
+sshd      28883       root  mem       REG        8,2   50808  201962472 /lib/security/pam_winbind.so.orig
+
+root@chialindesktop:~# lsof | grep pam_win
+COMMAND     PID       USER   FD      TYPE     DEVICE    SIZE       NODE NAME
+gdm        2834       root  mem       REG        8,2   50808  201962472 /lib/security/pam_winbind.so.orig
+sshd       5711       root  DEL       REG        8,2          201938627 /lib/security/pam_winbind.so
+sshd      24482       root  mem       REG        8,2   50808  201962472 /lib/security/pam_winbind.so.orig
+sshd      28883       root  mem       REG        8,2   50808  201962472 /lib/security/pam_winbind.so.orig
+sshd      29118       root  mem       REG        8,2   50808  201938290 /lib/security/pam_winbind.so
+sshd      29183      cchou  mem       REG        8,2   50808  201938290 /lib/security/pam_winbind.so
+

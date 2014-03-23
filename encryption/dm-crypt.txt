@@ -1,0 +1,83 @@
+linux encryption dm-crypt
+
+http://www.hermann-uwe.de/blog/howto-disk-encryption-with-dm-crypt-luks-and-debian
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# badblocks -c 10240 -s -w -t random -v /dev/sda3
+
+# wajig install cryptsetup hashalot
+
+# cryptsetup --verbose --verify-passphrase luksFormat /dev/sda3
+  Are you sure? (Type uppercase yes): YES
+  Enter LUKS passphrase: (enter password)
+
+# cryptsetup luksOpen /dev/sda3 foobar
+
+# mkfs.xfs /dev/mapper/foobar 
+
+# mkdir foobar
+# mount /dev/mapper/foobar foobar/
+
+# dd if=/dev/zero bs=1G count=16 | pv > testfile 
+    16GB 0:04:24 [61.9MB/s]
+
+# umount /root/foobar
+# cryptsetup luksClose /dev/mapper/foobar
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(LVM - not as flexiable!!)
+
+# fdisk -l /dev/sda
+/dev/sda3            9727       12338    20980890   83  Linux
+/dev/sda4           12339       14950    20980890   83  Linux
+
+  384  pvcreate /dev/sda3
+  386  vgcreate vg1 /dev/sda3
+  388  lvcreate -L+5G -n data vg1
+
+# cryptsetup --verbose --verify-passphrase luksFormat /dev/vg1/data 
+# cryptsetup luksOpen /dev/vg1/data foobar
+# mkfs.xfs /dev/mapper/foobar 
+# mount /dev/mapper/foobar foobar/
+
+# df -k
+/dev/mapper/foobar     5232124      4280   5227844   1% /root/foobar
+
+
+# lvextend -L+5G /dev/vg1/data 
+
+  408  xfs_growfs /root/foobar/
+     Not working!!!
+
+1) 
+# umount /root/foobar/
+# cryptsetup luksClose /dev/mapper/foobar 
+
+# cryptsetup luksOpen /dev/vg1/data foobar
+# mount /dev/mapper/foobar foobar/
+# xfs_growfs /root/foobar/
+  (extended by 10G)
+
+2)
+  439  vgextend vg1 /dev/sda4
+  441  lvextend -L+20G -i 2 /dev/vg1/data
+
+# cryptsetup luksOpen /dev/vg1/data foobar
+# mount /dev/mapper/foobar foobar/
+# xfs_growfs /root/foobar/
+  (extended by 20G)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

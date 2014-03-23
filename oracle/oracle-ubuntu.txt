@@ -1,0 +1,441 @@
+oracle on ubuntu (waban clia lims)
+
+http://www.pythian.com/blogs/549/installing-oracle-11g-on-ubuntu-linux-704
+http://ubuntuforums.org/showthread.php?t=437691&highlight=install+oracle
+http://www.linuxinsight.com/oracle10g_on_debian.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+create image from srikar804
+extend 10GB for /
+
+--wajig purge-depend gcc-4.2
+
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+enable bash_completion
+vi /etc/bash.bashrc
+
+Baseline packages:
+
+cat > /etc/apt/apt.conf <<EOF
+Acquire::http::Proxy "http://aptcacher.cardiodx.com:3142";
+EOF
+
+mv /etc/apt/sources.list /etc/apt/sources.list.orig
+cat > /etc/apt/sources.list <<EOF
+deb http://mirror.anl.gov/ubuntu/ hardy main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ hardy main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu/ hardy-updates main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ hardy-updates main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu hardy-security main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu hardy-security main restricted universe multiverse
+EOF
+
+#wget http://www.medibuntu.org/sources.list.d/gutsy.list -O /etc/apt/sources.list.d/medibuntu.list
+#wget -q http://packages.medibuntu.org/medibuntu-key.gpg -O- | apt-key add -
+
+apt-get update
+apt-get install wajig -y
+
+wajig upgrade
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install build-essential -y
+wajig install sun-java6-jdk -y
+wajig install xterm xauth -y
+wajig install gcc make binutils lesstif2 libc6 libc6-dev rpm libmotif3 libaio1 libstdc++5 gawk alien ksh gcc-3.3 g++-3.3 libstdc++5 -y
+wajig install gcc-4.2-multilib -y
+wajig install libc6-i386 lib32stdc++6 lib32z1 ia32-libs libc6-dev-i386 -y
+glibc-2.7-1  ?????
+
+
+groupadd -g 521 oracle
+groupadd -g 522 oinstall
+groupadd -g 523 dba
+useradd -g 521 -u 521 -G oinstall,dba -d /home/oracle -s /bin/bash oracle
+passwd oracle
+
+mkdir /home/oracle
+chown oracle:oracle /home/oracle/
+cp /etc/skel/.bash* /home/oracle/
+cp /etc/skel/.profile /home/oracle/
+chown oracle:oracle /home/oracle/.bash*
+chown oracle:oracle /home/oracle/.profile 
+
+
+mkdir -p /u01/app/oracle
+chown -R oracle:oinstall /u01
+
+groupadd -g 524 nobody
+usermod -g nobody nobody
+
+
+------
+groupmod -g 512 oracle
+groupmod -g 521 oracle
+groupmod -g 522 oinstall
+groupmod -g 523 dba
+usermod -u 522 oracle
+usermod -g oracle oracle
+
+chown -R oracle:oinstall /u01
+
+cd /u01/app/oracle/product/10.2.0/db_1/network/admin/
+vi listener.ora 
+vi tnsnames.ora 
+
+------
+
+
+ln -s /usr/bin/awk /bin/awk
+ln -s /usr/bin/rpm /bin/rpm
+ln -s /usr/bin/basename /bin/basename
+
+echo "Red Hat Linux release 4" > /etc/redhat-release
+
+
+vi /etc/sysctl.conf
+fs.file-max = 65535
+kernel.shmall = 2097152
+kernel.shmmax = 2147483648
+kernel.shmmni = 4096
+kernel.sem = 250 32000 100 128
+net.ipv4.ip_local_port_range = 1024 65000
+net.core.rmem_default = 1048576
+net.core.rmem_max = 1048576
+net.core.wmem_default = 262144
+net.core.wmem_max = 262144
+
+
+sysctl -p
+
+cat /proc/sys/kernel/sem
+ipcs -ls
+
+vi /etc/security/limits.conf
+oracle soft nproc 2047
+oracle hard nproc 16383
+oracle soft nofile 1023
+oracle hard nofile 65535
+
+vi /etc/pam.d/login
+session required /lib/security/pam_limits.so
+session required pam_limits.so
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+ssh -X oracle@orabuntu
+
+vi .bashrc
+ORACLE_BASE=/u01/app/oracle; export ORACLE_BASE
+ORACLE_HOME=$ORACLE_BASE/product/10.2.0/db_1; export ORACLE_HOME
+ORACLE_SID=ORCL; export ORACLE_SID
+ORACLE_TERM=xterm; export ORACLE_TERM
+PATH=/usr/sbin:$PATH; export PATH
+PATH=$ORACLE_HOME/bin:$PATH; export PATH
+
+gunzip 10201_database_linux_x86_64.cpio.gz
+cpio -idmv < 10201_database_linux_x86_64.cpio
+
+./runInstaller
+
+--./runInstaller -ignoreSysPrereqs
+
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   (Because of Oracle Enterprise Manager???  Ignore this!!)
+   INFO: of input file `/srv/oracle/product/10.2/db_1/sysman/lib/libnmcbuf.a(nmcbuft.o)' 
+	is incompatible with i386:x86-64 output
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Advanced installation option
+oinstall as the group
+Custom:
+  Uncomment: 
+    Oracle Enterprise Manager Console DB
+    Oracle Programmer 10.2.0.1.0
+    Oracle XML Development Kit 10.2.0.1.0
+create a database
+configure tns listener
+create a "General Purpose" database
+	SID: ORCL
+  Enable Archiving
+		Edit Archive Mode Parameters:
+			Archive Log Destinations:
+			1: /u01/app/oracle/archive
+				mkdir /u01/app/oracle/archive (as oracle)
+  No "Sample Schemas"
+  Memory: 50%
+
+
+  
+run the following script as root
+/u01/app/oracle/oraInventory/orainstRoot.sh
+/u01/app/oracle/product/10.2.0/db_1/root.sh
+
+sqlplus system as sysdba
+(make sure you can shutdown and startup the db)
+
+
+/u01/app/oracle/product/10.2.0/db_1/network/admin/listener.ora
+
+sqlplus system@testdb
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/oratab
+orcl:/u01/app/oracle/product/10.2.0/db_1:Y
+
+vi /etc/init.d/oracle
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:  
+# Required-Stop:   
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Oracle services
+### END INIT INFO
+
+export ORACLE_HOME=/u01/app/oracle/product/10.2.0/db_1
+export PATH=$PATH:$ORACLE_HOME/bin
+
+ORA_OWNR="oracle"
+
+if [ ! -f $ORACLE_HOME/bin/dbstart -o ! -d $ORACLE_HOME ]
+then
+    echo "Oracle startup: cannot start"
+    exit 1
+fi
+
+case "$1" in
+    start)
+        echo -n "Starting Oracle... "
+				mount /clims
+        su $ORA_OWNR -c "$ORACLE_HOME/bin/lsnrctl start"
+        su $ORA_OWNR -c $ORACLE_HOME/bin/dbstart
+        echo "OK"
+        ;;
+    stop)
+        echo -n "Shutdown down Oracle... "
+        su $ORA_OWNR -c "$ORACLE_HOME/bin/lsnrctl stop"
+        su $ORA_OWNR -c $ORACLE_HOME/bin/dbshut
+				umount /clims
+        echo "OK"
+        ;;
+    reload|restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+
+chmod 755 oracle 
+sysv-rc-conf 
+	2 3 4 5 6 0 S
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install smbfs -y
+
+vi /etc/fstab
+//pdc/clims 	/clims cifs credentials=/root/smbcredentials 0 3
+
+vi /root/smbcredentials
+username=oracle
+password=oracle$0G
+
+chmod 600 /root/smbcredentials 
+
+mkdir /clims
+mount /clims
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+netca
+
+scripts:
+/u01/app/oracle/admin/ORCL/scripts
+
+dbca
+
+CREATE TABLESPACE "SCE_CONTENT" LOGGING 
+DATAFILE '/u01/app/oracle/oradata/ORCL/sec_content_01.dbf' SIZE 500M REUSE 
+AUTOEXTEND ON 
+NEXT  1280K MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL SEGMENT 
+SPACE MANAGEMENT  AUTO;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+10/02/10:
+~~~~~~~~~
+ORA-1691: unable to extend lobsegment SCESCHEMA.SYS_LOB0000051796C00013$$ by 8192 in tablespace              SCE_CONTENT 
+
+fle system (plenty of free space!!!):
+/dev/mapper/vg0-root 524156928 213643436 310513492  41% /
+
+file size:
+-rw-r----- 1 oracle oracle 34317803520 2010-10-02 15:56 sec_content_01.dbf
+
+OK, could be Oracle internal thing...
+
+  select * from dba_tablespace_usage_metrics order by used_percent desc;
+
+  TABLESPACE_NAME 	USED_SPACE TABLESPACE_SIZE USED_PERCENT
+  SCE_CONTENT			  4186160	   4194302         99.8058795
+																							 ^^^^^^^^^^
+																							 almost 100% !!
+  
+  Command REF: http://ss64.com/ora/tablespace_a.html
+
+  alter tablespace "SCE_CONTENT"
+  add datafile '/u01/app/oracle/oradata/ORCL/sec_content_02.dbf' SIZE 500M REUSE
+  AUTOEXTEND ON
+  NEXT  1280K MAXSIZE UNLIMITED;
+
+  TABLESPACE_NAME 	USED_SPACE TABLESPACE_SIZE USED_PERCENT
+  SCE_CONTENT			  4194352	   8388604         50.000596
+                                               ^^^^^^^^^
+                                               50% now!!
+  (Hope this reslve the issue.  X the fingers....)
+
+06/30/11
+~~~~~~~~~
+-rw-r----- 1 oracle oracle 34317803520 2011-06-30 07:27 sec_content_01.dbf
+-rw-r----- 1 oracle oracle 31672246272 2011-06-30 09:09 sec_content_02.dbf
+
+	TABLESPACE_NAME 	USED_SPACE TABLESPACE_SIZE USED_PERCENT
+	SCE_CONTENT			  8038048	   8388604         95.8210448
+
+  alter tablespace "SCE_CONTENT"
+  add datafile '/u01/app/oracle/oradata/ORCL/sec_content_03.dbf' SIZE 500M REUSE
+  AUTOEXTEND ON
+  NEXT  1280K MAXSIZE UNLIMITED;
+
+
+	TABLESPACE_NAME 	USED_SPACE TABLESPACE_SIZE USED_PERCENT
+	SCE_CONTENT			  8038048	   12582906        63.8806966
+
+-rw-r----- 1 oracle oracle 34317803520 2011-06-30 07:27 sec_content_01.dbf
+-rw-r----- 1 oracle oracle 31672246272 2011-06-30 09:14 sec_content_02.dbf
+-rw-r----- 1 oracle oracle   524296192 2011-06-30 09:14 sec_content_03.dbf
+
+06/08/12
+~~~~~~~~
+  alter tablespace "SCE_CONTENT"
+  add datafile '/u01/app/oracle/oradata/ORCL/sec_content_04.dbf' SIZE 500M REUSE
+  AUTOEXTEND ON
+  NEXT  1280K MAXSIZE UNLIMITED;
+
+	SCE_CONTENT			 12562760	 16777208   74.8799204
+
+-rw-r----- 1 oracle oracle 34317803520 2012-06-08 11:00 /u01/app/oracle/oradata/ORCL/sec_content_01.dbf
+-rw-r----- 1 oracle oracle 34330386432 2012-06-08 06:09 /u01/app/oracle/oradata/ORCL/sec_content_02.dbf
+-rw-r----- 1 oracle oracle 34330386432 2012-06-08 11:00 /u01/app/oracle/oradata/ORCL/sec_content_03.dbf
+-rw-r----- 1 oracle oracle   524296192 2012-06-08 11:01 /u01/app/oracle/oradata/ORCL/sec_content_04.dbf
+
+05/02/13
+~~~~~~~~
+  alter tablespace "SCE_CONTENT"
+  add datafile '/u01/app/oracle/oradata/ORCL/sec_content_05.dbf' SIZE 500M REUSE
+  AUTOEXTEND ON
+  NEXT  1280K MAXSIZE UNLIMITED;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CREATE TABLESPACE "SCE_DATA" LOGGING
+DATAFILE '/u01/app/oracle/oradata/ORCL/sec_data_01.dbf' SIZE 500M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL SEGMENT 
+SPACE MANAGEMENT  AUTO;
+
+
+CREATE TABLESPACE "INDX" LOGGING
+DATAFILE '/u01/app/oracle/oradata/ORCL/indx01.dbf' SIZE 500M REUSE
+AUTOEXTEND ON
+NEXT  1280K MAXSIZE UNLIMITED 
+EXTENT MANAGEMENT LOCAL SEGMENT 
+SPACE MANAGEMENT  AUTO;
+
+
+--alter system set audit_trail='DB' SCOPE=BOTH;
+alter system set max_enabled_roles=150 SCOPE=BOTH;
+alter system set open_cursors=600 SCOPE=BOTH;
+
+
+
+~~~~~~~~~~~~~~~~
+mkdir metadataserver
+copy WabanLIMS_Database-1.zip over
+cd metadataserver
+unzip WabanLIMS_Database-1.zip
+
+chmod 755 driver.sh 
+vi driver.sh
+SYSPASSWORD=waban123
+SYSTEM_PASS=waban123
+
+mv driver.sh ..
+cd ..
+./driver.sh
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /u01/app/oracle
+mkdir archive
+
+--sqlplus system as sysdba
+--alter system set log_archive_dest_1 = 'location=/u01/app/oracle/archive';
+
+grant execute on dbms_lock to dnalims;
+
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/rna/extraction/*', 'read,write,delete')
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/rna/quantitation/*', 'read,write,delete');
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/cdna/rna_norm_worklist/*', 'read,write,delete');
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/cdna/norm_rtsetup/*', 'read,write,delete');
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/cdna/pool_rerack/*', 'read,write,delete');
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/qpcr/roche480_input/*', 'read,write,delete');
+exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.net.SocketPermission', '127.0.0.1:6311', 'connect,resolve' );
+
+
+--sqlplus dnalims/dnalims
+--SQL> @lims_assay_container.pkb
+
+~/svn/src/oracle
+sqlplus dnalims/dnalims@orcl @CDX_MAIN.sql
+sqlplus dnalims/dnalims@orcl @VALIDATION_RULE_MAKEPLATE.sql
+sqlplus dnalims/dnalims@orcl @load_discrete_attribute.sql
+sqlplus dnalims/dnalims@orcl @load_event.sql
+sqlplus dnalims/dnalims@orcl @load_attribute.sql
+
+cd cdx_procedure;
+sqlplus dnalims/dnalims@orcl @container.sql
+
+cd ../procedure_exports; 
+./load_procedures.sh
+
+~/svn/trunk/lib 
+loadjava -user DNALIMS/DNALIMS@orcl -v -resolve ./lib/REngine.jar
+loadjava -user DNALIMS/DNALIMS@orcl -v -resolve ./lib/Rserve.jar
+
+~/svn/trunk/jar
+loadjava -user DNALIMS/DNALIMS@orcl -v -resolve ./jar/java_stored_procedures.jar
+
+
+

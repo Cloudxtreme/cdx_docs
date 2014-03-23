@@ -1,0 +1,43 @@
+# sfdisk /dev/sdb
+/dev/sdb1 :0 60000 fd
+/dev/sdb2 :60000 251224 fd
+
+
+/dev/sdb1          0+  59999   60000- 481949999+  fd  Linux raid autodetect
+/dev/sdb2      60000  311223  251224  2017956780   fd  Linux raid autodetect
+
+mdadm -Cv /dev/md1 -l1 --force -n1 /dev/sdb1
+
+mdadm --detail --scan
+
+pvcreate /dev/md1
+vgcreate mtv01 /dev/md1
+lvcreate -L100g -n test mtv01
+
+mkfs.jfs /dev/mtv01/test
+
+mkdir /mnt/test
+mount /dev/mtv01/test /mnt/test
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mdadm -Cv /dev/md2 -l1 --force -n1 /dev/sdb2
+
+mdadm --detail --scan
+
+pvcreate /dev/md2
+vgcreate mtv02 /dev/md2
+lvcreate -L100g -n home mtv02
+
+mkfs.jfs /dev/mtv02/home
+
+mkdir /mnt/home
+mount /dev/mtv02/home /mnt/home
+
+lvextend -L+10G /dev/mtv02/home
+mount -o remount,resize /mnt/home
+
+
+mdadm -S /dev/md0
+
+

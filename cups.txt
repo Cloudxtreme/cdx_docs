@@ -1,0 +1,2 @@
+  cupsys defoma fontconfig gs-common gs-esp gsfonts laptop-detect libcupsimage2 libfontconfig1 libfreetype6 libice6 libjpeg62 libpaper1 libpng12-0 libpoppler1 libsm6 libtiff4 libx11-6 libxau6 libxext6 libxt6 poppler-utils ttf-bitstream-vera ttf-dejavu ttf-freefont x11-common
+

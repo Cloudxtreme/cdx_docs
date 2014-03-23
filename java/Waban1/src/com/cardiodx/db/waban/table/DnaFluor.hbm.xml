@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.DnaFluor" table="DNA_FLUOR" schema="DNALIMS">
+        <comment>Fluorimetry information for DNA purification readings.</comment>
+        <id name="dnaFluorId" type="big_decimal">
+            <column name="DNA_FLUOR_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="standardCurve" class="com.cardiodx.db.waban.table.StandardCurve" fetch="select">
+            <column name="STANDARD_CURVE_ID" precision="22" scale="0" not-null="true">
+                <comment>Standard curve identifier and foreign key to the STANDARD_CURVE table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="measurement" class="com.cardiodx.db.waban.table.Measurement" fetch="select">
+            <column name="MEASUREMENT_ID" precision="22" scale="0" not-null="true">
+                <comment>Measurement identifier and foreign key to the MEASUREMENT table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>Sample identifier used by the lab and foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+        <property name="well" type="string">
+            <column name="WELL" length="10">
+                <comment>Sample well location.</comment>
+            </column>
+        </property>
+        <property name="fluorescence" type="string">
+            <column name="FLUORESCENCE" length="20">
+                <comment>Raw fluorescence reading.</comment>
+            </column>
+        </property>
+        <property name="volume" type="big_decimal">
+            <column name="VOLUME" precision="22" scale="0">
+                <comment>Sample volume.</comment>
+            </column>
+        </property>
+        <property name="concentration" type="big_decimal">
+            <column name="CONCENTRATION" precision="22" scale="0">
+                <comment>Derived raw DNA concentration.</comment>
+            </column>
+        </property>
+        <property name="adjConc" type="big_decimal">
+            <column name="ADJ_CONC" precision="22" scale="0">
+                <comment>Calculated concentration from fluorometer program.</comment>
+            </column>
+        </property>
+        <property name="dilution" type="big_decimal">
+            <column name="DILUTION" precision="22" scale="0">
+                <comment>A plated sample's dilution.</comment>
+            </column>
+        </property>
+        <property name="cv" type="big_decimal">
+            <column name="CV" precision="22" scale="0">
+                <comment>Measurement variance for a sample.</comment>
+            </column>
+        </property>
+        <property name="latestCalculation" type="java.lang.Boolean">
+            <column name="LATEST_CALCULATION" precision="1" scale="0">
+                <comment>Flag indicating that this is the most current measurement (1 = yes).</comment>
+            </column>
+        </property>
+        <property name="isControl" type="java.lang.Boolean">
+            <column name="IS_CONTROL" precision="1" scale="0">
+                <comment>Flag indicating that this is a control sample (1 = yes).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

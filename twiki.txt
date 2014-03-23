@@ -1,0 +1,48 @@
+
+http://library.linode.com/web-applications/wikis/twiki/ubuntu-12.04-lucid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~```
+
+wajig install ntp sysstat build-essential fakeroot deborphan -y
+wajig install libwww-perl -y
+
+mv LocalLib.cfg.txt LocalLib.cfg
+
+vi /var/www/twiki/bin# vi LocalLib.cfg 
+$twikiLibPath = "/var/www/twiki/lib";
+$TWiki::cfg{ScriptUrlPaths}{view} = '';
+
+
+--
+-- CPAN
+--
+perl -MCPAN -e shell
+
+CGI::Session
+Error
+FreezeThaw
+--GD
+HTML::Tree
+Time-modules
+
+reload cpan
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://twiki.cardiodx.com/bin/configure/  
+   --> extensions --> Find More Extensions
+
+
+
+
+wget http://twiki.org/p/pub/Plugins/LdapContrib/LdapContrib.tgz
+cd /var/www/twiki
+
+tar zxvf LdapContrib.tgz
+./LdapContrib_installer
+
+vi ldaptest
+my $server = 'pdc.cardiodx.com';
+my $baseDN = 'dc=cardiodx,dc=com';
+my $bindUser = 'cdxtest';
+my $bindPassword = 'password';
+
+

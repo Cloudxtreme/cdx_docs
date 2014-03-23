@@ -1,0 +1,50 @@
+
+Copy oracle instant client debian packages over:
+  ~/gdrive/it/software/Oracle 10g/instantclient_10.204/x86_64
+
+wajig install ./oracle-instantclient-basic_10.2.0.4-2_amd64.deb \
+ oracle-instantclient-devel_10.2.0.4-2_amd64.deb \
+ oracle-instantclient-sqlplus_10.2.0.4-2_amd64.deb
+
+
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/10.2.0.4/client64/lib
+
+vi tnsnames.ora
+RDLIMS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+        (ADDRESS =
+          (COMMUNITY = tcp.world)
+          (PROTOCOL = TCP)
+          (Host = rdlims)
+          (Port = 1521)
+        )
+    )
+    (CONNECT_DATA = (SID = ORCL)
+    )
+  )
+
+export TNS_ADMIN=.
+export ORACLE_HOME=.
+/usr/lib/oracle/10.2.0.4/client64/bin/sqlplus system/rdlimssys246@rdlims
+
+gem install ruby-oci8 -v 2.0.4 --no-rdoc --no-ri
+gem install activerecord-oracle_enhanced-adapter -v 1.3.0 --no-rdoc --no-ri
+
+
+cd /etc/ld.so.conf.d/
+cat > oracle.conf <<EOF
+/usr/lib/oracle/10.2.0.4/client64/lib
+EOF
+ldconfig
+
+
+irb
+irb(main):001:0> require 'rubygems'
+irb(main):002:0> require 'active_record'
+irb(main):003:0> db_instance = 'ccllims'
+irb(main):004:0> ActiveRecord::Base.establish_connection(:adapter => 'oracle_enhanced',
+irb(main):005:1* 																				:database => "//#{db_instance}/orcl",
+irb(main):006:1* 																				:username => 'warehouse',
+irb(main):007:1* 																				:password => 'dwhreader')

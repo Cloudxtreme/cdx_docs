@@ -1,0 +1,137 @@
+
+--
+-- Rename database name
+--
+sqlplus system/password as sysdba
+SQL> shutdown immediate
+
+SQL> startup mount
+
+--nid target=sys/passwor@orcl dbname=rdlims
+nid target=sys@rdlims as sysdba dbname=lin40
+
+SQL> exit
+
+sqlplus system/password as sysdba
+startup mount
+	ORA-01103: database name 'HYIELD' in control file is not 'ORCL'
+
+alter system set DB_NAME=HYIELD scope=spfile;
+shutdown immediate;
+
+--cp orapwORCL orapwORCL.orig
+--orapwd file=./orapwORCL password=oracle10G entries=10
+
+cd product/10.2.0/db_1/dbs/
+mv spfileORCL.ora spfileHYIELD.ora
+
+cd network/admin$ 
+vi tnsnames.ora 
+HYIELD =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = devlims.cardiodx.com)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = HYIELD)
+    )
+  )
+
+export ORACLE_SID=LIN40
+
+sqlplus system/password as sysdba
+SQL> startup mount
+SQL> alter database open resetlogs;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- Move controlfile/logfile/datafile
+--
+
+export ORACLE_SID=LIN40
+rlwrap sqlplus system/devlimssys246 as sysdba
+
+-- control file
+select name from v$controlfile;
+SQL> alter system set control_files='/u01/app/oracle/oradata/LIN40/control01.ctl', '/u01/app/oracle/oradata/LIN40/control02.ctl', '/u01/app/oracle/oradata/LIN40/control03.ctl' scope=spfile;
+SQL> shutdown immediate;
+
+cd /u01/app/oracle/oradata/
+mkdir LIN40
+ll ORCL/*control*
+mv ORCL/*control* LIN40/
+
+SQL> startup
+
+select name from v$controlfile;
+
+
+-- logfile
+SELECT member FROM v$logfile;
+
+SQL> shutdown immediate;
+
+  646  ll ORCL/*.log
+  647  mv ORCL/*.log LIN40/
+
+SQL> startup mount
+
+SQL> alter database rename file '/u01/app/oracle/oradata/ORCL/redo01.log' to '/u01/app/oracle/oradata/LIN40/redo01.log';
+SQL> alter database rename file '/u01/app/oracle/oradata/ORCL/redo02.log' to '/u01/app/oracle/oradata/LIN40/redo02.log';
+SQL> alter database rename file '/u01/app/oracle/oradata/ORCL/redo03.log' to '/u01/app/oracle/oradata/LIN40/redo03.log';
+
+SQL> alter database open;
+
+SELECT member FROM v$logfile;
+
+-- datafile
+SELECT name FROM v$datafile;
+
+SQL> shutdown immediate;
+
+  653  mv ORCL/*.dbf LIN40/
+  655  rmdir ORCL/
+
+SQL> startup mount
+
+alter database rename file '/u01/app/oracle/oradata/ORCL/system01.dbf' to '/u01/app/oracle/oradata/LIN40/system01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/undotbs01.dbf' to '/u01/app/oracle/oradata/LIN40/undotbs01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sysaux01.dbf' to '/u01/app/oracle/oradata/LIN40/sysaux01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/users01.dbf' to '/u01/app/oracle/oradata/LIN40/users01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_01.dbf' to '/u01/app/oracle/oradata/LIN40/sec_content_01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_data_01.dbf' to '/u01/app/oracle/oradata/LIN40/sec_data_01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/indx01.dbf' to '/u01/app/oracle/oradata/LIN40/indx01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_02.dbf' to '/u01/app/oracle/oradata/LIN40/sec_content_02.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_03.dbf' to '/u01/app/oracle/oradata/LIN40/sec_content_03.dbf';
+
+SQL> alter database open;
+
+SELECT name FROM v$datafile;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+
+rlwrap sqlplus sys/mayank22sys246 as sysdba
+
+select sid, serial#, username, program
+from v$session
+where username = 'CCHOU';
+
+       SID    SERIAL# USERNAME
+---------- ---------- ------------------------------
+       154      12190 CCHOU
+
+
+SQL> execute dbms_session.set_sql_trace(true);
+
+SQL> execute dbms_system.set_sql_trace_in_session(154,12190,true);
+
+SQL> execute dbms_system.set_sql_trace_in_session(154,12190,false);
+
+
+cat orcl_ora_26652.trc | egrep -v 'STAT|PARSE|EXEC|FETCH|STMT|PARSING|====' > 1.trc
+
+
+select sid, serial#, username, program
+from v$session
+where username = 'SRIKAR';
+

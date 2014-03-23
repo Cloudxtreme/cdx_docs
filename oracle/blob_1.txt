@@ -1,0 +1,40 @@
+set pagesize 10000
+set linesize 345
+
+col segment for a30;
+col owner for a10;
+col tablespace_name for a15;
+col segment_name for a30;
+col file_name for a50;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rlwrap sqlplus / as sysdba
+
+SELECT owner, df.tablespace_name, df.file_name, segment_name, segment_type, ds.bytes/1024/1024 MB
+FROM dba_segments ds, dba_data_files df
+where ds.tablespace_name = df.tablespace_name
+and segment_type like 'LOB%'
+and owner not in ('XDB', 'SYSTEM', 'SYSMAN', 'MDSYS', 'SYS', 'WMSYS')
+and ds.bytes/1024/1024 > 1
+order by ds.bytes/1024/1024 desc;
+
+select owner, table_name, data_type from dba_tab_columns where owner in ('SCESCHEMA') and data_type like '%LOB%';
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rlwrap sqlplus sceschema/ccllimssce@ORCL
+
+delete????
+alter table VERSIONEDDOCUMENT modify lob(content) (shrink space);
+
+
+try:
+~~~~
+select count(*) from versioneddocument;
+--delete from versioneddocument;
+delete from versioneddocument where VERSIONED_DOCUMENT_ID < 1000000;
+alter table VERSIONEDDOCUMENT modify lob(content) (shrink space);
+???
+
+
+

@@ -1,0 +1,26 @@
+
+use 'Hard drive installation'
+
+
+4GB image size:
+pfSense-1.2.3-RELEASE-4g-nanobsd.img.gz
+
+gunzip pfSense-1.2.3-RELEASE-4g-nanobsd.img.gz
+dd if=pfSense-1.2.3-RELEASE-4g-nanobsd.img of=/dev/sdc bs=16k
+
+zcat pfSense-1.2.3-RELEASE-4g-nanobsd.img.gz | dd of=/dev/sdc bs=16k
+
+picocom -b 9600 /dev/ttyS0
+
+Enter the new LAN IP address: 10.10.37.3
+Enter the new LAN subnet bit count: 21
+Do you want to enable the DHCP server on LAN [y|n]?  n
+
+on eth0
+
+http://10.10.37.3
+  admin/pfsense
+
+
+Problems:
+  Had some issues w/ firewall config.

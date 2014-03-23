@@ -1,0 +1,24 @@
+[general]
+static=yes
+writeprotect=no
+
+[globals]
+NUFONE=IAX2/cardiodx@NuFone
+SBC=ZAP/g1
+
+[macro-nufonetrunk]
+exten => s, 1, Dial(${NUFONE}/${MACRO_EXTEN})
+exten => s, 102, Hangup
+
+[macro-sbctrunk]
+exten => s, 1, Dial(${SBC}/w${MACRO_EXTEN})
+exten => s, 102, Hangup
+
+[macro-fax]
+exten => s, 1, txfax(/home/cchou/image.tif | caller |debug)
+
+
+[default]
+exten => _1NXXNXXXXXX, 1, Macro(sbctrunk, ${EXTEN})
+exten => 200, 1, Goto(14088883248, 1)
+

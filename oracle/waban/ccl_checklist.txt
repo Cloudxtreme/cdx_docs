@@ -1,0 +1,145 @@
+set line 3000
+set pagesize 1000
+
+-- RNAX for the day
+col checklist_name for a10
+select distinct c.checklist_id, c.checklist_name,
+    to_char(c.date_created, 'HH24:MI:SS') created,
+    to_char(c.date_completed, 'HH24:MI:SS') completed
+from checklist_sample cs, checklist c, procedure_template p
+where cs.checklist_id = c.checklist_id
+  and c.procedure_template_id = p.procedure_template_id
+  and p.PROCEDURE_NAME = 'RNA Extraction'
+  and to_char(c.date_created) = '27-MAY-11'
+order by created;
+
+21043 A		10:06:21 15:11:43
+21044 B		10:15:01 15:47:24
+
+-- How many samples are there?
+select c.checklist_id, count(sample_id)
+from checklist c, checklist_sample s
+where c.checklist_id = s.checklist_id
+and c.checklist_id in (21043,21044)
+group by c.checklist_id;
+
+21043		   21
+21044		   29
+
+-- sample locations and accession information
+col location for a10
+select substr(limspackage.container_position(s1.sample_id),9) location, a.accession_number, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2, accession a
+where s1.Sample_ID = cs.Sample_ID
+and s2.Sample_ID = cs.orig_Sample_ID
+and s2.accession_id = a.accession_id
+and checklist_ID = 21043
+order by location;
+
+--------------------------------
+-- create TRF barcodes
+--------------------------------
+cat 2.txt | awk '{print $1,$2": <img src=\"http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data="$2"&dpi=96&imagetype=gif&rotation=0\"/>"
+	$3": <img src=\"http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data="$3"&dpi=96&imagetype=gif&rotation=0\"/>","</br>"}'
+
+http://cchoudesktop.cardiodx.com/21043.html
+
+--------------------------------
+-- accessioning
+--------------------------------
+accession, new
+  new --> lab accession trf50565 w/o the letter
+          study: commercial
+  add sample
+     lab tube id: trf50565c
+     sample type: blood
+     sample condition: acceptable
+      save
+save
+  click yes to continue
+  click yes to continue
+
+--------------------------------
+-- bubble removal
+--------------------------------
+find the checklist id (21040) from ccllims
+create a new rack - chialin_rack1 and add 20 samples (below)
+
+select s.sample_id, s.sample_tube_id, cs.status
+from checklist c, checklist_sample cs, sample s
+where c.checklist_id = cs.checklist_id
+and cs.sample_id = s.sample_id
+and c.checklist_id = 21040;
+
+   1544506 T1048473		       Passed
+   2317386 TRF51186A		     Passed
+   2317404 TRF54981B		     Passed
+   2317438 TRF47239C		       Failed
+   2285467 T1042090		       Passed
+   2317388 TRF51199A		     Passed
+   2317408 TRF48795A		     Passed
+   2317441 TRF47237C		     Passed
+   2317377 TRF51479C		     Passed
+   2317391 TRF55000A		     Passed
+   2317411 TRF29692A		     Passed
+   2317380 TRF51185C		     Passed
+   2317394 TRF54993B		     Passed
+   2317429 TRF41760C		       Failed
+   2317382 TRF51198A		     Passed
+   2317398 TRF55016B		     Passed
+   2317432 TRF59251A		     Passed
+   2317384 TRF51184B		     Passed
+   2317401 TRF55015A		     Passed
+   2317436 TRF39054C		     Passed
+
+20 - 2 = 18 good samples
+
+cat 3.txt | awk '{print $1,$2": <img src=\"http://barcode.tec-it.com/barcode.ashx?code=Code128&modulewidth=fit&data="$2"&dpi=96&imagetype=gif&rotation=0\" /> </br>"}'
+
+Create a new checklist - Bubble Removal/Volume Check 
+
+  Isopropanol: T1021003 w/ 50 ul
+
+From ccllims, fnd the output file - 21040_BubblePopOutput.txt
+  copy it to mayank22:/clims/data/bubble_removal_volume_read/output
+  rename: mv 21040_BubblePopOutput.txt 20139_BubblePopOutput.txt
+
+--------------------------------
+-- RNAX
+--------------------------------
+(A1)	   NEGCONTROL_13JAN2011_2    T1048473
+(A2)	   TRF55000		     TRF55000A
+(A3)	   TRF39054		     TRF39054C
+(B1)	   POSCONTROL_CDL001070_02   T1042090
+(B2)	   TRF54993		     TRF54993B
+(B2)	   TRF51199		     TRF51199A
+(B3)	   TRF47237		     TRF47237C
+(C1)	   TRF51479		     TRF51479C
+(C2)	   TRF55016		     TRF55016B
+(C3)	   TRF43121		     TRF43121A.....newly added
+(D1)	   TRF51185		     TRF51185C
+(D2)	   TRF55015		     TRF55015A
+(E1)	   TRF51198		     TRF51198A
+(E2)	   TRF54981		     TRF54981B
+(F1)	   TRF54985		     TRF54985B.....newly added
+(F2)	   TRF48795		     TRF48795A
+(G1)	   TRF51186		     TRF51186A
+(G2)	   TRF29692		     TRF29692A
+(H1)	   TRF49557		     TRF49557B.....newly added
+(H1)	   TRF51184		     TRF51184B
+(H2)	   TRF59251		     TRF59251A
+
+18 + 3(new) = 21 samples
+
+
+
+
+
+
+
+
+
+
+
+
+

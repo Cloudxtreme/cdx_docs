@@ -1,0 +1,15 @@
+
+set long 300000 pages 0 lines 10000
+
+select dbms_metadata.get_ddl('VIEW','SAMPLE_DISPLAY_VIEW', 'DNALIMS') from dual;
+
+
+
+select dbms_metadata.get_ddl('VIEW','ACCESSION_VARIABLE_VIEW', 'DNALIMS') from dual;
+
+
+
+
+select dbms_metadata.get_ddl('VIEW','CONTAINER_DISPLAY_VIEW', 'DNALIMS') from dual;
+
+select dbms_metadata.get_ddl('VIEW','CDX_CURRENT_REPORT_VIEW', 'DNALIMS') from dual;

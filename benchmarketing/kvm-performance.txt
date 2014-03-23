@@ -1,0 +1,30 @@
+
+
+phoronix multicore:
+
+Processor: 2 x Quad-Core AMD Opteron 2378 @ 2.41GHz (Total Cores: 8) 
+   Memory: 8 x 2048 MB, 
+   Disk: 2 x 300GB ST3300831AS + 6 x 2000GB ST32000542AS
+
+Processor: QEMU Virtual CPU 0.9.1 @ 24.12GHz (Total Cores: 4)
+   Memory: 1 x 1000 MB RAM, 
+   Disk: 45GB QEMU HARDDISK, Graphics: Cirrus Logic GD 5446
+
+
+--
+-- degradation (slower compared to the original performance)
+--
+Timed Apache Compilation		33.12	40.36			  21.86%
+Timed PHP Compilation				37.96	54.01			  42.28%
+Timed ImageMagick Compilation	62.58	104.97	  67.74%
+7-Zip Compression						13146	6147			 -53.24%
+Parallel BZIP2 Compression	10.01	21.23			 112.09%
+OpenSSL											364.17	180.8		 -50.35%
+Bwfirt											202.09	126.52	 -37.39%
+C-Ray												68.84	115.5			  67.78%
+POV-Ray											55.71	1770			3077.17%
+Tachyon											1550	43.65			 -97.18%
+FFmpeg											25.72	24.65			  -4.16%
+GraphicsMagick							99	87					 -12.12%
+GraphicsMagick							51	33					 -35.29%
+

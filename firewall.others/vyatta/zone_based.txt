@@ -1,0 +1,52 @@
+set zone-policy zone dmz interface eth2
+set zone-policy zone private interface eth0
+set zone-policy zone private interface eth1
+set zone-policy zone public interface eth3
+set zone-policy zone vyatta local-zone
+
+show zone-policy
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set firewall name private_to_dmz rule 1 action accept
+set firewall name private_to_dmz rule 1 protocol tcp
+set firewall name private_to_dmz rule 1 destination port http,https,ftp,ssh,telnet
+set firewall name private_to_dmz rule 2 action accept
+set firewall name private_to_dmz rule 2 protocol icmp
+set firewall name private_to_dmz rule 2 icmp type-name any
+
+set firewall name public_to_dmz rule 1 action accept
+set firewall name public_to_dmz rule 1 protocol tcp
+set firewall name public_to_dmz rule 1 destination port http,https
+set firewall name public_to_dmz rule 2 action accept
+set firewall name public_to_dmz rule 2 protocol icmp
+set firewall name public_to_dmz rule 2 icmp type-name any
+
+set firewall name to_public rule 1 action accept
+
+set firewall name to_private rule 1 action accept
+set firewall name to_private rule 1 protocol all
+set firewall name to_private rule 1 state established enable
+set firewall name to_private rule 1 state related enable
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set zone-policy zone dmz from private firewall name private_to_dmz
+set zone-policy zone dmz from public firewall name public_to_dmz
+
+set zone-policy zone private from dmz firewall name to_private
+set zone-policy zone private from public firewall name to_private
+
+set zone-policy zone public from dmz firewall name to_public
+set zone-policy zone public from private firewall name to_public
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set firewall name private_to_vyatta rule 1 action accept
+
+set firewall name public_to_vyatta rule 1 action accept
+set firewall name public_to_vyatta rule 1 protocol all
+set firewall name public_to_vyatta rule 1 state established enable
+set firewall name public_to_vyatta rule 1 state related enable
+
+set zone-policy zone vyatta from private firewall name private_to_vyatta
+set zone-policy zone vyatta from public firewall name public_to_vyatta
+

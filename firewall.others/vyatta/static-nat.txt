@@ -1,0 +1,44 @@
+
+http://amila-kumanayake.blogspot.com/2009/04/how-to-configure-nat-for-small-office.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--set interfaces ethernet eth0 address 10.192.192.2 prefix-length 24
+--set interfaces ethernet eth0 address 10.192.192.84 prefix-length 24
+
+set interfaces ethernet eth4 address 10.10.43.1 prefix-length 24
+--set system gateway-address 10.192.192.1
+
+
+-- outbound static nat rule
+set service nat rule 11
+set service nat rule 11 type source
+set service nat rule 11 outbound-interface eth1
+set service nat rule 11 protocol all
+set service nat rule 11 source address 10.10.43.2
+set service nat rule 11 destination address 0.0.0.0/0
+set service nat rule 11 outside-address address 67.95.201.200
+
+
+-- inbound static nat rule
+set service nat rule 12
+set service nat rule 12 type destination
+set service nat rule 12 inbound-interface eth1
+set service nat rule 12 protocol all
+set service nat rule 12 source address 0.0.0.0/0
+set service nat rule 12 destination address 67.95.201.200
+set service nat rule 12 inside-address address 10.10.43.2
+
+
+???
+-- outside MASQUERADE rule
+set service nat rule 20
+set service nat rule 20 type masquerade
+set service nat rule 20 outbound-interface eth0
+set service nat rule 20 protocol all
+set service nat rule 20 source network 192.168.0.0/24
+set service nat rule 20 destination network 0.0.0.0/0
+
+
+
+
+

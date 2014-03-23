@@ -1,0 +1,16 @@
+   45  mv initrd.img-2.6.15-27-amd64-server a.gz
+   46  gzip -d a.gz
+       mkdir init
+   48  cd init
+   50  cpio -i < ../a
+   52  history
+
+
+
+   30  find | cpio -H newc -o > ../new
+   31  cd ..
+   32  gzip -9 new 
+   35  mv new.gz /boot/initrd.img-cdx
+
+
+

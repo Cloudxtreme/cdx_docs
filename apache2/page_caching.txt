@@ -1,0 +1,11 @@
+
+
+How to disable page caching on browsers (ruby rails)
+
+  http://stackoverflow.com/questions/985530/best-way-to-disable-client-caching
+  http://stackoverflow.com/questions/711418/how-to-prevent-browser-page-caching-in-rails
+
+> FYI I used the approach in the second link below, pretty much exactly  :-)
+> 
+> M
+

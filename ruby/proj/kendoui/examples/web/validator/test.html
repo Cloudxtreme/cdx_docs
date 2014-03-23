@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic usage</title>
+
+    <link href="../../content/shared/styles/examples-offline.css" rel="stylesheet">
+    <link href="../../../styles/kendo.common.min.css" rel="stylesheet">
+    <link href="../../../styles/kendo.default.min.css" rel="stylesheet">
+
+    <script src="../../../js/jquery.min.js"></script>
+    <script src="../../../js/kendo.web.min.js"></script>
+    <script src="../../content/shared/js/console.js"></script>
+</head>
+<body>
+        <div id="tickets">
+            <ul>
+                <li>
+                    <label for="fullname" class="required">Your Name</label>
+                    <input type="text" id="fullname" name="fullname" class="k-textbox" placeholder="Full name" required validationMessage="Please enter {0}" />
+                </li>
+                <li>
+                    <label for="search" class="required">Movie</label>
+                    <input type="search" id="search" name="search" required validationMessage="Please select movie"/><span class="k-invalid-msg" data-for="search"></span>
+                </li>
+            </ul>
+        </div>
+
+            <style scoped>
+
+
+                #tickets ul {
+                    list-style-type: none;
+                }
+                #tickets li {
+                    margin: 10px 0 0 0;
+                }
+
+                label {
+                    display: inline-block;
+                    width: 90px;
+                    text-align: right;
+                }
+
+            </style>
+
+        </div>
+
+</body>
+</html>

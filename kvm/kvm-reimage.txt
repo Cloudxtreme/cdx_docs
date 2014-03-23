@@ -1,0 +1,87 @@
+virsh # shutdown hardy64
+
+virsh # define /etc/libvirt/qemu/hardy64.xml 
+
+
+    <disk type='file' deviceo'disk'>
+      <source file='/home/cardiodx/images/hardy64.img'/>
+      <target dev='hda' bus='ide'/>
+    </disk>
+    <disk type='file' deviceo'disk'>
+      <source file='/home/cardiodx/images/randal.img'/>
+      <target dev='hdb' bus='ide'/>
+    </disk>
+
+virsh # start hardy64
+
+
+mkdir newroot
+mount /dev/vg0/root newroot/
+cd newroot/
+mount /dev/sdb1 boot/
+
+untar
+
+grub
+
+modify menu.list
+modify fstab
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+image a kvm machine on lvm2:
+
+lvscan
+  ACTIVE            '/dev/vg0/dcontrol' [8.00 GB] inherit
+
+vi gclient1.xml 
+    <disk type='file' device='disk'>
+      <source file='/dev/mapper/vg0-dcontrol'/>
+      <target dev='hdb' bus='ide'/>
+    </disk>
+
+boot from gclient1
+fdisk /dev/sdb
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1               1          13      104391   83  Linux
+/dev/sdb2              14        1044     8281507+  83  Linux
+
+
+pvcreate /dev/sdb2
+vgcreate vg1 /dev/sdb2
+lvcreate -L+5G -n root vg1
+lvcreate -L+512M -n swap vg1
+
+mkfs.ext3 /dev/sdb1
+mkfs.xfs /dev/vg1/root 
+
+mkdir newroot
+mount /dev/vg1/root newroot/
+cd newroot/
+mkdir boot
+mount /dev/sdb1 boot/
+
+--tar --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" -cvf - / | ssh root@gclient1 'cd newroot; tar xvf - '
+tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" -cvf - / | ssh root@backup 'cd /mnt/backups/images/desktop/hardy; tar xvf -'
+
+rm /lib/modules.../volatile/.mounted 
+(or you'll get the following error:
+  ld_static: cannot open output file /lib/modules/2.6.15-26-386/volatile/xxxxxx.ko : Read-only file-system)
+
+
+vi newroot/etc/hostname
+vi newroot/etc/hosts
+vi newroot/etc/motd
+vi newroot/etc/network/interfaces
+vi netwoor/boot/grub/ment.list
+vi newroot/etc/fstab
+  NOTE: the device could be hda? (rahter than sda?)
+vi newroot/etc/dhcp3/dhclient.conf
+   send host-name "<hostname>";
+
+
+grub
+
+
+
+
+

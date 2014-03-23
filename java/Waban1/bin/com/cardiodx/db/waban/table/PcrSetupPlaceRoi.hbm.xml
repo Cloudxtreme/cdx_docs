@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PcrSetupPlaceRoi" table="PCR_SETUP_PLACE_ROI" schema="DNALIMS">
+        <comment>Stored details of ROI's placed in plates for PCR_SETUP</comment>
+        <id name="pcrPlaceRoiId" type="big_decimal">
+            <column name="PCR_PLACE_ROI_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="caseRoi" class="com.cardiodx.db.waban.table.CaseRoi" fetch="select">
+            <column name="CASE_ROI_ID" precision="22" scale="0" not-null="true">
+                <comment>Case ROI ID Identifier and foreigh key to CASE_ROI table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="pcrSetup" class="com.cardiodx.db.waban.table.PcrSetup" fetch="select">
+            <column name="PCR_SETUP_ID" precision="22" scale="0" not-null="true">
+                <comment>PCR Setup Identifier</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Subsidiary Identifier and foreign key to SUBSIDIARY table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>Sample ID Identifier and foreign key to SAMPLE_TABLE.</comment>
+            </column>
+        </many-to-one>
+        <property name="oligoId" type="big_decimal">
+            <column name="OLIGO_ID" precision="22" scale="0">
+                <comment>OLIGO ID Identifier and foreigh key to OLIGO table</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

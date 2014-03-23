@@ -1,0 +1,5 @@
+root@storage1:~/foo# dd if=/dev/vg2/etqdevel bs=100M | pv > etqdevel.img
+  40GB 0:09:17 [73.4MB/s] 
+
+# dd if=etqdevel.img bs=100M | pv | nc kvmsrv2 5000
+9+0 records in [12.4MB/s] 

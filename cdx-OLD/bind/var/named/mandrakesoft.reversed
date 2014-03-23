@@ -1,0 +1,16 @@
+$ORIGIN 2.168.192.in-addr.arpa.
+$TTL 1D
+@	IN	SOA	sunlight.mandrakesoft.com. florin.mandrakesoft.com. (
+				2001042702 ; serial
+				28800      ; refresh (8 hours)
+				14400      ; retry (4 hours)
+				3600000    ; expire (5 weeks 6 days 16 hours)
+				86400      ; minimum (1 day)
+				)
+@			NS	sunlight.mandrakesoft.com.
+$TTL 3600	; 1 hour
+178	IN	PTR	sunlight.mandrakesoft.com.
+23	IN	PTR	moonlight.mandrakesoft.com.
+
+; auto generate data
+$GENERATE 214-222 $ IN PTR 192-168-2-$.mandrakesoft.com.

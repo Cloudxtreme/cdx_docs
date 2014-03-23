@@ -1,0 +1,36 @@
+dn: ou=Users,dc=cardiodx,dc=com
+objectClass: organizationalUnit
+ou: Users
+
+dn: uid=cchou,ou=Users,dc=cardiodx,dc=com
+cn: Chialin
+sn: Chou
+uid: cchou
+uidNumber: 1098
+gidNumber: 513
+loginShell: /bin/bash
+gecos: Chialin Chou
+description: Chialin Chou
+displayName: Chialin Chou
+homeDirectory: /home/cchou
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: posixAccount
+userPassword:: e1NTSEF9ZStyL0NxQ2JnL3pySjZmWS9WYUJqZk0zekNwek9XeDY=
+
+dn: uid=srikar,ou=Users,dc=cardiodx,dc=com
+uid: srikar
+uidNumber: 1005
+gidNumber: 513
+loginShell: /bin/bash
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: posixAccount
+sn: Rao
+cn: Srikar
+homeDirectory: /home/srikar
+gecos: Srikar Rao
+description: Srikar Rao
+displayName: Srikar Rao
+userPassword:: e1NTSEF9V09xZ1FSeEFoMUpPMG5kMEhzSmhVdEd4Q0FLQkNWWkw=
+

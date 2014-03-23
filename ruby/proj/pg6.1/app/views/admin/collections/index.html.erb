@@ -1,0 +1,35 @@
+<h3>Listing admin_collections</h3>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Label</th>
+    <th>Data type</th>
+    <th>Created by</th>
+    <th>Modified by</th>
+    <th>Created at</th>
+    <th>Modified at</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @admin_collections.each do |admin_collection| %>
+  <tr>
+    <td><%= admin_collection.name %></td>
+    <td><%= admin_collection.label %></td>
+    <td><%= admin_collection.data_type %></td>
+    <td><%= admin_collection.created_by %></td>
+    <td><%= admin_collection.modified_by %></td>
+    <td><%= admin_collection.created_at %></td>
+    <td><%= admin_collection.modified_at %></td>
+    <td><%= link_to 'Show', admin_collection %></td>
+    <td><%= link_to 'Edit', edit_admin_collection_path(admin_collection) %></td>
+    <td><%= link_to 'Destroy', admin_collection, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Collection', new_admin_collection_path %>

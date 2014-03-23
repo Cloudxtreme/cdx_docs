@@ -1,0 +1,12 @@
+$TTL 3D
+@               IN      SOA     mentorware.com. root.mentorware.com. (
+                                199609203       ; Serial
+                                28800   ; Refresh
+                                7200    ; Retry
+                                604800  ; Expire
+                                86400)  ; Minimum TTL
+                        NS      mentorware.com.
+        
+1                       PTR     localhost.
+
+

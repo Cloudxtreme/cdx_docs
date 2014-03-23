@@ -1,0 +1,8 @@
+
+select * into outfile '/tmp/qcfact.csv'
+FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
+ESCAPED BY '\\'
+LINES TERMINATED BY '\n'
+from qc_fact 
+where batch_id = 'A/34479';
+

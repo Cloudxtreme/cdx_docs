@@ -1,0 +1,13 @@
+
+http://www.iu.hio.no/teaching/materials/MS004A/index.phtml?show=L50.en&week=6
+
+
+iptables -t nat -A POSTROUTING -o outgoing-interface [ eventual protocol specifications ] \
+-j SNAT --to-source address[-address][:port-port]
+
+
+iptables -t nat -A POSTROUTING -o $EXTERNAL_IFACE -p tcp -s $LAN_ADDRESSES --dport 80 \
+-j SNAT --to-source $MY_EXTERNAL_IP
+
+
+

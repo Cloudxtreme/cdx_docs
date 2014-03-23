@@ -1,0 +1,80 @@
+http://www.delouw.ch/linux/Postfix-Cyrus-Web-cyradm-HOWTO/html/
+http://tomster.org/geek/freebsdcookbook/ar01s03.html
+http://www.sendmail.org/~ca/email/cyrus/sysadmin.html
+http://en.tldp.org/HOWTO/Cyrus-IMAP-8.html#ss8.1
+
+
+passwd cyrus
+
+service cyrus-imapd start
+service saslauthd start
+
+telnet www imap
+. logout
+
+
+
+create entry in sasldb2 (where is it??)
+
+sasldblistusers2 
+
+saslpasswd2 cchou
+su - cchou
+imtest -m login -p imap localhost 
+imtest -m login -a cchou www
+--imtest -m KERBEROS_V4 foobar
+
+	S: L01 OK User logged in
+. logout
+
+
+su - cyrus
+cyradm localhost
+IMAP Password:
+
+	-- create account
+	cm user.cchou
+
+	-- set quota (5m)
+	setquota user.cchou 5000
+	
+	-- user admin his own mbox
+	sam user.cchou mailadmin all
+	
+	-- delete
+	#dm user.cchou
+quit
+
+	
+
+--delete
+#saslpasswd -d cchou
+
+
+other commands: http://www.oreilly.com/catalog/mimap/chapter/ch09.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				--prune the db
+				/etc/cron.daily 
+
+				#!/bin/bash
+				su cyrus -s /bin/bash -c '/usr/cyrus/bin/deliver -E 3'
+
+
+				/usr/lib/cyrus-imapd/deliver
+
+
+				vi /etc/postfix/master.cf 
+				cyrus   unix    -       n       n       -       -       pipe    \
+					flags=R user=cyrus      argv=/usr/sbin/cyrdeliver -e -m ${extension} ${user}
+															^^^^^^^^^^
+															not found!!
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://dudle.linuxroot.org/docs/postfix_cyrus/
+
+
+

@@ -1,0 +1,32 @@
+drupal ubuntu 10.04 lucid
+
+https://help.ubuntu.com/community/Drupal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tasksel install lamp-server
+  secret07
+  secret07
+
+
+??
+sudo sed -i 's/# RewriteBase \/drupal/ RewriteBase \/drupal6/' /etc/drupal/6/htaccess
+
+
+wajig install drupal6
+
+--reconfigure db if needed:
+dbconfig-common
+
+
+  250  cd /etc/drupal/6/
+
+  276  a2enmod rewrite
+  277  /etc/init.d/apache2 restart
+
+  279  cp htaccess htaccess.sav
+  280  sed -i 's/# RewriteBase \/drupal/ RewriteBase \/drupal6/' /etc/drupal/6/htaccess
+
+??????
+Have problems!!!!
+
+
+

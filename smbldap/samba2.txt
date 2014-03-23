@@ -1,0 +1,243 @@
+ubuntu hardy 804 ldap samba 
+
+http://ubuntuforums.org/showthread.php?t=640760
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Change the host name to smb01
+
+NOTE: Domain name can't be the same as machine. 
+      (you'll get "duplicate domain name" error message if you do.)
+
+wajig install slapd ldap-utils migrationtools
+password: 12345
+
+dpkg-reconfigure slapd
+No
+DNS domain name: cardiodx.com
+Name of your organization: cardiodx.com
+Admin password: 12345
+Confirm password: 12345
+OK
+BDB
+No
+Yes
+No
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install cupsys
+wajig install samba smbldap-tools smbclient samba-doc
+
+cp /usr/share/doc/samba-doc/examples/LDAP/samba.schema.gz /etc/ldap/schema/
+cd /etc/ldap/schema/
+gzip -d /etc/ldap/schema/samba.schema.gz
+cd ..
+vi slapd.conf 
+
+include         /etc/ldap/schema/samba.schema
+include         /etc/ldap/schema/misc.schema
+
+#access to attrs=userPassword,shadowLastChange
+access to attrs=userPassword,shadowLastChange,sambaNTPassword,sambaLMPassword
+
+/etc/init.d/slapd restart
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi smb.conf
+
+workgroup = CCSMB
+security = user
+
+passdb backend = ldapsam:ldap://localhost/
+obey pam restrictions = no
+
+ldap admin dn = cn=admin,dc=cardiodx,dc=com
+ldap suffix = dc=cardiodx, dc=com
+ldap group suffix = ou=Groups
+ldap user suffix = ou=Users
+ldap machine suffix = ou=Computers
+ldap idmap suffix = ou=Users
+; Do ldap passwd sync
+ldap passwd sync = Yes
+passwd program = /usr/sbin/smbldap-passwd %u
+passwd chat = *New*password* %n\n *Retype*new*password* %n\n *all*authentication*tokens*updated*
+add user script = /usr/sbin/smbldap-useradd -m "%u"
+ldap delete dn = Yes
+delete user script = /usr/sbin/smbldap-userdel "%u"
+add machine script = /usr/sbin/smbldap-useradd -w "%u"
+add group script = /usr/sbin/smbldap-groupadd -p "%g"
+delete group script = /usr/sbin/smbldap-groupdel "%g"
+add user to group script = /usr/sbin/smbldap-groupmod -m "%u" "%g"
+delete user from group script = /usr/sbin/smbldap-groupmod -x "%u" "%g"
+set primary group script = /usr/sbin/smbldap-usermod -g "%g" "%u"
+domain logons = yes
+
+;   invalid users = root
+
+logon path = 
+
+
+** Comment out the following lines:
+** Or, you'll get you do not have permission to chnage your password' error message!!!
+**
+#   unix password sync = yes
+#   passwd program = /usr/bin/passwd %u
+#   passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %
+#   pam password change = yes
+
+
+  
+smbpasswd -w 12345
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /usr/share/doc/smbldap-tools/examples/
+cp smbldap_bind.conf /etc/smbldap-tools/
+cp smbldap.conf.gz /etc/smbldap-tools/
+cd /etc/smbldap-tools/
+gzip -d smbldap.conf.gz 
+
+net getlocalsid
+SID for domain CCSMB is: S-1-5-21-1630852465-2210815896-3929207977
+
+vim smbldap.conf
+
+< SID="S-1-5-21-1630852465-2210815896-3929207977"
+????? sambaUnixIdPooldn="sambaDomainName=CCSMB,${suffix}" 
+< sambaDomain="CCSMB"
+< suffix="dc=cardiodx,dc=com"
+< mailDomain="cardiodx.com"
+
+vi smbldap_bind.conf 
+slaveDN="cn=admin,dc=cardiodx,dc=com"
+slavePw="12345"
+masterDN="cn=admin,dc=cardiodx,dc=com"
+masterPw="12345"
+
+chmod 0644 /etc/smbldap-tools/smbldap.conf
+chmod 0600 /etc/smbldap-tools/smbldap_bind.conf
+smbldap-populate -u 30000 -g 30000
+New password: 12345
+Retype new password: 12345 
+
+
+/etc/init.d/samba restart
+
+smbclient -U% -L localhost
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install auth-client-config libpam-ldap libnss-ldap
+
+LDAP server Uniform Resource Identifier: ldap://127.0.0.1
+Distinguished name of the search base: dc=cardiodx,dc=com
+LDAP version to use: 3
+Make local root Database admin: Yes
+Does the LDAP database require login? No
+LDAP account for root: cn=admin,dc=cardiodx,dc=com
+LDAP root account password: 12345
+
+
+cd /etc
+????cp ldap.conf ldap.conf.orig
+vi ldap.conf
+24c24
+< host 127.0.0.1
+< uri ldap://127.0.0.1/
+< bind_policy soft
+host ldap
+base dc=cardiodx,dc=com
+ldap_version 3
+pam_password md5
+ssl start_tls
+ssl on
+tls_checkpeer no
+#bind_policy soft
+
+
+
+cp ldap.conf /etc/ldap
+
+#vi /etc/auth-client-config/profile.d/open_ldap
+
+vi /etc/nsswitch.conf
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+
+
+cd /etc/pam.d
+mv common-auth common-auth.orig
+mv common-password common-password.orig
+mv common-account common-account.orig
+mv common-session common-session.orig
+
+cat > common-auth << EOF
+auth       required     pam_env.so
+auth       sufficient   pam_unix.so likeauth nullok
+auth       sufficient   pam_ldap.so use_first_pass
+auth       required     pam_deny.so
+EOF
+
+cat > common-password << EOF
+password   sufficient   pam_unix.so nullok md5 shadow 
+password   sufficient   pam_ldap.so use_first_pass
+password   required     pam_deny.so
+EOF
+
+cat > common-account << EOF
+account    sufficient   pam_unix.so
+account    sufficient   pam_ldap.so
+account    required     pam_deny.so
+EOF
+
+cat > common-session << EOF
+session    required     pam_limits.so
+session    required     pam_mkhomedir.so skel=/etc/skel/ umask=0077
+session    required     pam_unix.so
+session    optional     pam_ldap.so
+EOF
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/etc/init.d/samba restart
+/etc/init.d/slapd restart
+
+
+ldapsearch -x -b dc=cardiodx,dc=com
+ldapsearch -D "cn=admin,dc=cardiodx,dc=com" -b "dc=cardiodx,dc=com" "(ObjectClass=*)" -W -x
+
+smbldap-useradd -a -m -M test01 -c "Test Acct01" test01
+smbldap-passwd test01
+
+ldapsearch -D "uid=test01,ou=Users,dc=cardiodx,dc=com" -b "dc=cardiodx,dc=com" "(ObjectClass=*)" -W -x
+
+smbclient -U% -L localhost
+
+smbclient //smb01/homes -U test01
+
+vi smb.conf
+[homes]
+   comment = Home Directories
+   browseable = no
+
+[public]
+        comment = Public Drive
+        path = /data/samba/public
+        writeable = yes
+        force create mode = 0666
+        force directory mode = 0777
+
+mkdir -p /data/samba/public
+chmod 777 /data/samba/public
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+flip -m /home/samba/netlogon/allusers.bat
+
+
+*****
+To join the domain: Use 'root'  
+You'll get "User could not be found" error message if you use administrator.  (since it doesn't exist on ldap any more).
+
+
+
+

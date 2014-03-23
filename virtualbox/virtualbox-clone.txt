@@ -1,0 +1,36 @@
+virtual box clone uuid
+
+on kvmsrv4 
+
+clone it on cchoudesktop
+
+~/.VirtualBox/VDI$ VBoxManage clonevdi WinXP_i386.vdi cloned.vdi
+
+
+VBoxManage clonevdi winxp_master.vid EasyPDF.vid
+
+
+VBoxManage internalcommands setvdiuuid winxp3.vdi 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- migrate to kvm
+
+* on kvmrv3
+VBoxManage internalcommands setvdiuuid cclvm1.vdi 
+VBoxManage clonehd -format RAW ./cclvm1.vdi ./cclvm1.img
+VBoxManage clonehd -format RAW ./winxp5/winxp5.vdi /iscsi/temp/test01.img
+
+copy cclvm1.img over to kvmsrv4
+
+* on kvmarv4
+qemu-img convert -f raw cclvm1.img -O qcow2 ccllvm1.qcow
+kvm -m 1024 -hda cclvm1.qcow
+
+
+/usr/bin/kvm -M pc -m 512 -smp 4 -monitor pty -localtime -no-acpi \
+-drive file=test01.qcow,if=ide,boot=on \
+-net nic,macaddr=08:00:27:d3:7f:cb,vlan=0 -net tap,fd=32,script=,vlan=0 \
+-usb -usbdevice tablet 
+

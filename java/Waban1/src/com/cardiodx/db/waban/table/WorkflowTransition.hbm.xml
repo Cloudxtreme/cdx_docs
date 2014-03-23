@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.WorkflowTransition" table="WORKFLOW_TRANSITION" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.table.WorkflowTransitionId">
+            <key-property name="fromNode" type="big_decimal">
+                <column name="FROM_NODE" precision="22" scale="0" />
+            </key-property>
+            <key-property name="toNode" type="big_decimal">
+                <column name="TO_NODE" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="workflowDataslot" class="com.cardiodx.db.waban.table.WorkflowDataslot" fetch="select">
+            <column name="WORKFLOW_DATASLOT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="condition" type="string">
+            <column name="CONDITION" length="1000" />
+        </property>
+    </class>
+</hibernate-mapping>

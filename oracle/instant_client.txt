@@ -1,0 +1,50 @@
+
+cd ~/gdrive/it/software/Oracle\ 10g/instantclient_10.204/i386
+
+wajig install ./oracle-instantclient-basiclite_10.2.0.4-2_i386.deb \
+ ./oracle-instantclient-devel_10.2.0.4-2_i386.deb \
+ ./oracle-instantclient-odbc_10.2.0.4-2_i386.deb \
+ ./oracle-instantclient-sqlplus_10.2.0.4-2_i386.deb
+
+
+--not working?????
+cd /etc/ld.so.conf.d/
+vi oracle.conf
+# libc default configuration
+/usr/lib/oracle/10.2.0.4/client/lib
+
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/10.2.0.4/client/lib
+
+64bit
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/10.2.0.4/client64/lib
+
+sqlplus
+
+/usr/lib/oracle/10.2.0.4/client64/bin/sqlplus
+
+--not working???
+sqlplus system/rdlimssys246\\rdlims@orcl
+
+
+export TNS_ADMIN=.
+export ORACLE_HOME=.
+
+vi tnsnames.ora
+
+RDLIMS =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+        (ADDRESS =
+          (COMMUNITY = tcp.world)
+          (PROTOCOL = TCP)
+          (Host = rdlims)
+          (Port = 1521)
+        )
+    )
+    (CONNECT_DATA = (SID = ORCL)
+    )
+  )
+
+sqlplus system/rdlimssys246@rdlims
+

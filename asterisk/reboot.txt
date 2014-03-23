@@ -1,0 +1,8 @@
+asterisk -rx "sip notify polycom-check-cfg 2721"
+
+
+asterisk -rvvvvv
+sip notify polycom-check-cfg 2721
+
+# asterisk -rx "sip notify polycom-check-cfg 2781"
+

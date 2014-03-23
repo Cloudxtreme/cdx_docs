@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-schema="CTXSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="DMSYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="EXFSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="GTMETA" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="MDSYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="OLAPSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="ORDSYS" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="SCESCHEMA" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="SYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="SYSTEM" match-name=".*"
+		exclude="true">
+	</table-filter>
+	<table-filter match-schema="WMSYS" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-schema="XDB" match-name=".*" exclude="true"></table-filter>
+	<table-filter match-name=".*_VIEW" match-schema="DNALIMS">
+	</table-filter>
+
+	<table-filter match-name="CDX_CURRENT_REPORT_VIEW_2"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="CONTAINER_SHIPPED"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="DATA_IMPORT_COL_DICT"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="DNA_DES_REQUEST" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="EP3BACKDATA_IMPORT_COL_DICT"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="MDB_COVERED_ROIS"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="MDB_GENE" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="PENDING_SAMPLE_ATTRIBUTE_VW"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="PENDING_SUBJECT_ATTRIBUTE_NAME"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="PROCEDURE_TEMPLATE_RESULT"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="PROTOCOL_GENE_RESULT"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="SAMPLE_RECP_REP" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="SAMPLE_VARIABLE_FLD"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="SHIPPED_SAMPLE" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="TRGE_CASE" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="TRGE_CASE_SAMPLE"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="TRGE_CLASSIFICATION"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="TRGE_GENE_REGION"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="TRGE_GENOTYPE" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="TRGE_LITERATURE" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="TRGE_MINOR_ALLELE_FREQ"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="TRGE_POLY_EXTERN_REF"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="TRGE_TEST" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="TRGE_TEST_VARIANT"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-name="TRGE_VARIANT" match-schema="DNALIMS"></table-filter>
+	<table-filter match-name="TRGE_VAR_LIT_REL"
+		match-schema="DNALIMS">
+	</table-filter>
+	<table-filter match-schema="DNALIMS" match-name=".*" exclude="true" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</hibernate-reverse-engineering>

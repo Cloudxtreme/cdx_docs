@@ -1,0 +1,101 @@
+trac email notification
+
+https://subtrac.sara.nl/oss/email2trac
+https://subtrac.rc.sara.nl/oss/email2trac/ticket/55
+http://trac.edgewall.org/wiki/Email2tracOnWindows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wget ftp://ftp.sara.nl/pub/outgoing/email2trac.tar.gz
+
+
+wajig install cdbs
+
+
+cd email2trac-0.30
+./debian/rules binary
+cd ..
+wajig install ./email2trac_0.30-1_amd64.deb 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/email2rac.conf
+[DEFAULT]
+project: /var/lib/trac/it
+ticket_update: 1
+trac_version: 0.11 (even though wajig shows 0.10.4-2)
+use_public_cc = true (so we won't see "To: undisclosed-recipients")
+
+
+
+[it]
+project: /var/lib/trac/it
+
+
+email2trac -h
+	* From:      => Reporter
+	             => CC (Optional via reply_all option)
+	* Subject:   => Summary
+	* Body       => Description
+	* Component  => Can be set to SPAM via spam_level option
+
+# email2trac --project=it < msg.txt
+user_dict[summary] = 
+user_dict[reporter] = 
+user_dict[owner] = 
+user_dict[description] = 
+user_dict[type] = defect
+user_dict[status] = 
+user_dict[priority] = major
+user_dict[milestone] = 
+user_dict[component] = 
+user_dict[version] = 
+user_dict[resolution] = fixed
+user_dict[keywords] = 
+user_dict[cc] = 
+user_dict[blocking] = 
+user_dict[blockedby] = 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+useradd -g trac it
+
+smbldap-useradd -c "Trac IT" -M trac_it@cardiodx.com -m -P -N Trac -S IT trac_it
+CardioDx12#$
+
+
+# vi fetchmailrc
+poll webmail.cardiodx.com proto imap: username trac_it password CardioDx12#$
+mda "cat | /usr/bin/email2trac --project=it"
+idle
+
+chmod 600 fetchmailrc
+fetchmail -f fetchmailrc -v --ssl
+
+--
+-- reply mail doesn't work!!
+--
+vi /usr/bin/email2trac
+Around line 625
+   #tkt.save_changes(self.author, body_text, when)
+   tkt.save_changes(self.author, body_text)
+
+Log location - /var/log/syslog
+
+Fix (haven't tested):
+http://stackoverflow.com/questions/100210/python-easy-way-to-add-n-seconds-to-a-datetimetime
+
+
+vi /etc/email2rac.conf
+trac_version: 0.11 (even though wajig shows 0.10.4-2)
+
+
+--
+-- strip the original message
+--
+                for line in text.splitlines():
+                        # if line == '-- ':
+                        if line == '----- Original Message -----':
+                                break 
+                        body.append(line)
+
+
+
+

@@ -1,0 +1,29 @@
+
+
+login to backup
+tail -20f /data/log/pdc/200905/tail -2f local0
+
+connect sipura2100 to network
+
+May 11 13:40:10 pdc udhcpd_pdns: Wiping cache entry for linksyspap.cardiodx.com (10.10.36.181):
+May 11 13:40:10 pdc udhcpd_pdns: Wiping cache entry for 181.36.10.10.in-addr.arpa (10.10.36.181):
+May 11 13:40:10 pdc udhcpd_pdns: Adding linksyspap.cardiodx.com, A, 10.10.36.181:
+
+http:10.10.36.181
+
+admin login
+advance view
+line1
+
+proxy: asterisk
+outbound proxy: asterisk
+display name: ccl fax
+user id: 0919
+password: 0919pap2t
+auth id: 0919
+user auth id: yes
+
+cd /etc/asterisk
+vi sip.conf
+vi extensions.conf
+

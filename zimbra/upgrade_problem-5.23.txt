@@ -1,0 +1,50 @@
+[1]+  Running                 tail -20f zmmailboxd.out &
+
+Zimbra server reserving server socket port=143 bindaddr=null ssl=false
+Zimbra server reserving server socket port=993 bindaddr=null ssl=true
+Fatal error: exception while binding to ports
+java.net.SocketException: Unbound server sockets not implemented
+	at javax.net.ServerSocketFactory.createServerSocket(ServerSocketFactory.java:8
+
+
+# /opt/zimbra/bin/zmcertmgr viewdeployedcrt all
+XXXXX ERROR: failed to export /opt/zimbra/mailboxd/etc/mailboxd.pem from keystore.
+keytool error: java.lang.Exception: Keystore file does not exist: /opt/zimbra/mailboxd/etc/keystore
+XXXXX ERROR: /opt/zimbra/mailboxd/etc/mailboxd.pem does not exist
+
+------------      
+-- Looks like the old keystore didn't got migrated over.....
+-- There are differences.  Can I just copy it over???
+-- /opt/zimbra/java/bin# ./keytool -list -v -keystore /opt/zimbra/jetty/etc/keystore 
+-- /opt/zimbra/java/bin# ./keytool -list -v -keystore /opt/zimbra/jetty-6.1.5/etc/keystore
+------------      
+
+--
+-- srikar did the followings and it worked!!
+--
+/opt/zimbra/bin/zmcertmgr deploycrt comm /tmp/certs/wildcard.cardiodx.com.crt /tmp/certs/gd_bundle.crt
+
+I am following instructions from 
+http://wiki.zimbra.com/wiki/Administration_Console_and_CLI_Certificate_Tools#zmcertmgr
+
+Esp. the following
+Commercial Certificate Guidelines
+Follow these guidelines when using this command to generate a commercial certificate.
+The private key must exist in the /opt/zimbra/ssl/zimbra/commercial directory, and must be named commercial.key with its permission set to 740
+The server certificate and the chain certificate files must exist in a temp directory. (E.g. /root/certs/)
+The chain certificate files must be concatenated into one file called commercial_ca.crt
+
+cp wildcard.cardiodx.com.key /opt/zimbra/ssl/zimbra/commercial/commercial.key
+mkdir /tmp/certs
+mv wildcard.cardiodx.com.crt /tmp/certs
+cp ../../wildcard/gd_bundle.crt  /tmp/certs/
+/opt/zimbra/bin/zmcertmgr deploycrt comm /tmp/certs/wildcard.cardiodx.com.crt /tmp/certs/gd_bundle.crt 
+
+zmcontrol stop
+zmcontrol start
+
+Can we remove all the junk directories in /opt/zimbra/ssl -- they confuse the hell out of me.
+The only directory that should exist is /opt/zimbra/ssl/zimbra
+
+
+

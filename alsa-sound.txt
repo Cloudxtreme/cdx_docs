@@ -1,0 +1,38 @@
+http://ubuntuforums.org/showthread.php?s=a421b41702c580f833c6402b78e94c58&t=543793&page=2
+
+1. open Terminal
+applications --> accessories --> Terminal
+
+lspci -v | grep Audio
+
+*make sure the A-in Audio is capitalized.
+Should look like:
+Audio device: Intel Corporation 82801H (ICH8 Family) HD Audio Controller
+((((((If U dont have the above card U may want to search for a fix for the card listed in your Audio)))))))
+______________________________
+
+2. open-->system --> Admin. --> Synaptic Package Manager-
+
+Search for --ALSA --
+Install the list below-
+
+gnome-alsamixer
+gstreamer0.10-alsa
+gamix
+libpt-plugins-alsa
+linux-sound-base
+asoundconf-gtk
+gom
+Install all appps that start with alsa: in Synaptic
+(quite a few like 15 apps)
+alsa-firmware-loaders
+alsa-playerXXXXXfoo *** keep going down the list:
+______________________
+
+3. In terminal
+
+sudo apt-get install libncurses5-dev
+sudo apt-get install linux-backports-modules-generic
+
+__REBOOT____
+SOUND Upon reboot [center]Your sound Should be working!!!! 

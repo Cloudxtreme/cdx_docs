@@ -1,0 +1,34 @@
+
+
+create table
+
+get the first line --> columns
+  :1,$s/,/ varchar(255),^V^M/g
+  
+
+
+cd /root/SFDC
+cp CADTest__c.csv /var/lib/mysql/dwhdev
+cd /var/lib/mysql/dwhdev
+vi /var/lib/mysql/dwhdev/CADTest__c.csv
+  (remove first line)
+
+# mysqlimport --fields-optionally-enclosed-by='"' --fields-terminated-by=, --lines-terminated-by='\n' --user=root --password dwhdev CADTest__c.csv 
+
+		dwhdev.CADTest__c: Records: 42784  Deleted: 0  Skipped: 0  Warnings: 77
+
+wc -l CADTest__c.csv
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+mv /var/lib/mysql/dwhdev/CardioDx_Case_Summary_20130603.csv /var/lib/mysql/dwhdev/Case_Summary.csv
+mysqlimport --fields-optionally-enclosed-by='"' --fields-terminated-by=, --lines-terminated-by='\n' --user=root --password dwhdev Case_Summary.csv
+
+		dwhdev.Case_Summary: Records: 19431  Deleted: 0  Skipped: 0  Warnings: 19430
+
+
+
+
+
+

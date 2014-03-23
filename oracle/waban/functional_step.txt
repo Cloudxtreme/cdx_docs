@@ -1,0 +1,24 @@
+select distinct c.checklist_name || '/' || c.checklist_id batch_id, cc.checklist_col, cc.checklist_row, cc.entered_value
+from checklist_sample cs, checklist c, checklist_content cc, procedure_template pt
+where cs.checklist_id = c.checklist_id
+    and c.checklist_id = cc.checklist_id
+    and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'RNA Extraction'
+    and cc.checklist_col = 0
+    and to_char(c.date_created, 'MM-DD-YY') = '09-07-11'
+order by batch_id, cc.checklist_col, cc.checklist_row
+
+select st.number_in_sequence, st.step_type, fs.functional_step_id, st.step_template_id, st.description   
+from procedure_template pt, step_template st, functional_step fs
+where pt.procedure_template_id = st.procedure_template_id
+    and st.functional_step_id = fs.functional_step_id (+)
+and pt.procedure_name = 'RNA Extraction'
+and pt.procedure_status = 'APPROVED'
+order by pt.procedure_name, st.number_in_sequence
+
+select fsp.parameter_name, nvl(stp.value,fsp.default_value) ocx_name
+from functional_step_parameter fsp, step_template_parameter stp
+where stp.functional_step_parameter_id(+) = fsp.functional_step_parameter_id
+and fsp.functional_step_id = 19
+and stp.step_template_id(+) = 644
+

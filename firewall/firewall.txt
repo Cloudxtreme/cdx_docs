@@ -1,0 +1,85 @@
+http://www.untangle.com/
+http://www.pfsense.org
+
+
+woverine:
+
+
+modprobe r8169
+  eth2: RTL8169 at 0xf88a8e00, 00:22:3f:ef:c9:97, IRQ 169
+  eth3: RTL8169 at 0xf88aaf00, 00:22:3f:ef:c2:f2, IRQ 233
+
+modprobe e1000
+  e1000: 0000:01:00.0: e1000_probe: (PCI Express:2.5Gb/s:Width x4) 00:15:17:be:ee:76
+  e1000: 0000:01:00.1: e1000_probe: (PCI Express:2.5Gb/s:Width x4) 00:15:17:be:ee:77
+
+	eth4
+   inet addr:173.13.158.180  Bcast:173.13.158.191  Mask:255.255.255.240
+		173.13.158.180/28
+	eht5
+   inet addr:67.95.201.198  Bcast:67.95.201.223  Mask:255.255.255.224
+		67.95.201.198/27
+
+
+
+/opt/wolverine/etc/rc.d
+
+
+boot rescue cd
+net-setup eth0
+  eth0 will be the first port on e1000
+passwd (for root)
+
+mkdir newroot
+mount /dev/sda1 newroot
+
+generate woverine.tar
+copy woverine.tar to cchoudesktop
+
+--sudo mount -o loop -t cramfs woverine/firmware/rootfs.img root
+sudo mount -o loop -t cramfs woverine/firmware/wolverine.img foo
+
+cp -rp foo/ bar
+
+cd bar/etc/rc.d
+vi rc.cardiodx
+
+#!/bin/sh
+
+# Install the firmware addon package
+
+echo "Installing CardioDx firmware addon..."
+
+modprobe r8169
+modprobe e1000
+
+
+chmod 700 rc.cardiodx
+cd ../../..
+
+
+wajig install cramfsprogs
+
+mkcramfs bar wolverine.img
+
+umount /data/cchou/woverine/foo
+
+md5sum wolverine.img
+ca5aeabc8d8f6122e0950ff1b6ca992d  wolverine.img
+
+cd woverine/firmware/
+
+mv wolverine.img wolverine.img.102309
+mv ../../wolverine.img .
+
+vi checksum
+b1e9df04b02880f38a540211acf22446 *rootfs.img
+ca5aeabc8d8f6122e0950ff1b6ca992d *wolverine.img
+
+
+scp wolverine.img
+scp checksum
+
+reboot
+
+

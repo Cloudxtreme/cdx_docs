@@ -1,0 +1,18 @@
+
+ubuntu archive mirror sites:
+  https://launchpad.net/ubuntu/+archivemirrors
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install ntp sysstat -y
+
+ganglia
+ldap (ldap-client.txt)
+syslog-ng 
+ssmtp
+ssh
+--smartctl
+smartmontools
+
+visudo
+%linuxadmins ALL=(ALL) ALL
+

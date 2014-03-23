@@ -1,0 +1,41 @@
+<h3>Listing apples</h3>
+
+<table>
+  <tr>
+    <th>Dstr</th>
+    <th>Dtxt</th>
+    <th>Dint</th>
+    <th>Dflt</th>
+    <th>Ddec</th>
+    <th>Ddt</th>
+    <th>Dtime</th>
+    <th>Ddate</th>
+    <th>Dbin</th>
+    <th>Bbl</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @apples.each do |apple| %>
+  <tr>
+    <td><%= apple.dstr %></td>
+    <td><%= apple.dtxt %></td>
+    <td><%= apple.dint %></td>
+    <td><%= apple.dflt %></td>
+    <td><%= apple.ddec %></td>
+    <td><%= apple.ddt %></td>
+    <td><%= apple.dtime %></td>
+    <td><%= apple.ddate %></td>
+    <td><%= apple.dbin %></td>
+    <td><%= apple.bbl %></td>
+    <td><%= link_to 'Show', apple %></td>
+    <td><%= link_to 'Edit', edit_apple_path(apple) %></td>
+    <td><%= link_to 'Destroy', apple, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Apple', new_apple_path %>

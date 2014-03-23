@@ -1,0 +1,15 @@
+ubuntu encfs
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+encfs /root/foobar/encrypted/ /root/foobar/decrypted/
+
+# mkfs.xfs /dev/sda3 
+# mkdir encrypted decrypted
+# encfs /root/foobar/encrypted/ /root/foobar/decrypted/
+  (just hit enter for standard mode)
+
+# dd if=/dev/zero bs=1G count=16 | pv > testfile
+    16GB 0:04:01 [67.8MB/s]
+
+# fusermount -u /dev/foobar/decrypted
+

@@ -1,0 +1,31 @@
+
+for spf and dkim:
+
+zmprov modifyServer webmail.cardiodx.com zimbraMtaMyNetworks '127.0.0.0/8 10.10.32.0/21 67.95.201.196/32'
+
+
+cd conf/spamassassin 
+vi local.cf
+# Mods by Srikar Rao 7/11/08
+# This ensure SPF works by trusting the Return-Path header has not been modifed
+# by any relay
+always_trust_envelope_sender 1
+
+score SPF_PASS -1.00
+score SPF_NEUTRAL 0.00
+score SPF_FAIL 5.00
+score SPF_SOFTFAIL 1.00
+
+# uncomment loading of DKIM Plugin in ./v312.per
+score DKIM_VERIFIED -1.00
+score DKIM_SIGNED 0.00
+# End Mods by Srikar Rao 7/11/08
+
+
+vi v312.pre
+loadplugin Mail::SpamAssassin::Plugin::DKIM
+
+
+zmamavisdctl restart
+
+

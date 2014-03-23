@@ -1,0 +1,236 @@
+<style scoped>
+  .required {
+    font-weight: bold;
+  }
+  .container-section {
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border-color: rgba(255,255,255,0.2);
+    background: -moz-linear-gradient(top,  rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.07) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.01)), color-stop(100%,rgba(0,0,0,0.07)));
+    background: -webkit-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: -o-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: -ms-linear-gradient(top,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+    background: linear-gradient(to bottom,  rgba(0,0,0,0.01) 0%,rgba(0,0,0,0.07) 100%);
+  }
+</style>
+
+<%= form_for(@object, :html => {:id => 'admin_kendo'}) do |f| %>
+  <% if @object.errors.any? %>
+    <div id='error_explanation'>
+      <h2><%= pluralize(@object.errors.count, 'error') %> prohibited this object from being saved:</h2>
+      <ul>
+      <% @object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% collection = Admin::Collection.find_by_name('Kendo') # ' %>
+  <% html_table_width = collection.html_table_width=='' ? 3: collection.html_table_width.to_i %>
+
+  <% fields = Admin::Field.includes(:dtype).joins(:collection, :dtype).where("admin_collections.name = 'Kendo'").order('display_order') %>
+	<div class="container-section">
+  <table width='100%'>
+		<tr>
+    <td align='right'> <label for='fullname' class='required'>Name:</label></td>
+    <td align='left'>
+      <input id='admin_kendo_name' 
+						name='admin_kendo[name]' 
+						class='k-textbox' 
+						type='text' 
+						validationMessage='Name is required!' 
+						required 
+						value='<%=@object['name']%>'/> <br />
+      <span class='k-invalid-msg' data-for='admin_kendo[name]'></span>
+    </td>
+    <%(1..html_table_width-1).each do |i| %>
+      <td></td> <td></td>
+    <% end %>
+		</tr>
+  <% fields.each do |field| %>
+    <% required='required' if field.html_required %>
+
+    <%=raw('<tr>') if field.display_order.to_i == 1 %>
+    <% if Admin::Kendo.is_lut_column?(field.name) %>
+      <td align='right'><%= f.label field.name, field.label, :class=>required %>:</td>
+      <td align='left'>
+        <%= f.select(field.name, Admin::Kendo.selection_data(field.name)) %>
+        <span class='k-invalid-msg' data-for='admin_kendo[<%=field.name%>]'></span>
+      </td>
+    <% elsif Admin::Kendo.is_foreign_key?(field.name) %>
+      <!-- skip foreign keys -->
+    <% else %>
+      <td align='right'><%= f.label field.name, field.label, :class=>required %>:</td>
+      <td align='left'>
+        <%= raw(field.html_input_string Admin::Kendo.downcase_namespace_base, Admin::Kendo.downcase_name, @object[field.name]) %>
+        <span class='k-invalid-msg' data-for='admin_kendo[<%=field.name%>]'></span>
+      </td>
+    <% end %>
+    <%=raw('</tr>') if field.display_order.to_i%html_table_width == 0 %>
+
+  <% end %>
+
+  <!-- Foreign key(s) -->
+  <% Admin::Kendo.foreign_keys.each do |foreign_key| %>
+    <% if params[foreign_key] %>
+      <!-- <%= f.hidden_field foreign_key, :value => params[foreign_key] %><br /> -->
+      <%= f.label foreign_key %><br />
+      <%= f.select(foreign_key, Admin::Kendo.selection_data(foreign_key), :selected => params[foreign_key]) %><br />
+    <% elsif @object[foreign_key] %>
+      <!-- <%= f.hidden_field foreign_key, :value => @object[foreign_key] %><br /> -->
+      <%= f.label foreign_key %><br />
+      <%= f.select(foreign_key, Admin::Kendo.selection_data(foreign_key), :selected => @object[foreign_key]) %><br />
+    <% else %>
+      <%= f.label foreign_key %><br />
+      <%= f.select(foreign_key, Admin::Kendo.selection_data(foreign_key)) %><br />
+    <% end %>
+  <% end %>
+	</table>
+	</div>
+  <br />
+
+<div class='field'>Numeric:     <input type="number" id="numeric" value="17" min="0" max="100" step="1" /> <br /> </div>
+<div class='field'>Currency:    <input type="number" id="currency" value="30" min="0" /> <br /></div></div>
+<div class='field'>Percentage:  <input type="number" id="percentage" placeholder="between 0 and 1" min="0", max="1", step="0.01" /> <br /></div>
+<div class='field'>Exponencial: <input type="number" id="exp" required validationMessage="This is a required field" /> <br /></div>
+
+<div class='field'>Phone:       <input type="tel" id="tel" name="tel" class="k-textbox" pattern="\d{3}-\d{3}-\d{4}" placeholder="nnn-nnn-nnnn" required validationMessage="Ten digit phone number"/><br></div>
+
+<div class='field'>Datetime: <input type="datetime" id="datetimepicker" /> <br /></div>
+<div class='field'>Date:    <input type="date" id="datepicker" value="2011-03-25" /> <br /></div>
+<div class='field'>Time:    <input type="time" id="timepicker" value="10:00 AM" /> <br /></div>
+<div class='field'>Month:     <input type="month" id="monthpicker" value="November 2011" /> <br /></div>
+
+<div class='field'>Text:    <input type="text" id="fullname"  style="width:250px" name="fullname" class="k-textbox" placeholder="Full name" required validationMessage="Please enter {0}" /><br></div>
+<div class='field'>Search:  <input type="search" id="search" name="search" class="k-textbox" required validationMessage="Please select movie"/><br></div>
+<div class='field'>Email:     <input type="email" id="email" name="Email" class="k-textbox" placeholder="e.g. myname@example.net"  required data-email-msg="Email format is not valid" /><br></div>
+
+<div class='field'>Richtext: <textarea id="editor" style="width:540px;height:240px"></textarea> <br /></div>
+<div class='field'>Textarea: <textarea class="k-textbox">Textarea</textarea> <br /></div>
+<div class='field'>Checkbox: <input type="checkbox" name="Accept" required validationMessage="Acceptance is required" /> I accept the terms and condition of service <br /></div>
+
+<div class='field'>Weight:  <input id="custom" value="2" /> <br /></div>
+<div class='field'>URL:       <input id="url" type="url" class="k-textbox" /> <br /></div>
+<div class='field'>Autocomplete:      <input type='text' id="autocomplete" /> <br /></div>
+
+<div class='field'>Dropdown:
+            <select id="dropdownlist">
+                <option>S - 6 3/4"</option>
+                <option>M - 7 1/4"</option>
+                <option>L - 7 1/8"</option>
+                <option>XL - 7 5/8"</option>
+            </select> <br /></div>
+
+<div class='field'>Combo:
+  <select id="combo" placeholder="Select size...">
+    <option>X-Small</option>
+    <option>Small</option>
+    <option>Medium</option>
+    <option>Large</option>
+    <option>X-Large</option>
+    <option>2X-Large</option>
+  </select>
+</div>
+
+<div class='field'>Multiselect:
+        <select id="multiselect" multiple="multiple" data-placeholder="Select attendees..." style="width:340px;">
+            <option>Steven White</option>
+            <option>Nancy King</option>
+            <option>Anne King</option>
+            <option>Nancy Davolio</option>
+            <option>Anne Davolio</option>
+            <option>Andrew Suyama</option>
+            <option>Nige Buchanan</option>
+            <option>Laura Fuller</option>
+        </select>
+</div>
+
+
+<div id="climateCtrl"><input id="slider" class="temperature" /></div></div>
+<div id="climateCtrl"> <div id="rangeslider" class="humidity"> <input /><input /> </div> </div>
+<style> #climateCtrl { margin: 17px 10px 10px 10px; } </style>
+
+
+  <div class='actions'>
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script>
+  $(document).ready(function() {
+    var validator = $('#admin_kendo').kendoValidator().data('kendoValidator'),
+    status = $('.status');
+
+    <% fields = Admin::Field.includes(:dtype).joins(:collection, :dtype).where("admin_collections.name = 'Kendo'") %>
+    <% fields.each do |field| %>
+      <%=raw(field.widget_string(Admin::Kendo.downcase_namespace_base, Admin::Kendo.downcase_name)) \
+            if field.widget_string(Admin::Kendo.downcase_namespace_base, Admin::Kendo.downcase_name) -%>
+    <% end %>
+  });
+
+
+    /////////////////
+    $("#numeric").kendoNumericTextBox( {format: "n2" });
+    $("#currency").kendoNumericTextBox({ format: "c" });
+    $("#percentage").kendoNumericTextBox({ format: "p", decimals: 5 });
+    $("#exp").kendoNumericTextBox({ format: "e" });
+    $("#monthpicker").kendoDatePicker({ start: "year", depth: "year", format: "MMMM yyyy" });
+    $("#datetimepicker").kendoDateTimePicker({ value:new Date() });
+    $("#datepicker").kendoDatePicker({format: "yyyy-MM-dd"});
+    $("#timepicker").kendoTimePicker();
+    $("#editor").kendoEditor();
+    $("#custom").kendoNumericTextBox({ format: "#.00 kg" });
+
+    $("#dropdownlist").kendoDropDownList();
+    $("#combo").kendoComboBox();
+
+     var required = $("#multiselect").kendoMultiSelect().data("kendoMultiSelect");
+
+		var data = [ "Albania", "Andorra", "United Kingdom", "Vatican City" ];
+		$("#autocomplete").kendoAutoComplete({
+                        dataSource: data,
+                        filter: "startswith",
+                        placeholder: "Select country...",
+                        separator: ", "
+                    });
+
+    // for sliders
+    function sliderOnSlide(e) { }
+    function sliderOnChange(e) { }
+    function rangeSliderOnSlide(e) { }
+    function rangeSliderOnChange(e) { }
+
+    $(document).ready(function() {
+      $("#slider").kendoSlider({
+        change: sliderOnChange,
+        slide: sliderOnSlide,
+        min: 0,
+        max: 30,
+        smallStep: 1,
+        largeStep: 10,
+        value: 18
+      });
+
+      $("#rangeslider").kendoRangeSlider({
+        change: rangeSliderOnChange,
+        slide: rangeSliderOnSlide,
+        min: 0,
+        max: 10,
+        smallStep: 1,
+        largeStep: 2,
+        tickPlacement: "both"
+      });
+    });
+
+</script>
+
+
+

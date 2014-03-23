@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.WorklistProcedureSampleView" table="WORKLIST_PROCEDURE_SAMPLE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.WorklistProcedureSampleViewId">
+            <key-property name="origSampleId" type="big_decimal">
+                <column name="ORIG_SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="containerRow" type="big_decimal">
+                <column name="CONTAINER_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumn" type="big_decimal">
+                <column name="CONTAINER_COLUMN" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleTubeId" type="string">
+                <column name="SAMPLE_TUBE_ID" length="25" />
+            </key-property>
+            <key-property name="hasHistory" type="big_decimal">
+                <column name="HAS_HISTORY" precision="22" scale="0" />
+            </key-property>
+            <key-property name="status" type="java.lang.Character">
+                <column name="STATUS" length="0" />
+            </key-property>
+            <key-property name="worklistId" type="big_decimal">
+                <column name="WORKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="25" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

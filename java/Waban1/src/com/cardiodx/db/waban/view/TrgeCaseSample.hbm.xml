@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeCaseSample" table="TRGE_CASE_SAMPLE" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeCaseSampleId">
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseId" type="string">
+                <column name="CASE_ID" length="4000" />
+            </key-property>
+            <key-property name="casePk" type="big_decimal">
+                <column name="CASE_PK" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleTubeId" type="string">
+                <column name="SAMPLE_TUBE_ID" length="25" />
+            </key-property>
+            <key-property name="clientSampleTubeId" type="string">
+                <column name="CLIENT_SAMPLE_TUBE_ID" length="25" />
+            </key-property>
+            <key-property name="specimenType" type="string">
+                <column name="SPECIMEN_TYPE" length="30" />
+            </key-property>
+            <key-property name="sampleCondition" type="string">
+                <column name="SAMPLE_CONDITION" length="20" />
+            </key-property>
+            <key-property name="sampleStatus" type="string">
+                <column name="SAMPLE_STATUS" length="50" />
+            </key-property>
+            <key-property name="volume" type="big_decimal">
+                <column name="VOLUME" precision="22" scale="0" />
+            </key-property>
+            <key-property name="drawDate" type="date">
+                <column name="DRAW_DATE" length="8" />
+            </key-property>
+            <key-property name="dateReceived" type="date">
+                <column name="DATE_RECEIVED" length="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

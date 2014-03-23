@@ -1,0 +1,51 @@
+http://www.voip-info.org/wiki-Asterisk+fax
+http://www.mezzo.net/asterisk/app_ldap.html
+
+install ldap client (ldap-utils)
+
+wajig install ldap-utils
+wajig install libldap2-dev
+
+
+  299  wget http://www.mezzo.net/asterisk/app_ldap-1.0rc6.tgz
+  303  tar zxvf app_ldap-1.0rc6.tgz 
+  304  cd app_ldap-1.0rc6/
+
+make
+make install
+
+asterisk -rvvvvv
+load app-ldap.so
+show application LDAPget
+
+
+~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vi modify.ldif
+dn: uid=cchou,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+add: telephoneNumber
+telephoneNumber: 1234
+
+vi modify.ldif
+dn: uid=cchou,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+replace: telephoneNumber
+telephoneNumber: 1234
+
+ldapmodify -xW -D cn=Manager,dc=cardiodx,dc=com -f modify.ldif
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ldapsearch -x -b "dc=cardiodx,dc=com" "(ObjectClass=*)"
+
+ldapsearch -x -b "ou=Users,dc=cardiodx,dc=com" "(&(objectClass=posixAccount)(uidNumber=1098))"
+ldapsearch -x -b "ou=Users,dc=cardiodx,dc=com" "(&(objectClass=posixAccount)(telephoneNumber=2702))" displayName
+ldapsearch -x -b "ou=Users,dc=cardiodx,dc=com" "(&(objectClass=posixAccount)(telephoneNumber=2702))" mail
+
+
+NOTE: 
+problems sending out mails since the DNS domain is fake
+change all ldap configuration
+
+

@@ -1,0 +1,34 @@
+ubuntu intuit quickbooks enterprise server
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2.6.24-16-server i686
+
+wajig install build-essential fakeroot deborphan subversion sysv-rc-conf -y
+wajig install ntp -y
+
+
+wajig install libgamin-dev libfam0 fam
+wajig install ./qbdbm_19.0-21_i386.deb 
+
+
+# vi /opt/qb/util/qbmonitord.conf
+/QBData
+
+# mkdir /QBData
+
+# /etc/init.d/sysklogd restart
+
+# /opt/qb/util/qbmonitord -f
+
+# /opt/qb/util/qbmonitord
+
+
+# tail -f /var/log/qbdbfilemon.log
+
+
+# mkdir /var/lock/subsys/
+
+--/etc/init.d/qbdbfilemon start
+--/etc/init.d/qbdbmgrn_19
+
+

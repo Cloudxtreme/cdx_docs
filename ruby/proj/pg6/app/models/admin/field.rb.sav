@@ -1,0 +1,123 @@
+class Admin::Field < ActiveRecord::Base
+	include ModelHelper
+	attr_protected
+  validates :name, :presence => true
+
+	belongs_to :collection
+	belongs_to :dtype
+	has_many :security, :dependent => :destroy
+	has_many :validate, :dependent => :destroy
+
+  after_create :after_create
+  after_destroy :after_destroy
+
+	def html_input_string(namespace, collection, value)
+		html_str = "<input type='#{self.dtype.name}' id='#{namespace}_#{collection}_#{self.name}' name='#{namespace}_#{collection}[#{self.name}]' "
+		html_str += "required " if self.html_required # @@@ ????
+		html_str += "value='#{value}' "  if value
+		html_str += "validationMessage='#{self.html_validation_msg}' " if not self.html_validation_msg.empty?
+		html_str += "placeholder='#{self.html_placeholder}' " if not self.html_placeholder.empty?
+		html_str += "pattern='#{self.html_pattern}' " if not self.html_pattern.empty?
+		html_str += "min='#{self.html_min}' " if not self.html_min.empty?
+		html_str += "max='#{self.html_max}' " if not self.html_max.empty?
+		html_str += "step='#{self.html_step}' " if not self.html_step.empty?
+		if self.html_class != ''
+    	html_str += "class='#{self.html_class}' " 
+		else
+			if self.dtype.default_class != ''
+				html_str += "class='#{self.dtype.default_class}' "
+			end
+		end
+		html_str += " /> <br />\n"
+		html_str
+	end
+
+	def widget_string(namespace, collection)
+		if dtype.widget
+			widget_str = %($('\##{namespace}_#{collection}_#{self.name}').#{self.dtype.widget.name}({#{self.dtype.widget_option}})).gsub(/^ /,'').gsub(/\n/,'') 
+			widget_str += ".data('kendoMultiSelect')" if self.dtype.name == 'multiselect' 
+			widget_str += ";\n"
+		end
+		widget_str
+	end
+
+	def rails_type
+		self.dtype.rtype.name
+	end
+
+	def create_model(namespace, collection_name)
+    fd = File.open('templates/models/object.rb.erb')
+    template = fd.read
+    fd.close
+
+    renderer = ERB.new(template, nil, '-')
+    fd = File.open("app/models/#{namespace.downcase}/#{collection_name.downcase}.rb", 'w')
+    fd.puts renderer.result(binding)
+    fd.close
+	end
+
+	def after_create
+    @namespace = self.collection.namespace.name
+    @collection_name = self.collection.name
+
+		# DB
+		db_obj = "#{@namespace.downcase}_#{@collection_name.downcase.pluralize}"
+		column_name = self.name.downcase
+		rtype = self.dtype.rtype.name
+		ActiveRecord::Migration.add_column(db_obj, column_name, rtype)
+
+		dtype = self.dtype.name
+		if ['lookup', 'masterdetail', 'combobox', 'multiselect'].include?(dtype)
+			collection = Admin::Collection.find_by_name(@collection_name)
+
+			self.name =~ /(.*)_id/
+			associate_name = $1.capitalize
+			associate = Admin::Collection.find_by_name(associate_name)
+			#collection.associate_cid = associate.id
+			#collection.associate_type = dtype
+			#collection.save!
+		end
+
+		# belongs_to?
+    @associated_objects = []
+		fields =  Admin::Field.find_all_by_collection_id(self.collection.id)
+    fields.each do |field|
+      if field.name.downcase =~ /(.*)_id/
+      	@associated_objects << $1
+			end
+    end
+
+		create_model(@namespace, @collection_name) if @namespace != 'Admin'
+	end
+
+	def after_destroy
+    @namespace = self.collection.namespace.name
+    @collection_name = self.collection.name
+
+    # DB
+    db_obj = "#{@namespace.downcase}_#{@collection_name.downcase.pluralize}"
+    column_name = self.name.downcase
+		rtype = self.dtype.rtype.name
+	  ActiveRecord::Migration.remove_column(db_obj, column_name)
+
+    dtype = self.dtype.name
+		if ['lookup', 'masterdetail', 'combobox', 'multiselect'].include?(dtype)
+      collection = Admin::Collection.find_by_name(@collection_name)
+      #collection.associate_cid = nil
+      #collection.associate_type = nil
+      #collection.save!
+    end
+
+
+    @associated_objects = []
+    fields =  Admin::Field.find_all_by_collection_id(self.collection.id)
+    fields.each do |field|
+      if field.name.downcase =~ /(.*)_id/
+        @associated_objects << $1
+      end
+    end
+
+		create_model(@namespace, @collection_name)
+	end
+
+end

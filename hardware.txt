@@ -1,0 +1,7 @@
+linux hardware information
+
+
+-- memory:
+
+# dmidecode --type 17
+

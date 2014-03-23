@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PlateTemplateWell" table="PLATE_TEMPLATE_WELL" schema="DNALIMS">
+        <comment>Information about each well of a plate template used to create plates.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.PlateTemplateWellId">
+            <key-property name="plateTemplateId" type="big_decimal">
+                <column name="PLATE_TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="plateRow" type="big_decimal">
+                <column name="PLATE_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="plateColumn" type="big_decimal">
+                <column name="PLATE_COLUMN" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="plateWellType" class="com.cardiodx.db.waban.table.PlateWellType" fetch="select">
+            <column name="PLATE_WELL_TYPE_ID" precision="22" scale="0">
+                <comment>Foreign key to plate_well_type for the current well.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="plateTemplate" class="com.cardiodx.db.waban.table.PlateTemplate" update="false" insert="false" fetch="select">
+            <column name="PLATE_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign key used to identify the plate_template record.</comment>
+            </column>
+        </many-to-one>
+        <property name="replicationIndex" type="big_decimal">
+            <column name="REPLICATION_INDEX" precision="22" scale="0">
+                <comment>Positive non-zero value indicates that wells have the same sample.</comment>
+            </column>
+        </property>
+        <property name="dilutionFactor" type="big_decimal">
+            <column name="DILUTION_FACTOR" precision="22" scale="0">
+                <comment>Dilution factor used for diluting sample in this well.</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION">
+                <comment>Description of the sample that will be put in this well.</comment>
+            </column>
+        </property>
+        <property name="oligoId" type="big_decimal">
+            <column name="OLIGO_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

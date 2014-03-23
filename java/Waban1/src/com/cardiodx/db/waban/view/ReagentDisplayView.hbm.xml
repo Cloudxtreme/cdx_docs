@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.ReagentDisplayView" table="REAGENT_DISPLAY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.ReagentDisplayViewId">
+            <key-property name="reagentBarcode" type="string">
+                <column name="REAGENT_BARCODE" length="20" />
+            </key-property>
+            <key-property name="reagentName" type="string">
+                <column name="REAGENT_NAME" length="50" />
+            </key-property>
+            <key-property name="lotNumber" type="string">
+                <column name="LOT_NUMBER" length="20" />
+            </key-property>
+            <key-property name="expirationDate" type="string">
+                <column name="EXPIRATION_DATE" length="11" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="50" />
+            </key-property>
+            <key-property name="volume" type="big_decimal">
+                <column name="VOLUME" precision="22" scale="0" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="company" type="string">
+                <column name="COMPANY" length="100" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="concentration" type="big_decimal">
+                <column name="CONCENTRATION" precision="22" scale="0" />
+            </key-property>
+            <key-property name="organizationId" type="big_decimal">
+                <column name="ORGANIZATION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="parentReagentId" type="big_decimal">
+                <column name="PARENT_REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="reagentId" type="big_decimal">
+                <column name="REAGENT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="parentBarcode" type="string">
+                <column name="PARENT_BARCODE" length="20" />
+            </key-property>
+            <key-property name="units" type="string">
+                <column name="UNITS" length="50" />
+            </key-property>
+            <key-property name="dateReceived" type="date">
+                <column name="DATE_RECEIVED" length="7" />
+            </key-property>
+            <key-property name="location" type="string">
+                <column name="LOCATION" length="63" />
+            </key-property>
+            <key-property name="containerId" type="string">
+                <column name="CONTAINER_ID" length="20" />
+            </key-property>
+            <key-property name="containerRow" type="big_decimal">
+                <column name="CONTAINER_ROW" precision="22" scale="0" />
+            </key-property>
+            <key-property name="containerColumn" type="big_decimal">
+                <column name="CONTAINER_COLUMN" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

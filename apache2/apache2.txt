@@ -1,0 +1,75 @@
+configure apache2 on ubuntu ssl virtual host
+
+http://www.linode.com/wiki/index.php/Apache2_SSL_in_Ubuntu
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+link ssl modules
+  518  ln -s ../mods-available/ssl.conf 
+  519  ln -s ../mods-available/ssl.load
+
+
+# ll mods-enabled/
+lrwxrwxrwx 1 root root 26 2007-11-13 12:50 ssl.conf -> ../mods-available/ssl.conf
+lrwxrwxrwx 1 root root 26 2007-11-13 12:50 ssl.load -> ../mods-available/ssl.load
+
+cd /etc/apache2/sites-available
+cp default ssl
+
+cd /etc/apache2/sites-enabled
+ln -s ../sites-available 001-ssl
+
+vi ssl
+NameVirtualHost *:443
+<VirtualHost *:443>
+
+  DocumentRoot /var/www/
+
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/lims.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/lims.key
+
+  SetEnv force-proxy-request-1.0 1
+  SetEnv proxy-nokeepalive 1
+
+  ErrorLog "|/usr/bin/logger -p local0.err"
+  LogFormat "%v \"%r\" %>s %b \"%{Referer}i\"" privacy_format
+  CustomLog "|/usr/bin/logger -p local1.info" privacy_format
+  LogLevel warn
+</VirtualHost>
+
+
+
+# more vh 
+NameVirtualHost *:80
+
+<VirtualHost *:80>
+        ServerName gutsy2
+        DocumentRoot /var/www/gutsy2/
+</VirtualHost>
+
+<VirtualHost *:80>
+        ServerName gutsy1
+        DocumentRoot /var/www/gutsy1/
+</VirtualHost>
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<VirtualHost gutsy1.cardiodx.com:443>
+  ServerName gutsy1.cardiodx.com
+  DocumentRoot /var/www/gutsy1/
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/gutsy1.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/gutsy1.key
+</VirtualHost>
+
+<VirtualHost gutsy2.cardiodx.com:443>
+  ServerName gutsy2.cardiodx.com
+  DocumentRoot /var/www/gutsy2/
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/gutsy2.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/gutsy2.key
+</VirtualHost>
+
+
+

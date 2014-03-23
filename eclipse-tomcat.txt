@@ -1,0 +1,35 @@
+http://blog.theunical.com/linux/jack-wu-tomcat-6-eclipse-3-5-on-ubuntu-9-10/
+
+
+http://tomcat.apache.org/download-60.cgi
+  6.0.26
+http://www.eclipse.org/downloads/
+  Eclipse IDE for Java EE Developers
+
+
+
+cd ~/apache-tomcat-6.0.26/conf
+vi tomcat-users.xml
+    <user name="admin" password="admin" roles="manager,admin" />
+
+~/apache-tomcat-6.0.26/bin# ./startup.sh 
+
+
+Window->Preferences-> Server->Runtime Environments->Add->
+Apache Tomcat V6.0->Next-> Browse-> (Tomcat dir)
+->OK
+Finish->OK
+
+File -> New -> Project -> Web -> Dynamic Web Project -> 
+  Next -> 
+  Project Name: Test1
+  Finish
+
+
+Create a new folder:
+  WEB-INF/src
+
+New file: HelloServlet.java
+
+
+

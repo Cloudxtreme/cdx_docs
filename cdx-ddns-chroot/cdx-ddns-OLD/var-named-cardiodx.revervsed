@@ -1,0 +1,17 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+37.10.10.in-addr.arpa	IN SOA	sunlight.cardiodx.com. florin.cardiodx.com. (
+				2001042713 ; serial
+				28800      ; refresh (8 hours)
+				14400      ; retry (4 hours)
+				3600000    ; expire (5 weeks 6 days 16 hours)
+				86400      ; minimum (1 day)
+				)
+			NS	pdc.cardiodx.com.
+$ORIGIN 37.10.10.in-addr.arpa.
+$TTL 10800	; 3 hours
+
+$TTL 3600	; 1 hour
+2			PTR	pdc.cardiodx.com.
+3			PTR	backup.cardiodx.com.
+4			PTR	www.cardiodx.com.

@@ -1,0 +1,52 @@
+
+http://ubuntuforums.org/showthread.php?t=786095
+http://www.catswhocode.com/blog/19-ffmpeg-commands-for-all-needs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig remove ffmpeg x264 libx264-dev
+wajig install build-essential subversion git-core checkinstall yasm texi2html \
+libfaac-dev libfaad-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev \
+libsdl1.2-dev libx11-dev libxfixes-dev libxvidcore4-dev zlib1g-dev
+
+
+--
+-- h264
+--
+cd
+git clone git://git.videolan.org/x264.git
+cd x264
+./configure
+make
+checkinstall --pkgname=x264 --pkgversion "1:0.svn`date +%Y%m%d`+`git rev-list HEAD -n 1 | head -c 7`" --backup=no --default
+
+--
+-- libtheora
+--
+wajig install libogg-dev
+cd
+wget http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.gz
+tar xzvf libtheora-1.1.1.tar.gz
+cd libtheora-1.1.1
+./configure --disable-shared
+make
+checkinstall --pkgname=libtheora --pkgversion "1.1.1" --backup=no --default
+
+
+--
+-- ffmpeg
+--
+cd
+svn checkout svn://svn.ffmpeg.org/ffmpeg/trunk ffmpeg
+cd ffmpeg
+./configure --enable-gpl --enable-version3 --enable-nonfree --enable-postproc --enable-pthreads --enable-libfaac \
+--enable-libfaad --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libtheora \
+--enable-libx264 --enable-libxvid --enable-x11grab
+make
+checkinstall --pkgname=ffmpeg --pkgversion "4:0.5+svn`date +%Y%m%d`" --backup=no --default
+hash ffmpeg
+
+
+
+ffmpeg -i unknown-4.avi -acodec libfaac -ab 128k -ac 2 -vcodec libx264 -vpre slow -crf 22 -threads 0 output.mp4
+
+

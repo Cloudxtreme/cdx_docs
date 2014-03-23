@@ -1,0 +1,52 @@
+/usr/bin/kvm 
+  -S 
+  -M pc 
+  -m 128 
+  -smp 1 
+  -name i-3E8107E9
+  -uuid ee483c2a-4447-a081-5bc5-811e0c5150cc 
+  -nographic 
+  -monitor pty 
+  -pidfile /var/run/libvirt/qemu//i-3E8107E9.pid 
+  -boot c 
+  -kernel /var/lib/eucalyptus/instances/admin/i-3E8107E9/kernel 
+  -initrd /var/lib/eucalyptus/instances/admin/i-3E8107E9/ramdisk 
+  -append root=/dev/sda1 console=ttyS0 
+  -drive file=/var/lib/eucalyptus/instances/admin/i-3E8107E9/disk,if=scsi,index=0,boot=on 
+  -net nic,macaddr=d0:0d:3e:81:07:e9,vlan=0 
+  -net tap,fd=17,script=,vlan=0,ifname=vnet0 
+  -serial file:/var/lib/eucalyptus/instances/admin/i-3E8107E9/console.log 
+  -parallel none 
+  -usb
+
+
+/usr/bin/kvm 
+	-S 
+	-M pc 
+	-m 256 
+	-smp 1 
+	-name hardy1 
+	-uuid f6b21628-e18a-0c38-d793-7bfc54592690 
+	-monitor pty 
+	-pidfile /var/run/libvirt/qemu//hardy1.pid 
+	-boot c 
+	-drive file=/root/tmp/ubuntu-kvm/disk0.qcow2,if=ide,index=0,boot=on 
+	-net nic,macaddr=52:54:00:bb:b9:a3,vlan=0,model=virtio 
+	-net tap,fd=20,script=,vlan=0,ifname=vnet1 
+	-serial none 
+	-parallel none 
+	-usb 
+	-vnc 127.0.0.1:0
+
+
+/usr/bin/kvm 
+  -M pc 
+  -m 512 
+  -smp 2  
+  -monitor pty 
+  -no-acpi 
+  -drive file=/kvm/images/radius.img,if=ide,boot=on 
+  -net nic,macaddr=00:16:3e:35:26:6e,vlan=0 
+  -net tap,fd=14,script=,vlan=0 
+  -usb 
+  -vnc 127.0.0.1:2

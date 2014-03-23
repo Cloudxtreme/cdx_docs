@@ -1,0 +1,156 @@
+this guide explains how to setup a new instance on devlims.
+this assumes that the instance you're creating does NOT already exist on devlims.
+
+1) prepare ORCL db_files
+
+ssh root@devlims
+su - oracle
+cd /u01/app/oracle/oradata
+mkdir ORCL
+cd ORCL
+tar zxvf ../../dbdump/db_???.tar.gz
+mv u01/app/oracle/oradata/ORCL/* .
+rm -rf u01/
+
+cd /u01/app/oracle/product/10.2.0/db_1/dbs
+cp spfileORCL.ora.sav spfileORCL.ora
+
+2) let's rename ORCL to HYIELD
+
+export ORACLE_SID=ORCL
+rlwrap sqlplus system/password as sysdba
+startup mount
+exit
+
+nid target=sys@orcl as sysdba dbname=HYIELD
+	<enter ccllims password>
+	Change database ID and database name ORCL to HYIELD? (Y/[N]) => Y
+	Succesfully changed database name and ID.
+	DBNEWID - Completed succesfully.
+
+rlwrap sqlplus system/password as sysdba
+startup mount
+	ORA-01103: database name 'HYIELD' in control file is not 'ORCL'
+alter system set DB_NAME=HYIELD scope=spfile;
+shutdown immediate;
+exit
+
+cd /u01/app/oracle/product/10.2.0/db_1/dbs
+mv spfileORCL.ora spfileHYIELD.ora
+
+cd ../network/admin/
+vi tnsnames.ora
+HYIELD =
+(DESCRIPTION =
+(ADDRESS = (PROTOCOL = TCP)(HOST = devlims.cardiodx.com)(PORT = 1521))
+(CONNECT_DATA =
+(SERVER = DEDICATED)
+(SERVICE_NAME = HYIELD)
+)
+)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---- Move controlfile/logfile/datafile/tempfile
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+export ORACLE_SID=HYIELD
+rlwrap sqlplus system/password as sysdba
+startup mount
+alter database open resetlogs;
+
+=========================
+
+controlfile
+
+select name from v$controlfile;
+alter system set control_files='/u01/app/oracle/oradata/HYIELD/control01.ctl', '/u01/app/oracle/oradata/HYIELD/control02.ctl', '/u01/app/oracle/oradata/HYIELD/control03.ctl' scope=spfile;
+shutdown immediate;
+exit
+
+cd /u01/app/oracle/oradata/
+mkdir HYIELD
+mv ORCL/*control* HYIELD/
+
+cd /u01/app/oracle/admin
+mkdir HYIELD
+cd HYIELD
+mkdir adump bdump cdump dpdump pfile udump
+
+rlwrap sqlplus system/password as sysdba
+startup
+select name from v$controlfile;
+
+=========================
+
+logfile
+
+SELECT member FROM v$logfile;
+shutdown immediate;
+exit
+
+cd /u01/app/oracle/oradata/
+ll ORCL/*.log
+mv ORCL/*.log HYIELD/
+
+rlwrap sqlplus system/password as sysdba
+startup mount
+alter database rename file '/u01/app/oracle/oradata/ORCL/redo01.log' to '/u01/app/oracle/oradata/HYIELD/redo01.log';
+alter database rename file '/u01/app/oracle/oradata/ORCL/redo02.log' to '/u01/app/oracle/oradata/HYIELD/redo02.log';
+alter database rename file '/u01/app/oracle/oradata/ORCL/redo03.log' to '/u01/app/oracle/oradata/HYIELD/redo03.log';
+alter database open;
+SELECT member FROM v$logfile;
+
+=========================
+
+datafile/tempfile
+
+SELECT name FROM v$datafile;
+shutdown immediate;
+exit
+
+mv ORCL/*.dbf HYIELD/
+rmdir ORCL/
+
+rlwrap sqlplus system/password as sysdba
+startup mount
+alter database rename file '/u01/app/oracle/oradata/ORCL/system01.dbf' to '/u01/app/oracle/oradata/HYIELD/system01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/undotbs01.dbf' to '/u01/app/oracle/oradata/HYIELD/undotbs01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sysaux01.dbf' to '/u01/app/oracle/oradata/HYIELD/sysaux01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/users01.dbf' to '/u01/app/oracle/oradata/HYIELD/users01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_01.dbf' to '/u01/app/oracle/oradata/HYIELD/sec_content_01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_data_01.dbf' to '/u01/app/oracle/oradata/HYIELD/sec_data_01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/indx01.dbf' to '/u01/app/oracle/oradata/HYIELD/indx01.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_02.dbf' to '/u01/app/oracle/oradata/HYIELD/sec_content_02.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_03.dbf' to '/u01/app/oracle/oradata/HYIELD/sec_content_03.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/sec_content_04.dbf' to '/u01/app/oracle/oradata/HYIELD/sec_content_04.dbf';
+alter database rename file '/u01/app/oracle/oradata/ORCL/temp01.dbf' to '/u01/app/oracle/oradata/HYIELD/temp01.dbf';
+
+SELECT name FROM v$datafile;
+SELECT name FROM v$tempfile;
+alter database open;
+
+=========================
+
+4) finishing touches, you're almost there!
+
+alter system set audit_file_dest='/u01/app/oracle/admin/HYIELD/adump' scope=spfile;
+alter system set background_dump_dest='/u01/app/oracle/admin/HYIELD/bdump' scope=both;
+alter system set core_dump_dest='/u01/app/oracle/admin/HYIELD/cdump' scope=both;
+alter system set user_dump_dest='/u01/app/oracle/admin/HYIELD/udump' scope=both;
+alter system set dispatchers='(PROTOCOL=TCP) (SERVICE=HYIELDXDB)' scope=spfile;
+--alter system set sga_max_size='512M' scope=spfile;
+--alter system set sga_target='512M' scope=both;
+
+(restart db for step 4 changes to take effect)
+shutdown immediate;
+startup
+
+alter user system identified by hyieldsys246;
+alter user sys identified by hyieldsys246;
+alter user dnalims identified by hyielddna;
+alter user sceschema identified by hyieldsce;
+alter user sceadmin identified by hyieldsce246;
+
+
+
+

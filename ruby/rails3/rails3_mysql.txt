@@ -1,0 +1,82 @@
+follow rails3_1.txt
+
+
+wajig install mysql-server
+  secret07
+
+wajig install libmysqlclient-dev
+
+vi Gemfile
+gem 'mysql2'
+
+bundle install
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi database.yml
+
+development:
+  adapter: mysql2
+  database: NPPES
+  host: localhost
+  username: root
+  password: secret07
+
+rails server
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  505  rails generate scaffold User login:string email:string
+  506  rake db:migrate
+http://nppes.cardiodx.com:3000/users/
+
+You'll see
+	~/rails/nppes/config# vi routes.rb 
+	resources :users
+ 
+--
+-- disable pluralization!!
+--
+~/rails/nppes/config# vi application.rb 
+config.active_record.pluralize_table_names = false
+
+  -- route
+	vi routes.rb 
+	resources :user
+
+	-- controller
+	mv users_controller.rb user_controller.rb
+
+	vi user_controller.rb 
+	UsersController  -->  UserController
+
+	-- view
+	cd app/views
+	mv users user
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi routes.rb 
+resources :cms6060
+
+vi cms6060n_controller.rb
+class Cms6060nController < ApplicationController
+
+  def index
+  end
+end
+
+vi cms6060n.rb
+class Cms6060n < ActiveRecord::Base
+
+end
+
+vi views/cms6060n$ vi index.html.erb
+
+
+rails server
+
+
+
+
+
+
+
+

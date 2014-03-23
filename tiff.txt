@@ -1,0 +1,9 @@
+
+
+input: test.pdf
+output: test.tiff
+
+gs -sDEVICE=tiffg4 -r600x600 -dNOPAUSE -dBATCH -dSAFER -sOutputFile=test.tiff test.pdf 
+
+wajig install libtiff-tools 
+

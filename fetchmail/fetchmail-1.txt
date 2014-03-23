@@ -1,0 +1,121 @@
+fetchmail sample notification 
+
+
+ fetchmail -f fetchmailrc -v --ssl
+
+# cd snparser/
+
+# more fetchmailrc 
+poll webmail.cardiodx.com proto imap: username snparser password cdxtest
+mda "cat | /root/snparser/parse_mail.rb"
+idle
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The one shipped with CentOS has a bug on 'idle'  compile a new one from source.
+
+on CentOS 4.4
+yum install gcc
+yum install openssl openssl-devel
+
+wget http://download.berlios.de/fetchmail/fetchmail-6.3.8.tar.bz2
+
+./configure --with-ssl
+
+
+on webmail, we're using /etc/init.d/fetchmail-cdx
+#!/bin/bash
+#
+#	/etc/rc.d/init.d/fetchmail
+#
+# Starts the at daemon
+#
+# chkconfig: 2345 95 95
+# description: Runs commands scheduled by the at command at the time \
+#    specified when at was run, and runs batch commands when the load \
+#    average is low enough.
+# processname: fetchmail
+
+# Source function library.
+#. /etc/init.d/functions
+
+#test -x /usr/sbin/fetchmail || exit 0
+PIDFILE="/var/run/fetchmail-cdx.pid"
+
+RETVAL=0
+
+#
+#	See how we were called.
+#
+
+# Note: There is a bug on 'idle' on CentOS fetchmail program (6.2.5)
+# compile a new one (6.3.8) for snparser.
+prog="/root/snparser/fetchmail"
+fetchmailrc="/root/snparser/fetchmailrc"
+
+start() {
+        if test -e $PIDFILE ; then
+            pid=`cat $PIDFILE | sed -e 's/\s.*//'|head -n1`
+            PIDDIR=/proc/$pid
+            if [ -d ${PIDDIR} -a  "$(readlink -f ${PIDDIR}/exe)" = "${DAEMON}" ]; then
+                echo "fetchmail already started; not starting."
+                exit 0
+            else
+                echo "Removing stale PID file $PIDFILE."
+                rm -f $PIDFILE
+            fi
+        fi
+
+        echo "Starting mail retriever agent:" "fetchmail"
+	$prog -f $fetchmailrc --ssl &
+}
+
+stop() {
+	echo -n $"Stopping $prog: "
+	killproc /usr/sbin/fetchmail
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/fetchmail
+	echo
+        return $RETVAL
+}
+
+
+restart() {
+	stop
+	start
+}	
+
+reload() {
+	restart
+}	
+
+status_at() {
+ 	status /usr/sbin/fetchmail
+}
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	echo 'here'
+	stop
+	;;
+reload|restart)
+	restart
+	;;
+condrestart)
+	if [ -f /var/lock/subsys/fetchmail ]; then
+	    restart
+	fi
+	;;
+status)
+	status_at
+	;;
+*)
+	echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+	exit 1
+esac
+
+exit $?
+exit $RETVAL
+

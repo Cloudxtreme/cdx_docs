@@ -1,0 +1,56 @@
+ubuntu smartd
+
+http://www.outofcontrol.ca/2008/07/10/use-smartd-smartmontools-to-prevent-a-disaster/
+http://www.captain.at/howto-linux-smartmontools-smartctl.php
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# wajig install ssmtp mailx -y
+# vi /etc/ssmtp/ssmtp.conf 
+root=
+mailhub=mail.cardiodx.com
+rewriteDomain=cardiodx.com
+hostname=devlims
+FromLineOverride=YES
+
+mailx -v -s 'test' cchou@cardiodx.com < /etc/hosts
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# wajig install smartmontools
+
+# vi /etc/default/smartmontools 
+start_smartd=yes
+
+# vi /etc/smartd.conf 
+DEVICESCAN -d sat -m root -M exec /usr/share/smartmontools/smartd-runner
+           ^^^^^^
+						add this
+
+# /etc/init.d/smartmontools start
+
+--
+-- Manual run a test:
+--
+# smartctl -t short /dev/sda
+		(short, long, conveyance)
+Please wait 1 minutes for test to complete.
+Test will complete after Mon Jan  4 16:55:20 2010
+
+# smartctl -l selftest /dev/sda
+
+-- abort the test
+# smartctl -X /dev/sda
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# smartctl -i /dev/sda
+  SMART support is: Enabled
+
+  -- switch it on if needed
+  # smartctl -s on /dev/hda
+
+# smartctl -c /dev/sda
+  Self-test execution status:      ( 246)	Self-test routine in progress...
+
+# smartctl -a /dev/sda
+  (OR smartctl -d ata --all /dev/sdb)
+

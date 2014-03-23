@@ -1,0 +1,15 @@
+https://wiki.ubuntu.com/MacBookPro
+http://www.ubuntuforums.org/showthread.php?t=225621
+
+mapt-get install libusb-0.1-4 libusb-dev libgcrypt11-dev libglib2.0-dev
+wget http://people.freedesktop.org/~rbultje/linux-uvc-0.1.0-e.tar.gz
+tar xvfz linux-uvc-0.1.0-e.tar.gz
+cd linux-uvc-0.1.0-e/
+make
+sudo make install
+sudo mkdir /mnt/mac
+sudo mount -t hfsplus /dev/sda2 /mnt/mac/
+sudo ./extract /mnt/mac/System/Library/Extensions/IOUSBFamily.kext/Contents/PlugIns/AppleUSBVideoSupport.kext/Contents/MacOS/AppleUSBVideoSupport
+sudo modprobe uvcvideoke
+
+gst-launch-0.10 v4l2src use-fixed-fps=false ! video/x-raw-yuv,format=\(fourcc\)UYVY,width=640,height=480 ! ffmpegcolorspace ! ximagesink

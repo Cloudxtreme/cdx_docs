@@ -1,0 +1,64 @@
+
+Intel 82567LM-3 network driver for linux
+      86574L
+
+
+# lspci | grep -i ether
+00:19.0 Ethernet controller: Intel Corporation 82567LM-3 Gigabit Network Connection (rev 02)
+02:00.0 Ethernet controller: Broadcom Corporation NetXtreme BCM5721 Gigabit Ethernet PCI Express (rev 21)
+
+
+http://downloadcenter.intel.com/Detail_Desc.aspx?agr=Y&DwnldID=15817&ProdId=3003&lang=eng
+  86574L (bksrv): http://downloadcenter.intel.com/Detail_Desc.aspx?agr=Y&DwnldID=15817&ProdId=3023&lang=eng
+
+~/downloads$ scp e1000e-1.0.2.5.tar.gz root@squid:
+
+wajig install build-essential linux-headers-2.6.24-24-server 
+
+
+tar zxvf e1000e-1.0.2.5.tar.gz 
+
+make 
+make install
+modprobe e1000e
+
+driver installed at:
+  /lib/modules/2.6.24-28-server/kernel/drivers/net/e1000e/e1000e.ko
+
+NOTE: if you upate the kernel (wajig dist-upgrade), you'll need to create the 
+      the new ko module for the specific kernel!!!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- for squid:
+--
+Broadcom add-on 1 port:
+ eth0: 00:10:18:53:6b:f6
+
+Intel add-on 2 port:
+ eth1: 00:15:17:be:ee:76
+ eth2: 00:15:17:be:ee:77
+
+Intel on board (e1000e/82567LM-3):
+ eth3: 00:24:e8:32:7f:ce
+
+vi /etc/network/interfaces
+auto eth0
+iface eth0 inet static
+  address 10.10.37.2
+  netmask 255.255.248.0
+  #gateway 10.10.37.1
+
+auto eth1
+iface eth1 inet static
+  address 173.13.158.180
+  netmask 255.255.255.240
+  gateway 173.13.158.190
+
+auto eth2
+iface eth2 inet static
+  address 67.95.201.198
+  netmask 255.255.255.224
+  #gateway 67.95.201.193
+
+

@@ -1,0 +1,35 @@
+linux io benchmarking
+
+http://lbs.sourceforge.net/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iozone:
+http://www.iozone.org/
+
+iozone -s 4096 
+iozone -s 2G
+
+kvmsrv4: (iscsi, ocfs) Output is in Kbytes/sec        
+                                                    random  random    bkwd  record  stride                                   
+      KB  reclen   write rewrite    read    reread    read   write    read rewrite    read   fwrite frewrite   fread  freread
+ 2097152       4  133097  213856  1771539  1774144 1427427    1338 1920882  908820 1725431   166013   209538 1775145  1791124
+
+iozone -Q -c -g 2G -a -R -b output.wks 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bonnie++
+http://www.coker.com.au/bonnie++/
+
+# bonnie++ -n 0 -u 0 -r 512 -s 20480 -f -b
+
+
+-- kvmsrv4: (iscsi ocfs)
+Version 1.03b       ------Sequential Output------ --Sequential Input- --Random-
+                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+kvmsrv4         20G           51004  16 16199  12           39591  14 792.9   0
+kvmsrv4,20G,,,51004,16,16199,12,,,39591,14,792.9,0,,,,,,,,,,,,,
+
+-- kvmsrv6:
+kvmsrv6         20G           53818   7 25212   3           55977   4 201.0   0
+kvmsrv6,20G,,,53818,7,25212,3,,,55977,4,201.0,0,,,,,,,,,,,,,

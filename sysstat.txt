@@ -1,0 +1,10 @@
+
+--enable sadc
+vi /etc/default/sysstat 
+ENABLED="true"
+
+/etc/init.d/sysstat restart
+
+pidstat -d 5
+
+iostat -mx 5

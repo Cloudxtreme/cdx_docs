@@ -1,0 +1,26 @@
+ruby rails ruote plugin
+
+http://github.com/jmettraux/ruote_plugin/tree/master
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rails test
+script/plugin install git://github.com/jmettraux/ruote_plugin.git
+
+vi config/database.yml
+
+development:
+  adapter: mysql
+  database: test
+  username: root
+  password: montalvo
+
+script/generate ruote_plugin all
+rake ruote:install
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~/Documents/ruby/wferu/active_participant
+./activeP_createDB.rb
+
+vi config/environment.rb
+require 'openwfe/extras/participants/activeparticipants'
+

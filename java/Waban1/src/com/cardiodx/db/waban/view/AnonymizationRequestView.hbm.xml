@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.AnonymizationRequestView" table="ANONYMIZATION_REQUEST_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.AnonymizationRequestViewId">
+            <key-property name="anonymizationRequestId" type="big_decimal">
+                <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="requestCompletionStatus" type="string">
+                <column name="REQUEST_COMPLETION_STATUS" length="20" />
+            </key-property>
+            <key-property name="requestMessage" type="string">
+                <column name="REQUEST_MESSAGE" length="2000" />
+            </key-property>
+            <key-property name="requestType" type="string">
+                <column name="REQUEST_TYPE" length="20" />
+            </key-property>
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

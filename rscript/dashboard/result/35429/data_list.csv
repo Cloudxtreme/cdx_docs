@@ -1,0 +1,4 @@
+"Section","name","fpath","description"
+"Batch","tbl_batch","./35429/tbl_batch.csv","Batch level counts"
+"Plate","tbl_plate","./35429/tbl_plate.csv","Plate level counts"
+"Sample","tbl_ccad_scores","./35429/tbl_ccad_scores.csv","CCAD scores and diagnostics table"

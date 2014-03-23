@@ -1,0 +1,61 @@
+ubuntu lucid glustserfs
+
+http://www.vps.net/wiki/ubuntu-1004-lucid-x64-glusterfs-image-notes
+source:  http://download.gluster.com/pub/gluster/glusterfs/3.1/LATEST/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+servers:
+  jonathandesktop
+  chrisdesktop
+
+***on both machines:
+wajig install glusterfs-server
+  glusterfs-client glusterfs-server libglusterfs0 libibverbs1
+
+glusterfs --version
+	glusterfs 3.0.2 built on Mar 23 2010 00:24:16
+
+mkdir -p /export/gluster/store1
+
+
+***chrisdesktop
+glusterfs-volgen --name store1 --raid 1 jonathandesktop:/export/gluster/store1 chrisdesktop:/export/gluster/store1
+
+cp chrisdesktop-store1-export.vol /etc/glusterfs/glusterfsd.vol
+cp store1-tcp.vol /etc/glusterfs/glusterfs.vol
+
+scp jonathandesktop-store1-export.vol root@jonathandesktop:/etc/glusterfs/glusterfsd.vol
+scp store1-tcp.vol root@jonathandesktop:/etc/glusterfs/glusterfs.vol
+
+
+***on both machines:
+service glusterfs-server restart
+
+mkdir /root/glusterfs
+glusterfs /root/glusterfs/
+
+dd if=/dev/zero bs=1M count=2048 of=testfile
+  2147483648 bytes (2.1 GB) copied, 19.9625 s, 108 MB/s
+
+dd if=/dev/zero bs=1M count=4096 of=testfile
+  4294967296 bytes (4.3 GB) copied, 37.8655 s, 113 MB/s
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+client:
+  cchoudesktop
+
+wajig install glusterfs-client
+
+scp glusterfs.vol root@cchoudesktop:/etc/glusterfs/glusterfs.vol
+
+cd /root/
+mkdir glusterfs
+glusterfs /root/glusterfs/
+
+dd if=/dev/zero bs=1M count=2048 of=testfile
+  2147483648 bytes (2.1 GB) copied, 38.9524 s, 55.1 MB/s
+
+dd if=/dev/zero bs=1M count=4096 of=testfile
+  4294967296 bytes (4.3 GB) copied, 79.521 s, 54.0 MB/s
+
+
+

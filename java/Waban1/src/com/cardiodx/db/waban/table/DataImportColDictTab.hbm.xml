@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.DataImportColDictTab" table="DATA_IMPORT_COL_DICT_TAB" schema="DNALIMS">
+        <comment>This table keeps a dictionary of variable names that are relevant to the data load process.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.DataImportColDictTabId">
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+            <key-property name="levelCode" type="string">
+                <column name="LEVEL_CODE" length="1" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

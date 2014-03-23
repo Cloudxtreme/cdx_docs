@@ -1,0 +1,199 @@
+
+use the 03/27/11 backup.
+
+svn co svn://svn/clims/branches/ccllims_v3_0_bugfix
+
+# make the change
+cd ~/svn/ccllims_v3_0_bugfix/src/oracle/java/com/cardiodx/clims/rna
+vi RNAExtraction.java
+
+cd ~/svn/ccllims_v3_0_bugfix/src/oracle/java
+make
+
+# generate jar file
+make isntall 
+
+# create the new loader
+cd ~/svn/ccllims_v3_0_bugfix/src/oracle/loaders
+mkdir 3_0_4
+cp ../3_0_3/load_waban.sh .
+vi load_waban.sh 
+
+# generate the tar file for production
+cd ~/svn/ccllims_v3_0_bugfix
+tar czvf ccllims_v3_0_4.tar.gz jar lib src
+
+scp ccllims_v3_0_4.tar.gz oracle@srikar22:
+
+   31  mkdir ccllims_v3_0_4
+   32  cd ccllims_v3_0_4
+   34  tar zxvf ../ccllims_v3_0_4.tar.gz
+
+# load the jar file
+   NOTE: make sure you can run sqlplus dnalims/srikar22dna@ORCL
+./load_waban.sh dnalims srikar22dna srikar22sys246
+
+loadjava -user dnalims/srikar22dna -v -resolve ../../../../jar/java_stored_procedures.jar
+
+
+on 03/26/11, we've create bubble-pop checklist
+  checklist id: 18100
+  total samples: 61
+
+on 03/28/11, RNA Extraction checklists had been created:
+    18135, 18137, 18145, 18153
+  we select checklist id: 18135
+  there are 40 samples
+
+Create a new rack v3_0_4_testing_rack
+Place samples:
+  http://cchoudesktop.cardiodx.com/
+  beep in all blood tubes - 40 of them
+
+Create a new checklist:
+  (production: 18135)
+  Checklist Name: v3_0_4
+  Procedure - RNA Extraction
+  Container ID: v3_0_4_testing_rack
+    assign, save
+    No more samples can be added to this checklist when saved.  continue?   
+     yes
+    Verify blood sample type
+    biological sfty cabinet: CEID00090
+    hamilton star: CEID00104
+    p1000 pipette: A0507776A
+    freezer, -20c for reagent: CEID00115
+    refrigerator for reagent: CEID00105
+    reagent prep checklist id: 18134
+    samples have been mixed: Yes
+    sample contain pellets: No
+    run the samples on hamilton now
+    place blood samples in box: T1053435
+ 			 http://cchoudesktop.cardiodx.com/
+       beep in all tubes - 40 of them
+    check in blood sample box
+       check in
+         shelf: 2
+         rack: 2
+         compartment: 3
+    load hamilton output file
+       /clims/data/rna/extraction/T1041974_RNAxOutput.txt
+
+    Go to production - SCE - Retrieve T1041974_RNAxOutput.txt
+
+Test senarios:
+
+1) w/o 'Run ended' line:  ERROR: Incomplete Hamilton file; cannot load Transaction rolled back 
+2) Change PAXGeneTube_6 from TRF45367C to TRF45367: ERROR Samples in the output file do not match what's in the checklist
+3) Remove PAXGeneTube_6: Error in handling Extraction Output: 
+													ERROR: Number of PAX Gene tubes does not match the number of matrix tubes in the output file Transaction rolled back
+4) Remove PAXGeneTube_6, Matrix_TubeID_6, PAXGeneTubeVolume_TRF45367C: ERROR Samples in the output file do not match what's in the checklist
+5) Change PAXGeneTube_6 to same as PAXGeneTube_5: ERROR Samples in the output file do not match what's in the checklist
+																									Not checking for duplication at this time.
+
+
+
+Beads Present in Well1: Yes
+Beeds Present in Well2: Yes
+Check in RNA Matrix Rack: 2, 3, 5
+
+Right click STATUS, click Passed
+
+
+NOTE: For any reason, you can't delete a checklist because a step has been assigned, 
+      you can just fail the checklist..... Right click STATUS, click Failed.
+      Also, put a note in the first step.
+  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RNA Quant checklist ID: 18160
+
+-- RNA Quant
+--    Get the Spec Plate BC (AP007530) from the hamilton output file
+--    In theory, the CLS will scan the Spec plate BC into RNA Quant.
+
+Spec Plate ID/#: AP007530
+Samples: Neg Control: 1053730489-SPEC
+         TRF50393: 1053729452-SPEC
+
+When verifying samples, it'll read TRFs from the database.
+
+
+-- create a new checklist RNA Quant
+Spec Plate BC: AP007530
+
+Search a usable DEPC water:
+  Reagent --> Reagent Name: water
+  
+  CEID 00120
+  A0890973A
+DEPC water reagent_id T1032427
+	Do not track volume
+	ul: 50
+
+SCE - All Workbooks - public - files - 2011-03 - 28
+      - RNA_QUANTATION_18160
+      - AP007530.txt,1
+
+cp AP007530.txt /clims/data/rna/quantitation/
+
+Yes 
+No
+
+
+-- RNA Norm
+--    Get the Matrix Rack BC (T1051812) from the RNAE hamilton output file
+--    In theory, the CLS will scan the Spec plate BC into RNA Quant.
+
+Find the bad sample first:
+  OK, AP007530(H3) failed low 260/280
+  Sample ID: 1053730505 (1053730505-SPEC)
+
+  1) Remove it from the rack:
+  Click 'Place Sample': 
+  Container ID: T1051812
+  Right click H3, then click 'Clear'
+  
+    Normally, CCL will:
+      1) bring a new 'bad sample' rack
+      2) beep in the bad sample
+      3) the sample will be delted from this rack
+
+  2) Add IRP: 1027825323
+			(checked out by PYeung
+				OK, check-in the rack first - T1033139
+			)
+
+Create a new checklist for Norm:
+  Container ID (Matrix Rack): T1051812
+		00088
+	00115
+  00104
+  a0507776a
+  USe the sampe DEPC water as above - T1032427, 50
+  RT Kit - search through 'Reagent' - T1052997
+		2520
+	  1200
+		1200
+		 480
+     600
+  Normalization/RT Setup Output file: 
+			checklist ID: 18161
+			T1051812_RNA_Normalization_RT_Setup.txt
+
+   Since T1051812 is the BC of the rack, you'll need to find the 
+   file and rename it from production.  
+   OK, the file name is T1051774.........
+										T1051774_RNA_Normalization_RT_Setup.txt
+
+	   mv T1051774_RNA_Normalization_RT_Setup.txt /clims/data/cdna/norm_rtsetup/T1051812_RNA_Normalization_RT_Setup.txt
+
+     vi T1051812_RNA_Normalization_RT_Setup.txt
+     "MatrixRack_BC" "T1051774"      0.000000000000000       0.000000000000000
+                      ^^^^^^^^
+                       Change this to T1051812
+
+		(Or your'll get "Matrix tubes not all in matrix rack!" error message)
+
+    Run Upload Normalization/RT Setup Output File
+
+

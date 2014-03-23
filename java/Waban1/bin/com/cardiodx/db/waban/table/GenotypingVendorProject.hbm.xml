@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.GenotypingVendorProject" table="GENOTYPING_VENDOR_PROJECT" schema="DNALIMS">
+        <comment>Genotyping Vendor Project</comment>
+        <id name="projectId" type="big_decimal">
+            <column name="PROJECT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="VENDOR_ID" precision="22" scale="0" not-null="true">
+                <comment>foreign key to the ORGANIZATION table.</comment>
+            </column>
+        </many-to-one>
+        <property name="projectNo" type="string">
+            <column name="PROJECT_NO" length="50" not-null="true">
+                <comment>Project No assigned</comment>
+            </column>
+        </property>
+        <property name="actualCost" type="big_decimal">
+            <column name="ACTUAL_COST" precision="22" scale="0">
+                <comment>Actual cost of the project</comment>
+            </column>
+        </property>
+        <property name="estimatedCost" type="big_decimal">
+            <column name="ESTIMATED_COST" precision="22" scale="0">
+                <comment>Estimated cost of the project</comment>
+            </column>
+        </property>
+        <property name="invoiceDate" type="date">
+            <column name="INVOICE_DATE" length="7">
+                <comment>date on which invoice was raised</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="20">
+                <comment>current status of the project</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <property name="currency" type="string">
+            <column name="CURRENCY" length="10">
+                <comment>Currency type for the project</comment>
+            </column>
+        </property>
+        <property name="projectPono" type="string">
+            <column name="PROJECT_PONO" length="30">
+                <comment>PO no of the project</comment>
+            </column>
+        </property>
+        <set name="outboundRequests" table="OUTBOUND_REQUEST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROJECT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Project Identifier and Foreign key to GENOTYPING_VENDOR_PROJECT</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OutboundRequest" />
+        </set>
+        <set name="genotypingVendProjDtlses" table="GENOTYPING_VEND_PROJ_DTLS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROJECT_ID" precision="22" scale="0" not-null="true">
+                    <comment>reference key for genotyping vendor project details</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypingVendProjDtls" />
+        </set>
+        <set name="vendorProjectAssaies" table="VENDOR_PROJECT_ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROJECT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Project Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.VendorProjectAssay" />
+        </set>
+    </class>
+</hibernate-mapping>

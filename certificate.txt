@@ -1,0 +1,49 @@
+
+
+deploy certs for lims, bugs, wiki, etc.
+
+
+  205  rm bugs.cardiodx.com.crt bugs.cardiodx.com.key lims.cardiodx.com.crt lims.cardiodx.com.key phenodb.cardiodx.com.crt phenodb.cardiodx.com.key wiki.cardiodx.com.crt wiki.cardiodx.com.csr wiki.cardiodx.com.key
+  207  rm gd_intermediate.crt gd_intermediate_bundle.crt gd_cross_intermediate.crt gd_bundle.crt
+  209  rm wildcard.cardiodx.com.crt
+
+  214  scp cchou@cchoudesktop:~/gdrive/it/Private/ssl/wildcard/08-14-2012/apache/* .
+  216  mv cardiodx.com.crt wildcard.cardiodx.com.crt
+  220  chmod 640 wildcard.cardiodx.com.key
+  224  chgrp www-data wildcard.cardiodx.com.key 
+  226  chgrp www-data *
+  228  /etc/init.d/apache2 restart
+  231  cd /etc/apache2/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+--
+-- etq
+--
+
+# cd /etc/apache2/
+# cd ssl/
+  -rwxr--r-- 1 root root 4604 2009-03-18 14:28 gd_intermediate_bundle.crt
+  -rwxr--r-- 1 root root 1948 2009-03-18 14:13 wildcard.cardiodx.com.crt
+  -rwxr--r-- 1 root root 1675 2009-03-18 14:13 wildcard.cardiodx.com.key
+
+  506  mkdir SAV
+  507  cp * SAV/
+
+  511  scp cchou@cchoudesktop:~/gdrive/it/Private/ssl/wildcard/08-14-2012/apache/* .
+
+  519  rm gd_intermediate_bundle.crt
+  520  rm wildcard.cardiodx.com.crt
+
+  521  mv cardiodx.com.crt wildcard.cardiodx.com.crt
+
+  526  chgrp www-data *
+  528  chmod 640 wildcard.cardiodx.com.key
+
+  530  vi /etc/apache2/sites-available/etq 
+
+  SSLCertificateChainFile /etc/apache2/ssl/gd_bundle.crt
+#  SSLCertificateChainFile /etc/apache2/ssl/gd_intermediate_bundle.crt
+
+
+  531  /etc/init.d/apache2 restart
+

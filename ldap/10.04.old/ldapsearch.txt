@@ -1,0 +1,4 @@
+
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" uid=john sn givenName cn
+
+ldapsearch -x -b "dc=cardiodx,dc=com" "(ObjectClass=*)"

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbVariant" table="MDB_VARIANT" schema="DNALIMS">
+        <id name="variantId" type="big_decimal">
+            <column name="VARIANT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mdbPolymorphism" class="com.cardiodx.db.waban.table.MdbPolymorphism" fetch="select">
+            <column name="POLYMORPHISM_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="mdbClassification" class="com.cardiodx.db.waban.table.MdbClassification" fetch="select">
+            <column name="DEFAULT_CLASSIFICATION_ID" precision="22" scale="0">
+                <comment>This is the default classification for the variant.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0">
+                <comment>Gene identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" length="100" not-null="true" />
+        </property>
+        <property name="type" type="string">
+            <column name="TYPE" length="100" />
+        </property>
+        <property name="length" type="big_decimal">
+            <column name="LENGTH" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="variantSequence" type="string">
+            <column name="VARIANT_SEQUENCE" length="4000" />
+        </property>
+        <property name="wildTypeSequence" type="string">
+            <column name="WILD_TYPE_SEQUENCE" length="4000" />
+        </property>
+        <property name="webRef" type="string">
+            <column name="WEB_REF" length="1000" />
+        </property>
+        <property name="isSynonymous" type="java.lang.Boolean">
+            <column name="IS_SYNONYMOUS" precision="1" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbPopulationFreqs" table="MDB_POPULATION_FREQ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIANT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbPopulationFreq" />
+        </set>
+        <set name="mdbVariantLiteratures" table="MDB_VARIANT_LITERATURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIANT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariantLiterature" />
+        </set>
+        <set name="mdbGenotypesForAllele2VariantId" table="MDB_GENOTYPE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_2_VARIANT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbGenotype" />
+        </set>
+        <set name="rois" table="MDB_VARIANT_ROI" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="VARIANT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <many-to-many entity-name="com.cardiodx.db.waban.table.Roi">
+                <column name="ROI_ID" precision="22" scale="0" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="mdbVariantStructRels" table="MDB_VARIANT_STRUCT_REL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIANT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariantStructRel" />
+        </set>
+        <set name="mdbGenotypesForVariantId" table="MDB_GENOTYPE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIANT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbGenotype" />
+        </set>
+        <set name="mdbExternalReferences" table="MDB_VARIANT_EXTERN_REF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIANT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <many-to-many entity-name="com.cardiodx.db.waban.table.MdbExternalReference">
+                <column name="EXTERNAL_REFERENCE_ID" precision="22" scale="0" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

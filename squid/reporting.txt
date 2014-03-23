@@ -1,0 +1,35 @@
+squid reporting tool
+
+wajig install srg
+
+--vi /etc/srg/srg.conf
+--output_url "/root/srg_reports/"
+
+--cd /etc/srg
+--vi srg.conf
+--log_file "/var/log/squid3/access.log"
+
+vi /etc/cron.daily/srg
+LOGS="/var/log/squid3/access.log.1"
+
+
+srg -d -C /etc/srg/srg.conf /var/log/squid3/access.log
+srg -d -C /etc/srg/srg.conf -f 2009-12-14 -t 2009-12-14 /var/log/squid3/access.log
+
+dir: /srg_reports
+
+~~~~~~~~~~~~~~~~~~~
+wajig install php5 libapache2-mod-php5
+/etc/init.d/apache2 restart
+
+http://10.10.37.25/srg_reports/
+
+
+
+/etc/php5/apache2# vi php.ini 
+include_path='.:/usr/share/php:/usr/share/pear:/var/www'
+
+
+vi index.php
+ini_set("include_path", ".:/usr/share/php:/usr/share/pear:/var/www");
+

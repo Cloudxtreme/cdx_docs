@@ -1,0 +1,16 @@
+
+rvm gemset list
+	=> rails32
+
+rvm alias list
+	default => ruby-1.9.3-p194@rails32
+
+/usr/local/rvm/gems/ruby-1.9.3-p194@rails32/gems/railties-3.2.7/lib/rails/generators
+
+	rails --> controller, model, etc
+		./scaffold_controller/templates/controller.rb
+
+	erb --> view
+		scaffold/templates$ vi index.html.erb 
+
+

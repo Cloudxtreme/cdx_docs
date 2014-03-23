@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.WorkflowStatus" table="WORKFLOW_STATUS" schema="DNALIMS">
+        <id name="workflowStatusId" type="big_decimal">
+            <column name="WORKFLOW_STATUS_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="workflowItemId" type="big_decimal">
+            <column name="WORKFLOW_ITEM_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="workflowNodeId" type="big_decimal">
+            <column name="WORKFLOW_NODE_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="50" />
+        </property>
+        <property name="didEvent" type="java.lang.Boolean">
+            <column name="DID_EVENT" precision="1" scale="0" />
+        </property>
+        <property name="dateStarted" type="date">
+            <column name="DATE_STARTED" length="7" />
+        </property>
+        <property name="dateCompleted" type="date">
+            <column name="DATE_COMPLETED" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,8 @@
+
+19 useful commands:
+http://www.catswhocode.com/blog/19-ffmpeg-commands-for-all-needs
+
+http://www.linuxjournal.com/article/8517?page=0,1
+
+
+ffmpeg -i test.avi -vcodec h264 -y -v 2 -s 720x576 -bufsize 18800k -maxrate 15000k -minrate 15000k -b 10000k %1_720_576.mp4

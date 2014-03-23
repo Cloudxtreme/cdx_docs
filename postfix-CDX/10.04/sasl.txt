@@ -1,0 +1,89 @@
+ubuntu lucid postfix sasl
+
+http://jonsview.com/how-to-setup-email-services-on-ubuntu-using-postfix-tlssasl-and-dovecot
+http://www.jimmy.co.at/weblog/?p=52
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+root@portal:~# wajig install postfix sasl2-bin
+
+vi /etc/default/saslauthd
+START=yes
+MECHANISMS="pam"
+OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd"
+
+
+mkdir /etc/postfix/ssl
+cd /etc/postfix/ssl/
+
+copy wildcard files over
+
+  348  rm lms.pfx
+  349  chmod 640 wildcard.cardiodx.com.key
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cp main.cf main.cf.orig
+
+vi main.cf
+# SASL
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+broken_sasl_auth_clients = yes
+smtpd_recipient_restrictions = permit_sasl_authenticated,permit_mynetworks,reject_unauth_destination
+smtpd_tls_auth_only = no
+# TLS
+smtp_use_tls = yes
+smtpd_use_tls = yes
+smtp_tls_note_starttls_offer = yes
+smtpd_tls_key_file = /etc/postfix/ssl/wildcard.cardiodx.com.key
+smtpd_tls_cert_file = /etc/postfix/ssl/wildcard.cardiodx.com.crt
+smtpd_tls_CAfile = /etc/postfix/ssl/gd_bundle.crt
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+tls_random_source = dev:/dev/urandom
+
+vi /etc/postfix/sasl/smtpd.conf
+pwcheck_method: saslauthd 
+saslauthd_path: /var/run/saslauthd/mux
+mech_list: plain login 
+
+  597  adduser postfix sasl
+  598  grep sasl /etc/group
+  595  /etc/init.d/postfix restart
+
+???
+ 1077  ln -s /var/spool/postfix/var/run/saslauthd /var/run
+ 1078  chgrp sasl /var/spool/postfix/var/run/saslauthd
+ 1079  adduser postfix sasl
+
+perl -MMIME::Base64 -e 'print encode_base64("cdxtest\0cdxtest\0VerySecret!");'
+Y2R4dGVzdABjZHh0ZXN0AFZlcnlTZWNyZXQh
+
+on cchoudesktop:
+wajig install swaks
+swaks -s mail -tls -a -au cdxtest -ap VerySecret! --protocol ESMTPSA
+
+openssl verify -purpose sslserver -CAfile ./ssl/gd_bundle.crt ./ssl/wildcard.cardiodx.com.crt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# telnet localhost 25
+Trying ::1...
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+220 portal.cardiodx.com ESMTP Postfix (Ubuntu)
+ehlo localhost
+250-portal.cardiodx.com
+250-PIPELINING
+250-SIZE 10240000
+250-VRFY
+250-ETRN
+250-STARTTLS
+250-AUTH PLAIN NTLM LOGIN DIGEST-MD5 CRAM-MD5
+250-AUTH=PLAIN NTLM LOGIN DIGEST-MD5 CRAM-MD5
+250-ENHANCEDSTATUSCODES
+250-8BITMIME
+250 DSN
+quit
+221 2.0.0 Bye
+Connection closed by foreign host.
+

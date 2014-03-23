@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Gene" table="GENE" schema="DNALIMS">
+        <comment>Listing of gene names.</comment>
+        <id name="geneId" type="big_decimal">
+            <column name="GENE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="geneName" type="string">
+            <column name="GENE_NAME" length="100" not-null="true" unique="true">
+                <comment>Gene name.</comment>
+            </column>
+        </property>
+        <property name="geneLongName" type="string">
+            <column name="GENE_LONG_NAME" length="100">
+                <comment>Long description of gene</comment>
+            </column>
+        </property>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Number in sequence for display</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="2000" />
+        </property>
+        <property name="sequence" type="clob">
+            <column name="SEQUENCE" />
+        </property>
+        <property name="organism" type="string">
+            <column name="ORGANISM" length="100" />
+        </property>
+        <property name="range" type="string">
+            <column name="RANGE" length="30" />
+        </property>
+        <property name="ensemblId" type="string">
+            <column name="ENSEMBL_ID" length="30" />
+        </property>
+        <set name="pgxGeneDataReports" table="PGX_GENE_DATA_REPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>GENE ID FROM GENE TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxGeneDataReport" />
+        </set>
+        <set name="protocolGenes" table="PROTOCOL_GENE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Gene identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolGene" />
+        </set>
+        <set name="mdbStructures" table="MDB_STRUCTURE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0">
+                    <comment>Gene identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbStructure" />
+        </set>
+        <set name="rois" table="ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0">
+                    <comment>Gene identifier and foreign key to GENE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Roi" />
+        </set>
+        <set name="genotypeAutocallRules" table="GENOTYPE_AUTOCALL_RULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK to Gene</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypeAutocallRule" />
+        </set>
+        <set name="pgxGeneNarrativeTemplateses" table="PGX_GENE_NARRATIVE_TEMPLATES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK GENE ID FROM GENE TABLE</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxGeneNarrativeTemplates" />
+        </set>
+        <set name="assaies" table="ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0">
+                    <comment>Gene Identifier and Foreign Key to Gene table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Assay" />
+        </set>
+        <set name="mdbPolymorphisms" table="MDB_POLYMORPHISM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0">
+                    <comment>Gene identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbPolymorphism" />
+        </set>
+        <set name="procedureTemplateGenes" table="PROCEDURE_TEMPLATE_GENE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Gene identifier. Part of the primary key and foreign key to the GENE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateGene" />
+        </set>
+        <set name="geneValues" table="GENE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Gene identifier. Part of the primary key and foreign key to the GENE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneValue" />
+        </set>
+        <set name="pgxModifiedGeneTemplates" table="PGX_MODIFIED_GENE_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>GENE_ID of the modified Gene, FOREIGN KEY to GENE Table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifiedGeneTemplate" />
+        </set>
+        <set name="geneResults" table="GENE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Gene identifier and foreign key to the GENE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneResult" />
+        </set>
+        <set name="geneInterpretations" table="GENE_INTERPRETATION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Gene identifier. Part of the primary key and foreign key to the GENE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GeneInterpretation" />
+        </set>
+        <set name="alleles" table="ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Gene identifier and foreign key to the GENE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Allele" />
+        </set>
+        <set name="mdbVariants" table="MDB_VARIANT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0">
+                    <comment>Gene identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariant" />
+        </set>
+        <set name="phenotypeAutocallRules" table="PHENOTYPE_AUTOCALL_RULE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                    <comment>FK to Gene</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PhenotypeAutocallRule" />
+        </set>
+    </class>
+</hibernate-mapping>

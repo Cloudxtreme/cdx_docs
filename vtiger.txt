@@ -1,0 +1,61 @@
+http://wiki.vtiger.com
+http://www.it-works.co.at/cms/content/view/289/23/
+
+
+
+wajig install mysql-server
+wajig install php5
+wajig install php5-gd
+
+wajig install libpng12-dev 
+wajig install libjpeg62-dev
+wajig install libfreetype6-dev 
+wajig install dovecot-common dovecot-imapd dovecot-pop3d php5-imap
+   (??? Maildir support???)
+
+
+
+sudo /etc/init.d/apache2 restart
+
+wajig install libapache2-mod-auth-mysql
+wajig install php5-mysql
+
+sudo mysqladmin -u root password 
+
+root@gutsydesktop:/data/cchou/vTiger# mv vtigercrm /var/www/
+
+vi /etc/php5/apache2/php.ini
+
+/etc/init.d/apache2 restart
+
+
+GRANT ALL PRIVILEGES ON *.* TO 'vtiger'@'localhost'
+IDENTIFIED BY 'local admin pwd' WITH GRANT OPTION;
+
+create database vtigercrm504                 
+DEFAULT CHARACTER SET utf8 DEFAULT COLLATE
+utf8_general_ci
+
+
+NOTE*****
+For database host config, use localhost
+
+cp -rp vtiger /var/www
+chown www-data /var/www/vtiger
+
+mysql DB: vtigercrm504
+http://vtiger/vtigercrm
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Settings->Outgoing Server
+htaccess.txt --> .htaccess
+<Directory "C:/Program Files/vtigercrm/apache/htdocs/vtigerCRM">
+Options -Indexes
+</Directory> 
+
+
+
+
+
+

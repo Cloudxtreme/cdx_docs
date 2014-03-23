@@ -1,0 +1,12 @@
+server_host = pdc.cardiodx.com
+search_base = ou=Users,dc=cardiodx,dc=com
+server_port = 389
+version = 3
+
+start_tls = yes
+bind = no
+timeout = 5
+query_filter = (mailLocalAddress=%s)
+result_attribute = mailForwardingAddress
+lookup_wildcards = no
+

@@ -1,0 +1,94 @@
+
+--
+-- with load balancer:
+--
+
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        CardioDx, Inc.
+# Required-Start:
+# Required-Stop:
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Firewall services
+### END INIT INFO
+
+case "$1" in
+    start)
+        echo -n "Starting Firewall... "
+
+        # nat and squid config:
+        modprobe iptable_nat
+        echo 1 > /proc/sys/net/ipv4/ip_forward
+
+        iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth1 -d 0/0 -j MASQUERADE
+        iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth2 -d 0/0 -j MASQUERADE
+        iptables -A FORWARD -o eth1 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+        iptables -A FORWARD -o eth2 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+        iptables -A FORWARD -i eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+        iptables -A FORWARD -i eth2 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+        # config for squid
+        iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 10.10.37.2:3128
+        iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j REDIRECT --to-port 3128
+        iptables -t nat -A PREROUTING -i eth2 -p tcp --dport 80 -j REDIRECT --to-port 3128
+
+        # for input interface
+        iptables -A INPUT -i eth1 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        iptables -A INPUT -i eth2 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        iptables -A INPUT -i eth1 -m state --state NEW -j DROP
+        iptables -A INPUT -i eth2 -m state --state NEW -j DROP
+        ;;
+    stop)
+        echo -n "Shutdown down Firewall... "
+        iptables -F
+        iptables -F -t nat
+        ;;
+    reload|restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Usage: `basename $0` start|stop|restart|reload"
+        exit 1
+esac
+
+exit 0
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# more /etc/rc.local 
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+ip route add 67.95.201.192/27 dev eth2 src 67.95.201.198 table xo
+ip route add default via 67.95.201.193 table xo
+ip route add 173.13.158.176/28 dev eth1 src 173.13.158.180 table comcast
+ip route add default via 173.13.158.190 table comcast
+ip rule add from 67.95.201.198 table xo
+ip rule add from 173.13.158.180 table comcast
+ip route add default scope global nexthop via 67.95.201.193 dev eth2 weight 1 nexthop via 173.13.158.190 dev eth1 weight 5
+
+nohup /usr/sbin/gwping &
+
+exit 0
+
+
+
+
+
+
+

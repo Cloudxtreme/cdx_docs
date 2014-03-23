@@ -1,0 +1,180 @@
+linux raid performance
+
+mdadm -Cv /dev/md2 -l 0 -n 6 /dev/sdc1 /dev/sdd1 /dev/sde1 /dev/sdf1 /dev/sdg1 /dev/sdh1
+mdadm -Cv /dev/md3 -l 1 -n 2 /dev/sdc2 /dev/sdd2 
+mdadm -Cv /dev/md4 -l 5 -n 6 /dev/sdc3 /dev/sdd3 /dev/sde3 /dev/sdf3 /dev/sdg3 /dev/sdh3
+mdadm -Cv /dev/md5 -l 10 -n 6 /dev/sdc4 /dev/sdd4 /dev/sde4 /dev/sdf4 /dev/sdg4 /dev/sdh4
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Direct on raid MD device
+
+-- 
+-- dd
+--
+Write (2G, 16G):
+0:  574, 547 MB/s
+1:  109, 110 MB/s
+5:  334, 231 MB/s
+10: 417, 310 MB/s
+
+Read (2G, 16G)
+0:  160, 159 MB/s
+1:  120, 115 MB/s
+5:  174, 174 MB/s
+10: 186, 180 MB/s
+
+
+3 Threads on Raid-0:
+3 treads reading same file: 141, 139, 137
+3 threads writing 3 different files: 305, 263, 272
+3 threads reading 3 different files: 65, 65, 64
+
+
+-- http://www.linux.com/archive/feature/139742
+--
+bonnie++ -d raid0 -s 32768 -f -u 0
+
+Version 1.03b       ------Sequential Output------ --Sequential Input- --Random-
+                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+aoesrv          32G           648269  74 138283 18           498077  28 657.3   2
+aoesrv          32G           112072  14 40958   6           110399   7 471.4   0
+aoesrv          32G           166892  18 96033  13           487688  30 599.1   1
+aoesrv          32G           304761  41 87174  12           305381  18 707.4   0
+
+                    ------Sequential Create------ --------Random Create--------
+                    -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
+              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+                 16 22899  81 +++++ +++ 19658  65 20351  73 +++++ +++ 17767  71
+                 16  8945  24 +++++ +++  8140  19  8675  28 +++++ +++  3431  11
+                 16  1241   1 +++++ +++  1262   1  1411   2 +++++ +++  1030   2
+                 16 21565  71 +++++ +++ 18183  62 19632  67 +++++ +++ 16008  59
+
+iozone:
+5GB
+                                                            random  random    bkwd  record  stride                                   
+              KB  reclen   write rewrite    read    reread    read   write    read rewrite    read   fwrite frewrite   fread  freread
+r0       5242880       4  904018  880332  2736581  2669745 1976421  118405 2501328 2274468 2269591   862360   628056 2679818  2613811
+r1       5242880       4  117291  120935  2719852  2660119 1975033   19672 2499234 2263875 2286727   139536   120340 2174387  2123887
+r5       5242880       4  261764  272464  2548464  2496098 1867180   11893 2157916 2279424 1901055   286359   287056 2504821  2448045
+r10      5242880       4  323788  323978  2743784  2684986 1974926   56171 2483053 2289124 2296990   280344   265350 2670458  2604553
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- Using lvm
+--
+
+root@aoesrv:~# blockdev --report /dev/md2
+
+RO    RA   SSZ   BSZ   StartSec     Size    Device
+rw  1536   512   512          0 1171908096  /dev/md2
+rw   256   512   512          0  195318016  /dev/md3
+rw  1280   512  4096          0  976590080  /dev/md4
+rw   768   512   512          0  585954048  /dev/md5
+
+  177  mkfs.xfs /dev/raid0/lv
+  178  mkfs.xfs /dev/raid1/lv
+  182  mkfs.xfs -b size=4096 /dev/raid5/lv
+  183  mkfs.xfs /dev/raid10/lv
+
+dd:
+write/2nd write (2G, 16G)
+588/575, 502/510
+182/143, 111/109
+341/391, 233/243
+436/464, 301/340
+
+Read: (2G, 16G)
+319, 311
+118, 116
+287, 296
+256, 253
+
+
+Version 1.03b       ------Sequential Output------ --Sequential Input- --Random-
+                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
+Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec %CP
+aoesrv          32G           605767  74 118382 20           395229  32 658.5   0
+aoesrv          32G           107172  15 41848   6           110456   7 472.5   0
+aoesrv          32G           172216  21 84934  14           363723  34 600.4   0
+aoesrv          32G           301322  43 73163  13           304793  28 527.1   1
+                    ------Sequential Create------ --------Random Create--------
+                    -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
+              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
+                 16 10027  41 +++++ +++ 10157  41  9690  38 +++++ +++  6105  21
+                 16  6841  20 +++++ +++  5967  16  7195  16 +++++ +++  2300   7
+                 16   992   0 +++++ +++  1532   1  1069   0 +++++ +++   792   1
+                 16  8553  49 +++++ +++  7450  42  7821  45 +++++ +++  4059  30
+
+
+                                                            random  random    bkwd  record  stride                                   
+              KB  reclen   write rewrite    read    reread    read   write    read rewrite    read   fwrite frewrite   fread  freread
+         5242880       4  744120  896445  2741186  2678338 1987968  115573 2513979 2293500 2275835   824534   595656 2666445  2603675
+         5242880       4  120278  111444  2744191  2685517 1981136   19591 2515830 2300330 2301489   135384   121542 2198088  2147856
+         5242880       4  276676  289407  2562779  2507891 1880410   11787 2353677 1813005 2125915   304705   291134 2557536  2500014
+         5242880       4  325838  321431  2745048  2685846 1982178   55939 2517684 2288913 2296322   370510   270612 2375975  2318958
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+3 mirrors w/ lvm support
+
+Write (2G. 16G)
+104/103/101, 112/114/113
+
+Read (2G, 16G)
+108/112/111, 106/110/110
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iscsi:
+
+dd
+
+Write (2G. 16G)
+214,
+224,
+213,
+214,
+
+Read (2G, 16)
+74.7
+66.4
+78.5
+73.5
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- stripping using lvm:
+--
+
+  412  vgcreate vg1 /dev/md3 /dev/md6 /dev/md7
+  413  lvcreate -L+100G -n testlv -i 3 vg1
+  414  mkfs.xfs /dev/vg1/testlv 
+
+dd:
+Write: (2G, 16G)
+552, 377
+???, 266
+
+local machine
+write/read
+ 2g: 556, 259
+ 4g: 482, 263
+16g: 374, 268
+32g: 355, 267
+
+iscsi:
+ 2g: 231, 84.8
+ 4g: 147, 76.2
+16g: 111, 73.1
+32g:
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+snort ubuntu 
+
+http://www.howtoforge.com/intrusion-detection-with-snort-mysql-apache2-on-ubuntu-7.10
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,0 +1,68 @@
+select count(sample_id)
+from checklist c, checklist_sample cs, procedure_template pt
+where c.checklist_id = cs.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'Roche LC480 Data Extraction'
+;
+
+COUNT(SAMPLE_ID)
+----------------
+	 1999136
+
+select count(distinct sample_id)
+from checklist c, checklist_sample cs, procedure_template pt
+where c.checklist_id = cs.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'Roche LC480 Data Extraction'
+;
+
+COUNT(DISTINCTSAMPLE_ID)
+------------------------
+		 1994115
+
+Why there is a difference????
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+select cs.checklist_id, to_char(date_completed, 'HH24:MI:SS') date_completed, count(sample_id)
+from checklist c, checklist_sample cs, procedure_template pt
+where c.checklist_id = cs.checklist_id
+and c.procedure_template_id = pt.procedure_template_id
+and pt.procedure_name = 'Roche LC480 Data Extraction'
+and to_char(c.date_completed) = '02-JUN-11'
+group by cs.checklist_id, date_completed
+order by date_completed
+;
+
+384 samples x 27 checklists = 10368 rows selected.
+
+       21695 00:05:13		   384
+       21687 00:22:12		   384
+       21691 00:39:16		   384
+       21698 06:59:19		   384
+       21701 07:18:26		   384
+       21702 07:37:58		   384
+       21696 07:58:11		   384
+       21697 08:17:16		   384
+       21700 08:36:29		   384
+       21705 08:55:48		   384
+       21699 09:14:55		   384
+       21703 09:35:21		   384
+       21704 09:55:06		   384
+
+
+col job_name for a30
+select job_name, log_date, run_duration, status
+from user_scheduler_job_run_details
+where job_name = 'CLOSE_LC480_CHECKLISTS'
+--and run_duration != '+000 00:00:00'
+and to_char(log_date) like '02-JUN-11%'
+order by log_date;
+
+CLOSE_LC480_CHECKLISTS	       07-JUN-11 12.39.16.642257 AM -07:00					   +000 01:59:08							       SUCCEEDED
+CLOSE_LC480_CHECKLISTS	       07-JUN-11 09.55.06.319072 AM -07:00					   +000 03:14:57							       SUCCEEDED
+CLOSE_LC480_CHECKLISTS	       07-JUN-11 02.40.09.327434 PM -07:00					   +000 00:00:00							       SUCCEEDED
+CLOSE_LC480_CHECKLISTS	       07-JUN-11 10.40.09.138708 PM -07:00					   +000 00:00:00							       SUCCEEDED
+
+
+

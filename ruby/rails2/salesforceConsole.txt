@@ -1,0 +1,30 @@
+cd ~/ruby/rails/salesforce
+
+vi test.rb
+client = Databasedotcom::Client.new("config/databasedotcom.yml")
+client.authenticate :username => 'hub@cardiodx.com', :password => 'test789'
+
+client.materialize("User")
+u = SFDC_Models::User.first
+puts u.FirstName
+
+bundle exec rails runner "eval(File.read 'test.rb')"
+bundle exec rails runner test.rb
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+client = Databasedotcom::Client.new("config/databasedotcom.yml")
+client.authenticate :username => 'hub@cardiodx.com', :password => 'test789'
+
+client.materialize("User")
+
+#puts SFDC_Models::User.attributes
+#users = SFDC_Models::User.query("ID != NULL limit 10")
+users = SFDC_Models::User.all
+
+puts users
+users.each do |u|
+  puts u.FirstName
+end
+
+

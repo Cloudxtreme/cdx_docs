@@ -1,0 +1,108 @@
+trac svn new project
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- create a new project for asterisk:
+--
+
+svnadmin create /var/lib/svn/asterisk
+trac-admin /var/lib/trac/asterisk initenv
+  Project Name > Asterisk
+  Path to repository> /var/lib/svn/asterisk
+
+chown -R www-data /var/lib/svn/asterisk
+chown -R www-data /var/lib/trac/asterisk
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- load svn db (if needed)
+on svn:
+svnadmin dump /data/svn/repos/it > it.svn.dump
+
+on trac:
+svnadmin load /var/lib/svn/it < it.svn.dump
+
+
+cd /var/lib/trac/asterisk/conf#
+vi trac.ini
+
+[attachment]
+max_size = 10485760
+
+[components]
+batchmod.* = enabled
+customfieldadmin.* = enabled
+iniadmin.iniadmin.iniadminplugin = enabled
+mastertickets.* = enabled
+tracwysiwyg.* = enabled
+wikinotification.* = enabled
+
+[header_logo]
+link = http://trac.cardiodx.com/projects/asterisk/
+src = common/trac_banner.png
+
+[logging]
+log_level = ERROR
+log_type = syslog
+
+[notification]
+admit_domains = cardiodx.com
+always_notify_owner = true
+always_notify_reporter = true
+always_notify_updater = false
+smtp_always_cc = cchou@cardiodx.com
+smtp_default_domain = cardiodx.com
+smtp_enabled = true
+smtp_from = trac_it@cardiodx.com
+smtp_replyto = trac_it@cardiodx.com
+smtp_server = mail.cardiodx.com
+use_public_cc = true
+
+[project]
+admin = it@cardiodx.com
+descr = IT
+name = IT
+url = http://trac.cardiodx.com/projects/asterisk
+
+[ticket]
+restrict_owner = true
+
+-- [ticket-custom]
+-- blockedby = text
+-- blockedby.label = Blocked By
+-- blocking = text
+-- blocking.label = Blocking
+
+-- [ticket-workflow]
+-- accept = new -> assigned
+-- reassign = new,assigned,reopened -> new
+-- resolve = new,assigned,reopened -> closed
+-- metanav = login,logout,settings,help,about
+-- repository_dir = /var/lib/svn/it
+
+
+trac-admin /var/lib/trac/asterisk upgrade
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+trac-admin /var/lib/trac/asterisk/ permission list
+
+trac-admin /var/lib/trac/asterisk/ permission add cchou tracadmin
+trac-admin /var/lib/trac/asterisk/ permission add tracadmin TRAC_ADMIN
+
+remove privs from anonymous:
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous FILE_VIEW      
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous BROWSER_VIEW   
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous MILESTONE_VIEW 
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous ROADMAP_VIEW   
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous TIMELINE_VIEW  
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous LOG_VIEW       
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous CHANGESET_VIEW 
+trac-admin /var/lib/trac/asterisk/ permission remove anonymous REPORT_SQL_VIEW
+
+
+vi /etc/email2trac.conf
+
+[commercial]
+project: /var/lib/trac/commercial
+
+
+

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AssignInstrumentValue" table="ASSIGN_INSTRUMENT_VALUE" schema="DNALIMS">
+        <id name="assignInstrumentValueId" type="big_decimal">
+            <column name="ASSIGN_INSTRUMENT_VALUE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="configAttribute" class="com.cardiodx.db.waban.table.ConfigAttribute" fetch="select">
+            <column name="CONFIG_ATTRIBUTE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="assignInstrument" class="com.cardiodx.db.waban.table.AssignInstrument" fetch="select">
+            <column name="ASSIGN_INSTRUMENT_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="value" type="string">
+            <column name="VALUE" length="50" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

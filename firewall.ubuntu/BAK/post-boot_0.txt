@@ -1,0 +1,96 @@
+wolverine post-boot script
+
+menu
+
+  Run 4 modify config
+  Run 5 load the config and run post-boot
+  Run 7 to modify post-boot
+
+after each reboot, you'll need to rum meun and choose 5 to run post-boot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Load network module for RTL8196 and Intel E1000
+#
+modprobe r8169
+modprobe e1000
+
+grep 8086:105e /etc/sysconf/niclist
+if [ $? != 0 ]; then
+  echo '8086:105e e1000' >> /etc/sysconf/niclist
+fi
+
+grep 10ec:8169 /etc/sysconf/niclist
+if [ $? != 0 ]; then
+  echo '10ec:8169 r8169' >> /etc/sysconf/niclist
+fi
+
+#
+# Add the routing table
+#
+grep comcast /etc/iproute2/rt_tables
+if [ $? != 0 ]; then
+  echo '2 comcast' >> /etc/iproute2/rt_tables
+fi
+
+grep xo /etc/iproute2/rt_tables
+if [ $? != 0 ]; then
+  echo '3 xo' >> /etc/iproute2/rt_tables
+fi
+
+#
+# Network interfaces for Comcast and XO
+#
+ifconfig eth4 173.13.158.180 netmask 255.255.255.240
+ifconfig eth5 67.95.201.198 netmask 255.255.255.224
+
+#
+# bound Comcast and XO as default route
+#
+ip route add 173.13.158.176/28 dev eth4 src 173.13.158.180 table comcast
+ip route add default via 173.13.158.190 table comcast
+ip route add 67.95.201.192/27 dev eth5 src 67.95.201.198 table xo
+ip route add default via 67.95.201.193 table xo
+ip rule add from 173.13.158.180 table comcast
+ip rule add from 67.95.201.198 table xo
+ip route add default scope global nexthop via 173.13.158.190 dev eth4 weight 5 nexthop via 67.95.201.193 dev eth5 weight 1
+
+
+#
+# Natting
+#
+iptables -F -t nat
+
+iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth4 -d 0/0 -j MASQUERADE
+iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth5 -d 0/0 -j MASQUERADE
+iptables -A FORWARD -o eth4 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o eth5 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth4 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth5 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+#
+# Traffic Control
+#
+tc qdisc del dev eth1 root
+
+tc qdisc add dev eth1 handle 1:0 root dsmark indices 8 default_index 0
+tc qdisc add dev eth1 handle 2:0 parent 1:0 htb
+tc class add dev eth1 parent 2:0 classid 2:1 htb rate 128000000bps ceil 128000000bps
+tc class add dev eth1 parent 2:1 classid 2:2 htb rate 128000000bps ceil 128000000bps
+tc qdisc add dev eth1 handle 3:0 parent 2:2 sfq
+tc class add dev eth1 parent 2:1 classid 2:3 htb rate 1250000bps ceil 6625000bps
+tc qdisc add dev eth1 handle 4:0 parent 2:3 sfq
+tc class add dev eth1 parent 2:1 classid 2:4 htb rate 375000bps ceil 625000bps
+tc qdisc add dev eth1 handle 5:0 parent 2:4 sfq
+tc class add dev eth1 parent 2:1 classid 2:5 htb rate 125000bps ceil 375000bps
+tc qdisc add dev eth1 handle 6:0 parent 2:5 sfq
+tc filter add dev eth1 parent 2:0 protocol all prio 1 tcindex mask 0x7 shift 0
+tc filter add dev eth1 parent 2:0 protocol all prio 1 handle 4 tcindex classid 2:5
+tc filter add dev eth1 parent 2:0 protocol all prio 1 handle 3 tcindex classid 2:4
+tc filter add dev eth1 parent 2:0 protocol all prio 1 handle 2 tcindex classid 2:3
+tc filter add dev eth1 parent 2:0 protocol all prio 1 handle 1 tcindex classid 2:2
+tc filter add dev eth1 parent 1:0 protocol all prio 1 u32 match u32 0xa0a2000 0xfffff800 at 12 match u32 0xa0a2000 0xfffff800 at 16 classid 1:1
+tc filter add dev eth1 parent 1:0 protocol all prio 1 u32 match u32 0xa0a2000 0xfffff800 at 12 classid 1:4
+tc filter add dev eth1 parent 1:0 protocol all prio 1 u32 match u32 0xa0a2500 0xffffff00 at 16 classid 1:2
+tc filter add dev eth1 parent 1:0 protocol all prio 1 u32 match u32 0x0 0x0 at 0 classid 1:3
+

@@ -1,0 +1,50 @@
+http://wiki.cchtml.com/index.php/Ubuntu_Edgy_Installation_Guide
+
+Manual installation:
+
+get the file
+
+  528  cd Desktop/
+  529  ls
+  530  chmod 755 ati-driver-installer-8.34.8-x86.x86_64.run 
+  531  ./ati-driver-installer-8.34.8-x86.x86_64.run --buildpkg Ubuntu/edgy
+  532  vi /etc/default/linux-restricted-modules-common
+  533  wajig install ./xorg-driver-fglrx_8.34.8-1*.deb
+  534  wajig install ./fglrx-kernel-source_8.34.8-1*.deb
+  535  wajig install ./fglrx-control_8.34.8-1*.deb
+  536  ll
+  537  mkdir fglrx
+  538  mv fglrx* fglrx
+  539  ls
+  540  mv xorg-driver-fglrx fglrx/
+  541  mv xorg-driver-fglrx* fglrx/
+  542  ls
+  543  ll
+  544  module-assistant prepare
+  545  module-assistant update
+  546  module-assistant build fglrx
+  547  lsmod | grep fgl
+  548  rmmod fglrx 
+  549  module-assistant install fglrx
+  550  depmod -a
+
+  478  cd /etc/X11/
+  477  aticonfig --initial
+  494  aticonfig --overlay-type=Xv
+  496  reboot; 
+
+
+# fglrxinfo 
+display: :0.0  screen: 0
+OpenGL vendor string: ATI Technologies Inc.
+OpenGL renderer string: ATI Mobility Radeon X1600
+OpenGL version string: 2.0.6334 (8.34.8)
+
+
+
+vi /etc/X11/xorg.conf
+Section "Extensions"
+        Option      "Composite" "true"
+EndSection
+
+beryl-manager 

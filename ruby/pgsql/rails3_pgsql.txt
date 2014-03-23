@@ -1,0 +1,84 @@
+http://www.funonrails.com/2011/03/getting-started-with-rails-3-postgres.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+rails new pg6 -d postgresql
+cd pg6
+
+vi Gemfile
+gem 'execjs'
+gem 'therubyracer'
+
+bundle install
+
+vi config/database.yml 
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: pg6
+  pool: 5
+  username: cchou
+  password: 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sudo su postgres
+createuser cchou
+	could not change directory to "/home/cchou/hdrive/ruby/rails/pg"
+	Shall the new role be a superuser? (y/n) y
+exit
+
+psql template1
+create database pg6;
+\l
+\dt
+\q
+
+rails server
+http://cchoudesktop:3000/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	$ rvm list
+	=* ruby-1.9.3-p194 [ x86_64 ]
+
+	$ rvm gemset list
+	gemsets for ruby-1.9.3-p194 (found in /usr/local/rvm/gems/ruby-1.9.3-p194)
+	=> rails32
+
+	/usr/local/rvm/gems/ruby-1.9.3-p194@rails32/gems/railties-3.2.7/lib/rails/generators/
+			View: /erb/scaffold/templates
+			Controller: /rails/scaffold_controller/templates
+
+$ rails console
+
+	require 'rails/generators'
+
+	-- 1st app
+	Rails::Generators.invoke("active_record:model", ["User", "name:string", "email:string"])
+	Rails::Generators.invoke("scaffold", ["User", "name:string", "email:string"])
+
+	ActiveRecord::Migration.create_table(:users)
+	ActiveRecord::Migration.add_column(:users, :name, :string, {:limit => 60})
+	ActiveRecord::Migration.add_column(:users, :email, :string, {:limit => 120})
+	
+	ActiveRecord::Migration.add_index(:users, :name)
+	ActiveRecord::Migration.add_index(:users, :email, :unique => true)
+
+
+$ psql pg2
+\dt
+\d users
+
+  -- 2nd one more app
+	Rails::Generators.invoke("active_record:model", ["Supplier", "name:string"])
+	Rails::Generators.invoke("scaffold", ["Supplier", "name:string"])
+
+	ActiveRecord::Migration.create_table(:suppliers)
+	ActiveRecord::Migration.add_column(:suppliers, :name, :string, {:limit => 60})
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+
+multi-tech isi 8 port modem
+
+8250.nr_uarts=12
+
+
+cd /boot/grub
+vi menu.lst
+kernel          /vmlinuz-2.6.24-25-server root=/dev/mapper/vg0-root ro quiet splash 8250.nr_uarts=12
+
+
+root@multitech:/etc/hylafax# cat /proc/tty/driver/serial
+serinfo:1.0 driver revision:
+0: uart:16550A port:000003F8 irq:4 tx:0 rx:0
+1: uart:unknown port:000002F8 irq:3
+2: uart:unknown port:000003E8 irq:4
+3: uart:unknown port:000002E8 irq:3
+4: uart:16550A port:0000EC98 irq:17 tx:49 rx:0 RTS|CTS|DTR|DSR|CD
+5: uart:16550A mmio:0xFE7FF000 irq:18 tx:7994 rx:1623 RTS|CTS|DTR|DSR
+6: uart:16550A mmio:0xFE7FF200 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+7: uart:16550A mmio:0xFE7FF400 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+8: uart:16550A mmio:0xFE7FF600 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+9: uart:16550A mmio:0xFE7FF800 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+10: uart:16550A mmio:0xFE7FFA00 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+11: uart:16550A mmio:0xFE7FFC00 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+12: uart:16550A mmio:0xFE7FFE00 irq:18 tx:201 rx:656 RTS|CTS|DTR|DSR
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+cu -l /dev/ttyS5
+
+~.
+
+
+cd /etc/hylafax/
+faxaddmodem ttyS5
+
+	Class 1 relies on HylaFAX to perform the bulk of the fax protocol.
+	Class 2 relies on the modem to perform the bulk of the fax protocol.
+	Class 2.0 is similar to Class 2 but may include more features.
+	Class 1.0 is similar to Class 1 but may add V.34-fax capability.
+	Class 2.1 is similar to Class 2.0 but adds V.34-fax capability.
+
+
+for i in 6 7 8 9 10 11 12; do cp config.ttyS5 config.ttyS${i}; done
+
+/etc/init.d/hylafax stop
+/etc/init.d/hylafax start
+
+cd /var/spool/hylafax/recvq/
+sendfax -n -d 16504752721 fax000000015.tif
+
+faxstat -sdl
+
+cd /var/spool/hylafax/log
+tail -20f c000000029
+
+
+
+
+

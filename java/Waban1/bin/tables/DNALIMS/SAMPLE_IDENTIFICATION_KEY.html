@@ -1,0 +1,808 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+	<head>
+		<title>Hibernate Mappings - Table Info</title>
+		<link rel="stylesheet" type="text/css" href="../../assets/doc-style.css" title="Style"/>
+	</head>
+	<body>
+
+	<div id="header">
+
+		<div id="logo">
+			<a href="http://www.hibernate.org/" target="_blank">
+				<img src="../../assets/hibernate_logo.gif" alt="Hibernate"/>
+			</a>
+		</div>
+
+		<ul><li><a href="../index.html" target="_top">Tables</a></li><li><a href="../../entities/index.html" target="_top">Entities</a></li></ul>
+
+		<hr/>
+
+	</div>
+
+		<h4>Schema DNALIMS</h4>
+		<h2>Table SAMPLE_IDENTIFICATION_KEY</h2>
+
+			<p>Linking Table for Identified and non identified sample attributes</p>
+
+		<table id="column_summary">
+			<thead>
+				<tr>
+					<th class="MainTableHeading" colspan="7">
+						Column Summary
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 14%">
+						Name
+					</th>
+					<th style="width: 14%">
+						SqlType
+					</th>
+					<th style="width: 14%">
+						Length
+					</th>
+					<th style="width: 14%">
+						Precision
+					</th>
+					<th style="width: 14%">
+						Scale
+					</th>
+					<th style="width: 14%">
+						Nullable
+					</th>
+					<th style="width: 14%">
+						Unique
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr>
+						<td>
+							<a href="#column_detail_SAMPLE_ID">
+								SAMPLE_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_ANONYMIZATION_LOG_ID">
+								ANONYMIZATION_LOG_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_ANONYMIZATION_REQUEST_ID">
+								ANONYMIZATION_REQUEST_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_ANONYMIZATION_STUDY_SETUP_ID">
+								ANONYMIZATION_STUDY_SETUP_ID
+							</a>
+						</td>
+						<td>
+							N/D
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_ACCESSION_ID">
+								ACCESSION_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_STUDY_PROTOCOL_ID">
+								STUDY_PROTOCOL_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_IDENTIFIED_SAMPLE_ID">
+								IDENTIFIED_SAMPLE_ID
+							</a>
+						</td>
+						<td>
+							varchar2(255 char)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							19
+						</td>
+						<td>
+							2
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_IS_ENCRYPTED">
+								IS_ENCRYPTED
+							</a>
+						</td>
+						<td>
+							number(1,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							1
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="#column_detail_SUBSIDIARY_ID">
+								SUBSIDIARY_ID
+							</a>
+						</td>
+						<td>
+							number(22,0)
+						</td>
+						<td>
+							255
+						</td>
+						<td>
+							22
+						</td>
+						<td>
+							0
+						</td>
+						<td>
+							true
+						</td>
+						<td>
+							false
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+		<table id="primary_key">
+			<thead>
+				<tr>
+					<th class="MainTableHeading" colspan="2">
+						Primary Key
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 50%">
+						Name
+					</th>
+					<th style="width: 50%">
+						Columns
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr>
+						<td>
+							No Primary Key
+						</td>
+					</tr>
+			</tbody>
+		</table>
+
+			<table id="foreign_keys">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="3">
+							Foreign Keys
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 33%">
+							Name
+						</th>
+						<th style="width: 33%">
+							Referenced Table
+						</th>
+						<th style="width: 33%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								FK_SAM_ID_KEY_ANON_SETUP
+							</td>
+							<td>
+								<a href="ANONYMIZATION_STUDY_SETUP.html" target="generalFrame">
+									ANONYMIZATION_STUDY_SETUP
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_ANONYMIZATION_STUDY_SETUP_ID">
+										ANONYMIZATION_STUDY_SETUP_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK543F29A3F36F098B
+							</td>
+							<td>
+								<a href="STUDY_PROTOCOL.html" target="generalFrame">
+									STUDY_PROTOCOL
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_PROTOCOL_ID">
+										STUDY_PROTOCOL_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_SAM_ID_KEY_ANON_REQ
+							</td>
+							<td>
+								<a href="ANONYMIZATION_REQUEST.html" target="generalFrame">
+									ANONYMIZATION_REQUEST
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_ANONYMIZATION_REQUEST_ID">
+										ANONYMIZATION_REQUEST_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK543F29A31726D1B3
+							</td>
+							<td>
+								<a href="ANONYMIZATION_REQUEST.html" target="generalFrame">
+									ANONYMIZATION_REQUEST
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_ANONYMIZATION_REQUEST_ID">
+										ANONYMIZATION_REQUEST_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK543F29A38CA1D0A4
+							</td>
+							<td>
+								<a href="ANONYMIZATION_STUDY_SETUP.html" target="generalFrame">
+									ANONYMIZATION_STUDY_SETUP
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_ANONYMIZATION_STUDY_SETUP_ID">
+										ANONYMIZATION_STUDY_SETUP_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_SAM_ID_KEY_STUDY
+							</td>
+							<td>
+								<a href="STUDY_PROTOCOL.html" target="generalFrame">
+									STUDY_PROTOCOL
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_PROTOCOL_ID">
+										STUDY_PROTOCOL_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK_SAM_ID_KEY_SID
+							</td>
+							<td>
+								<a href="SUBSIDIARY.html" target="generalFrame">
+									SUBSIDIARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								FK543F29A389A67BFC
+							</td>
+							<td>
+								<a href="SUBSIDIARY.html" target="generalFrame">
+									SUBSIDIARY
+								</a>
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+			
+		
+			<table id="indexes">
+				<thead>
+					<tr>
+						<th class="MainTableHeading" colspan="2">
+							Indexes
+						</th>
+					</tr>
+					<tr>
+						<th style="width: 50%">
+							Name
+						</th>
+						<th style="width: 50%">
+							Columns
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+						<tr>
+							<td>
+								IDX_SAMPLE_KEY_ANON_STUDY_ID
+							</td>
+							<td>
+									<a href="#column_detail_ANONYMIZATION_STUDY_SETUP_ID">
+										ANONYMIZATION_STUDY_SETUP_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_SAMPLE_KEY_STUDY_ID
+							</td>
+							<td>
+									<a href="#column_detail_STUDY_PROTOCOL_ID">
+										STUDY_PROTOCOL_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_SAMPLE_KEY_ACC_ID
+							</td>
+							<td>
+									<a href="#column_detail_ACCESSION_ID">
+										ACCESSION_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_SAMPLE_IDENTIFICATION__SID
+							</td>
+							<td>
+									<a href="#column_detail_SUBSIDIARY_ID">
+										SUBSIDIARY_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_SAMPLE_KEY_SAMPLE_ID
+							</td>
+							<td>
+									<a href="#column_detail_SAMPLE_ID">
+										SAMPLE_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_SAMPLE_KEY_ANON_REQ_ID
+							</td>
+							<td>
+									<a href="#column_detail_ANONYMIZATION_REQUEST_ID">
+										ANONYMIZATION_REQUEST_ID
+									</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								IDX_SAMPLE_KEY_IDENT_SAMPLE_ID
+							</td>
+							<td>
+									<a href="#column_detail_IDENTIFIED_SAMPLE_ID">
+										IDENTIFIED_SAMPLE_ID
+									</a>
+							</td>
+						</tr>
+				</tbody>
+			</table>
+		
+			<p id="column_detail" class="MainTableHeading">
+				Column Detail
+			</p>
+				
+				<h3 id="column_detail_SAMPLE_ID">SAMPLE_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Sample identifier used by the lab and primary key.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_ANONYMIZATION_LOG_ID">ANONYMIZATION_LOG_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Anonymization Log ID and primary Key
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_ANONYMIZATION_REQUEST_ID">ANONYMIZATION_REQUEST_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Anonymization Request ID and Primary Key
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_ANONYMIZATION_STUDY_SETUP_ID">ANONYMIZATION_STUDY_SETUP_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> N/D
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Anonymization Study Setup ID and primary Key
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_ACCESSION_ID">ACCESSION_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Accession identifier and primary key.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_STUDY_PROTOCOL_ID">STUDY_PROTOCOL_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Study protocol identifier and primary key.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_IDENTIFIED_SAMPLE_ID">IDENTIFIED_SAMPLE_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> varchar2(255 char)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 19
+					</li>
+					<li>
+						<strong>Scale:</strong> 2
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> Pending sample identifier and primary key.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_IS_ENCRYPTED">IS_ENCRYPTED</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(1,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 1
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> VALUE is 1 if IDENTIFIED_SAMPLE_ID is Encrypted and 0 otherwise.
+					</li>
+				</ul>
+
+
+				<hr/>
+				<h3 id="column_detail_SUBSIDIARY_ID">SUBSIDIARY_ID</h3>
+				
+				<ul>
+					<li>
+						<strong>Type:</strong> number(22,0)
+					</li>
+					<li>
+						<strong>Length:</strong> 255
+					</li>
+					<li>
+						<strong>Precision:</strong> 22
+					</li>
+					<li>
+						<strong>Scale:</strong> 0
+					</li>
+					<li>
+						<strong>Nullable:</strong> true
+					</li>
+					<li>
+						<strong>Unique:</strong> false
+					</li>
+					<li>
+						<strong>Comment:</strong> 
+					</li>
+				</ul>
+
+
+				<hr/>
+				
+
+	</body>
+</html>

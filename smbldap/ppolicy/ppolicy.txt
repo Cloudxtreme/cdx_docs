@@ -1,0 +1,227 @@
+ldap strong password policy ppolicy
+
+http://blog.zrmt.com/2007/10/19/howto-ppolicy-openldap/
+http://www.openldap.org/software/man.cgi?query=slapo-ppolicy&sektion=5&apropos=0&manpath=OpenLDAP+2.4-Release
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- pam
+--
+mv common-account common-account.1
+cat > common-account << EOF
+account sufficient pam_ldap.so
+account sufficient pam_unix.so nullok_secure
+account required pam_permit.so
+EOF
+
+mv common-auth common-auth.1
+cat > common-auth << EOF
+auth sufficient pam_unix.so
+auth sufficient pam_ldap.so use_first_pass
+ccount    required     pam_deny.so
+EOF
+
+mv common-password common-password.1
+cat > common-password << EOF
+password   sufficient   pam_unix.so nullok obscure md5
+password   [success=ok default=die] pam_ldap.so
+EOF
+
+mv common-session common-session.1
+cat > common-session << 
+session required        pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session required        pam_unix.so
+session optional        pam_ldap.so
+EOF
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /etc
+mv ldap.conf ldap.conf.sav
+
+cat > /etc/ldap.conf << EOF
+host smb01
+base dc=cardiodx,dc=com
+ldap_version 3
+pam_password exop
+pam_lookup_policy yes
+#ssl start_tls
+#ssl on
+#tls_checkpeer no
+#bind_policy soft
+#debug 5
+EOF
+
+vi /etc/ldap/slapd.conf
+include         /etc/ldap/schema/ppolicy.schema
+
+(add the following after 'suffix')
+moduleload ppolicy.la
+overlay ppolicy
+ppolicy_default "cn=defaultpolicy,dc=cardiodx,dc=com"
+#ppolicy_hash_cleartext
+ppolicy_use_lockout
+
+--
+-- object for ppolicy
+--
+
+vi cdx.ldif
+#dn: ou=policies,dc=cardiodx,dc=com
+#objectClass: organizationalUnit
+#ou: policies
+
+#dn: cn=default,ou=policies,dc=cardiodx,dc=com (NOTE: this may work but I'm not sure!!)
+dn: cn=defaultpolicy,dc=cardiodx,dc=com
+objectClass: top
+objectClass: device
+objectClass: pwdPolicy
+cn: defaultpolicy
+pwdAttribute: userPassword
+pwdMaxAge: 7516800
+pwdExpireWarning: 432000
+pwdInHistory: 6
+pwdCheckQuality: 1
+pwdMinLength: 8
+pwdMaxFailure: 4
+pwdLockout: TRUE
+pwdLockoutDuration: 1920
+pwdGraceAuthNLimit: 0
+pwdFailureCountInterval: 0
+pwdMustChange: TRUE
+pwdAllowUserChange: TRUE
+pwdSafeModify: FALSE
+
+
+ldapadd -D "cn=admin,dc=cardiodx,dc=com" -W -x -f cdx.ldif
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  458  man slappasswd 
+  470  slappasswd -h {SSHA} -s foobar
+
+vi /etc/ldap/slapd.conf
+rootdn          "cn=admin,dc=cardiodx,dc=com"
+rootpw {SSHA}TsUXMiA6hlG3RHdkyAy46g6n9wBgHe/V
+
+
+smbldap-useradd -a -c "Chialin Chou" -M cchou@cardiodx.com -m -P -N Chialin -S Chou cchou
+
+  485  vi cdxmod.ldif 
+
+dn: uid=cchou,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}PlvELxk1tDICdD0Pp9n1rRBEVNslfQaT
+
+dn: uid=srikar,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}eYxB+mCYtw8rZbyUMEAUrGj4JaK3ESOC
+
+  487  ldapmodify -D "cn=admin,dc=cardiodx,dc=com" -W -x -f /root/cdxmod.ldif 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ldapsearch -b "dc=cardiodx,dc=com" -D "uid=srikar,ou=Users,dc=cardiodx,dc=com" "cn=srikar" userPassword -x -w foobar  (????)
+ldapsearch -b "dc=cardiodx,dc=com" -D "cn=admin,dc=cardiodx,dc=com" "cn=srikar" userPassword -x -w cardiodx007
+ldapsearch -b "dc=cardiodx,dc=com" -D "uid=cchou,ou=Users,dc=cardiodx,dc=com" "cn=cchou" userPassword -x -w foobar
+
+
+  503  cd /root/
+  505  vi cdxmod.ldif 
+  507  vi /etc/ldap.conf
+  509  vi cdxpwdreset.ldif 
+dn: uid=srikar,ou=Users,dc=cardiodx,dc=com
+changetype: modify
+add: pwdReset
+pwdReset: TRUE
+
+  510  ldapmodify -D "cn=admin,dc=cardiodx,dc=com" -W -x -f /root/cdxpwdreset.ldif 
+
+
+wajig install libpam-ccreds libpam-mount libpam-foreground -y
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+wajig install libpam-ccreds
+more /usr/share/doc/libpam-ccreds/README
+cc_dump
+cc_test -store any srikar barbar
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.openldap.org/lists/openldap-software/200701/msg00382.html
+google: "ppolicy pwdCheckmodule example"
+
+
+ppolicy_hash_cleartext
+
+wajig source
+wajig build-depend slapd
+
+
+for smbk5pwd:
+http://student.physik.uni-mainz.de/~reiffert/smbk5pwd.html
+
+
+
+cp common-account common-account.0
+cp common-auth common-auth .0
+cp common-password common-password.0
+cp common-session common-session.0
+
+cp common-account.1 common-account
+cp common-auth.1 common-auth 
+cp common-password.1 common-password
+cp common-session.1 common-session
+~~~~~~~~~~~~~~
+cp common-account common-account.1
+cp common-auth common-auth.1
+cp common-password common-password.1
+cp common-session common-session.1
+
+cp common-account.0 common-account
+cp common-auth.0 common-auth 
+cp common-password.0 common-password
+cp common-session.0 common-session
+
+
+
+
+-- 
+-- mirror smbtest
+--
+cd /etc/pam.d
+mv common-account common-account.0
+cat > common-account << EOF
+account sufficient pam_ldap.so
+account sufficient pam_unix.so nullok_secure
+account required pam_permit.so
+EOF
+
+mv common-auth common-auth.0
+cat > common-auth << EOF
+auth sufficient pam_unix.so
+auth [authinfo_unavail=ignore success=1 default=2] pam_ldap.so use_first_pass
+auth [default=done] pam_ccreds.so action=validate use_first_pass
+#auth [default=ignore] pam_exec.so /usr/sbin/nss_updatedb ldap
+auth [default=done] pam_ccreds.so action=store use_first_pass
+auth [default=bad] pam_ccreds.so action=update use_first_pass
+EOF
+
+mv common-password common-password.0
+cat > common-password << EOF
+password   sufficient   pam_unix.so nullok obscure md5
+password   [success=ok default=die] pam_ldap.so
+password   optional pam_ccreds.so
+EOF
+
+mv common-session common-session.0
+cat > common-session << EOF
+session required        pam_mkhomedir.so skel=/etc/skel/ umask=0022
+session optional        pam_mount.so use_first_pass
+session optional        pam_foreground.so
+session required        pam_unix.so
+session optional        pam_ldap.so
+EOF
+

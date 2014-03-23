@@ -1,0 +1,113 @@
+
+vyatta
+
+
+http://www.vyatta.org/forum/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+boot from install cd (vc 5.02)
+install-system
+reboot
+
+dmesg | grep eth
+
+  eth0: Intel - onbard
+  eth1: Intel  (comcast) 			173.13.158.180/28
+  eth2: Intel  (xo)						67.95.201.198/27
+  eht3: Tigon3 (internal)			10.10.37.2/21
+  eth4: RTL8110s
+  eth5: RTL8110s
+
+
+configure
+
+set interfaces ethernet eth3 address 10.10.37.2/21
+set service https
+set service ssh
+commit
+exit
+
+
+Use either linux or Windows to connect.  It doesn't work for Mac.
+
+set interfaces ethernet eth1 address 173.13.158.180/28
+set interfaces ethernet eth2 address 67.95.201.198/27
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- load balancing
+--
+
+set protocols static route 0.0.0.0/0 next-hop 173.13.158.190
+set protocols static route 0.0.0.0/0 next-hop 67.95.201.193
+commit
+
+set load-balancing wan interface-health eth1 failure-count 5
+set load-balancing wan interface-health eth1 nexthop 173.13.158.190
+set load-balancing wan interface-health eth1 ping 74.125.19.104
+
+set load-balancing wan interface-health eth2 failure-count 5
+set load-balancing wan interface-health eth2 nexthop 67.95.201.193
+set load-balancing wan interface-health eth2 ping 74.125.19.104
+
+set load-balancing wan rule 10 inbound-interface eth3
+
+set load-balancing wan rule 10 interface eth1 weight 5
+set load-balancing wan rule 10 interface eth2 weight 1
+commit
+
+
+show load-balancing
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set system time-zone US/Pacific 
+
+
+set service nat rule 1 source address 10.10.32.0/21
+set service nat rule 1 outbound-interface eth1
+set service nat rule 1 type masquerade
+
+set service nat rule 2 source address 10.10.32.0/21
+set service nat rule 2 outbound-interface eth2
+set service nat rule 2 type masquerade
+
+show service nat
+
+
+
+set firewall name ALLOW_ESTABLISHED
+set firewall name ALLOW_ESTABLISHED rule 10
+set firewall name ALLOW_ESTABLISHED rule 10 action accept
+set firewall name ALLOW_ESTABLISHED rule 10 state established enable
+
+set interfaces ethernet eth0 firewall in name ALLOW_ESTABLISHED
+set interfaces ethernet eth0 firewall local name ALLOW_ESTABLISHED
+set interfaces ethernet eth1 firewall in name ALLOW_ESTABLISHED
+set interfaces ethernet eth1 firewall local name ALLOW_ESTABLISHED
+
+
+delete interfaces ethernet eth4
+delete interfaces ethernet eth5
+set interfaces ethernet eth4 mac 00:22:3f:ef:c9:97
+set interfaces ethernet eth5 mac 00:22:3f:ef:c2:f2
+
+delete interfaces ethernet eth0
+delete interfaces ethernet eth1
+set interfaces ethernet eth0 address 173.13.158.180/28 
+set interfaces ethernet eth0 mac 00:15:17:be:ee:76
+set interfaces ethernet eth1 address 67.95.201.198/27 
+set interfaces ethernet eth1 mac 00:15:17:be:ee:77
+
+
+
+
+
+
+
+
+
+
+
+

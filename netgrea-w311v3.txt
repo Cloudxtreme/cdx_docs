@@ -1,0 +1,45 @@
+
+http://ubuntuforums.org/showthread.php?t=179801
+
+wajig install ndiswrapper-common 
+wajig install ndiswrapper-utils-1.9
+
+wget ftp://downloads.netgear.com/files/wg311v3_1_0.zip
+
+
+  520  mkdir wg311v3
+  521  mv wg311v3_1_0.zip wg311v3
+  522  cd wg311v3/
+  524  unzip wg311v3_1_0.zip 
+  526  cd WG311v3\ V1.0/
+
+root@ubuntu910:~/wg311v3/WG311v3 V1.0/Driver/Windows XP# ll
+
+ndiswrapper -i WG311v3.INF
+modprobe ndiswrapper 
+iwlist wlan0 scan
+
+
+iwlist wlan0 scan
+
+          Cell 05 - Address: 00:1A:70:41:E0:0C
+                    ESSID:"myNetwork"
+                    Protocol:IEEE 802.11g
+                    Mode:Managed
+                    Frequency:2.452 GHz (Channel 9)
+                    Quality:31/100  Signal level:-76 dBm  Noise level:-96 dBm
+                    Encryption key:on
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 18 Mb/s
+                              24 Mb/s; 36 Mb/s; 54 Mb/s; 6 Mb/s; 9 Mb/s
+                              12 Mb/s; 48 Mb/s
+                    Extra:bcn_int=100
+                    Extra:atim=0
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+
+
+
+
+

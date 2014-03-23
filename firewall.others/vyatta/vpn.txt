@@ -1,0 +1,82 @@
+site to site vpn
+
+192.0.2.1       <-------------------> 192.0.2.33
+192.168.40.0/24											  192.168.60.0/24
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- enable ipsec
+set vpn ipsec ipsec-interfaces interface eth1
+show vpn ipsec ipsec-interfaces
+
+-- ike
+set vpn ipsec ike-group IKE_1 proposal 1
+set vpn ipsec ike-group IKE_1 proposal 1 encryption aes256
+set vpn ipsec ike-group IKE_1 proposal 1 hash sha1
+set vpn ipsec ike-group IKE_1 proposal 2 encryption aes128
+set vpn ipsec ike-group IKE_1 proposal 2 hash sha1
+set vpn ipsec ike-group IKE_1 lifetime 3600
+show -all vpn ipsec ike-group IKE_1
+
+-- esp
+set vpn ipsec esp-group ESP_1 proposal 1
+set vpn ipsec esp-group ESP_1 proposal 1 encryption aes256
+set vpn ipsec esp-group ESP_1 proposal 1 hash sha1
+set vpn ipsec esp-group ESP_1 proposal 2 encryption 3des
+set vpn ipsec esp-group ESP_1 proposal 2 hash md5
+set vpn ipsec esp-group ESP_1 lifetime 1800
+show -all vpn ipsec esp-group ESP_1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- site 1 (left)
+set vpn ipsec site-to-site peer 192.0.2.33 authentication mode pre-shared-secret
+edit vpn ipsec site-to-site peer 192.0.2.33
+  set authentication pre-shared-secret test_key_1
+  set ike-group IKE_1
+  set local-ip 192.0.2.1
+  set tunnel 1 local-subnet 192.168.40.0/24
+  set tunnel 1 remote-subnet 192.168.60.0/24
+  set tunnel 1 esp-group ESP_1
+top
+commit
+
+show -all vpn ipsec site-to-site peer 192.0.2.33
+
+-- site 2 (right)
+set vpn ipsec site-to-site peer 192.0.2.1 authentication mode pre-shared-secret
+edit vpn ipsec site-to-site peer 192.0.2.1
+  set authentication pre-shared-secret test_key_1
+  set ike-group IKE_1
+  set local-ip 192.0.2.33
+  set tunnel 1 local-subnet 192.168.60.0/24
+  set tunnel 1 remote-subnet 192.168.40.0/24
+  set tunnel 1 esp-group ESP_1
+top
+commit
+
+show -all vpn ipsec site-to-site peer 192.0.2.1
+
+
+--
+-- troubleshoot
+--
+show vpn ike sa
+show vpn ike status
+show vpn ipsec sa
+show vpn ipsec sa statistics
+
+show vpn ipsec status
+show vpn debug
+
+
+-- syslog
+set vpn ipsec logging log-modes raw
+set vpn ipsec logging log-modes crypt
+set vpn ipsec logging level warning
+set vpn ipsec logging facility daemon
+commit
+
+show -all vpn ipsec logging
+
+
+
+

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Roi" table="ROI" schema="DNALIMS">
+        <comment>Information about ROI used for a test in a study</comment>
+        <id name="roiId" type="big_decimal">
+            <column name="ROI_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="techniqueType" class="com.cardiodx.db.waban.table.TechniqueType" fetch="select">
+            <column name="TECHNIQUE_TYPE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0">
+                <comment>Subsidiary identifier.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0">
+                <comment>Gene identifier and foreign key to GENE table.</comment>
+            </column>
+        </many-to-one>
+        <property name="roiName" type="string">
+            <column name="ROI_NAME" length="30" not-null="true" unique="true">
+                <comment>ROI identifier and unique key.</comment>
+            </column>
+        </property>
+        <property name="roiType" type="string">
+            <column name="ROI_TYPE" length="50" not-null="true">
+                <comment>ROI type could be Allele or mutation.</comment>
+            </column>
+        </property>
+        <property name="geneRegionId" type="big_decimal">
+            <column name="GENE_REGION_ID" precision="22" scale="0">
+                <comment>Region of ROI</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30" />
+        </property>
+        <set name="roiAttributeFlds" table="ROI_ATTRIBUTE_FLD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiAttributeFld" />
+        </set>
+        <set name="caseRois" table="CASE_ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseRoi" />
+        </set>
+        <set name="oligoDesigns" table="OLIGO_DESIGN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OligoDesign" />
+        </set>
+        <set name="mdbGenotypes" table="MDB_GENOTYPE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbGenotype" />
+        </set>
+        <set name="mdbVariants" table="MDB_VARIANT_ROI" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROI_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <many-to-many entity-name="com.cardiodx.db.waban.table.MdbVariant">
+                <column name="VARIANT_ID" precision="22" scale="0" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="roiSelections" table="ROI_SELECTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROI_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiSelection" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.RequestItem" table="REQUEST_ITEM" schema="DNALIMS">
+        <comment>Anonymization Request Items database</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.RequestItemId">
+            <key-property name="anonymizationRequestId" type="big_decimal">
+                <column name="ANONYMIZATION_REQUEST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sampleId" type="big_decimal">
+                <column name="SAMPLE_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="accessionId" type="big_decimal">
+            <column name="ACCESSION_ID" precision="22" scale="0">
+                <comment>Accession Number</comment>
+            </column>
+        </property>
+        <property name="itemStatus" type="string">
+            <column name="ITEM_STATUS" length="20">
+                <comment>Item status can be completed, pending, rejected</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

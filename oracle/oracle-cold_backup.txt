@@ -1,0 +1,54 @@
+
+
+cd /etc/cron.daily
+
+
+# more backupdb 
+#!/bin/sh
+
+
+ORACLE_SID=ORCL
+ORACLE_BASE=/u01/app/oracle
+ORACLE_TERM=xterm
+ORACLE_HOME=/u01/app/oracle/product/10.2.0/db_1
+
+ORACLE_OWNR="oracle"
+DUMP_DIR=/u01/app/oracle/dbdump
+LOG=$DUMP_DIR/db_file.log
+
+
+
+touch $LOG
+echo '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' > $LOG
+echo `date` >> $LOG
+echo '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' >> $LOG
+/etc/init.d/oracle stop >> $LOG 2>&1
+tar czvf $DUMP_DIR/db_files.tar.gz $ORACLE_BASE/oradata $ORACLE_BASE/admin/ORCL 
+$ORACLE_HOME/network/admin >> $LOG 2>&1
+/etc/init.d/oracle start >> $LOG 2>&1
+echo '' >> $LOG
+echo '' >> $LOG
+
+
+chmod 755 backupdb
+
+change the daily run from 6 am to 2 am
+
+
+=========================================================================================
+--
+--recover test
+--
+
+(root) /etc/init.d/oracle stop
+
+login as oracle
+
+cd /u01/app/oracle/oradata
+rm -rf ORCL/
+
+cd /
+tar zxvf /u01/app/oracle/dbdump/db_files.tar.gz
+
+
+(root) /etc/init.d/oracle start

@@ -1,0 +1,93 @@
+
+OpenClinica-3.0.2.tar.gz
+
+wajig install sun-java6-jdk postgresql tomcat5.5
+wajig install tomcat5.5-admin tomcat5.5-webapps
+
+tar zxvf OpenClinica-3.0.2.tar.gz
+
+???
+mkdir /usr/local/oc
+mv OpenClinica-3.0.2 /usr/local/oc/
+
+cd /etc/tomcat5.5
+vi tomcat-users.xml
+  <user username="admin" password="secret" roles="manager,admin"/>
+
+/etc/init.d/tomcat5.5 restart
+
+  http://cchoudesktop:8180/manager/html/
+  http://localhost:8180/host-manager/html/
+  http://localhost:8180/admin
+
+http://edc.cardiodx.com:8180/
+
+
+--
+-- postgreSQL
+--
+
+su - postgres
+psql -U postgres -f /usr/local/oc/OpenClinica-3.0.2/config/database/PostgreSQL/3.0.2/install/create_role.sql
+psql -U postgres -f /usr/local/oc/OpenClinica-3.0.2/config/database/PostgreSQL/3.0.2/install/create_db.sql
+
+
+--
+--tomcat
+--
+cd /usr/share/tomcat5.5-webapps
+cd /usr/share/tomcat5.5
+
+cd /var/lib/tomcat5.5
+mkdir openclinica.data
+chown tomcat55 openclinica.data/
+
+cp /usr/local/oc/OpenClinica-3.0.2/distribution/OpenClinica.war webapps/
+chown tomcat55\: OpenClinica.war
+
+
+cd /var/lib/tomcat5.5/webapps/OpenClinica/WEB-INF/classes
+vi datainfo.properties
+
+filePath=/var/lib/tomcat5.5/openclinica.data/
+log.dir=/var/log/tomcat5.5
+
+
+/etc/init.d/tomcat55 restart
+
+???
+http://edc.cardiodx.com:8180/manager/html
+Click Start for /OpenClinica
+
+It doesn't work!!!!!
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Copy tomcat from EtQ
+
+  229  cd /usr/local/
+  233  tar zxvf /root/tomcat.tar.gz 
+
+  235  cd tomcat/
+  238  cd webapps/
+  241  rm -rf reliance_prod/
+
+  246  cd work/
+  248  cd Catalina/localhost/
+  250  rm -rf *
+
+  258  ll /var/lib/tomcat5.5/webapps/
+  261  cp /var/lib/tomcat5.5/webapps/OpenClinica.war .
+
+  274  export JAVA_HOME=/usr/lib/jvm/java-6-sun
+  278  /usr/tomcat/bin/startup.sh
+
+  279  cd /usr/tomcat/logs/
+  281  tail -20f catalina.out &
+
+
+http://edc.cardiodx.com:8080/OpenClinica
+  root/12345678
+
+
+
+

@@ -1,0 +1,45 @@
+
+sudo wajig install r-cran-rjava
+
+install.package("RJDBC")
+
+~/gdrive/it/software/Oracle 10g
+
+# Windows
+cp  ./instantclient_10.204/win32 .
+
+# Linux
+cp ./instantclient_10.205/x86_64/instantclient_10_2/ojdbc14.jar .
+
+library(RJDBC)
+drv <- JDBC("oracle.jdbc.driver.OracleDriver", "./ojdbc14.jar")
+conn = dbConnect(drv, "jdbc:oracle:thin:@ccllims:1521:ORCL", "warehouse", "dwhreader")
+query = "select count(*) from accession"
+dbGetQuery(conn, query)
+d = dbReadTable(conn, "accession")
+head(d)
+summary(d)
+str(d)
+
+--------------------------------------------------------------------------------------------------
+library(RJDBC)
+
+source("waban.R")
+options(stringsAsFactors=F)
+date.string = '2011-11-18'
+
+drv <- JDBC("oracle.jdbc.driver.OracleDriver", "./ojdbc14.jar")
+conn = dbConnect(drv, "jdbc:oracle:thin:@ccllims:1521:ORCL", "warehouse", "dwhreader")
+
+accession.data = get.all.accession.data(conn)
+qc.data = get.all.qc.data(conn)
+aggr.cp.data = get.aggregated.cp.data(conn, date.string)
+plate.lot.info = get.all.plate.lot.data(conn)
+cp.data = get.cp.data(conn, date.string)
+dbDisconnect(conn)
+
+str(accession.data)
+all.data = merge(aggr.cp.data, accession.data, by="accession.id", all.x=T)
+str(all.data)
+
+

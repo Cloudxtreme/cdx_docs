@@ -1,0 +1,52 @@
+
+/etc/network/interfaces
+
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+        address 10.10.37.28
+        netmask 255.255.255.0
+        network 10.10.37.0
+        broadcast 10.10.37.255
+        gateway 10.10.37.1
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers 10.10.37.21
+        dns-search cardiodx.com
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Jumbo frame
+
+http://ubuntuforums.org/showthread.php?t=101117
+
+--
+-- for aoe
+--
+
+-- on server
+# ifconfig
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+
+# ifconfig eth0 mtu 9000
+# ifconfig
+          UP BROADCAST RUNNING MULTICAST  MTU:9000  Metric:1
+
+
+-- on client
+# aoe-stat 
+      e1.1        34.359GB    br0 up            
+      e1.2         5.368GB    br0 up            
+      e1.3        53.687GB    br0 up            
+      e1.4         6.442GB    br0 up            
+      e1.5         6.442GB    br0 up           
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.StudyDisplayView" table="STUDY_DISPLAY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.StudyDisplayViewId">
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="sponsorStudyNumber" type="string">
+                <column name="SPONSOR_STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="studyTitle" type="string">
+                <column name="STUDY_TITLE" length="200" />
+            </key-property>
+            <key-property name="sponsorStudyTitle" type="string">
+                <column name="SPONSOR_STUDY_TITLE" length="200" />
+            </key-property>
+            <key-property name="studyClosed" type="java.lang.Boolean">
+                <column name="STUDY_CLOSED" precision="1" scale="0" />
+            </key-property>
+            <key-property name="studyDirector" type="string">
+                <column name="STUDY_DIRECTOR" length="30" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

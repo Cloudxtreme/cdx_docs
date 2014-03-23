@@ -1,0 +1,40 @@
+  201  wajig install slapd ldap-utils
+
+  202  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/cosine.ldif
+  203  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/nis.ldif
+  204  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/inetorgperson.ldif
+
+  205  vi backend.example.com.ldif
+  206  ldapadd -Y EXTERNAL -H ldapi:/// -f backend.example.com.ldif
+
+  207  vi frontend.example.com.ldif
+  208  ldapadd -x -D cn=admin,dc=example,dc=com -W -f frontend.example.com.ldif
+
+  209  ldapsearch -xLLL -b "dc=example,dc=com" uid=john sn givenName cn
+
+
+ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b cn=config dn
+
+ldapmodify -Y EXTERNAL -H ldapi:///
+SASL/EXTERNAL authentication started
+SASL username: gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth
+SASL SSF: 0
+dn: olcDatabase={1}hdb,cn=config
+add: olcDbIndex
+olcDbIndex: uidNumber eq
+
+modifying entry "olcDatabase={1}hdb,cn=config"
+
+(Ctrl+D)
+
+
+  215  vi schema_convert.conf
+  216  mkdir /tmp/ldif_output
+
+  217  slapcat -f schema_convert.conf -F /tmp/ldif_output -n0 -s "cn={5}dyngroup,cn=schema,cn=config" > /tmp/cn=dyngroup.ldif
+
+  218  vi /tmp/cn\=dyngroup.ldif 
+
+  219  ldapadd -Y EXTERNAL -H ldapi:/// -f /tmp/cn\=dyngroup.ldif
+
+

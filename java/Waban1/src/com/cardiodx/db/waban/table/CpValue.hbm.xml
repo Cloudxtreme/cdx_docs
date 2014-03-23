@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CpValue" table="CP_VALUE" schema="DNALIMS">
+        <id name="cpValueId" type="big_decimal">
+            <column name="CP_VALUE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="sampleTableByParentSampleId" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="PARENT_SAMPLE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="cpRun" class="com.cardiodx.db.waban.table.CpRun" fetch="select">
+            <column name="CP_RUN_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="oligoDesign" class="com.cardiodx.db.waban.table.OligoDesign" fetch="select">
+            <column name="OLIGO_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="sampleTableBySampleId" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="cpValue" type="string">
+            <column name="CP_VALUE" length="50" not-null="true" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true" />
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

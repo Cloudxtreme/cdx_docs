@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.ContainerCheckinView" table="CONTAINER_CHECKIN_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.ContainerCheckinViewId">
+            <key-property name="containerId" type="string">
+                <column name="`Container ID`" length="20" />
+            </key-property>
+            <key-property name="lab" type="string">
+                <column name="Lab" length="50" />
+            </key-property>
+            <key-property name="freezer" type="string">
+                <column name="Freezer" length="20" />
+            </key-property>
+            <key-property name="shelf" type="string">
+                <column name="Shelf" length="20" />
+            </key-property>
+            <key-property name="rack" type="string">
+                <column name="Rack" length="20" />
+            </key-property>
+            <key-property name="compartment" type="string">
+                <column name="Compartment" length="20" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="checkoutBy" type="string">
+                <column name="CHECKOUT_BY" length="30" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistRow" type="big_decimal">
+                <column name="CHECKLIST_ROW" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

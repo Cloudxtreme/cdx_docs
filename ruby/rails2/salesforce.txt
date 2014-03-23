@@ -1,0 +1,79 @@
+****** Installed on cchoudesktop for now *******
+
+~/ruby/rails/salesforce
+
+$ rvm alias list
+1.8.7 => ruby-1.8.7-p370
+1.9.3 => ruby-1.9.3-p194
+default => ruby-1.9.3-p194
+
+rails new salesforce
+
+vi Gemfile
+gem 'databasedotcom'
+gem 'databasedotcom-rails'
+gem 'therubyracer'
+
+   10  rvm gemset list
+   11  rvm gemset use rails32
+   12  gem list
+   13  bundle install
+   14  bundle show
+
+Setup --> App Setup --> Remote Access 
+  --> New
+  --> Application
+      Contact Email
+      Callback URL
+				Consumer Key: 3MVG9iTxZANhwHQvgUpcthGrKDAcArcKMP2mNpL2ZKy8CmzlYDofySUFLRMpyzNVkT0ndqj.teHFWKeLJ1dDT
+				Consumer Secret: 5973562288672165834
+
+vi databasedotcom.yml
+host: login.salesforce.com        # Use test.salesforce.com for sandbox
+client_secret: 5973562288672165834         # This is the Consumer Secret from Salesforce
+client_id: 3MVG9iTxZANhwHQvgUpcthGrKDAcArcKMP2mNpL2ZKy8CmzlYDofySUFLRMpyzNVkT0ndqj.teHFWKeLJ1dDT # This is the Consumer Key from Salesforce
+sobject_module: SFDC_Models       # See below for details on using modules
+debugging: true                   # Can be useful while developing
+username: hub@cardiodx.com
+password: test789
+
+
+cd lib
+vi sfdc_models.rb
+# Container into which you will materialize the Salesforce objects.
+module SFDC_Models
+end
+
+vi config/application.rb 
+config.autoload_paths += %W(#{config.root}/lib)
+
+$ rails console
+client = Databasedotcom::Client.new("config/databasedotcom.yml")
+client.authenticate :username => 'hub@cardiodx.com', :password => 'test789'
+
+client.materialize("User")
+
+SFDC_Models::User.count
+SFDC_Models::User.attributes
+
+u = SFDC_Models::User.first
+puts u.FirstName
+
+#users = SFDC_Models::User.all
+#users.each do |user|
+#	#puts user.FirstName
+#end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

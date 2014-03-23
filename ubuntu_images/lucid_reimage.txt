@@ -1,0 +1,59 @@
+  558  mkdir lucid
+  559  mount /dev/vg0/lucid lucid/
+  560  cd lucid/
+  563  tar zxvf lucid64.tar.gz 
+  567  rm lucid64.tar.gz 
+
+vi /etc/fstab
+/dev/mapper/vg0-lucid   /               xfs     defaults        0       1
+/dev/md0                /boot           ext3    defaults        0       2
+
+vi /etc/hostname
+
+cd /lucid/boot
+ll *2.6.32-22*
+cp *2.6.32-22* /boot
+
+cd /boot/grub
+vi menu.lst
+
+title           Ubuntu 10.04 LTS, kernel 2.6.32-22-server
+root            (hd0,0)
+kernel          /vmlinuz-2.6.32-22-server root=/dev/mapper/vg0-lucid ro quiet splash
+initrd          /initrd.img-2.6.32-22-server
+quiet
+
+chroot
+wajig install mdadm
+mdadm --detail --scan >> 
+
+mount /dev/md0 boot
+update-initramfs
+
+udev
+
+hostname
+
+network interface
+
+grub
+
+
+read: syslog-ng.txt
+
+--update-rc.d -f ssh remove
+--update-rc.d -f atd remove
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+-- fix console output problem
+--    http://staff.adams.edu/~cdmiller/posts/Ubuntu-Lucid-server-text-console/
+
+vi /etc/modprobe.d/blacklist-framebuffer.conf
+blacklist vga16fb
+
+Ctrl + Alt + F7
+
+please read upstart.txt
+
+

@@ -1,0 +1,47 @@
+[general]
+static=yes
+writeprotect=no
+
+[globals]
+NUFONE=IAX2/cardiodx@NuFone
+SBC=ZAP/g1
+
+[macro-nufonetrunk]
+exten => s, 1, Dial(${NUFONE}/${MACRO_EXTEN})
+exten => s, 102, Hangup
+
+[macro-sbctrunk]
+exten => s, 1, Dial(${SBC}/w${MACRO_EXTEN})
+exten => s, 102, Hangup
+
+[macro-fax]
+exten => s, 1, Set(FAXFILE=/var/spool/asterisk/fax.tif)
+exten => s, 2, rxfax(${FAXFILE} | debug)
+exten => s, 3, hangup
+
+
+[default]
+;exten => _1NXXNXXXXXX, 1, Macro(nufonetrunk, ${EXTEN})
+exten => _1NXXNXXXXXX, 1, Macro(sbctrunk, ${EXTEN})
+
+;exten => 200, 1, Goto(14088883248, 1)
+
+exten => 200, 1, Wait(60)
+;exten => 200, 2, txfax(ZAP/g1/16505658202, /home/cchou/image.tif|caller|debug)
+exten => 200, 2, txfax(ZAP/g1/16505658202, /home/cchou/image.tif|caller)
+exten => 200, 3, Hangup
+
+;exten => fax, 1, Goto(fax,1)
+
+;exten => s, 1, Answer
+;exten => s, 2, Ringing
+;exten => s, 3, Wait(60)
+;exten => s, 4, Hangup
+;exten => s, 4, Goto(14088883248, 1)
+
+;exten => fax, 1, Set(FAXFILE=/var/spool/asterisk/fax.tif)
+;exten => fax, 2, rxfax(${FAXFILE} | debug)
+
+
+
+

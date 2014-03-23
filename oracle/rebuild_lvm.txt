@@ -1,0 +1,131 @@
+***storage1
+  lvcreate -L+50G -i 3 -n testlv vg2
+
+***ccl25
+  mkdir temp
+  mount /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.testlv-lun-0 temp
+
+  tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" 
+     --exclude="/u01/app/oracle/oradata/ORCL/*" \
+		 --exclude="/u01/app/oracle/dbdump/*" \
+     --exclude="/u01/app/oracle/admin/ORCL/udump/*" \
+	   --exclude="/u01/app/oracle/archive/*" \
+		 --exclude="/u01/app/oracle/admin/ORCL/bdump/*" \
+		 --exclude="/var/cache/apt/archives/*" \
+     --exclude="/root/temp/*" \
+     --exclude="/home/oracle/*" \
+     --exclude="/home/mayank/*" \
+		 --exclude="/clims/*" \
+     -czvf /root/temp/ccl25.tar.gz /
+
+  umount /root/temp
+
+***storage1
+  -- create the lvm
+  lvcreate -i 3 -L+20G -n cclwebpq vg2
+  vi hardy64.xml
+    <disk type='block' device='disk'>
+      <source dev='/dev/disk/by-path/ip-10.10.37.37:3260-iscsi-storage1.cclwebpq-lun-0'/>
+      <target dev='hdb' bus='ide'/>
+    </disk>
+
+***kvmsrv4
+  --start the VM 
+  ./cdxvm.sh mount cclwebpq
+  ./cdxvm.sh mount testlv
+     tcp: [15] 10.10.37.37:3260,1 storage1.cclwebpq
+     tcp: [16] 10.10.37.37:3260,1 storage1.testlv
+  ./cdxvm.sh start hardy64
+
+***hardy64
+  **NOTE: 
+    1) for tar file, use iSCSI
+    2) for OS, use sdb (not lvm)
+  iscsiadm -m discovery -t st -p storage1
+  iscsiadm -m node -T storage1.testlv -l
+  mkdir temp
+  mount /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.testlv-lun-0 temp
+
+  511  fdisk /dev/sdb
+  513  mkfs.ext3 /dev/sdb1 
+  514  mkfs.xfs /dev/sdb2 
+  515  mount /dev/sdb2 newroot/
+  516  cd newroot/
+  518  mkdir boot
+  519  mount /dev/sdb1 boot/
+  522  tar xvf ../temp/ccl25.tar.gz 
+
+grub> device (hd0) /dev/sdb
+grub> root (hd0,0)
+grub> setup (hd0)
+grub> quit
+
+  change 
+    hostname
+    fstab (no lvm)
+			/dev/sda2 /               xfs     relatime        0       1
+			/dev/sda1  /boot           ext3    relatime        0       2
+    menu.lst (no lvm)
+			root=/dev/sda2
+    udev
+    listener.ora
+    tnsnames.ora
+  halt
+
+***cclwebpq
+  cp ccl25.xml cclwebpq.xml
+  uuidgen 
+  ./genmac.py 
+
+***kvmsrv4
+  ./cdxvm.sh stop hardy64
+  ./cdxvm.sh umount cclwebpq
+  ./cdxvm.sh umount testlv
+  ./cdxvm.sh start cclwebpq
+
+***storage1
+  lvcreate -L+40G -i 3 -n dbdump vg2
+  mkfs.xfs /dev/vg2/dbdump 
+  mkdir dbdump
+  mount /dev/vg2/dbdump dbdump/
+
+  lvcreate -i 3 -L+100G -n cclwebpq-data vg2
+  mkfs.xfs /dev/vg2/cclwebpq-data
+  mkdir data
+  mount /dev/vg2/cclwebpq-data data
+
+  ***bksrv:
+  cd /backup/daily.0/ccllims/u01/app/oracle/dbdump
+  rsync db_files.tar.gz root@storage1:/root/dbdump
+
+  cd data/
+  --tar zxvf ../dbdump/db_files.tar.gz 
+  tar zxvf ../dbdump/db_files.tar.gz u01/app/oracle/oradata/ORCL
+  
+  umount /root/data
+  umount /root/dbdump
+
+
+***cclwebpq
+  iscsiadm -m discovery -t st -p storage1
+  iscsiadm -m node -T storage1.cclweb-data -l
+  
+  ietadm --op new --tid=58 --params Name=storage1.cclwebpq-data
+  ietadm --op new --tid=154 --lun=0 --params Path=/dev/vg2/cclwebpq-data
+
+  cp .profile and .bashrc for user - oracle
+
+mount /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.cclweb-data-lun-0 /u01/app/oracle/oradata/ORCL/
+chown oracle:oracle /u01/app/oracle/oradata/ORCL
+  519  mv u01/app/oracle/oradata/ORCL/* .
+  521  rmdir u01/
+  523  rm -rf u01/
+/etc/init.d/oracle start
+
+
+
+
+
+
+
+

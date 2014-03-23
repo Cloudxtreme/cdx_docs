@@ -1,0 +1,82 @@
+network performance statistic stat
+netcat net cp copy 
+
+
+http://netcat.sourceforge.net/
+
+
+root@bksrv:~# nc -l -p 5000 > /dev/null
+root@kvmsrv1:~# dd if=/dev/zero bs=100M count=20 | pv | nc bksrv 5000
+1.95GB 0:00:26 [74.4MB/s] 
+
+root@bksrv:~# nc -l -p 5001 > /dev/null
+root@kvmsrv2:~# dd if=/dev/zero bs=100M count=20 | pv | nc bksrv 5001
+1.95GB 0:00:30 [66.6MB/s] 
+
+
+server# nc -l -p 5000 | tar xvf -
+client# tar cf - * | nc 10.10.36.129 5000
+
+
+bwm-ng
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On the target system I would run:nc Ðl Ðp 7000 | dd of=/dev/hdaOn the source system I would run:dd if=/dev/hda | nc 192.168.1.120 7000 Ðq 10
+
+
+nc -l -p 5000 | dd bs=1M of=/dev/vg0/backup
+dd bs=1M if=/dev/vg0/backup | nc 10.10.36.129 5000
+
+
+nc -l -p 5000 | dd of=/dev/vg0/log
+dd if=/dev/vg0/log | nc 10.10.36.129 5000
+
+
+wajig install pv
+
+server# nc -l 5000 > /dev/null
+client# dd if=/dev/zero bs=100M count=20 | pv | nc kvmsrv6 5000
+12.8GB 0:01:58 [ 112MB/s] 
+
+
+-- same machine:
+# nc -l 5000 > foo.test &
+# dd if=/dev/zero bs=100M count=20 | pv | nc kvmsrv6 5000
+1.95GB 0:01:14 [26.7MB/s] 
+1.95GB 0:00:55 [36.2MB/s] 
+
+
+******************
+NOTE: if you see: Connection refused
+
+on server: 
+# nc -vv -l -p 5000 > /dev/null
+# netstat -nap | grep 5000
+tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      26012/nc        
+
+- If you don't see above message, run as the following:
+# nc -l -p 5000 > /dev/null
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+dd if=/dev/zero of=testfile bs=100M count=20
+2097152000 bytes (2.1 GB) copied, 55.1421 s, 38.0 MB/s
+
+# dd if=testfile |pv |dd of=/dev/null
+2097152000 bytes (2.1 GB) copied, 69.5022 s, 30.2 MB/s
+
+# dd if=testfile bs=45M |pv |dd of=/dev/null
+2097152000 bytes (2.1 GB) copied, 17.0894 s, 123 MB/s
+2097152000 bytes (2.1 GB) copied, 68.5905 s, 30.6 MB/s
+
+# dd if=testfile bs=55M |pv |dd of=/dev/null
+2097152000 bytes (2.1 GB) copied, 36.0754 s, 58.1 MB/s
+
+# dd if=testfile bs=100M |pv |dd of=/dev/null
+2097152000 bytes (2.1 GB) copied, 70.9022 s, 29.6 MB/s
+
+
+dd if=/dev/etherd/e1.1 |pv | dd of=/dev/null
+

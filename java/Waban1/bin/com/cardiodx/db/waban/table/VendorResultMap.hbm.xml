@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.VendorResultMap" table="VENDOR_RESULT_MAP" schema="DNALIMS">
+        <comment>Used to store the vendor result values</comment>
+        <id name="vendorResultMapId" type="big_decimal">
+            <column name="VENDOR_RESULT_MAP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="genotypingVendorAssayMap" class="com.cardiodx.db.waban.table.GenotypingVendorAssayMap" fetch="select">
+            <column name="VENDOR_ASSAY_MAP_ID" precision="22" scale="0" not-null="true">
+                <comment>Genotyping Vendor Assay Map Identifier and foreign key to Genotyping_vendor_assay_map table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="systemResultValue" type="string">
+            <column name="SYSTEM_RESULT_VALUE" length="50" not-null="true">
+                <comment>System Result Value (gene or allele)</comment>
+            </column>
+        </property>
+        <property name="vendorResultValue" type="string">
+            <column name="VENDOR_RESULT_VALUE" length="50" not-null="true">
+                <comment>Vendor Result Value</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was modofied.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

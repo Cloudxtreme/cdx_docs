@@ -1,0 +1,4 @@
+
+
+http://blog.gnucom.cc/2010/hadoop-example-for-exim-logs-with-python/
+

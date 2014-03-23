@@ -1,0 +1,3 @@
+http://linuxhelp.blogspot.com/2006/06/how-to-securely-erase-hard-disk-before.html
+
+# shred -vfz -n 100 /dev/hda 

@@ -1,0 +1,23 @@
+
+how to generate gpg keys for another machine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+on cchoudsktop, generate keys for rails
+    3  gpg --gen-key
+    8  gpg --export -a > rails.pub
+   11  gpg --export-secret-key -a > rails.pri
+
+on cbshub: import the keys 
+  530  gpg --import rails.pub
+  531  gpg --allow-secret-key-import --import rails.pri 
+  532  gpg --list-keys
+
+on cbshub: encrypt a file
+  547  gpg --import cchou.asc 
+  548  gpg --list-keys 
+  550  gpg --edit-key 52035DAB
+  551  gpg -o crontab.gpg --encrypt -r 52035DAB crontab 
+
+on cchoudesktop, decrypt the file
+gpg -d /tmp/crontab.gpg 
+

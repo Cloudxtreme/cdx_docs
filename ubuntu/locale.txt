@@ -1,0 +1,3 @@
+perl: warning: Setting locale failed
+
+# sudo dpkg-reconfigure locales

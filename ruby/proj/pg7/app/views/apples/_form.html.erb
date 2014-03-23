@@ -1,0 +1,57 @@
+<%= form_for(@apple) do |f| %>
+  <% if @apple.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@apple.errors.count, "error") %> prohibited this apple from being saved:</h2>
+
+      <ul>
+      <% @apple.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :dstr %><br />
+    <%= f.text_field :dstr %>
+  </div>
+  <div class="field">
+    <%= f.label :dtxt %><br />
+    <%= f.text_area :dtxt %>
+  </div>
+  <div class="field">
+    <%= f.label :dint %><br />
+    <%= f.number_field :dint %>
+  </div>
+  <div class="field">
+    <%= f.label :dflt %><br />
+    <%= f.text_field :dflt %>
+  </div>
+  <div class="field">
+    <%= f.label :ddec %><br />
+    <%= f.text_field :ddec %>
+  </div>
+  <div class="field">
+    <%= f.label :ddt %><br />
+    <%= f.datetime_select :ddt %>
+  </div>
+  <div class="field">
+    <%= f.label :dtime %><br />
+    <%= f.time_select :dtime %>
+  </div>
+  <div class="field">
+    <%= f.label :ddate %><br />
+    <%= f.date_select :ddate %>
+  </div>
+  <div class="field">
+    <%= f.label :dbin %><br />
+    <%= f.text_field :dbin %>
+  </div>
+  <div class="field">
+    <%= f.label :bbl %><br />
+    <%= f.check_box :bbl %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,17 @@
+First User:
+
+    * # screen
+    * Ctrl + a
+    * :
+    * multiuser on
+
+Second User:
+
+    * # screen -ls
+    * # screen -x 8856.pts-2.etq
+
+Logging:
+
+    * Ctrl + a
+    * H
+

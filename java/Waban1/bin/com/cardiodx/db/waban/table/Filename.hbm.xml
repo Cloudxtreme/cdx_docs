@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Filename" table="FILENAME" schema="DNALIMS">
+        <comment>Information about files used elsewhere in the database.</comment>
+        <id name="filenameId" type="big_decimal">
+            <column name="FILENAME_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="filename" type="string">
+            <column name="FILENAME" length="256">
+                <comment>File name.</comment>
+            </column>
+        </property>
+        <property name="realName" type="string">
+            <column name="REAL_NAME" length="256">
+                <comment>File name.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the file was created.</comment>
+            </column>
+        </property>
+        <set name="assayResultLoadsForResultFilenameId" table="ASSAY_RESULT_LOAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RESULT_FILENAME_ID" precision="22" scale="0" not-null="true">
+                    <comment>Result File ID - Foreign Key to FILENAME.FILENAME_ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultLoad" />
+        </set>
+        <set name="assayResultLoadsForCsvFilenameId" table="ASSAY_RESULT_LOAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CSV_FILENAME_ID" precision="22" scale="0">
+                    <comment>CSV File ID - Foreign Key to FILENAME.FILENAME_ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultLoad" />
+        </set>
+        <set name="containerFilenames" table="CONTAINER_FILENAME" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FILENAME_ID" precision="22" scale="0" not-null="true">
+                    <comment>File identifier. Part of the primary key and foreign key to the FILENAME table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerFilename" />
+        </set>
+    </class>
+</hibernate-mapping>

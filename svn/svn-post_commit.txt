@@ -1,0 +1,69 @@
+svn trac post commit
+
+http://svnbook.red-bean.com/en/1.1/ch05s02.html
+http://trac.edgewall.org/wiki/TracFaq#can-trac-automatically-update-a-ticket-when-i-commit-a-changeset
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- test post commit on svn
+--
+cd /var/lib/svn/it/hooks
+vi post-commit
+REPOS="$1"
+REV="$2"
+touch /tmp/test1
+echo "$REPOS" >> /tmp/test1
+echo "$REV" >> /tmp/test1
+
+chmod 755 post-commit
+chown www-data:www-data post-commit
+
+vi a file and check it in
+cat /tmp/test1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  trac post commit hook
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /var/lib/svn/it/hooks
+
+svn list http://svn.edgewall.com/repos/trac/tags
+svn list http://svn.edgewall.com/repos/trac/tags/trac-0.11/contrib
+svn co http://svn.edgewall.com/repos/trac/tags/trac-0.11/contrib
+
+chmod 755 trac-post-commit-hook
+
+vi post-commit
+#!/bin/sh
+
+REPOS="$1"
+REV="$2"
+LOG=`/usr/bin/svnlook log -r $REV $REPOS`
+AUTHOR=`/usr/bin/svnlook author -r $REV $REPOS`
+TRAC_ENV='/var/lib/trac/it/'
+TRAC_URL='https://trac.cardiodx.com/projects/'
+
+touch /tmp/post-commit.log
+echo "author: $AUTHOR, repos: $REPOS, rev: $REV, log: $LOG" >> /tmp/test1
+
+/usr/bin/python /var/lib/svn/it/hooks/trac-post-commit-hook \
+-p "$TRAC_ENV"  \
+-r "$REV"       \
+-u "$AUTHOR"    \
+-m "$LOG"       \
+-s "$TRAC_URL"
+
+
+close, closed, closes, fix, fixed, fixes
+Changed blah and foo to do this or that. Fixes #10 and #12, and refs #12.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+./post-commit /var/lib/svn/it 10
+
+./trac-post-commit-hook -p /var/lib/trac/it -r 10 -u root -m "some comments on #49" -s "https://trac.cardiodx.com/projects"
+
+
+
+
+
+
+

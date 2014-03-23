@@ -1,0 +1,22 @@
+
+
+Password must be 12 char long!!!!!!
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Install MS iSCSI initiator 2.08 from g drive
+
+Run the program
+  Click discovery tab
+  (Target Portals) Add storage1
+  
+  Click Targets tab
+  Click storage1.mydrive
+    Click LogOn
+      Advanced...
+       Enter login, password
+
+
+Click Computer Management
+  Go through the wizard

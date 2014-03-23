@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.WorkflowInfoView" table="WORKFLOW_INFO_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.WorkflowInfoViewId">
+            <key-property name="workflowId" type="big_decimal">
+                <column name="WORKFLOW_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="workflowName" type="string">
+                <column name="WORKFLOW_NAME" length="50" />
+            </key-property>
+            <key-property name="version" type="string">
+                <column name="VERSION" length="10" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="30" />
+            </key-property>
+            <key-property name="parent" type="java.lang.Boolean">
+                <column name="PARENT" precision="1" scale="0" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="numWaiting" type="big_decimal">
+                <column name="NUM_WAITING" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numInProcess" type="big_decimal">
+                <column name="NUM_IN_PROCESS" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numCompleted" type="big_decimal">
+                <column name="NUM_COMPLETED" precision="22" scale="0" />
+            </key-property>
+            <key-property name="numWithErrors" type="big_decimal">
+                <column name="NUM_WITH_ERRORS" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

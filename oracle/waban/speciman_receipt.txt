@@ -1,0 +1,106 @@
+SQL> select study_protocol_id, study_number from study_protocol order by study_number;
+
+STUDY_PROTOCOL_ID STUDY_NUMBER
+----------------- --------------------
+	       54 2x2 System Test
+	       96 Atlanta
+	       23 CCL Studies
+	      139 COLOR
+	       32 COMPASS
+		1 Clinical Study
+		2 Commercial
+	       26 GXP-000228
+	       74 HML Pools
+	       95 IMPACT Cardiology
+	       51 IRP
+	       27 Inv Study
+	      117 NEGCONTROL
+	       21 PME
+	       53 POSCONTROL
+	       75 PPR-003183
+	      158 PPR-003275
+	       28 Rgt Qual
+	       25 Sample PBMC
+	      116 Sample Water
+	       24 Train and Qual
+	       30 sPBMC Test
+
+SQL> select * from discrete_attribute where attribute_name = 'SOURCE_TYPE' order by number_in_sequence;
+
+ATTRIBUTE_NAME		       ATTRIBUTE_VALUE					  NUMBER_IN_SEQUENCE	 GLOBAL SUBSIDIARY_ID
+------------------------------ -------------------------------------------------- ------------------ ---------- -------------
+SOURCE_TYPE		       Blood								   1	      1 	    1
+SOURCE_TYPE		       DNA								   4	      1 	    1
+SOURCE_TYPE		       Tissue								   5	      1 	    1
+SOURCE_TYPE		       FTA Cards							   6	      1 	    1
+SOURCE_TYPE		       Swabs								   7	      1 	    1
+SOURCE_TYPE		       cDNA								   8	      1 	    1
+SOURCE_TYPE		       RNA								   9	      1 	    1
+SOURCE_TYPE		       Water								  10	      1 	    1
+
+8 rows selected.
+
+SQL> select * from discrete_attribute where attribute_name = 'SAMPLE_CONDITION' order by number_in_sequence;
+
+ATTRIBUTE_NAME		       ATTRIBUTE_VALUE					  NUMBER_IN_SEQUENCE	 GLOBAL SUBSIDIARY_ID
+------------------------------ -------------------------------------------------- ------------------ ---------- -------------
+SAMPLE_CONDITION	       <select one>							   1	      1 	    1
+SAMPLE_CONDITION	       Acceptable							   2	      1 	    1
+SAMPLE_CONDITION	       Pending								   3	      1 	    1
+SAMPLE_CONDITION	       Unacceptable							   4	      1 	    1
+
+SQL> select * from discrete_attribute where attribute_name = 'QC_STATUS' order by number_in_sequence;
+
+ATTRIBUTE_NAME		       ATTRIBUTE_VALUE					  NUMBER_IN_SEQUENCE	 GLOBAL SUBSIDIARY_ID
+------------------------------ -------------------------------------------------- ------------------ ---------- -------------
+QC_STATUS		       PASSED								   1	      1 	    1
+QC_STATUS		       FAILED QC							   2	      1 	    1
+QC_STATUS		       Get Approval							   3	      1 	    1
+QC_STATUS		       Request redraw							   4	      1 	    1
+
+select urs.contact_id, oz.organization_id, oz.company
+from users urs, contact ct, organization oz
+where ct.contact_id = urs.contact_id 
+and oz.organization_id = ct.organization_id
+and upper(urs.username) = 'CCHOU';
+
+CONTACT_ID ORGANIZATION_ID COMPANY
+---------- --------------- ----------------------------------------------------------------------------------------------------
+	27		 1 LAB
+
+select company, organization_id from organization order by company;
+
+select abc.data_length from all_tab_cols abc where abc.table_name = 'SHIPMENT_SAMPLE' and abc.column_name = 'AVAILABLE_NUMBER';
+select abc.data_length from all_tab_cols abc where abc.table_name = 'SAMPLE_TABLE' and abc.column_name = 'CLIENT_SAMPLE_TUBE_ID';
+	sample_tube_id
+accession.accession_number
+shipment_sample.qc_comment
+
+
+select * from discrete_attribute where attribute_name = 'SPEC_REC_LBL_SPECIMEN_ID' order by number_in_sequence;
+SPEC_REC_LBL_SPECIMEN_ID Specimen ID(*): 1	       1 1
+
+
+SPEC_REC_LBL_LAB_SAMP_TUBE_ID
+SPEC_REC_LBL_ACCESSION_ID
+SPEC_RECEIPT_STUDY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+col fldlist for a90
+select upper(svf.value) fldlist, svf.study_protocol_id
+from study_variable_fld svf, protocol_defined_variable pdv, variable var
+where upper(var.variable_name) = 'QC REVIEW'
+and var.variable_id = pdv.variable_id
+and pdv.protocol_defined_variable_id = svf.protocol_defined_variable_id;
+
+protocol_defined_variable
+variable
+variable_type
+
+
+
+
+
+
+
+
+

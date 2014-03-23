@@ -1,0 +1,48 @@
+3.0.3
+
+wajig install openjdk-6-jre -y
+wajig install postgresql -y
+wajig install tomcat6
+
+-- copy openclinica tar file over
+cchou@cchoudesktop:~/Downloads$ scp OpenClinica-3.0.3.tar.gz root@openclinica:
+
+  285  mkdir /usr/local/oc
+  286  mv OpenClinica-3.0.2 /usr/local/oc/
+  289  tar zxvf OpenClinica-3.0.3.tar.gz 
+  292  mv OpenClinica-3.0.3 /usr/local/oc/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  294  su - postgres
+    7  psql -U postgres -f /usr/local/oc/OpenClinica-3.0.3/config/database/PostgreSQL/3.0.3/install/create_role.sql 
+    8  psql -U postgres -f /usr/local/oc/OpenClinica-3.0.3/config/database/PostgreSQL/3.0.3/install/create_db.sql 
+	  9  exit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  299  cd /var/lib/tomcat6/
+  300  mkdir openclinica.data
+  302  chown tomcat6 openclinica.data/
+
+  303  cp /usr/local/oc/OpenClinica-3.0.3/distribution/OpenClinica.war webapps/
+  304  chown tomcat6\: webapps/OpenClinica.war 
+
+  306  cd webapps/OpenClinica/WEB-INF/classes/
+  319  vi datainfo.properties 
+
+filePath=/var/lib/tomcat6/openclinica.data/
+log.dir=/var/log/tomcat6/
+mail.host=smtp.cardiodx.com
+adminEmail=admin@cardiodx.com
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  323  tail -20f /var/log/tomcat6/catalina.out &
+  321  /etc/init.d/tomcat6 restart
+
+https://openclinica.cardiodx.com/OpenClinica
+
+  root/12345678
+
+cdx2500!
+cdx2500.
+
+

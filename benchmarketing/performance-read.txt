@@ -1,0 +1,61 @@
+lvm iscsi snapshot copy dd performance
+
+ACTIVE   Original '/dev/vg1/win32-master' [25.01 GB] inherit
+ACTIVE   Snapshot '/dev/vg1/acrobatpro'   [10.01 GB] inherit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- original
+--
+# dd if=/dev/vg1/win32-master bs=64M | pv | dd of=/dev/null
+26851934208 bytes (27 GB) copied, 164.688 s, 163 MB/s
+
+--
+-- snapshot
+--
+# dd if=/dev/vg1/acrobatpro bs=64M | pv | dd of=/dev/null
+26851934208 bytes (27 GB) copied, 226.176 s, 119 MB/s
+
+
+163-119=44
+44/163=26% (slower!!)
+
+
+--
+-- over ssh
+--
+# dd if=/dev/vg1/win32-master bs=64M | pv | ssh root@kvmsrv1 'dd of=/dev/null'
+26851934208 bytes (27 GB) copied, 609.668 s, 44.0 MB/s
+
+
+--
+-- over iscsi
+--
+# dd if=/dev/disk/by-path/ip-10.10.37.39\:3260-iscsi-storage1.win32-master-lun-0 | pv | dd of=/dev/null
+26851934208 bytes (27 GB) copied, 527.899 s, 50.9 MB/s
+
+
+--
+-- over iscsi (3 of them)
+--
+kvmsrv1 # dd if=/dev/disk/by-path/ip-10.10.37.39\:3260-iscsi-storage1.win32-master-lun-0 | pv | dd of=/dev/null
+kvmsrv2 # dd if=/dev/disk/by-path/ip-10.10.37.39\:3260-iscsi-storage1.winxp-master-lun-0 | pv | dd of=/dev/null
+kvmsrv3 # dd if=/dev/disk/by-path/ip-10.10.37.39\:3260-iscsi-storage1.rdlims-master-lun-0 | pv | dd of=/dev/null
+
+kvmsrv1: 26851934208 bytes (27 GB) copied, 884.971 s, 30.3 MB/s, 32.5 MB/s
+kvmsrv2: 26851934208 bytes (27 GB) copied, 895.238 s, 30.0 MB/s, 31.2 MB/s
+kvmsrv3: 26851934208 bytes (27 GB) copied, 850.305 s, 31.6 MB/s, 33.5 MB/s
+
+
+--
+-- iscsi on iscsi image
+--
+# dd if=/dev/disk/by-path/ip-10.10.37.39\:3260-iscsi-storage1.win32-master-lun-0 bs=10M | pv | dd of=/dev/null
+~24MB/s
+
+-- iscsi on iscsi image (again)
+dd if=/dev/zero bs=5M count=1024 | pv > testfile
+   5GB 0:03:53 [21.9MB/s]
+
+
+

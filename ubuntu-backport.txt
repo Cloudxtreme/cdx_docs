@@ -1,0 +1,15 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ubuntu backport
+deb http://archive.ubuntu.com/ubuntu hardy-backports main universe multiverse restricted
+
+For Ubuntu 8.10 (Intrepid Ibex):
+
+url: http://archive.ubuntu.com/ubuntu 
+distribution: intrepid-backports
+sections: main universe multiverse restricted
+
+For Ubuntu 8.04 (Hardy Heron):
+
+url: http://archive.ubuntu.com/ubuntu 
+distribution: hardy-backports
+sections: main universe multiverse restricted

@@ -1,0 +1,65 @@
+http://wiki.apache.org/cassandra/GettingStarted
+http://wiki.apache.org/cassandra/ArticlesAndPresentations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+java -version
+java version "1.6.0_20"
+
+su - hadoop
+wget http://mirror.cloudera.com/apache//cassandra/0.6.8/apache-cassandra-0.6.8-bin.tar.gz
+tar zxvf apache-cassandra-0.6.8-bin.tar.gz
+exit
+
+cd /usr/local
+mv /home/hadoop/apache-cassandra-0.6.8 .
+ln -s apache-cassandra-0.6.8 cassandra
+
+vi README.txt
+
+mkdir -p /var/log/cassandra
+chown -R hadoop /var/log/cassandra
+mkdir -p /var/lib/cassandra
+chown -R hadoop /var/lib/cassandra
+
+
+su - hadoop
+vi .bashrc
+export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.22/
+export HADOOP_HOME=/usr/local/hadoop
+export CASSANDRA_HOME=/usr/local/cassandra
+export PIG_HOME=/usr/local/pig
+export HIVE_HOME=/usr/local/hive
+export PATH=$HADOOP_HOME/bin:$CASSANDRA_HOME/bin:$PIG_HOME/bin:$HIVE_HOME/bin:$PATH
+
+  <Seeds>
+      <Seed>cchoudesktop</Seed>
+  </Seeds>
+
+  <ListenAddress>10.10.35.48</ListenAddress>
+  <ThriftAddress>10.10.35.48</ThriftAddress>
+
+
+-- starting it as 'foreground'
+cassandra -f
+
+cassandra-cli --host cchoudesktop --port 9160
+
+  http://wiki.apache.org/cassandra/CassandraCli
+
+  set Keyspace1.Standard2['jsmith']['first'] = 'John'
+       \            \         \        \          \
+        \            \         \_ key   \          \_ value
+         \            \                  \_ column
+          \_ keyspace  \_ column family
+
+cassandra> set Keyspace1.Standard2['jsmith']['first'] = 'John'
+cassandra> set Keyspace1.Standard2['jsmith']['last'] = 'Smith'
+cassandra> set Keyspace1.Standard2['jsmith']['age'] = '42'
+
+cassandra> get Keyspace1.Standard2['jsmith']
+  => (column=last, value=Smith, timestamp=1294436950500000)
+  => (column=first, value=John, timestamp=1294436946900000)
+  => (column=age, value=42, timestamp=1294436953470000)
+  Returned 3 results.
+
+

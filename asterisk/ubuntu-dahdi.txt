@@ -1,0 +1,320 @@
+http://asterisk.pbx.in/asterisk-ubuntu-server-edition-howto
+http://www.cahilig.org/install-asterisk-14-and-asterisk-gui-centos-4-and-centos-5#installation
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig list | grep linux
+wajig purge linux-image-2.6.24-16-server linux-ubuntu-modules-2.6.24-16-server linux-server linux-image-server
+wajig install linux-server linux-image-server linux-ubuntu-modules-$(uname -r)
+wajig install alsa-base alsa-utils linux-sound-base
+--wajig install asterisk asterisk-sounds-extra asterisk-mp3 
+--wajig install zaltel
+--wajig install libpri1.2
+wajig install subversion
+wajig install vim-nox
+
+wajig install sox libsox-fmt-all
+
+vi .vimrc
+syntax on
+
+wajig install build-essential fakeroot sysv-rc-conf linux-headers-$(uname -r)
+--wajig install checkinstall
+
+
+reboot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- libpri
+--
+wget http://downloads.asterisk.org/pub/telephony/libpri/libpri-1.4.10.tar.gz
+tar xvzf libpri-1.4.10.tar.gz 
+cd libpri-1.4.10/
+make
+make install 
+cd
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- dahdi
+--
+# ***Note: 2.2 dosen't work at this time (05/01/09)
+# svn co http://svn.digium.com/svn/dahdi/linux/trunk dahdi-kernel 
+# cd dahdi-kernel
+# make
+# make isntall
+
+# svn co http://svn.digium.com/svn/dahdi/tools/trunk dahdi-tools 
+# ./configure
+# make
+# make install
+# make config
+#   /etc/dahdi/init.conf
+#   /etc/dahdi/modules
+#   /etc/dahdi/genconf_parameters
+#   /etc/modprobe.d/dahdi
+#   /etc/modprobe.d/dahdi.blacklist
+
+wget http://downloads.asterisk.org/pub/telephony/dahdi-linux/releases/dahdi-linux-2.1.0.4.tar.gz
+tar zxvf dahdi-linux-2.1.0.4.tar.gz
+cd dahdi-linux-2.1.0.4
+make
+make install
+cd
+
+wget http://downloads.asterisk.org/pub/telephony/dahdi-tools/releases/dahdi-tools-2.1.0.tar.gz
+tar zxvf dahdi-tools-2.1.0.tar.gz 
+cd dahdi-tools-2.1.0
+./configure
+make
+make install
+make config
+cd
+
+
+--
+-- rhino
+--
+wget http://downloads.rhinoequipment.com/Rhino%20Downloads/Drivers/DAHDI/rhino-linux-current.tbz2
+tar -xjvf rhino-linux-current.tbz2
+cd ~/rhino-linux-0.99.1
+export DAHDI_DIR=~/dahdi-linux-2.1.0.4
+make
+make install
+cd
+
+depmod -a
+
+wget http://ftp.rhinoequipment.com/Drivers/Contrib/modprobe.rhino
+sed -i 's/ztcfg/dahdi_cfg/g' modprobe.rhino 
+cp modprobe.rhino /etc/modprobe.d/
+
+cd /etc/dahdi
+vi modules
+r1t1
+
+cd /etc/dahdi
+mv system.conf system.conf.orig
+vi system.conf
+loadzone = us
+defaultzone=us
+span=1,1,3,esf,b8zs
+bchan=1-12
+dchan=24
+
+
+reboot
+
+lsmod | grep r1t1
+dahdi_scan 
+dahdi_test -v
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- asterisk
+--
+wajig install libncurses-dev
+groupadd -g 556 asterisk
+useradd -g 556 -u 556 asterisk
+
+wget http://downloads.digium.com/pub/asterisk/releases/asterisk-1.4.24.1.tar.gz
+tar zxvf asterisk-1.4.24.1.tar.gz
+cd asterisk-1.4.24.1
+./configure
+make
+make install
+make samples
+
+strings /usr/lib/asterisk/modules/chan_dahdi.so | grep '^DAHDI Telephony'
+DAHDI Telephony Driver w/PRI
+DAHDI Telephony w/PRI
+
+# cat /proc/dahdi/1 
+
+Read junction/ReadMe.txt
+
+on old asterisk:
+tar cvf /tmp/asterisk.tar iax.conf extensions.conf sip.conf voicemail.conf queues.conf agents.conf manager.conf features.conf meetme.conf zapata.conf
+
+mkdir ORIG
+mv iax.conf ORIG/
+mv extensions.conf ORIG/
+mv sip.conf ORIG/
+mv voicemail.conf ORIG/
+mv queues.conf ORIG/
+mv agents.conf ORIG/
+mv manager.conf ORIG/
+mv features.conf ORIG/
+mv meetme.conf ORIG/
+mv chan_dahdi.conf ORIG/
+
+tar xvf /root/asterisk.tar 
+mv zapata.conf chan_dahdi.conf
+
+asterisk
+
+NOTE: files under ./conf
+
+vi extensions.conf
+DAHDI
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- LDAPGet
+--
+http://www.mezzo.net/asterisk/app_ldap.html
+
+--wajig install ldap-utils ldapvi libldap-2.4-2 libldap2-dev
+wajig install ldapvi 
+  ldapvi libglib2.0-0
+
+wget http://www.mezzo.net/asterisk/app_ldap-2.0rc1.tgz
+tar zxvf app_ldap-2.0rc1.tgz 
+cd app_ldap-2.0rc1/
+make
+make install
+
+load app_ldap.so 
+show application LDAPget 
+
+mv ldap.conf ldap.conf.sav
+vi ldap.conf
+
+http://www.mezzo.net/asterisk/app_ldap.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- vsftpd
+--
+rsync -av root@10.10.37.126:/data/plcmspip .
+
+wajig install vsftpd
+
+cp /etc/vfsftp.conf 
+
+listen=YES
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+dirmessage_enable=YES
+xferlog_enable=YES
+connect_from_port_20=YES
+xferlog_std_format=YES
+nopriv_user=ftp
+ls_recurse_enable=YES
+
+secure_chroot_dir=/var/run/vsftpd
+pam_service_name=vsftpd
+
+
+  168  groupadd -g 500 PlcmSpIp
+  169  useradd -g 500 -g 500 PlcmSpIp
+  170  passwd PlcmSpIp
+
+vi /etc/passwd
+PlcmSpIp:x:1001:500::/data/plcmspip:/bin/sh
+
+on pdc:
+vi /etc/udhcpd.conf
+
+# For Polycom IP phones
+option tftp 10.10.37.26
+option ntpsrv  91.189.94.4
+option timezone -28800
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- iaxmodem
+--
+wajig install iaxmodem 
+
+copy the following over:
+  ttyIAX1
+  ttyIAX2
+  ttyIAX3
+  
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- ssmtpd
+--
+install ssmtp (see ssmtp.txt)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- hylafax
+--
+wajig install hylafax-server 
+
+/var/spool/hylafax/bin/faxrcvd
+
+vi FaxDispatch
+FROMADDR=cdxfax@cardiodx.com
+# Notifications of both successful & failed fax receipts are sent to this email address
+TOADDR=faxmaster@cardiodx.com
+# Faxes recd. are sent to this email address
+SENDTO=${CALLID4}@cardiodx.com
+SENDER="${CALLID2} <${CALLID1}>"
+FILETYPE=pdf
+
+
+copy the following over:
+  config.ttyIAX1
+  config.ttyIAX2
+  config.ttyIAX3
+  FaxDispatch
+  config
+
+
+--vi /etc/hylafax/hosts.hfaxd
+--10\.10\.:::
+
+vi extensions.conf
+
+  602  adduser cdxtest
+  603  cat /etc/group
+  604  faxuser -p cdxtest -u 1002 cdxtest
+  605  faxadduser -p cdxtest -u 1002 cdxtest
+  606  cat /var/spool/hylafax/etc/hosts.hfaxd 
+
+Install/configure client on Windows, see:
+  http://winprinthylafax.sourceforge.net/
+
+cd /etc/hylafax/templates/en
+vi faxrcvd-notify-error.txt
+vi faxrcvd-notify-success.txt
+
+add:
+   CallID4: $CALLID4
+
+
+
+faxstat -s
+
+
+wajig install ghostscript gsfonts-other
+
+/etc/hylafax
+vi hyla.conf
+#FontMap:  /usr/share/gs-esp/8.15/lib:/usr/share/gs-esp/7.07/lib:/usr/share/gs/6.53
+FontMap:  /usr/share/ghostscript/8.61/lib/
+
+sendfax -vv -n -d 16504752721 /etc/hosts
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Go from 12 to 23 lines:
+cd /etc/dahdi
+vi system.conf 
+12 --> 23
+
+vi /etc/asterisk/chan_dahdi.conf
+12 --> 23
+
+
+
+

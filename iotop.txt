@@ -1,0 +1,14 @@
+
+http://guichaz.free.fr/iotop/
+
+
+  503  wget http://guichaz.free.fr/iotop/files/iotop-0.4.4.tar.gz
+
+echo 1 > /proc/sys/vm/block_dump
+
+	man ./iotop.1 
+  ./iotop.py -o -d 15
+		then type 'a'
+    then type space
+
+

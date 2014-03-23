@@ -1,0 +1,14 @@
+
+rlwrap sqlplus dnalims/chialin30dna
+set linesize 32000
+
+select constraint_name,constraint_type,table_name,r_owner,r_constraint_name
+from all_constraints where constraint_type in ('P','U') and table_name='VARIABLE';
+
+select constraint_name,constraint_type,table_name,r_constraint_name
+from user_constraints 
+where constraint_type='R'
+and r_constraint_name in (
+  select constraint_name from user_constraints 
+  where constraint_type in ('P','U') and table_name='VARIABLE');
+

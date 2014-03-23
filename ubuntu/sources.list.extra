@@ -1,0 +1,19 @@
+deb http://us.archive.ubuntu.com/ubuntu/ edgy main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ edgy main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ edgy-updates main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ edgy-updates main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ edgy-backports main restricted universe multiverse
+deb-src http://us.archive.ubuntu.com/ubuntu/ edgy-backports main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu edgy-security main restricted universe multiverse
+deb-src http://security.ubuntu.com/ubuntu edgy-security main restricted universe multiverse
+
+# Extra
+deb http://ubuntu.beryl-project.org/ edgy main
+deb http://3v1n0.tuxfamily.org edgy beryl-svn
+
+deb http://ubuntu.beryl-project.org feisty main
+deb-src http://ubuntu.beryl-project.org feisty main
+

@@ -1,0 +1,7 @@
+
+
+ERB: http://ruby-doc.org/stdlib-1.9.3/libdoc/erb/rdoc/ERB.html
+
+Binding: http://onestepback.org/index.cgi/Tech/Ruby/RubyBindings.rdoc
+
+

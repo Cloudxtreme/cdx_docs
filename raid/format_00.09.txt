@@ -1,0 +1,13 @@
+
+if you see:
+  mdadm: metadata format 00.90 unknown, ignored.
+
+message.....
+
+
+cd /etc/mdadm
+vi mdadm.conf
+
+change 00.90 to 0.90
+
+

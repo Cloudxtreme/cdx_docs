@@ -1,0 +1,118 @@
+Phones:
+
+# egrep 2010-0[123] Master.csv | wc -l
+22731
+
+# grep 2010-01 Master.csv | wc -l
+6202
+# grep 2010-02 Master.csv | wc -l
+6679
+# grep 2010-03 Master.csv | wc -l
+9788
+
+Fax:
+# egrep 2010-0[123] Master.csv | awk -F, '{print $2,$3}' | grep fax | wc -l
+694
+
+root@aster64:/var/log/asterisk/cdr-csv# grep 2010-03 Master.csv | awk -F, '{print $2,$3}' | grep fax | wc -l
+279
+root@aster64:/var/log/asterisk/cdr-csv# grep 2010-02 Master.csv | awk -F, '{print $2,$3}' | grep fax | wc -l
+209
+root@aster64:/var/log/asterisk/cdr-csv# grep 2010-01 Master.csv | awk -F, '{print $2,$3}' | grep fax | wc -l
+206
+
+/var/spool/hylafax/doneq# ll | wc -l
+908
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What types of calls do we have?
+# grep 2010-03 Master.csv | awk -F, '{print $4}' | sort -u
+
+"conferences"
+"default"
+"outbound"
+"pstn"
+"phone-tree"
+
+"it" "it-0609" "it-0917" "it-lims"
+"lims-0822"
+"receiving-weekday" "receiving-weekend"
+"service-0616" "service-1606"
+"customer-service"
+
+OK, outbound only goes out.  default may be outgoing calls or internal calls.
+
+How manay outbound calls do we have?
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep outbound | wc -l
+3642
+
+default ones excludes 27xx and 09xx extensions:
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep default | egrep -v '\"27[0-9][0-9]\"|\"09[0-9][0-9]\"' | wc -l
+310
+
+So total outbound calls will be:
+  For Jan-March: 3642 + 310 = 3952
+  In March:      2317 + 111 = 2428
+
+Inbound calls (through pstn) but not fax:
+# grep 2010-0[123] Master.csv | awk -F, '{print $3,$4}' | grep -v fax | grep pstn | egrep '\"27[0-9][0-9]\"' | wc -l
+3082
+
+Inbound fax (through pstn) to extensions:
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep fax | grep -v \"27[0-9][0-9]\" | grep -v \"09[0-9][0-9]\" | grep -v \"\" | grep pstn | wc -l
+401
+
+Outbound fax:
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$5}' | grep Fax | egrep '\"27[0-9][0-9]\"|\"09[0-9][0-9]\"' | wc -l
+534
+
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4,$5}' | grep -i fax | grep -v pstn | egrep '\"27[0-9][0-9]\"|\"09[0-9][0-9]\"' | grep -v '^\"\"' | wc -l
+534
+
+How many calls going to 'conference lines'
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep conferences | wc -l
+702
+
+conf calls coming from non-cardiodx lines:
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep conferences | egrep -v '\"27[0-9][0-9]\"|\"09[0-9][0-9]\"' | wc -l
+564
+
+Calls going to phone tree:
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep phone-tree | egrep -v '\"27[0-9][0-9]\"|\"09[0-9][0-9]\"|\"\"' | wc -l
+257
+
+How about spell by name (phone tree, option 3)
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4}' | grep phone-tree | egrep -v '\"27[0-9][0-9]\"|\"09[0-9][0-9]\"|\"\"' | grep \"3\" | wc -l
+99
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+for i in ANSWERED BUSY FAILED 'NO ANSWER'; do echo $i; done
+
+for i in ANSWERED BUSY FAILED 'NO ANSWER'; do echo $i; grep 2010-0[123] Master.csv | awk -F, '{print $15}' | grep "$i" | wc -l; done
+  ANSWERED 7201
+  BUSY 1512
+  FAILED 7
+  NO ANSWER 305
+
+why calls failed?
+# grep 2010-0[123] Master.csv | awk -F, '{print $2,$3,$4,$15}' | grep FAILED
+"2780" "16502266000" "default" "FAILED"
+"2780" "16502266000" "default" "FAILED"
+"2799" "16504752781" "outbound" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2734" "19258060757" "default" "FAILED"
+"2734" "19258060757" "default" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+"2799" "fax" "pstn" "FAILED"
+
+

@@ -1,0 +1,52 @@
+
+# vi /etc/rc.local
+ip rule add fwmark 4 table comcast
+ip rule add fwmark 5 table xo
+
+
+-- Add the following line after natting
+
+vi /etc/init.d/firewall
+
+        ##########################
+        # Mangle for DMZs
+        ##########################
+				iptables -t mangle -A PREROUTING -s 10.10.43.0/24 -d ! 10.10.32.0/21 -j MARK --set-mark 5
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ip route show table comcast
+173.13.158.176/28 dev eth4  scope link  src 173.13.158.180 
+default via 173.13.158.190 dev eth4 
+
+# ip route show table xo
+67.95.201.192/27 dev eth5  scope link  src 67.95.201.198 
+default via 67.95.201.193 dev eth5 
+
+# ip rule
+0:	from all lookup local 
+32762:	from all fwmark 0x5 lookup xo 
+32763:	from all fwmark 0x4 lookup comcast 
+32764:	from 67.95.201.198 lookup xo 
+32765:	from 173.13.158.180 lookup comcast 
+32766:	from all lookup main 
+32767:	from all lookup default 
+
+
+# iptables-save 
+
+-A PREROUTING -s 10.10.43.0/255.255.255.128 -d ! 10.10.32.0/255.255.248.0 -j MARK --set-mark 0x5 
+
+
+
+# ip route
+173.13.158.176/28 dev eth4  proto kernel  scope link  src 173.13.158.180 
+67.95.201.192/27 dev eth5  proto kernel  scope link  src 67.95.201.198 
+10.10.43.0/24 dev eth3  proto kernel  scope link  src 10.10.43.1 
+192.168.10.0/24 via 67.95.201.193 dev eth5 
+10.10.32.0/21 dev eth0  proto kernel  scope link  src 10.10.37.2 
+default 
+	nexthop via 173.13.158.190  dev eth4 weight 12
+	nexthop via 67.95.201.193  dev eth5 weight 1
+
+

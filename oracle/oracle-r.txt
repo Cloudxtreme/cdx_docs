@@ -1,0 +1,35 @@
+oracle r
+
+1. install R on the database server
+2. isntall RServe in R
+   - within R, install the Rserve package
+           $ R
+            > install.packages("Rserve")
+            > install.packages("outliers")
+            > q()
+   - Start RServe
+           $ R CMD Rserve
+             OR (if this doesn't work)
+           $ R
+           > library(Rserve)
+           > Rserve()
+           > q()
+
+3. grant DNALIMS read/write FilePermission on /clims/data
+        exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/rna/extraction/*', 'read,write,delete')
+        SQL>  exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.io.FilePermission', '/clims/data/rna/quantitation/*', 'read,write,delete');
+
+4. grant socket permission  
+        exec dbms_java.grant_permission( 'DNALIMS', 'SYS:java.net.SocketPermission', '127.0.0.1:6311', 'connect,resolve' )
+
+5. run load_waban.sh
+        - load discrete attribute
+        - load attribute attribute
+        - load procedure templates
+6. load new instrument types (Biological Safety Cabinet, Freezer, Refrigerator, Pipette, Nanodrop 8000)
+        - scripts to be set up by Mack
+7. load libraries REngine.jar and Rserve.jar for RServer
+        loadjava -user DNALIMS/DNALIMS@//common25411/orcl -v -resolve lib/REngine.jar
+        loadjava -user DNALIMS/DNALIMS@//common25411/orcl -v -resolve lib/Rserve.jar
+8. load java stored procedure jar
+        loadjava -user DNALIMS/DNALIMS@//common25411/orcl -v -resolve jar/java_stored_procedures.jar

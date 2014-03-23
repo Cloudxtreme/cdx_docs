@@ -1,0 +1,8 @@
+
+wget http://jimsun.linxnet.com/downloads/pflogsumm-1.1.1.tar.gz
+tar zxvf pflogsumm-1.1.1.tar.gz 
+
+./pflogsumm.pl /data/log/mail/201010/mail 
+
+for i in 01 02 03 04 05 06 07 08 09; do ./pflogsumm.pl /data/log/mail/2010$i/mail > 2010$i $i; done
+

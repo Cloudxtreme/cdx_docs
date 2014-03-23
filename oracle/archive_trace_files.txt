@@ -1,0 +1,8 @@
+  578  find . -type f -mtime +7 -name \*.trc -exec mv {} ../BAK \;
+  580  find . -type f -mtime +5 -name \*.trc -exec mv {} ../BAK \;
+  582  find . -type f -mtime +3 -name \*.trc -exec mv {} ../BAK \;
+  584  find . -type f -mtime +1 -name \*.trc -exec mv {} ../BAK \;
+  586  mv ../BAK/ TRA14
+  588  tar czvf TRA14.tar.gz TRA14
+  590  rm -rf TRA14
+

@@ -1,0 +1,125 @@
+http://ubuntuforums.org/showthread.php?t=236093
+https://help.ubuntu.com/community/BIND9ServerHowto
+
+
+NOTE: 
+1) need to re-generate the key
+2) how bout chroot???
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install bind9
+
+files under: /etc/bind
+
+cp named.conf.local named.conf.cdx
+
+vi named.conf
+include "/etc/bind/named.conf.cdx";
+
+# more named.conf.cdx 
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+key mykey {
+       algorithm hmac-md5;
+       #secret "IriCelUSbPMypSjImBsiTHMauOumRPMkdBjoxVINAx0vxJZNRKGWzFCKibad";
+       secret "HbIytTDYJrDphhcTneCbzOWIkjeRbUvARGkaYQGGKDlyDZzcwwrZqeCoaltQ";
+};
+
+zone "37.10.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/cardiodx.reversed";
+        allow-update { key mykey; };
+};
+
+zone "cardiodx.com" {
+        type master;
+        file "/etc/bind/cardiodx.zone";
+        allow-update { key mykey; };
+};
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# cat cardiodx.zone 
+$ORIGIN .
+$TTL 86400      ; 1 day
+cardiodx.com            IN SOA  pdc.cardiodx.com. pdc.cardiodx.com. (
+                                2001046649 ; serial
+                                86400      ; refresh (1 day)
+                                21600      ; retry (6 hours)
+                                3600000    ; expire (5 weeks 6 days 16 hours)
+                                3600       ; minimum (1 hour)
+                                )
+                        NS      pdc.cardiodx.com.
+                        MX      10 mail.cardiodx.com.
+$ORIGIN cardiodx.com.
+adaxis                  CNAME   itdesktop
+aragorn                 A       10.10.37.23
+asterisk                A       10.10.37.26
+backup                  A       10.10.37.22
+bioinformatics          A       10.10.37.28
+bugs                    CNAME   bioinformatics
+bwprinter               A       10.10.37.90
+cdxwap                  A       10.10.37.70
+colorprinter            A       10.10.37.91
+denbwprinter            A       10.10.37.94
+ensembl                 CNAME   srikardesktop
+firewall                A       10.10.37.1
+hibbert                 A       10.10.37.25
+intranet                CNAME   backup
+itmandriva              A       10.10.37.55
+ldap                    CNAME   pdc
+lims                    CNAME   bioinformatics
+localhost               A       127.0.0.1
+mail                    A       10.10.37.2
+mediatrix               A       10.10.37.80
+pdc                     A       10.10.37.21
+phenodb                 CNAME   bioinformatics
+saruman                 A       10.10.37.24
+scanner                 A       10.10.37.93
+sipura2100              A       10.10.37.85
+smtp                    CNAME   mail
+svn                     CNAME   backup
+syslog                  CNAME   backup
+testlims                CNAME   srikardesktop
+vpn                     CNAME   backup
+webmail                 A       10.10.37.27
+www                     CNAME   mail
+zebra                   A       10.10.37.92
+
+
+
+
+root@pdc:/data/named/etc/bind# more cardiodx.reversed
+$ORIGIN .
+$TTL 43200      ; 12 hours
+37.10.10.in-addr.arpa   IN SOA  pdc.cardiodx.com. root\@cardiodx.com. (
+                                2001057210 ; serial
+                                43200      ; refresh (12 hours)
+                                21600      ; retry (6 hours)
+                                3600000    ; expire (5 weeks 6 days 16 hours)
+                                3600       ; minimum (1 hour)
+                                )
+                        NS      pdc.cardiodx.com.
+$ORIGIN 37.10.10.in-addr.arpa.
+1                       PTR     firewall.cardiodx.com.
+10                      PTR     cdxSwitch1.cardiodx.com.
+102                     PTR     amydesktop.cardiodx.com.
+104                     PTR     Labdesktop5.cardiodx.com.
+105                     PTR     LabDesktop3.cardiodx.com.
+107                     PTR     manufacture1.cardiodx.com.
+108                     PTR     davidmac.cardiodx.com.
+11                      PTR     poeSwitch1.cardiodx.com.
+113                     PTR     itdesktop.cardiodx.com.
+114                     PTR     DD19YJ91.cardiodx.com.
+116                     PTR     LABDESKTOP1.cardiodx.com.
+118                     PTR     gx620.cardiodx.com.
+12                      PTR     poeSwitch2.cardiodx.com.
+120                     PTR     mingdesktop.cardiodx.com.
+121                     PTR     barbaradesktop.cardiodx.com.
+124                     PTR     kevindesktop.cardiodx.com.
+125                     PTR     spetramax1.cardiodx.com.

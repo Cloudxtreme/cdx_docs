@@ -1,0 +1,100 @@
+squid guard
+
+http://www.howforge.com/how-filter-http-traffic-using-squidguard-ubuntu
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install squidguard
+
+
+--
+-- black lists
+--
+http://www.squidguard.org/blacklists.html
+
+cd /var/lib/squidguard/db
+
+-- mesd
+wget http://squidguard.mesd.k12.or.us/blacklists.tgz
+tar zxvf blacklists.tgz
+mv blacklists mesd
+chown -R root:proxy mesd/
+
+
+-- Université Toulouse
+wget ftp://ftp.univ-tlse1.fr/pub/reseau/cache/squidguard_contrib/blacklists.tar.gz
+
+tar zxvf blacklists.tar.gz
+mv blacklists toulouse
+chown -R root:proxy toulouse/
+
+# cd /var/lib/squidguard/db/mesd
+# ll | grep lrw | awk '{print "ln -s ",$10,$8}'
+ln -s  ../toulouse/hacking hacking_t
+ln -s  ../toulouse/malware malware_t
+ln -s  ../toulouse/mixed_adult mixed_adult_t
+ln -s  ../toulouse/phishing phishing_t
+ln -s  ../toulouse/redirector redirector_t
+ln -s  ../toulouse/strict_redirector strict_redirector_t
+ln -s  ../toulouse/strong_redirector strong_redirector_t
+
+squidGuard -C all
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/squid3/squid.conf
+redirect_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf
+
+
+mv squidGuard.conf squidGuard.conf.orig
+grep -v "^#" squidGuard.conf.orig | sed '/^$/d' > squidGuard.conf
+
+
+# cat squidGuard.conf
+dbhome /var/lib/squidguard/db/mesd
+logdir /var/log/squid
+time workhours {
+  weekly mtwhf 08:00 - 19:30
+  date *-*-01  08:00 - 19:30
+}
+dest malware_t {
+  domainlist  malware_t/domains
+  urllist     malware_t/urls
+  expressionlist  malware_t/expressions
+}
+dest mixed_adult_t {
+  domainlist  mixed_adult_t/domains
+  urllist     mixed_adult_t/urls
+}
+
+dest phishing_t {
+  domainlist  phishing_t/domains
+  urllist     phishing_t/urls
+}
+
+acl {
+  default {
+    pass     !mixed_adult_t !malware_t !phishing_t any
+    redirect http://wiki.cardiodx.com/Blocked_Page
+  }
+}
+
+
+-- test
+# /usr/sbin/squid3 -D -d 1 -N
+
+# /usr/bin/squidGuard -c /etc/squid/squidGuard.conf
+
+You should see:
+2009-12-11 13:39:17 [8046] squidGuard ready for requests (1260567557.698)
+
+# ps -ef | grep squid
+root      7918  5493  0 13:28 pts/0    00:00:00 tail -20f squidGuard.log
+root      8044  6037  0 13:38 pts/1    00:00:00 vi squidGuard.conf
+root      8059     1  0 13:40 ?        00:00:00 /usr/sbin/squid3 -D -sYC
+proxy     8061  8059  0 13:40 ?        00:00:00 (squid) -D -sYC
+proxy     8064  8061 36 13:40 ?        00:00:02 (squidGuard) -c /etc/squid/squidGuard.conf
+proxy     8065  8061 40 13:40 ?        00:00:02 (squidGuard) -c /etc/squid/squidGuard.conf
+proxy     8066  8061 45 13:40 ?        00:00:02 (squidGuard) -c /etc/squid/squidGuard.conf
+proxy     8067  8061 35 13:40 ?        00:00:02 (squidGuard) -c /etc/squid/squidGuard.conf
+proxy     8068  8061 45 13:40 ?        00:00:02 (squidGuard) -c /etc/squid/squidGuard.conf
+root      8071  5493  0 13:40 pts/0    00:00:00 grep squid
+

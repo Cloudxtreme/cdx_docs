@@ -1,0 +1,72 @@
+ubuntu DRBD replication block mirror
+
+http://www.cb1inc.com/2008/05/18/installing-drbd-8.2.5-on-ubuntu-8.04-hardy-heron
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sudo apt-get install drbd8-utils
+
+drbd01 and drbd02:
+
+vi /etc/drbd.conf
+global { usage-count yes; }
+common { syncer { rate 100M; } }
+resource r0 {
+  protocol C;
+  startup {
+    wfc-timeout 15;
+    degr-wfc-timeout 60;
+  }
+  net {
+    cram-hmac-alg sha1;
+    shared-secret "topSecret$463";
+    allow-two-primaries;
+  }
+  on drbd01 {
+    device /dev/drbd0;
+    disk /dev/sdb1;
+    address 192.168.0.1:7788;
+    meta-disk internal;
+  }
+  on drbd02 {
+    device /dev/drbd0;
+    disk /dev/sdb1;
+    address 192.168.0.2:7788;
+    meta-disk internal;
+  }
+}
+
+
+on drbd01:
+   scp /etc/drbd.conf drbd02:~
+
+on drbd02:
+   sudo mv drbd.conf /etc/
+
+on both mayes:
+   sudo /etc/init.d/drbd start
+   sudo drbdadm create-md r0
+On the drbd01 (or primary):
+   sudo drbdadm -- --overwrite-data-of-peer primary all
+
+on drbd02:
+   watch -n1 cat /proc/drbd
+
+Finally, add a filesystem to /dev/drbd0 and mount it:
+   sudo mkfs.ext3 /dev/drbd0
+   sudo mount /dev/drbd0 /srv
+
+1.2. Testing
+on the drbd01 (the primary)
+sudo cp -r /etc/default /srv
+sudo umount /srv
+Demote the primary server to the secondary role:
+sudo drbdadm secondary r0
+
+on drbd02, promote it to the primary role:
+sudo drbdadm primary r0
+
+Lastly, mount the partition:
+sudo mount /dev/drbd0 /srv
+Using ls you should see /srv/default copied from the former primary host drbd01.
+
+
+

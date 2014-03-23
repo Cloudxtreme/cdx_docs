@@ -1,0 +1,47 @@
+Installing the AoE HBA driver into ESXi
+
+Installation of the AoE HBA driver into ESXi is accomplished using an interface ESXi
+supports for third party drivers. Third party drivers can be installed into a file, 
+/bootbank/oem.tgz, which is unpacked each time ESXi boots. The following steps detail how to
+get into the ESXi service console to install/upgrade the ethdrv AoE HBA driver.
+Step 1: Enable SSH (skip this step if you already have SSH enabled)
+At the console of the ESXi host, press ALT-F1 to access the console window.
+Type unsupported in the console and then press <Enter>. Note: You will not see the
+text you type in. If you typed in unsupported correctly, you will see the Tech Support
+Mode warning and a password prompt. Enter the password for the root login.
+You should then see the prompt of ~ #. Edit the inetd.conf file with vi by typing
+
+       vi /etc/inetd.conf
+Find the line that begins with #ssh and remove the #. Then save the file. If you're new
+to using vi, then move the cursor down to #ssh line and then press the Insert key. Move
+the cursor over one space and then hit backspace to delete the #. Then press ESC and
+type in :wq to save the file and exit vi. If you make a mistake, you can press the ESC
+key and then type it :q! to quit vi without saving the file.
+Reboot the ESXi server to enable ssh.
+Step 2: Install EtherDrive HBA Driver
+The following instructions assume driver release 0.9.2. Change the file/directory names
+below as appropriate for other release versions.
+Copy the install script to the ESXi server:
+
+       scp /path/to/esxi-ethdrv-0.9.2-00000.tgz root@esxi_ip_address:/tmp/
+ssh to the ESXi server:
+
+       ssh root@esxi_ip_address
+Change directory to /tmp and unpack the driver tarball:
+
+       cd /tmp
+
+       tar –zxvf esxi-ethdrv-0.9.2-00000.tgz
+This will unpack a directory named by the driver version. Change directory into this
+directory and run the driver install script:
+
+      cd esxi-ethdrv-0.9.2-00000
+
+      ./coraid_hba_install
+The coraid_hba_install script unpacks the /bootbank/oem.tgz file, upgrades/installs the
+files necessary for the HBA driver and repacks it back into /bootbank/oem.tgz. As a
+precaution a copy of oem.tgz is stored in /bootbank/oem_bak.tgz prior to driver install.
+After update of oem.tgz is complete, reboot the ESXi server. Once the ESXi server has
+completed rebooting, refresh the Storage Adapters in the VI Client.
+For questions/comments, please contact esxbeta@coraid.com.
+

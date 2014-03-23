@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MaintenanceSchedule" table="MAINTENANCE_SCHEDULE" schema="DNALIMS">
+        <comment>Used to store maintenance schedule information for instruments</comment>
+        <id name="maintenanceScheduleId" type="big_decimal">
+            <column name="MAINTENANCE_SCHEDULE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="instrumentSetup" class="com.cardiodx.db.waban.table.InstrumentSetup" fetch="select">
+            <column name="INSTRUMENT_SETUP_ID" precision="22" scale="0" not-null="true">
+                <comment>Instrument Setup Identifier</comment>
+            </column>
+        </many-to-one>
+        <property name="scheduleDate" type="date">
+            <column name="SCHEDULE_DATE" length="7">
+                <comment>Scheduled date for maintenance</comment>
+            </column>
+        </property>
+        <property name="scheduleTime" type="string">
+            <column name="SCHEDULE_TIME" length="5">
+                <comment>Scheduled time for maintenance</comment>
+            </column>
+        </property>
+        <property name="actualDownDate" type="date">
+            <column name="ACTUAL_DOWN_DATE" length="7">
+                <comment>Actual date of starting the maintenance</comment>
+            </column>
+        </property>
+        <property name="actualDownTime" type="string">
+            <column name="ACTUAL_DOWN_TIME" length="5">
+                <comment>Actual time of starting the maintenance</comment>
+            </column>
+        </property>
+        <property name="actualUpDate" type="date">
+            <column name="ACTUAL_UP_DATE" length="7">
+                <comment>Actual date when maintenance is over</comment>
+            </column>
+        </property>
+        <property name="actualUpTime" type="string">
+            <column name="ACTUAL_UP_TIME" length="5">
+                <comment>Actual time when maintenance is over</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="20">
+                <comment>Status of the maintenance</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

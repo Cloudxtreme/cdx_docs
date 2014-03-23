@@ -1,0 +1,164 @@
+zimbra tomcat certificate ssl rsa openssl
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://certs.godaddy.com/Repository.go
+
+cd /opt/zimbra/ssl/wildcard
+
+cat gd*.crt > godaddy_ca.crt
+/opt/zimbra/bin/zmcertmgr verifycrt comm ./wildcard.cardiodx.com.key ./wildcard.cardiodx.com.crt ./godaddy_ca.crt
+
+cp wildcard.cardiodx.com.key ../zimbra/commercial/commercial.key
+
+/opt/zimbra/bin/zmcertmgr deploycrt comm  ./wildcard.cardiodx.com.crt ./godaddy_ca.crt 
+
+/opt/zimbra/bin/zmcertmgr viewdeployedcrt all
+
+ ll ../zimbra/commercial/
+total 20
+-rw-r----- 1 root root 6052 2008-10-23 22:13 commercial_ca.crt
+-rw-r--r-- 1 root root 8000 2008-10-23 22:13 commercial.crt
+-rwxr--r-- 1 root root 1675 2008-10-23 22:13 commercial.key
+
+zmcontrol stop
+zmcontrol start
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+*** NOTE:  default ca certificate password: changeit  !!!!!
+
+http://geeksnotes.livejournal.com/12187.html
+
+http://wiki.zimbra.com/index.php?title=Commercial_Certificates
+
+***Renew crt for webmail.cardiodx.com:
+openssl x509 -text -in webmail.cardiodx.com.crt 
+keytool -printcert -v -file webmail.cardiodx.com.crt
+
+
+openssl x509 -noout -text -in smtpd.crtopenssl rsa -noout -text -in smtpd.key
+
+openssl verify -CAfile gd_intermediate_bundle.crt bugs.cardiodx.com.crt
+
+NOTE: Modulus (1024 bit): should match between them.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+keytool -import -alias tomcat -keystore /opt/zimbra/ssl/ssl/commercial.keystore -trustcacerts -file webmail.cardiodx.com.crt -storepass zimbra
+cp /opt/zimbra/ssl/ssl/commercial.keystore /opt/zimbra/tomcat/conf/keystore
+tomcat restart
+
+>>> 
+>>> NOTE: 
+>>> 
+>>> 1. you need to generate the CSR from the keytool command since the public/private keys should also be stored in the keystore (to have a chain)1. 
+>>> 2. The private/public keys should also have the 'tomcat' as the alias (as the certificate) - to have a 4 item chain.
+>>> 3. (unknown, yet.) if we don't want to re-generate the csr, we need to replace the crt from the keystore.
+>>>    can't just rename the keystore to .save and re-generate a new one... since the private/public key won't be in the keystore (as mentioned above.)
+>>>    maybe there is a way that we can just replace the crt witht eh new one?
+>>> 
+
+Problems on godaddy certificate!!!!
+Oct 22, 2007 6:51:36 PM org.apache.tomcat.util.net.PoolTcpEndpoint acceptSocket
+SEVERE: Endpoint [SSL: ServerSocket[addr=0.0.0.0/0.0.0.0,port=0,localport=7071]] 
+	ignored exception: java.net.SocketException: SSL handshake errorjavax.net.ssl.SSLException: 
+	No available certificate or key corresponds to the SSL cipher suites which are enabled.
+java.net.SocketException: SSL handshake errorjavax.net.ssl.SSLException: 
+	No available certificate or key corresponds to the SSL cipher suites which are enabled.
+        at org.apache.tomcat.util.net.jsse.JSSESocketFactory.acceptSocket(JSSESocketFactory.java:113)
+        at org.apache.tomcat.util.net.PoolTcpEndpoint.acceptSocket(PoolTcpEndpoint.java:407)
+        at org.apache.tomcat.util.net.LeaderFollowerWorkerThread.runIt(LeaderFollowerWorkerThread.java:70)
+        at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:684)
+        at java.lang.Thread.run(Thread.java:595)
+
+
+
+  718  keytool -list -v -keystore commercial.keystore 
+
+  721  keytool -genkey -alias tomcat -keyalg RSA -keystore commercial.keystore
+  722  keytool -genkey -alias tomcat -keyalg RSA -keystore commercial.keystore
+  723  keytool -certreq -keyalg RSA -alias tomcat -file commercial.csr -keystore commercial.keystore 
+
+  729  keytool -genkey -alias tomcat -keyalg RSA -keystore commercial.keystore
+  730  keytool -certreq -keyalg RSA -alias tomcat -file webmail.cardiodx.com.csr -keystore commercial.keystore 
+
+  732  less webmail.cardiodx.com.csr 
+  733  cat webmail.cardiodx.com.csr 
+  734  mv /tmp/webmail.cardiodx.com.zip .
+  736  cp /tmp/webmail.cardiodx.com.zip .
+  738  unzip webmail.cardiodx.com.
+  739  unzip webmail.cardiodx.com.zip 
+  741  exit
+
+  742  cd ssl/ssl/testing/
+  744  keytool -list -v -keystore commercial.keystore 
+  745  keytool -import -alias intermed -keystore commercial.keystore  -trustcacerts -file gd_intermediate.crt 
+  746  keytool -import -alias cross -keystore commercial.keystore  -trustcacerts -file gd_cross_intermediate.crt 
+  748  keytool -import -alias tomcat -keystore commercial.keystore -trustcacerts -file webmail.cardiodx.com.crt 
+  750  keytool -list -v -keystore commercial.keystore 
+  752  cp commercial.keystore /opt/zimbra/tomcat/conf/keystore
+  753  tomcat restart
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://mark.foster.cc/wiki/index.php/Keytool_to_OpenSSL_Conversion_tips
+
+$ keytool -list -keystore commercial.keystore -storepass zimbra
+
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 3 entries
+
+tomcat, Oct 23, 2007, PrivateKeyEntry, 
+Certificate fingerprint (MD5): 1D:E4:9B:98:C3:53:42:8F:21:5C:72:61:59:12:7B:07
+cross, Oct 23, 2007, trustedCertEntry,
+Certificate fingerprint (MD5): 82:BD:9A:0B:82:6A:0E:3E:91:AD:3E:27:04:2B:3F:45
+intermed, Oct 23, 2007, trustedCertEntry,
+Certificate fingerprint (MD5): D5:DF:85:B7:9A:52:87:D1:8C:D5:0F:90:23:2D:B5:34
+
+
+$ keytool -export -alias tomcat -keystore commercial.keystore -storepass zimbra -file cardiodx-der.crt
+Certificate stored in file <cardiodx.crt>
+
+$ openssl x509 -noout -text -in cardiodx-der.crt -inform der
+$ openssl x509 -out cardiodx-pem.crt -outform pem -in cardiodx-der.crt -inform der
+
+$ java ExportPriv 
+Usage: java ExportPriv <keystore> <alias> <password>
+
+$ java ExportPriv commercial.keystore tomcat zimbra > cardiodx.key
+
+$ openssl pkcs8 -inform PEM -nocrypt -in cardiodx-pkcs8.key -out cardiodx.key
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 1083  mv commercial.keystore commercial.keystore.sav
+ 1085  keytool -import -alias tomcat -keystore /opt/zimbra/ssl/ssl/commercial.keystore -trustcacerts -file webmail.cardiodx.com.crt -storepass zimbra
+ 1087  ll /opt/zimbra/tomcat/conf/keystore
+ 1088  ll /opt/zimbra/tomcat/conf/keystore*
+ 1089  mv /opt/zimbra/tomcat/conf/keystore /opt/zimbra/tomcat/conf/keystore.sav
+ 1090  cp commercial.keystore /opt/zimbra/tomcat/conf/keystore
+ 1091  tomcat restart
+ 1092  zmcontrol status
+
+
+ 1142  keytool -import -alias root -keystore tomcat.keystore -trustcacerts -file gd-class2-root.crt 
+ 1143  keytool -import -alias intermediate -keystore tomcat.keystore -trustcacerts -file gd_intermediate.crt 
+ 1144  keytool -import -alias cross -keystore tomcat.keystore -trustcacerts -file gd_cross_intermediate.crt 
+ 1145  keytool -import -alias tomcat -keystore tomcat.keystore -trustcacerts -file webmail.cardiodx.com.crt
+ 1146  keytool  -keystore tomcat.keystore -list -v
+ 1148  keytool  -keystore commercial.keystore.sav -list -v -storepass zimbra
+
+
+keytool -import -alias root -keystore tomcat.keystore -trustcacerts -file valicert_class2_root.crt -storepass zimbra
+keytool -import -alias intermed -keystore tomcat.keystore -trustcacerts -file gd_intermediate.crt -storepass zimbra
+keytool -import -alias cross -keystore tomcat.keystore -trustcacerts -file gd_cross_intermediate.crt -storepass zimbra
+keytool -import -alias tomcat -keystore tomcat.keystore -trustcacerts -file webmail.cardiodx.com.crt -storepass zimbra
+cp tomcat.keystore /opt/zimbra/tomcat/conf/keystore
+
+
+keytool -export -alias tomcat -keystore /opt/zimbra/ssl/ssl/commercial.keystore -file exported.crtopenssl x509 -out exported-pem.crt -outform pem -text -in exported.crt -inform dercat exported-pem.crt ca_int1.crt ca_int2.crt >> my.crt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

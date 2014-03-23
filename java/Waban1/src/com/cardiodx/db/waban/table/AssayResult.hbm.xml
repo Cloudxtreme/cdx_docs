@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.AssayResult" table="ASSAY_RESULT" schema="DNALIMS">
+        <comment>Results of a procedure to be used for allelic determinations.</comment>
+        <id name="assayResultId" type="big_decimal">
+            <column name="ASSAY_RESULT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="assayResultLoad" class="com.cardiodx.db.waban.table.AssayResultLoad" fetch="select">
+            <column name="ASSAY_RESULT_LOAD_ID" precision="22" scale="0">
+                <comment>Foreign key to be appended to existing table for the corresponding ASSAY_RESULT_LOAD record.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist identifier and foreign key to the CHECKLIST table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0">
+                <comment>Used within the lab to track samples. A foreign key to the SAMPLE table.</comment>
+            </column>
+        </many-to-one>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="assayResultInfos" table="ASSAY_RESULT_INFO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ASSAY_RESULT_ID" precision="22" scale="0">
+                    <comment>Foreign key to the ASSAY_RESULT record which is created for each sample in the results file.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultInfo" />
+        </set>
+        <set name="assayAlleleResults" table="ASSAY_ALLELE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ASSAY_RESULT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Assay result identifier, part of the primary key, and foreign key to the ASSAY_RESULT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayAlleleResult" />
+        </set>
+    </class>
+</hibernate-mapping>

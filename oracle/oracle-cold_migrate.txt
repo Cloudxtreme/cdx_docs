@@ -1,0 +1,36 @@
+
+--
+-- source db
+--
+
+shutdown db:
+  136  sqlplus system/waban123 as sysdba
+
+tar files:
+  152  tar czvf oradata.tar.gz oradata/
+
+bring up db:
+  154  sqlplus system/waban123 as sysdba
+
+copy files over
+  157  scp oradata.tar.gz oracle@mayank25423:/u01/app/oracle
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+-- 
+-- dest db
+--
+
+shutdown db:
+   60  sqlplus system/waban123 as sysdba
+
+remove old dafiles:
+   62  rm -rf oradata
+
+copy the new data files;
+   64  tar zxvf oradata.tar.gz 
+
+bring up db:
+   66  sqlplus system/waban123 as sysdba
+`

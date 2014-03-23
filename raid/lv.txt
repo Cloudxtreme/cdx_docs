@@ -1,0 +1,94 @@
+
+
+lvcreate -L20G -n bonnie /dev/vg0
+mkfs.xfs /dev/vg0/bonnie
+mount /dev/vg0/bonnie /home/cchou/bonne/
+lvextend -L+2G /dev/vg0/bonnie
+xfs_growfs /home/cchou/bonne/
+
+
+cd bonnie
+chown cchou .
+bonnie -u cchou
+
+
+pvcreate /dev/sda3
+vgcreate vg1 /dev/evms/sda3
+
+
+pvcreate /dev/sdb1
+vgextend vg0 /dev/sdb1
+lvextend -L+2G /dev/vg0/root 
+xfs_growfs /
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+cchou@pdc:~$ df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg0-newroot
+                       5232640    531904   4700736  11% /
+varrun                 1030268       528   1029740   1% /var/run
+varlock                1030268         4   1030264   1% /var/lock
+udev                   1030268        80   1030188   1% /dev
+devshm                 1030268         0   1030268   0% /dev/shm
+/dev/mapper/vg0-data 262133760 262133740        20 100% /data
+/dev/md0                 77120     23432     53688  31% /boot
+cchou@pdc:~$ 
+
+cchou@pdc:~$ 
+cchou@pdc:~$ sudo bash
+Password:
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# lvscan
+File descriptor 5 left open
+  ACTIVE            '/dev/vg0/root' [4.88 GB] inherit
+  ACTIVE            '/dev/vg0/swap' [1.95 GB] inherit
+  ACTIVE            '/dev/vg0/data' [250.00 GB] inherit
+  ACTIVE            '/dev/vg0/newroot' [5.00 GB] inherit
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# vgscan
+File descriptor 5 left open
+  Reading all physical volumes.  This may take a while...
+  Found volume group "vg0" using metadata type lvm2
+root@pdc:~# pvscan
+File descriptor 5 left open
+  PV /dev/md1   VG vg0   lvm2 [69.15 GB / 0    free]
+  PV /dev/md2   VG vg0   lvm2 [210.21 GB / 17.53 GB free]
+  Total: 2 [279.36 GB] / in use: 2 [279.36 GB] / in no VG: 0 [0   ]
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# lvextend -L+10G /dev/vg0/data 
+File descriptor 5 left open
+  Extending logical volume data to 260.00 GB
+  Logical volume data successfully resized
+
+root@pdc:~# xfs_growfs /data
+meta-data=/dev/mapper/vg0-data   isize=256    agcount=200, agsize=327680 blks
+         =                       sectsz=512   attr=1
+data     =                       bsize=4096   blocks=65536000, imaxpct=25
+         =                       sunit=0      swidth=0 blks, unwritten=1
+naming   =version 2              bsize=4096  
+log      =internal               bsize=4096   blocks=2560, version=1
+         =                       sectsz=512   sunit=0 blks
+realtime =none                   extsz=65536  blocks=0, rtextents=0
+xfs_growfs: XFS_IOC_FSGROWFSDATA xfsctl failed: No space left on device
+
+
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# 
+root@pdc:~# df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg0-newroot
+                       5232640    531968   4700672  11% /
+varrun                 1030268       528   1029740   1% /var/run
+varlock                1030268         4   1030264   1% /var/lock
+udev                   1030268        80   1030188   1% /dev
+devshm                 1030268         0   1030268   0% /dev/shm
+/dev/mapper/vg0-data 262133760 262133740        20 100% /data
+/dev/md0                 77120     23432     53688  31% /boot

@@ -1,0 +1,53 @@
+
+
+-- creat a lvm volume
+lvcreate -L+20G -n openclinica vg1
+
+-- export iscsi device
+cat /proc/net/iet/volume 
+
+ietadm --op new --tid=15 --params Name=storage1.openclinica
+ietadm --op new --tid=15 --lun=0 --params Path=/dev/vg1/openclinica 
+
+-- mount the device on kvm
+iscsiadm -m discovery -t st -p storage1
+iscsiadm -m node -T storage1.openclinica -l
+
+-- add the device to xml
+cd xml
+vi hardy64.xml
+    <disk type='block' device='disk'>
+      <source dev='/dev/disk/by-path/ip-10.10.35.58:3260-iscsi-storage1.openclinica-lun-0'/>
+      <target dev='hdb' bus='ide'/>
+    </disk>
+
+-- start the parent kvm image
+./cdxvm.sh istart hardy64
+
+
+-- create the new image 
+  :
+  : fstab
+    hosts
+    hostname
+    grub/menu.lst
+  grub
+
+
+-- create new xml file
+cp dwhdevel.xml openclinica.xml
+  Copy lucid64 for all lucid kvm images!!
+  Copy hardy64 for all hardy kvm images!!
+
+-- start the new kvm
+iscsiadm -m node -T storage1.openclinica -u
+iscsiadm -m session
+
+-- shutdown the parent kvm image
+./cdxvm.sh stop lucid64
+  remove the device from xml file
+
+./cdxvm.sh istart openclinica
+
+
+

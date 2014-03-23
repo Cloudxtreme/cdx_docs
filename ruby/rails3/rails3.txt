@@ -1,0 +1,81 @@
+
+--  * First you need to add all users that will be using rvm to 'rvm' group,
+--     and logout - login again, anyone using rvm will be operating with `umask g+w`.
+-- 
+--  * To start using RVM you need to run `source /etc/profile.d/rvm.sh`
+--     in all your open shell windows, in rare cases you need to reopen all shell windows.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- do the followin so you'll not get “RVM is not a function” error
+--
+Open a terminal
+  Edit --> Profiles --> Edit (Default) 
+  --> Tile and Command
+  --> x Run command as login shell
+
+Start a new teminal
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+groupadd -g 123 rails
+useradd -g 123 -u 123 -d /home/rails -s /bin/bash rails
+
+mkdir /home/rails
+chown rails:rails /home/rails/
+
+
+
+curl -L get.rvm.io | bash -s stable
+
+vi /etc/group
+rvm:x:1001:rails
+
+
+vi .bashrc
+export PATH=$PATH:/usr/local/rvm/bin
+	(should add /etc/profile.d/rvm.sh ???)
+
+rvm install 1.8.7
+rvm alias create 1.8.7 ruby-1.8.7-p370
+
+rvm install 1.9.3
+rvm alias create 1.9.3 ruby-1.9.3-p194
+
+rvm alias create default ruby-1.8.7-p370
+
+rvm alias list
+
+rvm use 1.9.3
+rvm use ruby-1.9.3-p194
+
+rvm use 1.9.3 --default
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rvm gemset list
+rvm gemset create rails32 
+rvm gemset use rails32
+gem install rails --no-rdoc --no-ri
+--gem install ruby-net-ldap --no-rdoc --no-ri
+--gem install therubyracer --no-rdoc --no-ri
+
+rvm use 1.9.3@rails32 --default
+
+rails new test32
+
+--ExecJS::RuntimeUnavailable error:
+	`autodetect': Could not find a JavaScript runtime. 
+	See https://github.com/sstephenson/execjs for a list of available runtimes. 
+
+vi Gemfile
+gem 'execjs'
+gem 'therubyracer'
+
+bundle install
+
+rails server
+
+
+
+
+
+

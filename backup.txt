@@ -1,0 +1,62 @@
+
+
+boot from recovery disk
+
+fdisk -l /dev/sda
+/dev/sda1               1          13      104391   fd  Linux raid autodetect
+/dev/sda2              14      243201  1953407610   fd  Linux raid autodetect
+
+
+sfdisk -d /dev/sda | sfdisk /dev/sdb
+sfdisk -d /dev/sda | sfdisk /dev/sdc
+sfdisk -d /dev/sda | sfdisk /dev/sdd
+
+
+mknod /dev/md1 b 9 1
+
+
+mdadm -Cv /dev/md0 -l 1 -n 4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
+mdadm -Cv /dev/md1 -l 5 -n 4 /dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2
+
+cat mdstat
+md1 : active raid5 sdd2[4] sdc2[2] sdb2[1] sda2[0]
+      5860222464 blocks level 5, 64k chunk, algorithm 2 [4/3] [UUU_]
+      [>....................]  recovery =  0.0% (1051140/1953407488) finish=371.4min speed=87595K/sec
+
+mdadm --detail --scan /dev/md1 
+
+		State : clean, degraded, recovering
+
+    Number   Major   Minor   RaidDevice State
+       0       8        2        0      active sync   /dev/sda2
+       1       8       18        1      active sync   /dev/sdb2
+       2       8       34        2      active sync   /dev/sdc2
+       4       8       50        3      spare rebuilding   /dev/sdd2
+
+
+
+*** Read recovery.txt
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   53  cd /proc
+   55  cat mdstat
+   56  mdadm /dev/md0 -f /dev/sdd1 -r /dev/sdd1
+   59  mdadm /dev/md0 -f /dev/sdc1 -r /dev/sdc1
+   60  mdadm /dev/md0 -f /dev/sdb1 -r /dev/sdb1
+   61  mdadm /dev/md0 -f /dev/sda1 -r /dev/sda1
+   63  mdadm -S /dev/md0
+
+   74  mdadm --zero-superblock /dev/sda1
+   75  mdadm --zero-superblock /dev/sdb1
+   76  mdadm --zero-superblock /dev/sdc1
+   77  mdadm --zero-superblock /dev/sdd1
+
+mdadm -Cv /dev/md0 -l 1 -n 4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+mdadm -Cv /dev/md2 -l 5 -n 4 /dev/sde1 /dev/sdf1 /dev/sdg1 /dev/sdh1
+
+
+

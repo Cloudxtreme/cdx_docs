@@ -1,0 +1,60 @@
+http://linuxsutra.chakravaka.com/index.php?op=ViewArticle&articleId=7
+
+Objective:
+To serve a block device(File-system GFS) to many clients.. to be used as a shared storage.
+
+Topology:
+gnbd server
+|
+|
+-------gnbd client1
+|
+|
+-------gnbd client2
+
+
+Pre-Install:
+1)On all the three nodes disable loopback.
+2)Add entries of all the participating nodes in /etc/hosts
+
+
+Install:
+
+Step 1) Installing GFS on all machines.
+
+You can get RPM's from CentOS-csgfs repository.
+Get,
+http://mirror.centos.org/centos/4/csgfs/CentOS-csgfs.repo file into yum.repos.d directory.
+Do,
+rpm --import http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-4
+
+Now you are going to install GFS using yum:
+
+yum -y install GFS.x86_64 GFS-kernel.x86_64
+GFS-kernel-largesmp.x86_64 GFS-kernel-smp.x86_64
+gnbd.x86_64 gnbd-kernel.x86_64 gnbd-kernel-largesmp.x86_64
+gnbd-kernel-smp.x86_64 lvm2-cluster.x86_64 GFS-kernheaders.x86_64
+gnbd-kernheaders.x86_64 ccs* cman* dlm* fence* iddev*
+magma* perl-Net-Telnet* system-config-cluster*
+
+Later remove these since you will be starting them from rc.local
+
+chkconfig --level 2345 gfs off
+chkconfig --level 2345 clvmd off
+chkconfig --level 2345 fenced off
+chkconfig --level 2345 lock_gulmd off
+chkconfig --level 2345 cman off
+chkconfig --level 2345 ccsd off
+
+Now restart your server.
+
+Step 2)
+On all servers create cluster.conf
+See an example: /etc/cluster/cluster.conf
+
+Next)
+Refer step4, step5, step6 from
+http://linuxsutra.blogspot.com/2006/11/howto-gfs-gnbd.html
+
+http://linuxsutra.chakravaka.com/index.php?op=ViewArticle&articleId=6
+

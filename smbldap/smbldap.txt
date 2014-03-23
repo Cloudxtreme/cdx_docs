@@ -1,0 +1,7 @@
+samba ldap smbldap cardiodx
+
+
+follow the instruction in samba2.txt
+
+ldapadd -D "cn=admin,dc=cardiodx,dc=co" -W -x -f ppolicy.ldif
+

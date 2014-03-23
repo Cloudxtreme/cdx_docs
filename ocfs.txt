@@ -1,0 +1,161 @@
+oracle cluster file system ocfs ocfs2
+
+http://oss.oracle.com/projects/ocfs2/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+modprobe ocfs2
+wajig install ocfs2-tools 
+--wajig install ocfs2console 
+--wajig install xterm xauth
+
+
+mkdir /etc/ocfs2
+cd /etc/ocfs2
+vi cluster.conf
+
+******
+****** NOTE: tab, NOT space
+******
+cluster:
+        node_count = 2
+        name = ocfs2
+
+node:
+        ip_port = 7777
+        ip_address = 10.10.36.23
+        number = 1
+        name = gclient1
+        cluster = ocfs2
+node:
+        ip_port = 7777
+        ip_address = 10.10.36.34
+        number = 2
+        name = gclient2
+        cluster = ocfs2
+
+/etc/init.d/o2cb enable
+/etc/init.d/o2cb status
+
+/etc/init.d/o2cb start
+/etc/init.d/o2cb load
+/etc/init.d/o2cb online ocfs2
+
+/etc/init.d/o2cb offline ocfs2
+/etc/init.d/o2cb unload
+/etc/init.d/o2cb disable
+
+mkfs.ocfs2 -b 4K -C 32K -N 2 -L ocfs2 /dev/etherd/e2.4 
+mount -t ocfs2 /dev/etherd/e2.4 /mnt/e2.4/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fsck.ocfs2 -n /dev/etherd/e2.4 
+
+umount /mnt/e2.4/
+tunefs.ocfs2 -N 8 /dev/sdf2
+tunefs.ocfs2 -L "old datafiles" /dev/sdf2
+-- resize file system (fs offline only!)
+umount from all machines
+on aoe server:
+  lvextend -L+10G /dev/vg0/ocfs2
+  vblade-persist stop 2 4
+  vblade-persist start 2 4
+on aoe client
+  aoe-discover
+  aoe-stat
+  (should see the new size)
+
+tunefs.ocfs2 -S /dev/etherd/e2.4
+
+
+mounted.ocfs2 -d
+mounted.ocfs2 -f
+
+o2cb_ctl -I -n kvmsrv2
+o2cb_ctl -I -t node
+o2cb_ctl -I -t cluster
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To mount volume containing Oracle data files, Voting disk, etc., do:
+# mount -t ocfs2 -o datavolume,nointr /dev/sdf2 /u01
+# mount
+/dev/sdf2 on /u01 type ocfs2 (rw,datavolume,nointr)
+
+
+/dev/sdf2 /u01     ocfs2 _netdev,datavolume,nointr 0 0
+/dev/sdg2 /orahome ocfs2 _netdev                   0 0
+/dev/sdX  /dir	   ocfs2 _netdev		0 0
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- add to online cluster
+o2cb_ctl -C -i -n NODENAME -t node -a number=NODENUM -a ip_address=IPADDR -a ip_port=IPPORT -a cluster=CLUSTERNAME
+
+### on gclient1 (and all running nodes)
+o2cb_ctl -I -t node
+o2cb_ctl -C -i -n kvmsrv2 -t node -a number=3 -a ip_address=10.10.36.32 -a ip_port=7777 -a cluster=ocfs2
+scp cluster.conf root@xensrv1:/etc/ocfs2
+
+### on xensrv1
+cd /etc/init.d/
+./o2cb load
+./o2cb online ocfs2
+./o2cb status
+
+
+-- add to offline cluster
+o2cb_ctl -C -n NODENAME -t node -a number=NODENUM -a ip_address=IPADDR -a ip_port=IPPORT -a cluster=CLUSTERNAME
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+heart beat
+
+vi /etc/default/o2cb
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mount -t debugfs debugfs /sys/kernel/debug/
+debugfs.ocfs2 /dev/etherd/e2.4 
+echo "fs_locks" | debugfs.ocfs2 /dev/etherd/e2.4 > fslocks
+
+debugfs.ocfs2 /dev/etherd/e2.4
+ls 
+ls -l
+cat 123
+encode 123 (get the lock name)
+slotmap
+ls -l //
+   :0000  ---> file owned by slot# 0
+   :0001  ---> file owned by slot# 1
+   
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To do dlm debugging, first one needs to know the dlm domain, which matches the volume UUID.
+	# echo "stats" | debugfs.ocfs2 -n /dev/sdX | grep UUID: | while read a b ; do echo $b ; done
+	82DA8137A49A47E4B187F74E09FBBB4B
+
+Then do:
+	# echo R dlm_domain lockname > /proc/fs/ocfs2_dlm/debug
+
+For example:
+	# echo R 82DA8137A49A47E4B187F74E09FBBB4B M000000000000000006672078b84822 > /proc/fs/ocfs2_dlm/debug
+	# dmesg | tail
+	struct dlm_ctxt: 82DA8137A49A47E4B187F74E09FBBB4B, node=79, key=965960985
+	lockres: M000000000000000006672078b84822, owner=75, state=0 last used: 0, on purge list: no
+	  granted queue:
+	    type=3, conv=-1, node=79, cookie=11673330234144325711, ast=(empty=y,pend=n), bast=(empty=y,pend=n)
+	  converting queue:
+	  blocked queue:
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+for quorum and fencing, please read:
+  http://oss.oracle.com/projects/ocfs2/dist/documentation/ocfs2_faq.html
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Context Dependent Symbolic Links (CDSL)
+
+
+

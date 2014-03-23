@@ -1,0 +1,130 @@
+[root@pdc smbldap-tools-0.8.6]# chmod 755 configure.pl
+[root@pdc smbldap-tools-0.8.6]# ./configure.pl
+Unrecognized escape \p passed through at ./configure.pl line 194.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+       smbldap-tools script configuration
+       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Before starting, check
+ . if your samba controller is up and running.
+ . if the domain SID is defined (you can get it with the 'net getlocalsid')
+
+ . you can leave the configuration using the Crtl-c key combination
+ . empty value can be set with the "." caracter
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Looking for configuration files...
+
+Samba Config File Location [/etc/samba/smb.conf] >
+smbldap Config file Location (global parameters) [/etc/smbldap-tools/smbldap.conf] >
+Use of uninitialized value in concatenation (.) or string at ./configure.pl line 75, <STDIN> line 2.
+smbldap Config file Location (bind parameters) [] >
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]# ./configure.pl
+Unrecognized escape \p passed through at ./configure.pl line 194.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+       smbldap-tools script configuration
+       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Before starting, check
+ . if your samba controller is up and running.
+ . if the domain SID is defined (you can get it with the 'net getlocalsid')
+
+ . you can leave the configuration using the Crtl-c key combination
+ . empty value can be set with the "." caracter
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Looking for configuration files...
+
+Samba Config File Location [/etc/samba/smb.conf] >
+Use of uninitialized value in concatenation (.) or string at ./configure.pl line 65, <STDIN> line 1.
+smbldap Config file Location (global parameters) [] >
+smbldap Config file Location (bind parameters) [/etc/smbldap-tools/smbldap_bind.conf] >
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]# ./configure.pl
+Unrecognized escape \p passed through at ./configure.pl line 194.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+       smbldap-tools script configuration
+       -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Before starting, check
+ . if your samba controller is up and running.
+ . if the domain SID is defined (you can get it with the 'net getlocalsid')
+
+ . you can leave the configuration using the Crtl-c key combination
+ . empty value can be set with the "." caracter
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Looking for configuration files...
+
+Samba Config File Location [/etc/samba/smb.conf] >
+smbldap Config file Location (global parameters) [/etc/smbldap-tools/smbldap.conf] >
+smbldap Config file Location (bind parameters) [/etc/smbldap-tools/smbldap_bind.conf] >
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Let's start configuring the smbldap-tools scripts ...
+
+. workgroup name: name of the domain Samba act as a PDC
+  workgroup name [CDX] >
+. netbios name: netbios name of the samba controler
+  netbios name [PDC] >
+. logon drive: local path to which the home directory will be connected (for NT Workstations). Ex: 'H:'
+  logon drive [X:] > H:
+. logon home: home directory location (for Win95/98 or NT Workstation).
+  (use %U as username) Ex:'\\PDC\home\%U'
+  logon home (leave blank if you don't want homeDirectory) [\\PDC\home\%U] >
+. logon path: directory where roaming profiles are stored. Ex:'\\PDC\profiles\%U'
+  logon path (leave blank if you don't want roaming profile) [\\PDC\profiles\%U] >
+. home directory prefix (use %U as username) [/home/%U] >
+. default user netlogon script (use %U as username) [%U.cmd] >
+  default password validation time (time in days) [45] >
+. ldap suffix [dc=cardiodx,dc=com] >
+. ldap group suffix [ou=Groups] >
+. ldap user suffix [ou=People] >
+. ldap machine suffix [ou=People] >
+. Idmap suffix [ou=Idmap] >
+. sambaUnixIdPooldn: object where you want to store the next uidNumber
+  and gidNumber available for new users and groups
+  sambaUnixIdPooldn object (relative to ${suffix}) [cn=NextFreeUnixId] >
+. ldap master server: IP adress or DNS name of the master (writable) ldap server
+Use of uninitialized value in scalar chomp at ./configure.pl line 138, <STDIN> line 17.
+Use of uninitialized value in hash element at ./configure.pl line 140, <STDIN> line 17.
+Use of uninitialized value in concatenation (.) or string at ./configure.pl line 144, <STDIN> line 17.
+Use of uninitialized value in string at ./configure.pl line 145, <STDIN> line 17.
+  ldap master server [] >
+. ldap master port [389] >
+. ldap master bind dn [cn=Manager,dc=cardiodx,dc=com] >
+. ldap master bind password [] >   Warning: You really need to set this parameter...
+  ldap master bind password [] >
+. ldap slave server: IP adress or DNS name of the slave ldap server: can also be the master one
+Use of uninitialized value in scalar chomp at ./configure.pl line 138, <STDIN> line 22.
+Use of uninitialized value in hash element at ./configure.pl line 140, <STDIN> line 22.
+Use of uninitialized value in concatenation (.) or string at ./configure.pl line 144, <STDIN> line 22.
+Use of uninitialized value in string at ./configure.pl line 145, <STDIN> line 22.
+  ldap slave server [] >
+. ldap slave port [389] >
+. ldap slave bind dn [cn=Manager,dc=cardiodx,dc=com] >
+. ldap slave bind password [] >   Warning: You really need to set this parameter...
+  ldap slave bind password [] >
+. ldap tls support (1/0) [0] > 1
+. How to verify the server's certificate (none, optional or require) [require] >
+. CA certificate file [/etc/smbldap-tools/ca.pem] >
+. certificate to use to connect to the ldap server [/etc/smbldap-tools/smbldap-tools.pem] >
+. key certificate to use to connect to the ldap server [/etc/smbldap-tools/smbldap-tools.key] >
+. SID for domain CDX: SID of the domain (can be obtained with 'net getlocalsid PDC')
+  SID for domain CDX [] >
+. unix password encryption: encryption used for unix passwords
+  unix password encryption (CRYPT, MD5, SMD5, SSHA, SHA) [SSHA] >
+. default user gidNumber [513] >
+. default computer gidNumber [515] >
+. default login shell [/bin/bash] >
+. default domain name to append to mail adress [] >
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+backup old configuration files:
+  /etc/smbldap-tools/smbldap.conf->/etc/smbldap-tools/smbldap.conf.old
+  /etc/smbldap-tools/smbldap_bind.conf->/etc/smbldap-tools/smbldap_bind.conf.old
+writing new configuration file:
+  /etc/smbldap-tools/smbldap.conf done.
+  /etc/smbldap-tools/smbldap_bind.conf done.
+[root@pdc smbldap-tools-0.8.6]#
+[root@pdc smbldap-tools-0.8.6]#

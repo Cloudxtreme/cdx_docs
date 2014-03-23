@@ -1,0 +1,47 @@
+
+root@nppes:~# su - rails
+
+$ cd nppes/
+$ irb
+
+irb(main):001:0> version = ">= 0"
+irb(main):002:0> ARGV = ['generate', 'controller', 'hello']
+irb(main):003:0> load Gem.bin_path('railties', 'rails', version) 
+      create  app/controllers/hello_controller.rb
+      invoke  erb
+      create    app/views/hello
+      invoke  test_unit
+      create    test/functional/hello_controller_test.rb
+      invoke  helper
+      create    app/helpers/hello_helper.rb
+      invoke    test_unit
+      create      test/unit/helpers/hello_helper_test.rb
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/hello.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/hello.css.scss
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$ rails console
+Loading development environment (Rails 3.2.12)
+irb(main):001:0> version = ">= 0"
+irb(main):002:0> ARGV = ['generate', 'controller', 'world']
+irb(main):003:0> load Gem.bin_path('railties', 'rails', version)
+      create  app/controllers/world_controller.rb
+      invoke  erb
+      create    app/views/world
+      invoke  test_unit
+      create    test/functional/world_controller_test.rb
+      invoke  helper
+      create    app/helpers/world_helper.rb
+      invoke    test_unit
+      create      test/unit/helpers/world_helper_test.rb
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/world.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/world.css.scss
+

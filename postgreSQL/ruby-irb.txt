@@ -1,0 +1,5 @@
+root@cchoudesktop:~# irb
+irb(main):001:0> require 'postgres'
+irb(main):002:0> conn = PGconn.open('portal.cardiodx.com', 5432, nil, nil, 'portaldb', 'portal', 'p0rta1')
+irb(main):003:0> res = conn.exec ('select * from users')
+

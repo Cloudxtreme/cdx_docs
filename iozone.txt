@@ -1,0 +1,3 @@
+
+iozone -Q -c -g 2G -a -R -b output.wks 
+

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbStructure" table="MDB_STRUCTURE" schema="DNALIMS">
+        <id name="structureId" type="big_decimal">
+            <column name="STRUCTURE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0">
+                <comment>Gene identifier and primary key.</comment>
+            </column>
+        </many-to-one>
+        <property name="transcriptName" type="string">
+            <column name="TRANSCRIPT_NAME" length="100" />
+        </property>
+        <property name="isDefault" type="big_decimal">
+            <column name="IS_DEFAULT" precision="22" scale="0" />
+        </property>
+        <property name="translationStart" type="big_decimal">
+            <column name="TRANSLATION_START" precision="22" scale="0" />
+        </property>
+        <property name="isComplement" type="java.lang.Boolean">
+            <column name="IS_COMPLEMENT" precision="1" scale="0" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbProteins" table="MDB_PROTEIN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STRUCTURE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbProtein" />
+        </set>
+        <set name="mdbVariantStructRels" table="MDB_VARIANT_STRUCT_REL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STRUCTURE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbVariantStructRel" />
+        </set>
+        <set name="mdbGeneRegions" table="MDB_GENE_REGION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STRUCTURE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbGeneRegion" />
+        </set>
+    </class>
+</hibernate-mapping>

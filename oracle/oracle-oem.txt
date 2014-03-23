@@ -1,0 +1,23 @@
+
+
+oracle@devlims:~/database$ ./runInstaller 
+
+Advanced
+Custom
+  Uncheck 
+    Oracle Programmer 
+    Oracle XML Development Kit
+  (Only check Oracle Enterprise Manager Console DB)
+
+Not working!!!!
+
+INFO: make[1]: *** [/u01/app/oracle/product/10.2.0/db_1/sysman/lib/nmccollector] Error 1
+make: *** [nmccollector] Error 2
+
+INFO: End output from spawned process.
+INFO: ----------------------------------
+INFO: Exception thrown from action: make
+Exception Name: MakefileException
+Exception String: Error in invoking target 'collector' of makefile '/u01/app/oracle/product/10.2.0/db_1/sysman/lib/ins_emdb.mk'. See '/u01/app/oracle/oraInventory/logs/installActions2012-06-27_04-34-06PM.log' for details.
+Exception Severity: 1
+

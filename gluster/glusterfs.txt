@@ -1,0 +1,5 @@
+
+http://blogama.org/node/78/
+
+wajig install sshfs build-essential flex bison byacc vim wget
+

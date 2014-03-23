@@ -1,0 +1,67 @@
+1.9.3-p194 :003 > require 'rails/generators'
+1.9.3-p194 :004 > Rails::Generators.invoke("scaffold", ["User", "name:string", "email:string"])
+      invoke  resource_route
+       route    resources :users
+      invoke  scaffold_controller
+      create    app/controllers/users_controller.rb
+      invoke    erb
+      create      app/views/users
+      create      app/views/users/index.html.erb
+      create      app/views/users/edit.html.erb
+      create      app/views/users/show.html.erb
+      create      app/views/users/new.html.erb
+      create      app/views/users/_form.html.erb
+      invoke    helper
+      create      app/helpers/users_helper.rb
+      invoke  assets
+*     invoke    js
+*     create      app/assets/javascripts/users.js
+      invoke    css
+      create      app/assets/stylesheets/users.css
+      invoke  css
+      create    app/assets/stylesheets/scaffold.css
+  		["user", nil, nil, ["user", nil], 
+					["user", 
+						["UsersController"], 
+						"app/controllers/users_controller.rb", 
+						["user", "/home/cchou/hdrive/MacBookPro/CDX-Linux/ruby_rails/proj/test32/app/views/users", ["index", "edit", "show", "new", "_form"]], 
+						nil, 
+						["users", ["UsersHelper"], "app/helpers/users_helper.rb", nil]], 
+					["users", ["users", nil], ["users", nil]], 
+					["users", "app/assets/stylesheets/scaffold.css"]
+			] 
+
+
+
+cchou@cchoudesktop:~/hdrive/MacBookPro/CDX-Linux/ruby_rails/proj/test32$ rails generate scaffold Pen name:string
+      invoke  active_record
+*     create    db/migrate/20130314003203_create_pens.rb
+*     create    app/models/pen.rb
+*     invoke    test_unit
+*     create      test/unit/pen_test.rb
+*     create      test/fixtures/pens.yml
+      invoke  resource_route
+       route    resources :pens
+      invoke  scaffold_controller
+      create    app/controllers/pens_controller.rb
+      invoke    erb
+      create      app/views/pens
+      create      app/views/pens/index.html.erb
+      create      app/views/pens/edit.html.erb
+      create      app/views/pens/show.html.erb
+      create      app/views/pens/new.html.erb
+      create      app/views/pens/_form.html.erb
+*     invoke    test_unit
+*     create      test/functional/pens_controller_test.rb
+      invoke    helper
+      create      app/helpers/pens_helper.rb
+*     invoke      test_unit
+*     create        test/unit/helpers/pens_helper_test.rb
+      invoke  assets
+*     invoke    coffee
+*     create      app/assets/javascripts/pens.js.coffee
+      invoke    scss
+      create      app/assets/stylesheets/pens.css.scss
+      invoke  scss
+      create    app/assets/stylesheets/scaffolds.css.scss
+

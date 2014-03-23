@@ -1,0 +1,124 @@
+select c.checklist_id,c.checklist_name,p.procedure_name proc, p.sop_version version, 
+	p.procedure_description, p.procedure_url,c.date_created, limspackage.checklist_lock_info(c.checklist_id) lock_info,
+	c.completed, c.locked_by, c.avg_priority, p.procedure_mode,nvl(c.IS_ANALYTICAL, decode(p.PROCEDURE_TYPE, 'Analytical', 1, 0)) analytical 
+from procedure_template p, 
+	(select chk.checklist_id, max(chk.checklist_name) checklist_name, max(chk.date_created) date_created,
+		nvl(max(chk.completed),0) completed, max(chk.locked_by) locked_by, max(chk.is_analytical) is_analytical,
+		max(chk.procedure_template_id) procedure_template_id, max(chk.created_by) created_by,
+		max(chk.assigned_to) assigned_to, max(chk.assigned_to_role) assigned_to_role, avg(cs.PRIORITY) avg_priority 
+	from checklist chk, checklist_sample cs 
+	where chk.checklist_id = cs.checklist_id (+) 
+	group by chk.CHECKLIST_ID) c 
+where (c.procedure_template_id = p.procedure_template_id 
+ and c.assigned_to='CCHOU' 
+ and nvl(c.Completed,0) = 0) 
+UNION 
+select c.checklist_id,c.checklist_name,p.procedure_name proc, p.sop_version version, 
+		p.procedure_description, p.procedure_url, c.date_created, limspackage.checklist_lock_info(c.checklist_id) lock_info,
+		c.completed, c.locked_by, c.avg_priority, p.procedure_mode,nvl(c.IS_ANALYTICAL, decode(p.PROCEDURE_TYPE, 'Analytical', 1, 0)) analytical 
+from procedure_template p, 
+   	(select chk.checklist_id, max(chk.checklist_name) checklist_name, max(chk.date_created) date_created,
+			nvl(max(chk.completed),0) completed, max(chk.locked_by) locked_by, max(chk.is_analytical) is_analytical,
+			max(chk.procedure_template_id) procedure_template_id, max(chk.created_by) created_by,
+			max(chk.assigned_to) assigned_to, max(chk.assigned_to_role) assigned_to_role, avg(cs.PRIORITY) avg_priority 
+		from checklist chk, checklist_sample cs 
+		where chk.checklist_id = cs.checklist_id (+) 
+		group by chk.CHECKLIST_ID) c 
+where (c.procedure_template_id = p.procedure_template_id 
+and c.assigned_to_role in ( 
+	select urp.GRANTED_ROLE 
+	from user_role_privs urp 
+	where username = 'CCHOU') 
+AND NVL (c.completed, 0) = 0 )
+;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+select c.checklist_id,c.checklist_name,p.procedure_name proc, p.sop_version version,
+  p.procedure_description, p.procedure_url,c.date_created, limspackage.checklist_lock_info(c.checklist_id) lock_info,
+  c.completed, c.locked_by, c.avg_priority, p.procedure_mode,nvl(c.IS_ANALYTICAL, decode(p.PROCEDURE_TYPE, 'Analytical', 1, 0)) analytical
+from procedure_template p,
+  (select chk.checklist_id, max(chk.checklist_name) checklist_name, max(chk.date_created) date_created,
+    nvl(max(chk.completed),0) completed, max(chk.locked_by) locked_by, max(chk.is_analytical) is_analytical,
+    max(chk.procedure_template_id) procedure_template_id, max(chk.created_by) created_by,
+    max(chk.assigned_to) assigned_to, max(chk.assigned_to_role) assigned_to_role, avg(cs.PRIORITY) avg_priority
+  from checklist chk, checklist_sample cs
+  where chk.checklist_id = cs.checklist_id (+)
+  group by chk.CHECKLIST_ID) c
+where (c.procedure_template_id = p.procedure_template_id
+ and c.assigned_to='CCHOU'
+ and nvl(c.Completed,0) = 0)
+
+columns:
+
+select * from user_ind_columns where table_name = 'CHECKLIST';
+
+
+INDEX_NAME		       TABLE_NAME		      COLUMN_NAME		COLUMN_POSITION COLUMN_LENGTH CHAR_LENGTH DESC
+------------------------------ ------------------------------ ------------------------- --------------- ------------- ----------- ----
+IDX_CHECKLIST_PROC_TEMP        CHECKLIST		      PROCEDURE_TEMPLATE_ID		      1 	   22		0 ASC
+IDX_CHECKLIST_SID	       CHECKLIST		      SUBSIDIARY_ID			      1 	   22		0 ASC
+IDX_CHECKLIST_USERS	       CHECKLIST		      LOCKED_BY 			      1 	   30	       30 ASC
+PK_CHECKLIST		       CHECKLIST		      CHECKLIST_ID			      1 	   22		0 ASC
+
+set timing on
+select chk.checklist_id, max(chk.checklist_name) checklist_name, max(chk.date_created) date_created,
+    nvl(max(chk.completed),0) completed, max(chk.locked_by) locked_by, max(chk.is_analytical) is_analytical,
+    max(chk.procedure_template_id) procedure_template_id, max(chk.created_by) created_by,
+    max(chk.assigned_to) assigned_to, max(chk.assigned_to_role) assigned_to_role, avg(cs.PRIORITY) avg_priority
+  from checklist chk, checklist_sample cs
+  where chk.checklist_id = cs.checklist_id (+)
+  group by chk.CHECKLIST_ID;
+
+17338 rows selected.
+Elapsed: 00:00:04.30
+
+create index idx_checklist_checklist_name on checklist(CHECKLIST_NAME);
+create index idx_checklist_date_created on checklist(DATE_CREATED);
+create index idx_checklist_completed on checklist(COMPLETED);
+ lock_by done
+create index idx_checklist_is_analytical on checklist(IS_ANALYTICAL);
+  procedure_template_id done
+create index idx_checklist_create_by on checklist(CREATED_BY);
+create index idx_checklist_assigned_to on checklist(ASSIGNED_TO);
+create index idx_checklist_assigned_to_role on checklist(ASSIGNED_TO_ROLE);
+
+
+Elapsed: 00:00:04.24 (not helping create indexes!!!!!)
+
+create index ind_checklist_sample_priority on checklist_sample(priority);
+
+Elapsed: 00:00:04.24 (not improving!!!)
+
+create index ind_my_test on checklist(checklist_name,date_created,completed,locked_by,is_analytical,procedure_template_id,created_by,assigned_to,assigned_to_role);
+
+Elapsed: 00:00:04.22 (Again, not improving!!!)
+
+
+
+explain plan for
+select chk.checklist_id, max(chk.checklist_name) checklist_name, max(chk.date_created) date_created,
+    nvl(max(chk.completed),0) completed, max(chk.locked_by) locked_by, max(chk.is_analytical) is_analytical,
+    max(chk.procedure_template_id) procedure_template_id, max(chk.created_by) created_by,
+    max(chk.assigned_to) assigned_to, max(chk.assigned_to_role) assigned_to_role, avg(cs.PRIORITY) avg_priority
+  from checklist chk, checklist_sample cs
+  where chk.checklist_id = cs.checklist_id (+)
+  group by chk.CHECKLIST_ID;
+
+
+select rtrim(lpad(' ',2*level)||
+			rtrim(operation)||' '||
+			rtrim(options)||' '||
+			object_name) query_plan
+from plan_table
+connect by prior id=parent_id
+start with id=0;
+
+
+QUERY_PLAN
+------------------------------------------------------------------------------------------------------------------------------------
+  SELECT STATEMENT
+    HASH GROUP BY
+      HASH JOIN OUTER
+	TABLE ACCESS FULL CHECKLIST
+	TABLE ACCESS FULL CHECKLIST_SAMPLE
+

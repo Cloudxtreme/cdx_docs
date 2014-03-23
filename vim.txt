@@ -1,0 +1,35 @@
+
+syntax on
+set ts=2
+
+
+set nocompatible
+
+set tabstop=2
+set shiftwidth=2
+set shiftround
+set expandtab
+set autoindent
+set smartindent
+
+set showmatch
+
+set guioptions-=T
+set guioptions+=a
+set guioptions+=A
+
+set vb t_vb=
+
+set ruler
+
+set hls
+set ignorecase
+set smartcase
+set incsearch
+
+set tags=tags;
+
+filetype on
+filetype indent on
+filetype plugin on
+

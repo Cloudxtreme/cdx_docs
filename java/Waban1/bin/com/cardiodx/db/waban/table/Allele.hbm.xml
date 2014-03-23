@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Allele" table="ALLELE" schema="DNALIMS">
+        <comment>Description of alleles for a given gene.</comment>
+        <id name="alleleId" type="big_decimal">
+            <column name="ALLELE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="gene" class="com.cardiodx.db.waban.table.Gene" fetch="select">
+            <column name="GENE_ID" precision="22" scale="0" not-null="true">
+                <comment>Gene identifier and foreign key to the GENE table.</comment>
+            </column>
+        </many-to-one>
+        <property name="alleleName" type="string">
+            <column name="ALLELE_NAME" length="50">
+                <comment>The allele name.</comment>
+            </column>
+        </property>
+        <property name="alleleLongName" type="string">
+            <column name="ALLELE_LONG_NAME" length="100">
+                <comment>The allele name.</comment>
+            </column>
+        </property>
+        <property name="numberInSequence" type="big_decimal">
+            <column name="NUMBER_IN_SEQUENCE" precision="22" scale="0">
+                <comment>Number in sequence for display</comment>
+            </column>
+        </property>
+        <set name="protocolAlleles" table="PROTOCOL_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Allele identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolAllele" />
+        </set>
+        <set name="transitionMatrixes" table="TRANSITION_MATRIX" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>ALLELE_ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TransitionMatrix" />
+        </set>
+        <set name="alleleResults" table="ALLELE_RESULT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Allele identifier and foreign key to the ALLELE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AlleleResult" />
+        </set>
+        <set name="procedureTemplateAlleles" table="PROCEDURE_TEMPLATE_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Allele identifier. Part of the primary key and foreign key to the ALLELE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProcedureTemplateAllele" />
+        </set>
+        <set name="genotypeAutocallAlleles" table="GENOTYPE_AUTOCALL_ALLELE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to allele</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.GenotypeAutocallAllele" />
+        </set>
+        <set name="assaies" table="ASSAY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0">
+                    <comment>Allele Identifier and Foreign Key to Allele table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Assay" />
+        </set>
+        <set name="alleleValues" table="ALLELE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ALLELE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Allele identifier. Part of the primary key and foreign key to the ALLELE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AlleleValue" />
+        </set>
+    </class>
+</hibernate-mapping>

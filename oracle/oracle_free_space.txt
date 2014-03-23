@@ -1,0 +1,84 @@
+set pagesize 10000
+set linesize 345
+
+select sid, serial#, username, status, machine from v$session where username is not null;
+
+update accession_variable_fld_table avft 
+set avft.value = '' 
+where exists 
+( 
+select '-' 
+from accession a, protocol_defined_variable pdv, variable v 
+where pdv.protocol_defined_variable_id = avft.protocol_defined_variable_id 
+and v.variable_id = pdv.variable_id 
+and avft.accession_id = a.accession_id 
+and v.variable_name in ('Name of Patient (Last)', 'Name of Patient (First)', 'Date of Birth','Gender', 
+	'Medical Record/Patient Number', 'Patient Address', 'Patient City', 'Patient State', 'Patient Zip Code', 
+	'Patient Phone', 'Name of Phlebotomist', 'Insured Member ID', 'Insured Group Number', 'Insured Relationship', 'Insurance Plan') 
+); 
+
+update SCESCHEMA.versioneddocument 
+set content = EMPTY_BLOB(); 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+col file_name for a55
+SELECT
+   a.tablespace_name,
+   a.file_name,
+   a.bytes allocated_bytes,
+   b.free_bytes
+FROM
+   dba_data_files a,
+   (SELECT file_id, SUM(bytes) free_bytes
+    FROM dba_free_space b GROUP BY file_id) b
+WHERE
+   a.file_id=b.file_id
+ORDER BY
+   a.tablespace_name;
+
+
+TABLESPACE_NAME 	       FILE_NAME					       					ALLOCATED_BYTES FREE_BYTES
+------------------------------ ------------------------------------------------------- --------------- ----------
+INDX			       /u01/app/oracle/oradata/PDLIMS/indx01.dbf		    	3207856128	   524288
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_01.dbf	    3.4318E+10	  7208960
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_03.dbf	    3.4330E+10	 37617664
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_02.dbf	    3.4330E+10	 19202048
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_04.dbf	    1342177280	 67043328
+SCE_DATA		       /u01/app/oracle/oradata/PDLIMS/sec_data_01.dbf		    2147483648 1934950400
+SYSAUX			       /u01/app/oracle/oradata/PDLIMS/sysaux01.dbf		         492830720	 21102592
+SYSTEM			       /u01/app/oracle/oradata/PDLIMS/system01.dbf		         576716800	 10813440
+UNDOTBS1		       /u01/app/oracle/oradata/PDLIMS/undotbs01.dbf		         440401920	401539072
+USERS			       /u01/app/oracle/oradata/PDLIMS/users01.dbf		        4372561920	  1769472
+
+
+
+TABLESPACE_NAME 	       FILE_NAME					       					ALLOCATED_BYTES FREE_BYTES
+------------------------------ ------------------------------------------------------- --------------- ----------
+INDX			       /u01/app/oracle/oradata/PDLIMS/indx01.dbf		    	3214409728	   786432
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_01.dbf	    3.4327E+10	  7995392
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_03.dbf	    3.4340E+10	  4849664
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_02.dbf	    3.4340E+10	  3211264
+SCE_CONTENT		       /u01/app/oracle/oradata/PDLIMS/sec_content_04.dbf	    1351352320	  9109504
+SCE_DATA		       /u01/app/oracle/oradata/PDLIMS/sec_data_01.dbf		    2147483648 1934950400
+SYSAUX			       /u01/app/oracle/oradata/PDLIMS/sysaux01.dbf		     	 492830720	  9306112
+SYSTEM			       /u01/app/oracle/oradata/PDLIMS/system01.dbf		     	 576716800	 10813440
+UNDOTBS1		       /u01/app/oracle/oradata/PDLIMS/undotbs01.dbf		     	 875560960	   589824
+USERS			       /u01/app/oracle/oradata/PDLIMS/users01.dbf		        4409262080	  4915200
+
+
+-- srink temp tablespace
+alter database tempfile '/u01/app/oracle/oradata/PDLIMS/temp01.dbf' resize 2G;
+
+alter database datafile '/u01/app/oracle/oradata/PDLIMS/sec_content_01.dbf' resize 12G;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+select dbms_lob.getlength(content) from VERSIONEDDOCUMENT;
+
+select segment_name, segment_type, extent_id, bytes, sum(bytes) over ( partition by segment_name, segment_type )/1024/1024 sum_bytes
+from dba_extents
+where tablespace_name = 'SCE_CONTENT'
+order by segment_name, segment_type, extent_id;
+
+
+
+

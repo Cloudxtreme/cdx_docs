@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PgxSetupTemplate" table="PGX_SETUP_TEMPLATE" schema="DNALIMS">
+        <comment>PGx Setup Template</comment>
+        <id name="setupTemplateId" type="big_decimal">
+            <column name="SETUP_TEMPLATE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="setupTemplateName" type="string">
+            <column name="SETUP_TEMPLATE_NAME" length="100" not-null="true">
+                <comment>NAME OF SETUP TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="200">
+                <comment>DESCRIPTION OF TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="fileBlob" type="blob">
+            <column name="FILE_BLOB">
+                <comment>Template file storage</comment>
+            </column>
+        </property>
+        <property name="fileName" type="string">
+            <column name="FILE_NAME">
+                <comment>FILENAME OF THE TEMPLATE</comment>
+            </column>
+        </property>
+        <property name="reportCategory" type="string">
+            <column name="REPORT_CATEGORY" length="100" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>SETUP TEMPLATE CREATED BY</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>SETUP TEMPLATE CREATED DATE</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>SETUP TEMPLATE MODIFIED BY</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>SETUP TEMPLATE MODIFIED DATE</comment>
+            </column>
+        </property>
+        <set name="reportTemplates" table="REPORT_TEMPLATE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TEMPLATE_FILE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ReportTemplate" />
+        </set>
+        <set name="pgxModifyDataRptComments" table="PGX_MODIFY_DATA_RPT_COMMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SETUP_TEMPLATE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign Key for PGX_GENE_ID from PGX_GENE_NARRATIVE_TEMPLATES Table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PgxModifyDataRptComment" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<%
+  @column_names = Admin::Field.display_columns
+  @url = Admin::Field.url
+  @parents = Admin::Field.my_parents
+%>
+
+<%= form_for(@object) do |f| %>
+  <% if @object.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@object.errors.count, "error") %> prohibited this object from being saved:</h2>
+
+      <ul>
+      <% @object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <% @column_names.each do |column_name| %>
+		<div class="field">
+
+	    <%= f.label column_name %><br />
+
+			<% if Admin::Field.is_this_col_lut?(@parents, column_name) %>
+				<%= f.select(:type_id, Admin::Field.get_lut_data(@parents, column_name)) %>
+
+			<% elsif Admin::Field.is_this_col_2way?(@parents, column_name) %>
+				<!-- @@@@@@@@@@@@@@ -->
+				<%= f.hidden_field :collection_id , :value => 2%> 
+
+			<% else %>
+  	  	<%= f.text_field column_name %>
+
+			<% end %>
+
+		</div>
+	<% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

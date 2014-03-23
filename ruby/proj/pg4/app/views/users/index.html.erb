@@ -1,0 +1,50 @@
+<h3>Listing users</h3>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.name %></td>
+    <td><%= user.email %></td>
+    <td><%= link_to 'Show', user %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New User', new_user_path %>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+$('#example').dataTable( {
+"bProcessing": true, "sAjaxSource": '/arrays.txt'
+} ); });
+
+</script>
+
+
+<h1>Test#index</h1>
+Find me in app/views/test/index.html.erb
+<div id="container">
+<h1>Live example</h1>
+BrowserPlatform(s)Engine versionCSS grade
+<table id="example" class="display" border="0" cellspacing="0" cellpadding="0">
+<thead>
+<tr>
+<th>Rendering engine</th>
+</tr>
+</thead>
+</table>
+</div>
+

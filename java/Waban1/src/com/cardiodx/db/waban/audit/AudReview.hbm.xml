@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudReview" table="AUD_REVIEW" schema="DNALIMS">
+        <comment>Aud Review</comment>
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign Key to Change Reason Table.</comment>
+            </column>
+        </property>
+        <property name="reviewId" type="big_decimal">
+            <column name="REVIEW_ID" precision="22" scale="0" not-null="true">
+                <comment>REVIEW Identifier and Primary Key</comment>
+            </column>
+        </property>
+        <property name="reviewName" type="string">
+            <column name="REVIEW_NAME">
+                <comment>Name Of REVIEW</comment>
+            </column>
+        </property>
+        <property name="reviewNotes" type="string">
+            <column name="REVIEW_NOTES">
+                <comment>REVIEW Notes</comment>
+            </column>
+        </property>
+        <property name="username" type="string">
+            <column name="USERNAME" length="30">
+                <comment>REVIEW User Name</comment>
+            </column>
+        </property>
+        <property name="rolename" type="string">
+            <column name="ROLENAME" length="30">
+                <comment>REVIEW Role Name</comment>
+            </column>
+        </property>
+        <property name="md5digest" type="string">
+            <column name="MD5DIGEST" length="100">
+                <comment>Md5digest</comment>
+            </column>
+        </property>
+        <property name="checklistId" type="big_decimal">
+            <column name="CHECKLIST_ID" precision="22" scale="0">
+                <comment>Checklist Identifier.</comment>
+            </column>
+        </property>
+        <property name="checklistRow" type="big_decimal">
+            <column name="CHECKLIST_ROW" precision="22" scale="0">
+                <comment>Checklist Row.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who caused this audit transaction to take place.</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place.</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,73 @@
+ubuntu iscsi target create on the fly
+
+http://www.novell.com/support/search.do?cmd=displayKC&docType=kc&externalId=3463107&sliceId=SAL_Public&dialogID=12005301&stateId=0%200%2012009573
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  988  cd /proc/net/iet/
+
+  991  more volume 
+  992  more session 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- add a new target
+--
+# lvcreate -L+5G -n hello -i 3 vg2
+
+# cat volume | grep tid
+
+# ietadm --op new --tid=58 --params Name=storage1.hello
+# ietadm --op new --tid=58 --lun=0 --params Path=/dev/vg2/hello
+--# ietadm --op new --tid=58 --params user=cdx,Password=secretCDX94303
+
+
+-- client
+# iscsiadm -m discovery -t st -p storage1 
+# iscsiadm -m node -T storage1.hello -l
+
+# iscsiadm -m node -T storage1.hello -u
+
+# ietadm --op delete --tid=58 
+
+
+# cat /proc/net/iet/session | head
+tid:61 name:storage1.pq22-master
+	sid:51791395852976640 initiator:iqn.1993-08.org.debian:01:47532e458b8e
+		cid:0 ip:10.10.36.32 state:active hd:none dd:none
+	sid:47006321282449920 initiator:iqn.1993-08.org.debian:01:47532e458b8e
+		cid:0 ip:10.10.36.32 state:active hd:none dd:none
+
+ietadm --op delete --tid=61 --sid=51791395852976640 --cid=0
+ietadm --op delete --tid=61 --sid=47006321282449920 --cid=0
+ietadm --op delete --tid=61
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- add a new lun (to an existing target)
+--
+# ietadm --op new --tid=2 --lun=1 --params=Path=/dev/vg2/hello
+
+# cat volume 
+tid:2 name:storage1.temp
+	lun:0 state:0 iotype:fileio iomode:wb path:/dev/vg1/temp
+	lun:1 state:0 iotype:fileio iomode:wt path:/dev/vg2/hello
+
+
+-- client
+# iscsiadm -m node -T storage1.temp -l
+
+# ls -l /dev/disk/by-path/ip-10.10.37.37\:3260-iscsi-storage1.temp-lun-*
+lrwxrwxrwx 1 root root 9 2010-01-26 15:14 /dev/disk/by-path/ip-10.10.37.37:3260-iscsi-storage1.temp-lun-0 -> ../../sdc
+lrwxrwxrwx 1 root root 9 2010-01-26 15:14 /dev/disk/by-path/ip-10.10.37.37:3260-iscsi-storage1.temp-lun-1 -> ../../sdd
+
+
+# ietadm --op delete --tid=2 --lun=1
+
+# cat volume
+tid:2 name:storage1.temp
+  lun:0 state:0 iotype:fileio iomode:wb path:/dev/vg1/temp
+
+
+
+

@@ -1,0 +1,29 @@
+do some upgrade:
+
+  501  export PATH=$PATH:/usr/jdk1.5.0_10/bin
+  502  export JAVA_HOME=/usr/jdk1.5.0_10
+  503  cd /usr/
+  505  cd tomcat/
+  508  cd webapps/
+  510  cd reliance_dev/
+  513  cd common/
+  516  cd localization/core/
+  519  mv standard_text.properties standard_text.properties.120308
+553  scp standard_text.properties root@etqdevel:/usr/tomcat/webapps/reliance_dev/common/localization/core
+  521  chmod 644 standard_text.properties
+
+  523  cd ../../..
+  525  cd WEB-INF/classes/com/etq/reliance/business/
+  527  mv Phase.class Phase.class.120308
+565  scp Phase.class root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF/classes/com/etq/reliance/business
+  529  chmod 644 Phase.class
+
+
+  531  cd /usr/tomcat/
+  533  ps -ef | grep java
+  534  kill -9 13833
+  535  ps -ef | grep java
+  536  cd bin/
+  538  ./startup.sh 
+  539  tail -20f ../logs/catalina.out 
+

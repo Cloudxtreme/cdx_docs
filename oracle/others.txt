@@ -1,0 +1,11 @@
+install ntp
+install ssmtp
+install libpam-foreground
+
+cp ldap.conf /etc/ldap
+
+install smartd (smartctl)
+
+rc0.d,  rc6.d, rcS.d
+ln -s ../init.d/oracle K20oracle
+

@@ -1,0 +1,36 @@
+
+sqlnet.ora?? (Not sure we need RADIUS) in it
+SQLNET.AUTHENTICATION_SERVICE = (BEQ, TCPS, RADIUS)
+NAMES.DIRECTORY_PATH = (TNSNAMES)
+
+
+tnsnames.ora add a new entry
+	Start --> All Programs
+	--> Oracle - Home1 --> Configuration and Migration Tools
+	--> Net Coniguration Assistant
+
+	Local Net Service Name configuration 
+		Add
+		Service Name: WABAN254
+		TCP 
+		Host name: waban254
+					(Use the standard port number of 1521)
+		Yes, perform a test
+		Change login --> Use cdxtest/cdxtest
+
+odbc
+	Start --> Control Panel
+		--> Administrative Tools
+		--> Data Sources (ODBC)
+  Creat a new System DSN:
+	Click 'System DNS' tab
+  Click 'Add'
+		Data Source Name: Waban254
+		TNS Service Name: WABAN254
+		Test connection
+			User Name: cdxtest
+			Password: cdxtest
+
+
+
+

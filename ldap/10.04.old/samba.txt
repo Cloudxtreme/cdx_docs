@@ -1,0 +1,4 @@
+http://tuxnetworks.blogspot.com/2010/07/howto-samba-ldap-on-1004-lucid-short.html
+
+http://doc.ubuntu.com/ubuntu/serverguide/C/samba-ldap.html
+

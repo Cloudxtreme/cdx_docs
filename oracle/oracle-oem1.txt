@@ -1,0 +1,13 @@
+
+echo "Red Hat Linux release 4" > /etc/redhat-release
+
+cd ~/Oracle_OEM_10.3/Disk1
+./runInstaller
+
+Enterprise Manager 10g Grid Control Using a New DB
+
+EMREP
+
+  password: emrepsys246
+
+

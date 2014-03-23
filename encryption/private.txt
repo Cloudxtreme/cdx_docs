@@ -1,0 +1,21 @@
+https://help.ubuntu.com/community/EncryptedPrivateDirectory
+
+
+# wajig install ecryptfs-utils
+
+
+Login as cardiodx
+
+$ ecryptfs-setup-private 
+Enter your login passphrase: 
+Enter your mount passphrase [leave blank to generate one]:
+Enter your mount passphrase (again):
+
+
+Good for laptops:
+1) Data will be encrypted on the HD.
+2) root will be able to see the data if cardiodx logs in.
+3) If cardiodx logs out, root can't see the data any more.
+4) "su - cardiodx" won't allow root to see the data.
+
+

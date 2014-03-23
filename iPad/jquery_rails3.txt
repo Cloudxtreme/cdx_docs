@@ -1,0 +1,30 @@
+
+http://fuelyourcoding.com/getting-started-with-jquery-mobile-rails-3/
+
+
+
+rails new jqmoblog
+
+vi Gemfile
+gem 'execjs'
+gem 'therubyracer'
+gem 'jquery-rails'
+
+bundle install
+
+rails generate scaffold Post title:string body:text
+rake db:migrate
+rails server
+
+
+vi app/assets/javascripts/application.js
+//= require jquery
+//= require jquery_ujs
+//= require_tree .
+
+  119  rm public/index.html 
+  114  cd config/
+  116  vi routes.rb 
+
+
+

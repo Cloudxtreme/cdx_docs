@@ -1,0 +1,12 @@
+
+asterisk click2dial extension 1.5.1
+  
+Tools --> Add-ons --> Asterisk.... --> Preferences
+   Host: asterisk
+   Port: 5038
+   User: test
+   Password: footest
+   Context: default
+   Channel: SIP, 2721
+
+

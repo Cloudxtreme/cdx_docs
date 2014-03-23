@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<project name="Hibernate RevEng" basedir="." default="usage">
+
+<path id="toolslib">
+  <fileset dir="../lib">
+    <include name = "*.jar"/>
+  </fileset>
+</path>
+
+<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="toolslib"/>
+
+<target name="generate">
+    <hibernatetool destdir="src">
+        <jdbcconfiguration propertyfile="hibernate.properties" revengfile="hibernate.reveng.xml" />
+        <hbm2hbmxml />
+        <hbm2cfgxml ejb3="true" />
+        <hbmlint destdir="src" />
+        <hbm2hbmxml destdir="src" />
+    </hibernatetool>
+
+    <hibernatetool destdir="src">
+        <configuration configurationfile="hibernate.cfg.xml" />
+        <hbm2java destdir="src" />
+        <hbm2dao destdir="src" />
+    </hibernatetool>
+</target>
+
+</project>

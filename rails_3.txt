@@ -1,0 +1,62 @@
+Mayank's note
+~~~~~~~~~~~~~
+
+Rails 3 Beta and Oracle
+Here’s how I got my Rails 3 Beta working with Oracle.
+
+Step 1. Install the Rails 3.0.0 Beta gem
+
+$ sudo gem install rails --pre
+
+Step 2. Install the Ruby-OCI8 gem
+
+$ export ORACLE_HOME=/usr/lib/oracle/10.2.0.4/client64
+
+$ export LD_LIBRARY_PATH=/usr/lib/oracle/10.2.0.4/client64/lib
+
+$ sudo env LD_LIBRARY_PATH=$LD_LIBRARY_PATH ORACLE_HOME=$ORACLE_HOME gem install ruby-oci8 -- --with-instant-client
+Step 3. Use the oracle_enhanced adapter bundle
+
+If your intent is to use the oracle_enhanced adapter from a Rails application, you can do so by using the bundle mechanism in Rails 3.0. Create a rails application (rails testapp) and modify the Gemfile to contain the following on a single line:
+
+gem 'activerecord-oracle_enhanced-adapter', '>=1.3.0.beta2', :git => 'git://github.com/rsim/oracle-enhanced.git', :branch => 'rails3', :require => 'active_record/connection_adapters/oracle_enhanced_adapter'
+
+Then in the root directory for the Rails application, run
+
+$ bundle install
+
+This should be enough to run a Rails application and connect to Oracle, once you modify the database.yml file accordingly (and the adapter should be “oracle_enhanced”).
+
+Step 4. Installing oracle_enhanced adapter as a gem
+
+If you need to connect to Oracle using a script, then there’s more to be done. As you can see above, the oracle_enhanced adapter was installed as an application-specific bundle, not a system-wide gem.
+
+From the Rails root of the application above, run:
+
+$ bundle show activerecord-oracle_enhanced-adapter
+
+Change directories to the directory that this command responds with. In my case:
+
+$ cd /home/mayank/.bundle/ruby/1.8/bundler/gems/oracle-enhanced-35f26176bf0c8e76ceaff468030e8aebad7d65bf-rails3
+
+You need to use this directory to make a gem.
+
+$ gem build activerecord-oracle_enhanced-adapter.gemspec
+
+That builds the gem. Now to install it!
+
+$ sudo gem install activerecord-oracle_enhanced-adapter-1.3.0.beta2.gem
+
+That’s it! To use the gem in a script, do the following:
+
+require 'rubygems'
+
+require 'active_record'
+
+require 'active_support'
+
+gem 'activerecord-oracle_enhanced-adapter'
+
+ActiveRecord::Base.establish_connection(:adapter => 'oracle_enhanced', :database => '//rdlims/orcl', :username => '[username]', :password => '[password]')
+
+

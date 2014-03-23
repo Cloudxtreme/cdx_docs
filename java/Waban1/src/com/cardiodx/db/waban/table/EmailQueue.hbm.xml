@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.EmailQueue" table="EMAIL_QUEUE" schema="DNALIMS">
+        <comment>To store all mails</comment>
+        <id name="emailQueueId" type="big_decimal">
+            <column name="EMAIL_QUEUE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="emailTo" type="string">
+            <column name="EMAIL_TO" length="1000">
+                <comment>Email Id of the recepient</comment>
+            </column>
+        </property>
+        <property name="emailFrom" type="string">
+            <column name="EMAIL_FROM" length="1000">
+                <comment>Email Id of the sender</comment>
+            </column>
+        </property>
+        <property name="emailSubject" type="string">
+            <column name="EMAIL_SUBJECT" length="1000">
+                <comment>Subject of the email</comment>
+            </column>
+        </property>
+        <property name="mailContent" type="string">
+            <column name="MAIL_CONTENT" length="4000">
+                <comment>Body or the content of the email</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="20">
+                <comment>current status of the email</comment>
+            </column>
+        </property>
+        <property name="dateQueued" type="date">
+            <column name="DATE_QUEUED" length="7">
+                <comment>Date on which the email is queued</comment>
+            </column>
+        </property>
+        <property name="dateSent" type="date">
+            <column name="DATE_SENT" length="7">
+                <comment>Date on which email is sent</comment>
+            </column>
+        </property>
+        <property name="noOfAttempts" type="big_decimal">
+            <column name="NO_OF_ATTEMPTS" precision="22" scale="0">
+                <comment>The attempts made to send the email</comment>
+            </column>
+        </property>
+        <property name="lastErrStr" type="string">
+            <column name="LAST_ERR_STR">
+                <comment>The last error string returmed</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

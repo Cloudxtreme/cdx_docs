@@ -1,0 +1,3 @@
+locale-get en_US
+locale -a
+

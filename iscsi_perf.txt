@@ -1,0 +1,14 @@
+
+
+Write: # dd if=/dev/zero bs=10M count=1500 | pv > testfile
+Read:  # dd if=testfile | pv > /dev/null
+
+xfs:
+W: 15728640000 bytes (16 GB) copied, 129.032 s, 122 MB/s
+R: 15728640000 bytes (16 GB) copied, 137.158 s, 115 MB/s
+
+
+ocfs:
+W: 15728640000 bytes (16 GB) copied, 146.139 s, 108 MB/s
+R: 15728640000 bytes (16 GB) copied, 121.238 s, 130 MB/s
+ 

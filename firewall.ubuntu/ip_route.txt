@@ -1,0 +1,34 @@
+
+12.149.54.90 via 67.95.201.193 dev eth5 
+66.18.99.68 via 67.95.201.193 dev eth5 
+67.95.201.200 dev eth2  scope link 
+173.13.158.176/28 dev eth4  proto kernel  scope link  src 173.13.158.180 
+67.95.201.192/27 dev eth5  proto kernel  scope link  src 67.95.201.198 
+66.18.106.160/27 via 67.95.201.193 dev eth5 
+192.168.3.0/24 dev eth3  proto kernel  scope link  src 192.168.3.0 
+10.10.43.0/24 dev eth2  proto kernel  scope link  src 10.10.43.1 
+12.3.153.0/24 via 67.95.201.193 dev eth5 
+10.10.32.0/21 dev eth1  proto kernel  scope link  src 10.10.37.2 
+default 
+	nexthop via 173.13.158.190  dev eth4 weight 5
+	nexthop via 67.95.201.193  dev eth5 weight 1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+echo '3 dmz1' >> /etc/iproute2/rt_tables
+ip route add 67.95.201.200/32 dev eth5 src 67.95.201.198 table dmz1
+ip route add 67.95.201.200/32 dev eth2 src 10.10.37.2 table dmz1
+ip rule add from 67.95.201.200 table dmz1
+
+ip route add default via 67.95.201.193 table dmz1
+--ip route del default via 67.95.201.193 table dmz1
+
+
+
+ip rule 
+
+ip route list table dmz1
+
+
+

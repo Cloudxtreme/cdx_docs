@@ -1,0 +1,57 @@
+Install:
+========
+
+1 With the system still powered down, connect a VGA monitor and keyboard to the host.
+2 Insert the Vyatta LiveCD into the CD drive and close the drive.
+3 Power up the system.
+NOTE Systems with a Flash device may boot slowly from LiveCD, as the system looks for DMA
+that does not exist on the IDE device. This is expected behavior.
+4
+After the startup messages complete, the login prompt appears:
+vyatta login:
+5 Log on to the system as root with the password vyatta.
+6 At the system command prompt enter the following:
+install-system
+The installer launches. The installer is an interactive install script that prompts you for some
+basic information and confirmation during the install.
+7 Follow the prompts and specify the compact Flash device name recorded above when
+ required until a system prompt displays.
+8 Remove the CD from its drive and reboot.
+9 During the boot sequence press the appropriate key sequence (for example, <F2>) to
+ interrupt the boot sequence and enter your system’s BIOS setup program.
+10 In the boot sequence menu arrange the boot devices such that the compact Flash device
+name (for example “IDE” or “SATA”) is first in the list so that the system will attempt to
+boot from it first.
+11 Save the settings and reboot the system. When the system restarts, it will be running from
+the compact Flash and you will see the following:
+Welcome to Vyatta - vyatta on tty1
+vyatta login:
+
+
+
+Test the system
+===============
+1 Log on to the system as user vyatta with the password vyatta.
+2 At the command prompt, enter the commands shown in the example, substituting an IP
+ address on your existing subnet. In the example:
+• The subnet is 192.168.1.0/24
+• The IP address of the interface is 192.168.1.81
+Make the appropriate substitutions for your network.
+vyatta@vyatta:~$ configure
+[edit]
+root@vyatta# set interfaces ethernet eth0 address 192.168.1.81/24
+[edit]
+root@vyatta# commit
+[edit]
+root@vyatta# exit
+exit
+vyatta@vyatta:~$
+1 From another host on the same subnet, ping the interface to ensure that it is up.
+2 From a Linux or Windows command prompt, enter the following command (substituting
+ the IP address you assigned to the interface):
+ping 192.168.1.81
+If the Vyatta system is reachable, you will see replies from it in response to the pings.
+If so, your system is installed and accessible on your network, and you are ready to review user
+interface options and configure the system.
+
+

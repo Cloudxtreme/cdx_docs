@@ -1,0 +1,20 @@
+
+http://ubuntuforums.org/showthread.php?t=30060
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install clamav clamav-daemon clamav-data 
+wajig install clamav-freshclam
+
+freshclam
+
+clamscan -i
+clamscan -r /home 
+clamscan -r / 
+clamscan -r --bell --mbox -i / 
+
+
+clamscan -i /home/user | mail user@example.com
+clamscan -r -i Downloads/ | mail -s 'Clam Scan Status' cchou@cardiodx.com
+
+create a cron 
+

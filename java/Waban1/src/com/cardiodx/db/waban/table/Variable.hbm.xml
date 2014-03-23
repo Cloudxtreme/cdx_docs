@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Variable" table="VARIABLE" schema="DNALIMS">
+        <comment>Listing of possible variables or attributes available for use in study protocols (age, weight, etc.).</comment>
+        <id name="variableId" type="big_decimal">
+            <column name="VARIABLE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="variableType" class="com.cardiodx.db.waban.table.VariableType" fetch="select">
+            <column name="VARIABLE_TYPE_ID" length="1">
+                <comment>Character used as a foreign key to restrict the type of a variable</comment>
+            </column>
+        </many-to-one>
+        <property name="variableName" type="string">
+            <column name="VARIABLE_NAME" length="30" not-null="true" unique="true">
+                <comment>Variable name (age, sex, etc.).</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="50">
+                <comment>Description of the variable.</comment>
+            </column>
+        </property>
+        <property name="minValue" type="string">
+            <column name="MIN_VALUE" length="50">
+                <comment>Minimum value for this variable (if a range).</comment>
+            </column>
+        </property>
+        <property name="maxValue" type="string">
+            <column name="MAX_VALUE" length="50">
+                <comment>Maximum value for this variable (if a range).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="testConditionAttributes" table="TEST_CONDITION_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0">
+                    <comment>Attribute identifier and foreign key to VARIABLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TestConditionAttribute" />
+        </set>
+        <set name="organizationAttributes" table="ORGANIZATION_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0">
+                    <comment>FK - Identifier to variable table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OrganizationAttribute" />
+        </set>
+        <set name="studyVariableRoles" table="STUDY_VARIABLE_ROLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0">
+                    <comment>Variable identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StudyVariableRole" />
+        </set>
+        <set name="variableValues" table="VARIABLE_VALUE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>The variable identifier this value is associated with and foreign key to the VARIABLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.VariableValue" />
+        </set>
+        <set name="roiAttributes" table="ROI_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Attribute identifier and foreign key to VARIABLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.RoiAttribute" />
+        </set>
+        <set name="configAttributes" table="CONFIG_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConfigAttribute" />
+        </set>
+        <set name="protocolDefinedVariables" table="PROTOCOL_DEFINED_VARIABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VARIABLE_ID" precision="22" scale="0" not-null="true">
+                    <comment>Variable identifier and foreign key to the VARIABLE table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ProtocolDefinedVariable" />
+        </set>
+    </class>
+</hibernate-mapping>

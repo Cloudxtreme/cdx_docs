@@ -1,0 +1,4 @@
+
+http://doc.pfsense.org/index.php/IPsec_Troubleshooting
+
+

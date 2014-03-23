@@ -1,0 +1,206 @@
+ubuntu lucid samba ldap smbldap
+
+http://tuxnetworks.blogspot.com/2010/07/howto-samba-ldap-on-1004-lucid-short.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+wajig install slapd ldap-utils samba samba-doc libpam-smbpass smbclient smbldap-tools ldap-auth-client
+
+  ldapi://
+  dc=cardiodx,dc=com
+  version: 3
+  Make local root Database admin: Yes
+  Does the LDAP database require login? No
+  LDAP account for root: cn=admin,dc=cardiodx,dc=com
+  LDAP root account password:: secret07
+  
+  ???update-rc.d: warning: libnss-ldap start runlevel arguments (2 3 4 5) do not match LSB Default-Start values (none)
+
+smbclient -U% -L localhost
+
+
+--
+-- for ldap:
+--
+  218  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/cosine.ldif
+  219  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/nis.ldif
+  220  ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/ldap/schema/inetorgperson.ldif
+
+ldapsearch -LLL -Y EXTERNAL -H ldapi:/// -b cn=config dn
+
+  221  vi backend.example.com.ldif
+  222  ldapadd -Y EXTERNAL -H ldapi:/// -f backend.example.com.ldif
+
+
+vi /etc/samba/smb.conf
+
+
+mkdir -p /data/samba
+cd /data
+chmod 700 samba
+
+mkdir homes groups netlogon
+mkdir public
+chmod 777 public/
+
+smbpasswd -W
+secret07
+
+service smbd restart
+
+
+cd /etc/ldap/schema/
+cp /usr/share/doc/samba-doc/examples/LDAP/samba.schema.gz .
+gzip -d samba.schema.gz 
+
+vi schema_convert.conf
+include /etc/ldap/schema/core.schema
+include /etc/ldap/schema/collective.schema
+include /etc/ldap/schema/corba.schema
+include /etc/ldap/schema/cosine.schema
+include /etc/ldap/schema/duaconf.schema
+include /etc/ldap/schema/dyngroup.schema
+include /etc/ldap/schema/inetorgperson.schema
+include /etc/ldap/schema/java.schema
+include /etc/ldap/schema/misc.schema
+include /etc/ldap/schema/nis.schema
+include /etc/ldap/schema/openldap.schema
+include /etc/ldap/schema/ppolicy.schema
+include /etc/ldap/schema/samba.schema
+
+
+slapcat -f ~/schema_convert.conf -F ~ -n0 -s "cn={12}samba,cn=schema,cn=config" > ~/cn=samba.ldif
+
+
+vi /root/cn\=samba.ldif 
+dn: cn=samba,cn=schema,cn=config
+     :
+cn: samba
+
+  Remove all the following lines:
+  structuralObjectClass: olcSchemaConfig
+  :
+  :
+
+ldapadd -Y EXTERNAL -H ldapi:/// -f ~/cn\=samba.ldif
+
+
+ldapsearch -Y EXTERNAL -H ldapi:/// -D cn=admin,cn=config -b cn=config -W olcDatabase={1}hdb
+
+net getlocalsid
+
+gzip -d /usr/share/doc/smbldap-tools/configure.pl.gz
+chmod 755 /usr/share/doc/smbldap-tools/configure.pl
+/usr/share/doc/smbldap-tools/configure.pl
+
+???  $# is no longer supported at /usr/share/doc/smbldap-tools/configure.pl line 314.
+ . empty value can be set with the "." character
+
+
+Samba Configuration File Path [/etc/samba/smb.conf] > 
+Smbldap-tools Configuration Directory Path [/etc/smbldap-tools/] > 
+. workgroup name: name of the domain Samba act as a PDC
+  workgroup name [CDX1] > 
+. netbios name: netbios name of the samba controler
+  netbios name [PDC] > 
+. logon drive: local path to which the home directory will be connected (for NT Workstations). Ex: 'H:'
+  logon drive [H:] > 
+. logon home: home directory location (for Win95/98 or NT Workstation).
+  (use %U as username) Ex:'\\PDC\%U'
+  logon home (press the "." character if you don't want homeDirectory) [\\PDC\%U] > 
+. logon path: directory where roaming profiles are stored. Ex:'\\PDC\profiles\%U'
+  logon path (press the "." character if you don't want roaming profile) [\\PDC\profiles\%U] > 
+. home directory prefix (use %U as username) [/home/%U] > 
+. default users' homeDirectory mode [700] > 
+. default user netlogon script (use %U as username) [startup.bat] > 
+  default password validation time (time in days) [45] > 
+. ldap suffix [dc=cardiodx,dc=com] > 
+. ldap group suffix [ou=Groups] > 
+. ldap user suffix [ou=Users] > 
+. ldap machine suffix [ou=Computers] > 
+. Idmap suffix [ou=Idmap] > 
+. sambaUnixIdPooldn: object where you want to store the next uidNumber
+  and gidNumber available for new users and groups
+  sambaUnixIdPooldn object (relative to ${suffix}) [sambaDomainName=CDX1] > 
+. ldap master server: IP adress or DNS name of the master (writable) ldap server
+  ldap master server [localhost] > 
+. ldap master port [389] > 
+. ldap master bind dn [cn=admin,dc=cardiodx,dc=com] > 
+. ldap master bind password [] > 
+. ldap slave server: IP adress or DNS name of the slave ldap server: can also be the master one
+  ldap slave server [localhost] > 
+. ldap slave port [389] > 
+. ldap slave bind dn [cn=admin,dc=cardiodx,dc=com] > 
+  ldap slave bind password [] > 
+. ldap tls support (1/0) [0] > 
+. SID for domain CDX1: SID of the domain (can be obtained with 'net getlocalsid PDC')
+  SID for domain CDX1 [S-1-5-21-1222247384-1065759410-947689741] > 
+. unix password encryption: encryption used for unix passwords
+  unix password encryption (CRYPT, MD5, SMD5, SSHA, SHA) [SSHA] > 
+. default user gidNumber [513] > 
+. default computer gidNumber [515] > 
+. default login shell [/bin/bash] > 
+. default skeleton directory [/etc/skel] > 
+. default domain name to append to mail adress [] > cardiodx.com
+?????? Use of uninitialized value $# in concatenation (.) or string at /usr/share/doc/smbldap-tools/configure.pl line 314, <STDIN> line 35.
+
+ll /etc/smbldap-tools/
+-rw-------  1 root root  432 2010-09-22 15:30 smbldap_bind.conf
+-rw-r--r--  1 root root 7567 2010-09-22 15:30 smbldap.conf
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+smbldap-populate 
+Populating LDAP directory for domain CDX1 (S-1-5-21-1222247384-1065759410-947689741)
+(using builtin directory structure)
+
+adding new entry: dc=cardiodx,dc=com
+adding new entry: ou=Users,dc=cardiodx,dc=com
+adding new entry: ou=Groups,dc=cardiodx,dc=com
+adding new entry: ou=Computers,dc=cardiodx,dc=com
+adding new entry: ou=Idmap,dc=cardiodx,dc=com
+adding new entry: uid=root,ou=Users,dc=cardiodx,dc=com
+adding new entry: uid=nobody,ou=Users,dc=cardiodx,dc=com
+adding new entry: cn=Domain Admins,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Domain Users,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Domain Guests,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Domain Computers,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Administrators,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Account Operators,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Print Operators,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Backup Operators,ou=Groups,dc=cardiodx,dc=com
+adding new entry: cn=Replicators,ou=Groups,dc=cardiodx,dc=com
+adding new entry: sambaDomainName=CDX1,dc=cardiodx,dc=com
+
+Please provide a password for the domain root: 
+Changing UNIX and samba passwords for root
+(secret07)
+
+Not needed?????
+service slapd stop
+slapindex
+chown openldap:openldap /var/lib/ldap/*
+service slapd start
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+smbldap-groupmod -m 'root' 'Administrators'
+
+smbldap-useradd -a -m -P cchou
+smbldap-useradd -a -m -P ian
+
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" uid=cchou
+
+vi /etc/nsswitch.conf
+passwd:         files ldap
+group:          files ldap
+
+getent passwd | grep cchou
+
+smbclient //PDC/homes -U cchou
+  pdb_get_group_sid: Failed to find Unix account for cchou
+
+
+
+
+
+
+

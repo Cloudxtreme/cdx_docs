@@ -1,0 +1,14 @@
+linux port forwarding
+
+
+# iptables -L -t nat
+
+Chain port-forward (1 references)
+target     prot opt source               destination         
+DNAT       udp  --  anywhere             vpn.cardiodx.com    udp dpt:1194 to:10.10.37.22:1194 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:https to:10.10.37.27:443 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:imaps to:10.10.37.27:993 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:www to:67.95.201.196:80 
+DNAT       tcp  --  anywhere             vpn.cardiodx.com    tcp dpt:3389 to:10.10.37.36:3389 
+DNAT       tcp  --  anywhere             ip67-95-201-197.z201-95-67.customer.algx.net tcp dpt:https to:10.10.37.36:443 
+

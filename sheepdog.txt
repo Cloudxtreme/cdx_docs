@@ -1,0 +1,89 @@
+
+https://github.com/collie/sheepdog/wiki/Getting-Started
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+
+wajig install sheepdog corosync libcorosync-dev
+
+
+lvcreate -L+5G -n sheepdog vg0
+mkfs.xfs /dev/vg0/sheepdog 
+mount /dev/vg0/sheepdog /var/lib/sheepdog/
+
+mount -o remount,user_xattr /var/lib/sheepdog
+
+
+vi /etc/default/corosync 
+START=yes
+
+service corosync start
+-- service sheepdog restart (doesn't kill all sheep processes)
+	killall sheep
+	service sheepdog start
+
+collie cluster format --copies=3
+collie node list
+
+qemu-img create sheepdog:Alice 2G
+collie vdi list
+
+--qemu-img convert -t writethrough ~/amd64.raw sheepdog:Bob
+
+
+qemu-img snapshot -c name sheepdog:Alice
+qemu-system-x86_64 sheepdog:Alice:1
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- zookeeper (better with odd number of servers)
+--
+http://sheepdog.taobao.org/people/zituan/sheepdog1k.html
+http://zookeeper.apache.org/doc/r3.3.4/zookeeperStarted.html#sc_ConnectingToZooKeeper
+http://www.myjeeva.com/2012/10/zookeeper-cluster-setup/
+
+-- two machines kvmsrv1 and kvmsrv6
+wajig install zookeeper zookeeper-bin zookeeperd
+
+cd /var/lib/zookeeper
+vi myid 
+1 (or 6)
+mkdir -p data/zk1 data/zk6
+mkdir -p log/zk1 log/zk6
+chown -R zookeeper:zookeeper data
+chown -R zookeeper:zookeeper log
+
+
+vi /etc/zookeeper/conf/zoo.cfg 
+dataDir=/var/lib/zookeeper
+server.1=kvmsrv1:2888:3888
+server.6=kvmsrv6:2888:3888
+
+tail -20f /var/log/zookeeper/zookeeper.log &
+
+
+service zookeeper restart
+
+/usr/share/zookeeper/bin/zkServer.sh status
+/usr/share/zookeeper/bin/zkCli.sh -server 127.0.0.1:2181
+--/usr/share/zookeeper/bin/zkCli.sh -server kvmsrv1:2181,kvmsrv6:2181
+	help
+	ls /
+	create /zk_test my_data
+	ls /
+	get /zk_test
+  delete /zk_test
+
+
+
+wajig isntall libzookeeper-dev
+--wajig install sheepdog 
+
+./configure --enable-zookeeper
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- libvirt
+--
+http://libvirt.org/storage.html#StorageBackendSheepdog
+

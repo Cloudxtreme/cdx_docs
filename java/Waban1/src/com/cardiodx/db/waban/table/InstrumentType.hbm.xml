@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.InstrumentType" table="INSTRUMENT_TYPE" schema="DNALIMS">
+        <comment>Used to store instrument types and object classes to be created for each type</comment>
+        <id name="typeName" type="string">
+            <column name="TYPE_NAME" length="20" />
+            <generator class="assigned" />
+        </id>
+        <property name="objectClass" type="string">
+            <column name="OBJECT_CLASS" length="100">
+                <comment>Class name of object created to support this instrument</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

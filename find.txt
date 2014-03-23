@@ -1,0 +1,21 @@
+find ./ -regextype posix-awk -regex "(.*.mpg|.*.avi|.*.doc|.*.xls)"
+find gdrive/it/Documentation/ -regextype posix-awk -regex "(.*.txt|.*.text|.*.html|.*.htm|.*.pdf|.*.ppt|.*.doc|.*.xls)" -exec ls -l {} \;
+
+
+find . -ctime 5 -exec ls -l {} \;
+find . -ctime +5 -exec ls -l {} \;
+
+find . -ctime +6 | xargs -t -I {} mv {} 2010
+
+
+-- Move file created afte than this file
+mkdir 2012
+find . -newer orcl_ora_18573.trc -exec mv -t 2012 {} \+
+
+-- Move file created before this file
+ll ./orcl_j003_28495.trc
+-rw-r----- 1 oracle oracle 822 2011-12-31 23:30 ./orcl_j003_28495.trc
+
+find . -name '*.trc' \! -newer ./orcl_j003_28495.trc -exec mv -t 2011 {} \+
+
+find . -name '*.trc' \! -newer ./orcl_j002_24021.trc -exec mv -t TRC11 {} \+

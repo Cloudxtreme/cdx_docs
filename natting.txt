@@ -1,0 +1,38 @@
+eth0: 10.10.35.23 (CardioDx)
+eth1: 173.13.158.180 (comcast)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- test on natting
+--
+modprobe iptable_nat
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth1 -d 0/0 -j MASQUERADE
+iptables -A FORWARD -o eth1 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+
+on windows, the default gw will 10.10.35.23
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- iptables (https://help.ubuntu.com/community/IptablesHowTo)
+--
+
+
+-- allow established traffic:
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+-- allow ssh
+iptables -A INPUT -p tcp -i eth0 -s 10.10.32.0/21 --dport ssh -j ACCEPT
+
+-- delete
+iptables -D INPUT -i eth1 -j DROP
+
+
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -i eth1 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -i eth1 -m state --state NEW -j DROP
+

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeLiterature" table="TRGE_LITERATURE" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeLiteratureId">
+            <key-property name="literatureId" type="big_decimal">
+                <column name="LITERATURE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="authors" type="string">
+                <column name="AUTHORS" length="2000" />
+            </key-property>
+            <key-property name="title" type="string">
+                <column name="TITLE" length="500" />
+            </key-property>
+            <key-property name="synopsis" type="string">
+                <column name="SYNOPSIS" length="2000" />
+            </key-property>
+            <key-property name="year" type="date">
+                <column name="YEAR" length="7" />
+            </key-property>
+            <key-property name="citation" type="string">
+                <column name="CITATION" length="100" />
+            </key-property>
+            <key-property name="pubmedId" type="string">
+                <column name="PUBMED_ID" length="20" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

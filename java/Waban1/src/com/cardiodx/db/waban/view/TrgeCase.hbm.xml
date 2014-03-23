@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.TrgeCase" table="TRGE_CASE" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.TrgeCaseId">
+            <key-property name="casePk" type="big_decimal">
+                <column name="CASE_PK" precision="22" scale="0" />
+            </key-property>
+            <key-property name="caseId" type="string">
+                <column name="CASE_ID" length="4000" />
+            </key-property>
+            <key-property name="caseType" type="string">
+                <column name="CASE_TYPE" length="4000" />
+            </key-property>
+            <key-property name="testType" type="string">
+                <column name="TEST_TYPE" length="30" />
+            </key-property>
+            <key-property name="testNumber" type="string">
+                <column name="TEST_NUMBER" length="30" />
+            </key-property>
+            <key-property name="testId" type="big_decimal">
+                <column name="TEST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="25" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="25" />
+            </key-property>
+            <key-property name="accessionDate" type="date">
+                <column name="ACCESSION_DATE" length="7" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="physicianName" type="string">
+                <column name="PHYSICIAN_NAME" length="81" />
+            </key-property>
+            <key-property name="hospital" type="string">
+                <column name="HOSPITAL" length="100" />
+            </key-property>
+            <key-property name="hospitalAddress1" type="string">
+                <column name="HOSPITAL_ADDRESS1" length="40" />
+            </key-property>
+            <key-property name="hospitalAddress2" type="string">
+                <column name="HOSPITAL_ADDRESS2" length="40" />
+            </key-property>
+            <key-property name="hospitalCity" type="string">
+                <column name="HOSPITAL_CITY" length="30" />
+            </key-property>
+            <key-property name="hospitalState" type="string">
+                <column name="HOSPITAL_STATE" length="30" />
+            </key-property>
+            <key-property name="hospitalCountry" type="string">
+                <column name="HOSPITAL_COUNTRY" length="30" />
+            </key-property>
+            <key-property name="hospitalZip" type="string">
+                <column name="HOSPITAL_ZIP" length="10" />
+            </key-property>
+            <key-property name="indexCaseId" type="string">
+                <column name="INDEX_CASE_ID" length="4000" />
+            </key-property>
+            <key-property name="originalCaseId" type="string">
+                <column name="ORIGINAL_CASE_ID" length="4000" />
+            </key-property>
+            <key-property name="reportDate" type="date">
+                <column name="REPORT_DATE" length="8" />
+            </key-property>
+            <key-property name="trgeQueueStatus" type="string">
+                <column name="TRGE_QUEUE_STATUS" length="4000" />
+            </key-property>
+            <key-property name="receiveDate" type="date">
+                <column name="RECEIVE_DATE" length="8" />
+            </key-property>
+            <key-property name="gender" type="string">
+                <column name="GENDER" length="4000" />
+            </key-property>
+            <key-property name="ethnicity" type="string">
+                <column name="ETHNICITY" length="4000" />
+            </key-property>
+            <key-property name="subjectCode" type="string">
+                <column name="SUBJECT_CODE" length="4000" />
+            </key-property>
+            <key-property name="lastName" type="string">
+                <column name="LAST_NAME" length="4000" />
+            </key-property>
+            <key-property name="firstName" type="string">
+                <column name="FIRST_NAME" length="4000" />
+            </key-property>
+            <key-property name="dob" type="date">
+                <column name="DOB" length="8" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

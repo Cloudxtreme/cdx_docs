@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.StudyProtocolView" table="STUDY_PROTOCOL_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.StudyProtocolViewId">
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="sponsorStudyNumber" type="string">
+                <column name="SPONSOR_STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="studyTitle" type="string">
+                <column name="STUDY_TITLE" length="200" />
+            </key-property>
+            <key-property name="studyDirector" type="string">
+                <column name="STUDY_DIRECTOR" length="30" />
+            </key-property>
+            <key-property name="sponsorStudyTitle" type="string">
+                <column name="SPONSOR_STUDY_TITLE" length="200" />
+            </key-property>
+            <key-property name="contactId" type="big_decimal">
+                <column name="CONTACT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="cascadeAccessionNumber" type="java.lang.Boolean">
+                <column name="CASCADE_ACCESSION_NUMBER" precision="1" scale="0" />
+            </key-property>
+            <key-property name="barcodeLength" type="big_decimal">
+                <column name="BARCODE_LENGTH" precision="22" scale="0" />
+            </key-property>
+            <key-property name="finalTubeBarcodeLowValue" type="string">
+                <column name="FINAL_TUBE_BARCODE_LOW_VALUE" length="20" />
+            </key-property>
+            <key-property name="finalTubeBarcodeHighValue" type="string">
+                <column name="FINAL_TUBE_BARCODE_HIGH_VALUE" length="20" />
+            </key-property>
+            <key-property name="studyClosed" type="java.lang.Boolean">
+                <column name="STUDY_CLOSED" precision="1" scale="0" />
+            </key-property>
+            <key-property name="shipDnaBack" type="java.lang.Boolean">
+                <column name="SHIP_DNA_BACK" precision="1" scale="0" />
+            </key-property>
+            <key-property name="accessionVarOcx" type="big_decimal">
+                <column name="ACCESSION_VAR_OCX" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyVarOcx" type="big_decimal">
+                <column name="STUDY_VAR_OCX" precision="22" scale="0" />
+            </key-property>
+            <key-property name="patientVarOcx" type="big_decimal">
+                <column name="PATIENT_VAR_OCX" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyUrl" type="string">
+                <column name="STUDY_URL" length="400" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="30" />
+            </key-property>
+            <key-property name="dateCreated" type="date">
+                <column name="DATE_CREATED" length="7" />
+            </key-property>
+            <key-property name="modifiedBy" type="string">
+                <column name="MODIFIED_BY" length="30" />
+            </key-property>
+            <key-property name="dateModified" type="date">
+                <column name="DATE_MODIFIED" length="7" />
+            </key-property>
+            <key-property name="subsidiaryId" type="big_decimal">
+                <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="studyType" type="string">
+                <column name="STUDY_TYPE" length="50" />
+            </key-property>
+            <key-property name="organizationId" type="big_decimal">
+                <column name="ORGANIZATION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="company" type="string">
+                <column name="COMPANY" length="100" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="84" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

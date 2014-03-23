@@ -1,0 +1,65 @@
+load balancing
+
+eth0: Tigon3 [partno(BCM5751PKFBG) rev 4001 PHY(5750)] (PCI Express) 10/100/1000BaseT Ethernet 00:13:72:87:03:89
+eth1: Tigon3 [partno(BCM95721A211F) rev 4201 PHY(5750)] (PCI Express) 10/100/1000BaseT Ethernet 00:10:18:53:6b:f6
+eth2: RTL8169 at 0xf88a8e00, 00:22:3f:ef:c9:97, IRQ 169
+eth3: RTL8169 at 0xf88aaf00, 00:22:3f:ef:c2:f2, IRQ 233
+eth4: e1000_probe: Intel(R) PRO/1000 Network Connection
+eth5: e1000_probe: Intel(R) PRO/1000 Network Connection
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+173.13.158.176  0.0.0.0         255.255.255.240 U     0      0        0 eth0
+10.10.32.0      0.0.0.0         255.255.248.0   U     0      0        0 eth1
+0.0.0.0         173.13.158.190  0.0.0.0         UG    0      0        0 eth0
+
+
+ifconfig eth0 down
+
+ifconfig eth0 10.39.1.1 netmask 255.255.255.0 up
+
+/mnt/config/rc.d/post-boot-script
+
+
+ifconfig eth4 173.13.158.180 netmask 255.255.255.240
+ifconfig eth5 67.95.201.198 netmask 255.255.255.224
+
+route add default gw 173.13.158.190 eth4
+route delete default
+
+/etc/iproute2/rt_tables
+2 comcast
+3 xo
+
+
+ip route add 173.13.158.176/28 dev eth4 src 173.13.158.180 table comcast
+ip route add default via 173.13.158.190 table comcast
+ip route add 67.95.201.192/27 dev eth5 src 67.95.201.198 table xo
+ip route add default via 67.95.201.193 table xo
+ip rule add from 173.13.158.180 table comcast
+ip rule add from 67.95.201.198 table xo
+ip route add default scope global nexthop via 173.13.158.190 dev eth4 weight 5 nexthop via 67.95.201.193 dev eth5 weight 1
+
+
+ip route show
+173.13.158.176/28 dev eth4  proto kernel  scope link  src 173.13.158.180 
+67.95.201.192/27 dev eth5  proto kernel  scope link  src 67.95.201.198 
+10.10.32.0/21 dev eth1  proto kernel  scope link  src 10.10.37.2 
+default 
+	nexthop via 173.13.158.190  dev eth4 weight 5
+	nexthop via 67.95.201.193  dev eth5 weight 1
+
+
+iptables -F -t nat
+
+iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth4 -d 0/0 -j MASQUERADE
+iptables -A POSTROUTING -t nat -s 10.10.32.0/21 -o eth5 -d 0/0 -j MASQUERADE
+iptables -A FORWARD -o eth4 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o eth5 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth4 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth5 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+
+

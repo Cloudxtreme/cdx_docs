@@ -1,0 +1,69 @@
+
+https://github.com/fauna/cassandra
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+gem install cassandra
+
+--export CASSANDRA_INCLUDE=/usr/local/cassandra/bin/cassandra.in.sh
+--export CASSANDRA_CONF=/usr/local/cassandra/conf
+--cassandra_helper cassandra
+
+vi /usr/lib/ruby/gems/1.8/gems/cassandra-0.9.0/conf/storage-conf.xml
+  <SavedCachesDirectory>data/cassandra/saved_caches</SavedCachesDirectory>
+  <CommitLogDirectory>data/cassandra/commitlog</CommitLogDirectory>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+irb
+require 'rubygems'
+require 'cassandra'
+include Cassandra::Constants
+store = Cassandra.new('Twitter')
+	=> #<Cassandra:70322577562340, @keyspace="Twitter", @schema={}, @servers=["127.0.0.1:9160"]>
+                                                       ^^^^^^^^^empty schema??????
+store.insert(:Users, '12345', {'screen_name' => 'wyhaines'})
+store.insert(:Users, '67890', {'screen_name' => 'wayneeseguin'})
+store.insert(:Statuses, '1', {'user_id' => '67890', 'text' => 'Hey, what is Cassandra like?'})
+store.insert(:Statuses, '2', {'user_id' => '12345', 'text' => '@wayneeseguin, It is great!'})
+store.insert(:Statuses, '3', {'user_id' => '12345', 'text' => 'It is a key/value store with a lime twist.'})
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+include SimpleUUID
+store.insert(:UserRelationships, '67890', {'user_timeline' => {UUID.new => '1'}})
+store.insert(:UserRelationships, '12345', {'user_timeline' => {UUID.new => '2'}})
+store.insert(:UserRelationships, '12345', {'user_timeline' => {UUID.new => '3'}})
+
+irb(main):022:0* my_message_relationships = store.get(:UserRelationships, '12345', 'user_timeline', :reversed => true)
+
+=> #<OrderedHash 
+	{
+	<UUID#70322577186940 time: Tue Jan 11 17:02:58 -0800 2011, 
+		usecs: 660696 
+		jitter: 7154288900675150994>=>"3", 
+
+	<UUID#70322577186920 time: Tue Jan 11 17:02:50 -0800 2011, 
+		usecs: 943372 
+		jitter: 7261767316737190047>=>"2"
+}
+	{
+		<UUID#70322577186940 time: Tue Jan 11 17:02:58 -0800 2011, 
+			usecs: 660696 
+			jitter: 7154288900675150994>=>1294794178660785, 
+		<UUID#70322577186920 time: Tue Jan 11 17:02:50 -0800 2011, 
+			usecs: 943372 
+			jitter: 7261767316737190047>=>1294794170943467
+}>
+
+
+my_message_relationships.values.each do |message_id| 
+   puts store.get(:Statuses, message_id).inspect
+end
+
+#<OrderedHash 
+	{"text"=>"It is a key/value store with a lime twist.", "user_id"=>"12345"}
+	{"text"=>1294794019733398, "user_id"=>1294794019733398}>
+
+#<OrderedHash 
+	{"text"=>"@wayneeseguin, It is great!", "user_id"=>"12345"}
+	{"text"=>1294794009514287, "user_id"=>1294794009514287}>
+=> ["3", "2"]
+

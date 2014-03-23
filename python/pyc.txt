@@ -1,0 +1,1 @@
+http://effbot.org/pyfaq/how-do-i-create-a-pyc-file.htm

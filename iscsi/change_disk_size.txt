@@ -1,0 +1,16 @@
+
+
+server
+  888  lvextend -L+10G /dev/vg2/portaltest
+
+  890  cat /proc/net/iet/volume 
+
+  891  ietadm --op delete --tid=19
+
+  893  ietadm --op new --tid=19 --params Name=storage1.portaltest
+  894  ietadm --op new --tid=19 --lun=0 --params Path=/dev/vg2/portaltest
+
+client:
+  955  iscsiadm -m discovery -t st -p storage1
+  966  ./cdxvm.sh istart portaltest
+

@@ -1,0 +1,94 @@
+asterisk queue stats
+
+http://www.asternic.biz/documentation/how-to-install/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /usr/src
+wget http://www.asternic.org/stats/asternic-stats-1.0.1.tgz
+
+untar asternic-stats-1.0.1.tgz and move it to /var/www/html
+
+/var/www/html/asternic-stats/
+
+wajig install php5-cli
+wajig install libapache2-mod-php5
+wajig install php5-mysql
+
+/etc/init.d/apache2 restart
+
+(for php-apache, read apache2/php.txt)
+
+mysql -u root -p
+(the internal pwrd)
+
+CREATE DATABASE qstats;
+GRANT ALL PRIVILEGES ON qstats.* TO 'qstats'@'localhost' IDENTIFIED BY 'qstats' WITH GRANT OPTION;
+
+mysql -u qstats -p
+
+mysql> use qstats
+mysql> source qstat.sql;
+
+cd html
+vi config.php
+
+$dbhost = 'localhost';
+$dbname = 'qstats';
+$dbuser = 'qstats';
+$dbpass = 'qstats';
+
+$language = "en";
+
+
+cd parselog
+vi config.php
+
+
+/etc/asterisk
+vi manager.conf
+[qstat]
+writetimeout = 10000
+secret = qstatpwd
+deny=0.0.0.0/0.0.0.0
+permit=127.0.0.1/255.255.255.255 
+read = system,call,log,verbose,agent,user,config,dtmf,reporting,cdr,dialplan
+write = system,call,agent,user,config,command,reporting,originate
+
+
+vi config_realtime.php 
+$manager_user   = "qstat";
+$manager_secret = "qstatpwd";
+
+http://asterisk.cardiodx.com:8088/html/asternic-stats/html/index.php
+
+0 0      * * *  php -q /var/www/html/asternic-stats/parselog/parselog.php
+
+root@aster64:/etc/cron.hourly# more asternic_parselog 
+#!/bin/bash
+
+date > /tmp/asternic-stats.log
+php -q /var/www/html/asternic-stats/parselog/parselog.php
+php -q /var/www/html/asternic-stats/cdr-csv/parselog.php > /tmp/parselog_cdr.log 2>&1
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+-- 
+-- adding Noelle and Ana Maria
+--
+# mysql -u root -p
+mysql> use qstats;
+mysql> insert into qagent values (38, 'SIP/2740');
+mysql> insert into qagent values (39, 'SIP/2779');
+
+mysql> insert into qmember values (4, 38);
+mysql> insert into qmember values (4, 39);
+
+mysql> quit
+
+
+Should also add:
+mysql> insert into qagent values (43, 'Agent/003');
+mysql> insert into qagent values (44, 'Agent/004');
+

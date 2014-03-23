@@ -1,0 +1,25 @@
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/WEB-INF# cp -rp classes/ classes.102808
+
+
+ /usr/mysql/bin/mysqldump -u root -p --all-databases -S /tmp/mysqldev.sock | bzip2 -c > db_dump-dev.bz2
+Enter password:
+
+ps -ef | grep java
+
+extract the zip file
+root@etqdevel:~/CustomPatch_102808/zip/WAR# cp -rp common/* /usr/tomcat/webapps/reliance_dev/common/
+root@etqdevel:~/CustomPatch_102808/zip/WAR# cp -rp docwork/* /usr/tomcat/webapps/reliance_dev/docwork/
+root@etqdevel:~/CustomPatch_102808/zip/WAR# cp -rp WEB-INF/* /usr/tomcat/webapps/reliance_dev/WEB-INF/
+
+/usr/mysql/bin/mysql -u root -p -S /tmp/mysqldev.sock
+mysql> INSERT INTO ENGINE.FIELD_SETTINGS (`FIELD_ID`, `ETQ$REVIEW_DATE`, `DECIMAL_PLACES`, `ETQ$VERSION`, `REFRESH_ON_CHANGE`, `REQUIRED_TYPE`, `TRANSLATION_FORMULA`, `ETQ$REASON`, `IS_MULTIVALUE`, `ETQ$MODIFIED_DATE`, `OI_CUSTOM_SYNC_CLASS`, `ETQ$CREATED_DATE`, `DEFAULT_FORMULA`, `IS_LINKS_PASTING_ALLOWED`, `LOOKUP_DISPLAY_COLUMN`, `DISPLAY_TYPE`, `LINKED_VIEW`, `ETQ$EFFECTIVE_DATE`, `ETQ$REQUESTED_BY`, `ETQ$LAST_EDITOR`, `OPEN_LATEST_REVISION`, `DISPLAY_NAME`, `IS_UNIQUE`, `IS_EDIT_ONLY_USING_CALENDAR`, `CURRENCY_ID`, `BASE_TABLE`, `JOIN_TABLE_NAME`, `ETQ$AUTHOR`, `DISABLE_BASE_TABLE_CONSTRAINT`, `LOOKUP_SQL_QUERY`, `SETTING_TYPE`, `FIELD_DIALOG_TYPE_ID`, `KEYWORD_FORMULA`, `ETQ$CURRENT_PHASE`, `FIELD_ACTION_NAME`, `BASE_TABLE_PK`, `KEYWORD_LIST_SORT`, `FIELD_NAMES_TYPE_ID`, `IS_PATH_DEFINED`, `LOOKUP_VIEW`, `ETQ$ROUTING_TYPE`, `FIELD_TYPE_ID`, `LINK_TYPE`, `IS_INDEXED`, `LOOKUP_DISPLAY_VALUE`, `HELP_TEXT`, `ON_EXIT`, `DATETIME_STYLE`, `VALIDATION_FORMULA`, `ETQ$ORIGINAL_DOC_ID`, `ON_CHANGE`, `ETQ$CHECKED_OUT_BY`, `FIELD_NAME`, `ON_ENTER`, `TABLE_FIELD_NAME`, `ETQ$NUMBER`, `ENABLE_EDIT_LINK_IN_READ_MODE`, `ETQ$CHECKED_OUT_DATE`, `MASTER_KEYWORD_LIST_ID`, `ETQ$NUMBER_ONLY`, `CHOICES_ON_REFRESH`, `ETQ$DUE_DATE`, `ETQ$REVISION`) VALUES
+    ->   (-78,NULL,NULL,0,NULL,0,NULL,NULL,1,'2008-02-20 00:00:00','','2008-02-20 00:00:00',NULL,NULL,3,1,NULL,NULL,11,11,NULL,'OI',NULL,NULL,NULL,'','',11,NULL,NULL,2,NULL,NULL,NULL,NULL,'',1,1,0,368,NULL,6,NULL,NULL,'ENGINE_DISPLAY_NAME',NULL,NULL,NULL,NULL,0,NULL,NULL,'ETQ$OI_ESIGNATURE',NULL,'','',NULL,NULL,NULL,NULL,NULL,NULL,'');
+Query OK, 1 row affected (0.21 sec)
+
+ALTER TABLE ENGINE.APPLICATION_SETTINGS ADD (ETQ$OI_ESIGNATURE TEXT NULL DEFAULT NULL);
+
+root@etqdevel:/usr/tomcat/webapps/reliance_dev/common/layouts# cd /usr/tomcat/bin/
+root@etqdevel:/usr/tomcat/bin# ./startup.sh
+root@etqdevel:/usr/tomcat/bin# tail -20f ../logs/catalina.out
+
+

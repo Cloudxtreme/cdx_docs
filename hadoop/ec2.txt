@@ -1,0 +1,6 @@
+
+To set up hadoop, your best bet are the Cloudera AMIs on Amazon’s EC2 compute cloud:
+http://www.cloudera.com/hadoop-ec2
+http://www.cloudera.com/hadoop-ec2-ebs-beta
+
+EC2 means anyone with a $10 bill can rent a 10-machine cluster with 1TB of distributed storage for 8 hours.

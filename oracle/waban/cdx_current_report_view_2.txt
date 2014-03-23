@@ -1,0 +1,82 @@
+CREATE OR REPLACE FORCE VIEW "DNALIMS"."CDX_CURRENT_REPORT_VIEW" ("CP_RUN_REPORT_ID", 
+		"ACCESSION_ID", "ACCESSION_NUMBER", "CP_RUN_ID", "CP_RUN_STATUS", "VERSIONED_DOCUMENT_ID", 
+			"FILE_NAME", "REPORT_TYPE", "REPORT_ID", "DATE_RECEIVED", "DATE_FAXED", "TURN_AROUND_TIME") AS
+SELECT cprr.cp_run_report_id,
+	acc.accession_id,
+	acc.accession_number,
+	cpr.cp_run_id,
+	cpr.status "CP_RUN_STATUS",
+	cprr.versioned_document_id,
+  vd.short_file_name "FILE_NAME",
+  substr(vd.short_file_name, 1, instr(vd.short_file_name, '_', 1, 1) - 1) "REPORT_TYPE",
+  substr(substr(vd.short_file_name, instr(vd.short_file_name, '_', -1) + 1), 1, 
+		instr(substr(vd.short_file_name, instr(vd.short_file_name, '_', -1) + 1), '.', 1) - 1) "REPORT_ID", acc.date_received,
+  CDX_VALIDATION.first_fax_attempt_date(cprr.versioned_document_id) "DATE_FAXED",
+  CDX_VALIDATION.first_fax_attempt_date(cprr.versioned_document_id) - acc.date_received "TURN_AROUND_TIME"
+FROM cp_run_report cprr, accession acc, cp_run cpr, sceschema.versioneddocumentvd
+  WHERE acc.accession_id = cprr.accession_id
+  AND cprr.versioned_document_id = (SELECT CDX_VALIDATION.get_current_report_id(cprr.accession_id) FROM DUAL)
+  AND cprr.cp_run_report_id = (select max(cp_run_report_id) from cp_run_report where accession_id = acc.accession_id)
+  AND cprr.cp_run_id = cpr.cp_run_id(+)
+  AND vd.versioned_document_id = cprr.versioned_document_id
+  AND lower(vd.short_file_name) like '%.pdf'
+  AND (select nvl(lims_attr_util.get_accession_attr(acc.accession_id, 'Stop Del very!', 'ACCESSION'), 'No') from dual) != 'Yes'
+  AND (select nvl(lims_attr_util.get_accession_attr(acc.accession_id, 'Stop Report!', 'ACCESSION'), 'No') from dual) != 'Yes'
+  AND (select nvl(lims_attr_util.get_study_attr(acc.study_protocol_id, 'Report Generation', 'STUDY'), 'Off') from dual) = 'On'
+  AND (select nvl(lims_attr_util.get_study_attr(acc.study_protocol_id, 'Report Delivery', 'STUDY'), 'Off') from dual) = 'On'
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+CREATE OR REPLACE FORCE VIEW "DNALIMS"."CDX_CURRENT_REPORT_VIEW_2" ("CP_RUN_REPORT_ID", 
+	"ACCESSION_ID", "ACCESSION_NUMBER", "CP_RUN_ID", "CP_RUN_STATUS", 
+	"VERSIONED_DOCUMENT_ID", "FILE_NAME", "REPORT_TYPE", "REPORT_ID", "DATE_RECEIVED", 
+	"DATE_FAXED", "TURN_AROUND_TIME") AS
+SELECT cprr.cp_run_report_id,
+	acc.accession_id,
+	acc.accession_number,
+	cpr.cp_run_id,
+	cpr.status "CP_RUN_STATUS",
+	cprr.versioned_document_id,
+	vd.short_file_name "FILE_NAME",
+	substr(vd.short_file_name, 1, instr(vd.short_file_name, '_', 1, 1) - 1) "REPORT_TYPE",
+	substr(substr(vd.short_file_name, instr(vd.short_file_name, '_', -1) + 1), 1, 
+				instr(substr(vd.short_file_name, instr(vd.short_file_name, '_', -1) + 1), '.', 1) - 1) "REPORT_ID",
+	acc.date_received,
+	min(cfa.date_created) "DATE_FAXED",
+	min(cfa.date_created) - acc.date_received "TURN_AROUND_TIME"
+FROM accession acc, cp_run_report cprr, sceschema.versioneddocument vd, cdx_fax_attempt cfa, cp_run cpr
+WHERE acc.accession_id = cprr.accession_id
+  AND cprr.versioned_document_id = vd.versioned_document_id
+  AND cprr.cp_run_id = cpr.cp_run_id(+)
+  AND cprr.versioned_document_id = (SELECT CDX_VALIDATION.get_current_report_id(cprr.accession_id) FROM DUAL)
+  AND vd.extension = 'pdf'
+  AND acc.accession_id NOT IN (
+      select a.accession_id
+      from accession a, accession_variable_fld_table avf, protocol_defined_variable pdv, variable v
+      where avf.accession_id = a.accession_id
+      and avf.protocol_defined_variable_id = pdv.protocol_defined_variable_id
+      and pdv.variable_id = v.variable_id
+      and pdv.study_protocol_id = a.study_protocol_id
+      and v.variable_name in ('Stop Report!', 'Stop Delivery!')
+      and avf.value = 'Yes'
+  )
+  AND acc.study_protocol_id IN (
+      select svf_gen.study_protocol_id
+      from study_variable_fld svf_gen, protocol_defined_variable pdv_gen, variable v_gen,
+	   study_variable_fld svf_del, protocol_defined_variable pdv_del, variable v_del
+      where svf_gen.protocol_defined_variable_id = pdv_gen.protocol_defined_variable_id
+      and pdv_gen.variable_id = v_gen.variable_id
+      and v_gen.variable_name = 'Report Generation'
+      and svf_gen.value = 'On'
+      and svf_del.protocol_defined_variable_id = pdv_del.protocol_defined_variable_id
+      and pdv_del.variable_id = v_del.variable_id
+      and v_del.variable_name = 'Report Delivery'
+      and svf_del.value = 'On'
+      and svf_gen.study_protocol_id = svf_del.study_protocol_id
+  )
+-- AND cfa.accession_id(+) = acc.accession_id  -- don't need this b/c versioned_document takes care of it, and is more precise
+AND cfa.fax_status(+) NOT IN ('ERROR', 'STOPPED')
+AND cfa.versioned_document_id(+) = cprr.versioned_document_id
+GROUP BY cprr.cp_run_report_id, acc.accession_id, acc.accession_number, cpr.cp_run_id, cpr.status, 
+			cprr.versioned_document_id, vd.short_file_name, acc.date_rceived
+
+

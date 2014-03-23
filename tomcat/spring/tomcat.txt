@@ -1,0 +1,64 @@
+http://static.springsource.org/docs/Spring-MVC-step-by-step/part1.html
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+--
+-- tomcat binary
+--
+Download tomcat (apache-tomcat-6.0.32.tar.gz) and untar it to ~
+cchou@cchoudesktop:~/apache-tomcat-6.0.32
+
+--
+-- workplace
+--
+cd workspace
+mkdir springapp
+
+cd springapp
+  mkdir src
+  mkdir war
+
+cd war
+  vi index.jsp
+
+<html>
+  <head><title>Example :: Spring Application</title></head>
+  <body>
+    <h1>Example - Spring Application</h1>
+    <p>This is my test.</p>
+  </body>
+</html>
+
+  mkdir WEB-INF/
+  cd WEB-INF/
+  mkdir classes
+  vi web.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
+
+  <welcome-file-list>
+    <welcome-file>
+      index.jsp
+    </welcome-file>
+  </welcome-file-list>
+
+</web-app>
+
+vi build.xml
+vi build.properties
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- deploy
+--
+ant
+ant deploy
+
+http://localhost:8080/springapp/index.jsp
+
+
+

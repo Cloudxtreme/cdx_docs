@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PlateSummary" table="PLATE_SUMMARY" schema="DNALIMS">
+        <id name="plateSummaryId" type="big_decimal">
+            <column name="PLATE_SUMMARY_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" not-null="true">
+                <comment>Subsidary Identifier</comment>
+            </column>
+        </many-to-one>
+        <property name="plateId" type="string">
+            <column name="PLATE_ID" length="20">
+                <comment>Plate Identifier</comment>
+            </column>
+        </property>
+        <property name="avgSignalStrength" type="big_decimal">
+            <column name="AVG_SIGNAL_STRENGTH" precision="22" scale="0">
+                <comment>verage Signal Strength</comment>
+            </column>
+        </property>
+        <property name="avgQualityScore" type="big_decimal">
+            <column name="AVG_QUALITY_SCORE" precision="22" scale="0">
+                <comment>Average Quality Score</comment>
+            </column>
+        </property>
+        <property name="avgPercentTargetMatch" type="big_decimal">
+            <column name="AVG_PERCENT_TARGET_MATCH" precision="22" scale="0">
+                <comment>Average Percent Target Match</comment>
+            </column>
+        </property>
+        <property name="plateStatus" type="string">
+            <column name="PLATE_STATUS" length="20">
+                <comment>Status fo Plate after auto trace qc</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was modified.</comment>
+            </column>
+        </property>
+        <property name="traceLoadStatus" type="string">
+            <column name="TRACE_LOAD_STATUS" length="20">
+                <comment>To indicate if all Traces are loaded or not. Its value will be either &#194;&#191;IN PROCESS&#194;&#191; or &#194;&#191;COMPLETED&#194;&#191;.</comment>
+            </column>
+        </property>
+        <set name="traceTransfers" table="TRACE_TRANSFER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PLATE_SUMMARY_ID" precision="22" scale="0">
+                    <comment>To store plate summary id from plate_summary table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceTransfer" />
+        </set>
+    </class>
+</hibernate-mapping>

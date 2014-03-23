@@ -1,0 +1,28 @@
+
+
+ip addr flush dev eth5
+
+ip -s link
+
+tcpdump -nq -i eth4
+
+ip route show cache
+
+ip -s route show cache 74.125.19.100
+  
+ip route show cache | grep -v broadcast | grep -v 'cache' | grep -v eth1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- default
+ip route add 173.13.158.176/28 dev eth4 src 173.13.158.180 table comcast
+ip route add 67.95.201.192/27 dev eth5 src 67.95.201.198 table xo
+
+- For IPSec tunnel
+ip route add 170.224.10.96/27 dev eth5 src 67.95.201.198 table xo
+ip route add 12.3.153.0/24 dev eth5 src 67.95.201.198 table xo
+ip route add 66.18.106.160/27 dev eth5 src 67.95.201.198 table xo
+
+
+

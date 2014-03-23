@@ -1,0 +1,257 @@
+Ubuntu intrepid installation
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sed -ie 's/^#alias/alias/g' ~/.bashrc
+sed -ie 's/^#alias/alias/g' ~/.bashrc
+sed -ie 's/^#alias/alias/g' ~/.bashrc
+
+
+Baseline packages:
+
+cat > /etc/apt/apt.conf <<EOF
+Acquire::http::Proxy "http://aptcacher.cardiodx.com:3142";
+EOF
+
+mv /etc/apt/sources.list /etc/apt/sources.list.orig
+cat > /etc/apt/sources.list <<EOF
+deb http://mirror.anl.gov/ubuntu/ intrepid main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ intrepid main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu/ intrepid-updates main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu/ intrepid-updates main restricted universe multiverse
+
+deb http://mirror.anl.gov/ubuntu intrepid-security main restricted universe multiverse
+#deb-src http://mirror.anl.gov/ubuntu intrepid-security main restricted universe multiverse
+EOF
+
+#wget http://www.medibuntu.org/sources.list.d/gutsy.list -O /etc/apt/sources.list.d/medibuntu.list
+#wget -q http://packages.medibuntu.org/medibuntu-key.gpg -O- | apt-key add -
+
+apt-get update
+apt-get install wajig -y
+
+install nvidia driver by clicking the vidio icon
+
+???wajig install compizconfig-settings-manager \
+ build-essential fakeroot deborphan subversion sysv-rc-conf compizconfig-settings-manager \
+ postgresql r-base sqlite3 scribus vim-gnome \
+ gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse \
+ gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse gstreamer0.10-ffmpeg \
+ sun-java6-jdk bioperl lvm2 xfsprogs ntp -y
+
+wajig install compizconfig-settings-manager -y
+wajig install build-essential fakeroot deborphan subversion sysv-rc-conf compizconfig-settings-manager -y
+wajig install postgresql r-base sqlite3 scribus vim-gnome -y
+wajig install gstreamer0.10-plugins-good gstreamer0.10-plugins-bad gstreamer0.10-plugins-bad-multiverse \
+				gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse -y gstreamer0.10-ffmpeg -y
+wajig install sun-java6-jdk -y
+wajig install bioperl -y
+wajig install lvm2 xfsprogs -y
+wajig install ntp -y
+
+wajig upgrade 
+wajig install linux-image-2.6.27-9-generic 
+
+wajig install openssh-server -y
+cd /etc/dhcp3/
+vi dhclient.conf
+send host-name "<hostname>";
+ 	
+Nvidia driver:
+	150  wajig install nvidia-glx-new
+	151  nvidia-xconfig
+	152	 reboot
+
+vi /etc/vim/vimrc
+
+reboot
+
+install updates from the 'update' icon
+
+~~~~~~~~~~~~~~~
+
+Ruby & Rails
+wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 libpgsql-ruby -y
+wget http://rubyforge.org/frs/download.php/29548/rubygems-1.0.1.tgz
+mv rubygems-1.0.1.tgz ~
+tar xzvf rubygems-1.0.1.tgz
+cd rubygems-1.0.1
+ruby setup.rb
+ln -s /usr/bin/gem1.8 /usr/bin/gem
+
+gems:
+gem update --system
+
+gem sources -l
+gem sources -a http://gemsrv.cardiodx.com/
+gem sources -r http://gems.rubyforge.org/
+gem sources -a http://gems.rubyforge.org/
+gem sources -l
+
+gem install rails --no-rdoc --no-ri
+gem install mongrel_cluster ferret camping --no-rdoc --no-ri
+gem install alib bio ensembl-api roo daemons --no-rdoc --no-ri
+gem install ruby-net-ldap ruby-debug slave --no-rdoc --no-ri
+gem install rsruby -- --with-R-dir=/usr/lib/R --with-R-include=/usr/share/R/include --no-rdoc --no-ri
+export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.10/
+gem install rjb --no-rdoc --no-ri
+gem install postgres-pr --no-rdoc --no-ri
+
+
+wajig install smbfs -y
+mkdir /media/pdc
+mount -t cifs //pdc/groups /media/pdc/ -o username=cchou
+
+NX:
+wajig install ./nxclient_3.3.0-3_i386.deb 
+wajig install ./nxnode_3.3.0-3_i386.deb 
+wajig install ./nxserver_3.3.0-8_i386.deb 
+
+Oracle instant client
+wajig install alien
+wajig install ./oracle-instantclient-basiclite_10.2.0.4-2_i386.deb 
+wajig install ./oracle-instantclient-devel_10.2.0.4-2_i386.deb 
+wajig install ./oracle-instantclient-sqlplus_10.2.0.4-2_i386.deb 
+cat > /etc/ld.so.conf.d/oracle.conf <<EOF
+/usr/lib/oracle/10.2.0.4/client/lib/
+EOF
+ldconfig
+ping oradev
+sqlplus system/waban123@oradev/ORCL
+
+(Not used) Tora: (http://a5exclamation.org/2008/04/14/oracle-and-tora-on-ubuntu-hardy/)
+	# wajig install libaio1
+  wajig install libqt3-mt-psql libqt3-mt-odbc libqt3-mt-mysql
+  wajig install ./tora_1.3.22-5_i386.deb
+	wajig hold tora
+
+SQL Developer:
+cd Oraclesqldeveloper/
+wajig install ./sqldeveloper_1.5.54.40-2_all.deb 
+sqldeveloper
+	/usr/lib/jvm/java-6-sun
+
+Aliases:
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+Ruby OCI8
+#wget http://rubyforge.org/frs/download.php/41042/ruby-oci8-1.0.3.tar.gz
+cd "/media/pdc/it/software/Oracle 10g"
+cp ruby-oci8-1.0.3.tar.gz ~
+cd 
+tar zxvf ruby-oci8-1.0.3.tar.gz 
+cd ruby-oci8-1.0.3/
+ruby setup.rb config
+ruby setup.rb setup
+ruby setup.rb install
+
+Adobe Flash & Reader:
+#get the deb package from: http://get.adobe.com/flashplayer/
+cd /media/pdc/it/software/adobe
+wajig purge flashplugin-nonfree
+wajig install ./install_flash_player_10_linux.deb 
+alsamixer 
+
+vi /etc/apt/sources.list
+deb http://packages.medibuntu.org/ hardy free non-free
+wget -q http://packages.medibuntu.org/medibuntu-key.gpg -O- | apt-key add -
+wajig update
+wajig install acroread -y
+
+visudo
+%linuxusers ALL=(ALL) ALL
+
+ldap:
+please read ldap/ldap-client.txt
+
+
+Radrails:
+	http://www.aptana.com/docs/index.php/Installing_Aptana_on_Linux
+cd /media/pdc/it/software/RadRails
+cp Aptana_Studio_Setup_Linux_1.21.zip ~
+unzip Aptana_Studio_Setup_Linux.zip 
+mv aptana/ /usr/local/
+wajig install xulrunner
+vi aptana
+	export MOZILLA_FIVE_HOME=/usr/lib/xulrunner
+	/usr/local/aptana/AptanaStudio
+chmod 755 aptana 
+aptana
+  (install ruby plugin)
+
+Virtualbox:
+vi /etc/apt/sources.list.d/virtualbox.list
+	deb http://download.virtualbox.org/virtualbox/debian hardy non-free
+
+wget -q http://download.virtualbox.org/virtualbox/debian/sun_vbox.asc -O- | sudo apt-key add -
+wajig install virtualbox-2.0 
+
+		/etc/init.d/vboxdrv setup
+		# VirtualBox (NOT virtualbox)
+
+pam_mount:
+wajig install libpam-mount -y
+
+vi /etc/security/pam_mount.conf.xml
+	*** Find: volume fstype="smbfs" (around line 270) and add the following line
+	<volume fstype="smbfs" server="pdc" path="%(USER)" mountpoint="/home/%(USER)/hdrive" />
+	<volume fstype="smbfs" server="pdc" path="groups" mountpoint="/home/%(USER)/gdrive" />
+	<volume fstype="smbfs" server="pdc" path="public" mountpoint="/home/%(USER)/pdrive" />
+
+	Add pam_mount.so to pam.d
+	root@cdxdesktop:/etc/pam.d# more common-auth
+			auth [success=done default=ignore] 	pam_unix.so
+			auth [success=1 default=ignore] 		pam_ldap.so use_first_pass
+			auth requisite 											pam_deny.so
+			auth optional 											pam_mount.so use_first_pass
+
+	root@cdxdesktop:/etc/pam.d# more common-session
+		session required    		pam_mkhomedir.so skel=/etc/skel/ umask=0022
+		session optional   			pam_mount.so
+		session sufficient      pam_ldap.so
+		session required        pam_unix.so
+		session optional        pam_foreground.so
+
+	root@cdxdesktop:/etc/pam.d# more su
+		session optional pam_xauth.so 
+		@include common-auth
+		@include common-account
+		@include common-session
+
+
+vi umount-cifs
+#! /bin/sh
+# Provides:          CardioDX, Inc.
+# Default-Stop:      S 0 1 6
+# Short-Description: KVM VM script
+# Description:       KVM VM startup script
+
+. /lib/lsb/init-functions
+
+list=`ls /var/run/pam_mount/`
+
+case "$1" in
+    start)
+    ;;
+  stop)
+  for mnt in $list
+  do
+    umount /home/$mnt/[hgp]drive
+  done
+    ;;
+  force-reload|restart)
+    $0 stop
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/atd {start|stop|restart|force-reload}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
+

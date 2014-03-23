@@ -1,0 +1,153 @@
+etq easypdf converter
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new machine.
+Rename the machine to etqpdf
+
+--
+-- Software
+--
+All s/w packages are under G:/it/software/EasyPDF
+
+install the following s/w:
+	jre 1.5.0_10:
+  	http://java.sun.com/products/archive/j2se/5.0_10/index.html
+		disable java auto update!
+	tomcat 5.0.28:
+		http://archive.apache.org/dist/jakarta/tomcat-5/v5.0.28/bin/
+		use admin and the internal pwrd
+    port: 8080
+
+		*** Copy Reliance-EasyPDFWindowsServer.war to
+			C:\Program Files\Apache Software Foundation\Tomcat 5.0\webapps
+
+Install BCL EasyPDF SDK 5.0
+  Anyone who uses this computer (all users)
+
+Copy jawin.dll to C:\WINDOWS\system32 (from G drive)
+
+--
+-- User
+--
+Create a Windows local account - easyPDFUser/welcome2PDF
+	User cannot change password
+  Password never expires
+
+Add the user to the Administrtor group
+
+
+-- 
+== Environment
+--
+Add the following to the system path (from system properties)
+  Create a new PATH under "Environment Variables"
+		C:\Program Files\Common Files\BCL Technologies\easyPDF 5
+
+--
+-- Service
+--
+BCL easyPDF SDK5 Loader:
+  Startup Type: Automatic
+  Logon:
+    This account:  .\easyPDFUser (and password)
+
+Manually start the service
+
+Logon to the machine as easyPDFUser (to initalize the account and PDF Driver setting).
+  And run word once.
+
+-- 
+-- Phase setting???????
+--
+
+--
+-- Word wettings:
+--
+Office assistant should be disabled (by default)
+Help | Customer Feedback Options...
+  I don't wish to participate
+
+create the following folders:
+	c:\easyPDF\dev
+      	  \test
+      	  \prod
+
+Share the folder --> easyPDF
+  Share this folder on the network
+    Share name: easypdf
+  Allow network users to change my file
+
+Reboot
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+on linux (for dev):
+
+vi /root/smbcredentials
+username=easyPDFUser
+password=welcome2PDF
+
+test manual mount:
+mount -t smbfs -o username=easyPDFUser //etqpdf/easyPDF /mnt/easyPDF/
+
+
+vi /etc/fstab
+//etqpdf/easyPDF   /mnt/easyPDF cifs credentials=/root/smbcredentials 0 3
+
+
+cd /usr/tomcat/webapps/reliance_dev/WEB-INF/props
+vi pdfGenerator_config.properties
+PD4MLFontsDirectoryPath =
+PD4MLProxyHost =
+PD4MLProxyPort =
+
+EasyPDFServerHost = etqpdf
+EasyPDFServerPort = 8080
+EasyPDFFolderLocalPath = /mnt/easyPDF/dev/
+EasyPDFSharedFolderName = easyPDF
+
+
+Make sure you share \\etqpdf\easyPDF\dev
+  (all the way to the 'dev' directory!!!)
+
+stop tomcat
+--clear cache
+cd /usr/tomcat/work/Catalina/localhost
+rm -rf *
+
+/etc/init.d/tomcat start
+tail -20f /usr/tomcat/logs/catalina.out
+
+
+
+Test:
+http://etqdevel/reliance_dev/reliance
+
+
+14 Aug 2009 12:43:43,814 [ERROR] business.BusinessException The specified file (1st argument) is not a FILE >> \\easypdf\easyPDF\1250279023754\PDF-Test5.doc
+14 Aug 2009 12:43:43,814 [ERROR] fields.Attachment Failed to generate a PDF for file: /usr/files/reliance_dev/7/37/0032/32/1233/PDF-Test5.doc. Possible root cause:
+The specified file (1st argument) is not a FILE >> \\easypdf\easyPDF\1250279023754\PDF-Test5.doc
+
+
+
+Make sure tomcat starts automatically.
+Make sure port 8080 is open on the Windows firewall.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

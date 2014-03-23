@@ -1,0 +1,68 @@
+select container_id, description from container
+where container_id in (
+select container_id from sample
+where accession_id in (
+select accession_id
+from accession 
+where accession_number in (
+'TRF50377', 'TRF50375', 'TRF50373', 'TRF50376', 'TRF47825', 'TRF50386', 'TRF50382', 'TRF50388', 'TRF50392', 'TRF38108', 
+'TRF50390', 'TRF50383', 'TRF50380', 'TRF41183', 'TRF44793', 'TRF50366', 'TRF50381', 'TRF50384', 'TRF50385', 'TRF50389', 
+'TRF38119', 'TRF49470', 'TRF47942', 'TRF42752', 'TRF45406', 'TRF45366', 'TRF45365', 'TRF45367', 'TRF50397', 'TRF50396', 
+'TRF50393', 'TRF50387', 'TRF31787', 'TRF45208', 'TRF50148', 'TRF50399', 'TRF50367', 'TRF50394', 'TRF50398', 'TRF50379', 
+'TRF50370', 'TRF50378', 'TRF50372', 'TRF39140', 'TRF50391', 'TRF50395', 'TRF50368', 'TRF50369', 'TRF50374', 'TRF50371', 
+'TRF42056', 'TRF41184', 'TRF34876', 'TRF44910', 'TRF45139', 'TRF42054', 'TRF42055', 'TRF41756', 'TRF42226', 'TRF42225', 
+'TRF38118' 
+)
+)
+)
+;
+
+select accession_number, accession_id
+from accession
+where accession_number in (
+'T1041876', 'T1043279', 'TRF38108', 'TRF45683');
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+select count(*)
+from sample 
+where accession_id in
+(select accession_id
+from accession
+where accession_number in (
+'TRF15222')
+);
+
+
+select distinct checklist_id
+from checklist_sample where sample_id in 
+ (select sample_id
+from sample 
+where accession_id  = 146)
+order by checklist_id;
+
+select procedure_template_id, PROCEDURE_NAME, SOP_NUMBER, SOP_VERSION from procedure_template order by PROCEDURE_NAME;
+		  150 Bubble Removal/Volume Check
+		  151 RNA Extraction
+
+select NUMBER_IN_SEQUENCE, DESCRIPTION from step_template where PROCEDURE_TEMPLATE_ID = 150 order by NUMBER_IN_SEQUENCE;
+		 1 Create Worklist
+		 2 Isopropanol
+		 3 Run the Samples on Hamilton now
+		 4 Load Hamilton Output File
+		 5 Verify Sample Volumes
+		 6 Check In Rack
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set line 1000
+set pagesize 1000
+
+select p.procedure_template_id, PROCEDURE_NAME, DESCRIPTION
+from procedure_template p, step_template s
+where p.procedure_template_id = s.procedure_template_id
+and p.procedure_template_id = 150
+;
+
+
+
+
+

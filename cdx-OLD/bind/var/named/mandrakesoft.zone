@@ -1,0 +1,29 @@
+$ORIGIN .
+$TTL 86400	; 1 day
+mandrakesoft.com	IN SOA	sunlight.mandrakesoft.com. florin.mandrakesoft.com. (
+				2001042711 ; serial
+				86400      ; refresh (1 day)
+				21600      ; retry (6 hours)
+				3600000    ; expire (5 weeks 6 days 16 hours)
+				3600       ; minimum (1 hour)
+				)
+			NS	sunlight.mandrakesoft.com.
+$ORIGIN mandrakesoft.com.
+192-168-2-214		A	192.168.2.214
+192-168-2-215		A	192.168.2.215
+192-168-2-216		A	192.168.2.216
+192-168-2-217		A	192.168.2.217
+192-168-2-218		A	192.168.2.218
+192-168-2-219		A	192.168.2.219
+192-168-2-220		A	192.168.2.220
+192-168-2-221		A	192.168.2.221
+192-168-2-222		A	192.168.2.222
+$TTL 10800	; 3 hours
+blueberry		A	192.168.2.221
+cchouxp			A	192.168.2.222
+$TTL 86400	; 1 day
+localhost		A	127.0.0.1
+mandrakesoft		A	216.71.116.162
+moonlight		A	192.168.2.23
+sunlight		A	192.168.2.178
+www			A	216.71.116.162

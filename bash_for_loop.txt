@@ -1,0 +1,8 @@
+bash for loop
+
+for i in *.pem; do echo $i; done
+
+for i in {1..10}; do echo $i; done
+
+for i in `seq 0 19`;do  MONITOR=all phoronix-test-suite batch-benchmark multicore; sleep 60; done
+

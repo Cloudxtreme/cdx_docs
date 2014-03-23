@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.WorkflowDataslot" table="WORKFLOW_DATASLOT" schema="DNALIMS">
+        <id name="workflowDataslotId" type="big_decimal">
+            <column name="WORKFLOW_DATASLOT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="workflow" class="com.cardiodx.db.waban.table.Workflow" fetch="select">
+            <column name="WORKFLOW_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="dataslotName" type="string">
+            <column name="DATASLOT_NAME" length="50" />
+        </property>
+        <property name="dataType" type="string">
+            <column name="DATA_TYPE" length="30" />
+        </property>
+        <property name="initialValue" type="string">
+            <column name="INITIAL_VALUE" length="1000" />
+        </property>
+        <set name="workflowTransitions" table="WORKFLOW_TRANSITION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WORKFLOW_DATASLOT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorkflowTransition" />
+        </set>
+        <set name="workflowNodeDatas" table="WORKFLOW_NODE_DATA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WORKFLOW_DATASLOT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorkflowNodeData" />
+        </set>
+    </class>
+</hibernate-mapping>

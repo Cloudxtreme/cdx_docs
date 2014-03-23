@@ -1,0 +1,8 @@
+
+
+alter user system identified by ccllims30sys246;
+alter user sys identified by ccllims30sys246;
+alter user dnalims identified by ccllims30dna;
+alter user sceschema identified by ccllims30sce;
+alter user sceadmin identified by ccllims30sce246;
+

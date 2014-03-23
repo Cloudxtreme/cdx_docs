@@ -1,0 +1,112 @@
+man afterboot
+
+--
+-- date:
+--
+/etc/rc.conf.local
+ntpd_flags=
+
+# more /etc/ntpd.conf                                                                                            
+listen on *
+
+ntpdate -s -d
+
+--
+-- interfaces:
+--
+# cd /etc     
+# vi hostname.em0 
+inet 10.10.37.2 255.255.248.0
+
+hostname.em0 173.13.158.180 255.255.255.240
+hostname.em1 inet 67.95.201.198 255.255.255.224
+hostname.bge1 inet 10.10.37.2 255.255.248.0
+
+sh /etc/netstart
+
+
+vi mygate
+65.....
+
+vi .bash_profile 
+export PKG_PATH=ftp://ftp.openbsd.org/pub/OpenBSD/4.6/packages/i386/
+
+
+
+rc.local:
+sysctl net.inet.ip.forwarding=1
+
+
+--
+-- natting
+--
+vi pf.conf 
+nat on em0 from 10.10.32.0/21 to any -> 173.13.158.180
+
+pfctl -f pf.conf 
+
+# more mygate 
+173.13.158.190
+
+sh /etc/netstat
+
+
+--
+-- load balancing
+--
+vi pf.conf
+
+lan_net = "10.10.32.0/21"
+internal  = "bge1"
+comcast = "em0"
+xo = "em1"
+cc_gw1 = "173.13.158.190"
+xo_gw2 = "67.95.201.193"
+
+#  nat outgoing connections on each internet interface
+nat on $comcast from $lan_net to any -> ($comcast)
+nat on $xo from $lan_net to any -> ($xo)
+
+#  default deny
+block in  from any to any
+block out from any to any
+
+#  pass all outgoing packets on internal interface
+pass out on $internal from any to $lan_net
+#  pass in quick any packets destined for the gateway itself
+pass in quick on $internal from $lan_net to $internal
+
+#  load balance outgoing tcp traffic from internal network.
+pass in on $internal route-to \
+    { ($comcast $cc_gw1), ($xo $xo_gw2) } round-robin \
+    proto tcp from $lan_net to any flags S/SA modulate state
+#  load balance outgoing udp and icmp traffic from internal network
+pass in on $internal route-to \
+    { ($comcast $cc_gw1), ($xo $xo_gw2) } round-robin \
+    proto { udp, icmp } from $lan_net to any keep state
+
+#  general "pass out" rules for external interfaces
+pass out on $comcast proto tcp from any to any flags S/SA modulate state
+pass out on $comcast proto { udp, icmp } from any to any keep state
+pass out on $xo proto tcp from any to any flags S/SA modulate state
+pass out on $xo proto { udp, icmp } from any to any keep state
+
+#  route packets from any IPs on $comcast to $cc_gw1 and the same for
+#  $xo and $xo_gw2
+pass out on $comcast route-to ($xo $xo_gw2) from $xo to any
+pass out on $xo route-to ($comcast $cc_gw1) from $comcast to any
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+pfctl -F nat
+pfctl -F rules
+
+pfctl -s rules -v
+pfctl -s info
+pfctl -s states 
+
+
+
+
+

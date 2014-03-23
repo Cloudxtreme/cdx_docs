@@ -1,0 +1,88 @@
+
+
+Intrepid (8.10)
+http://blog.brightbox.co.uk/posts/howto-do-ethernet-bonding-on-ubuntu-properly
+
+
+Will I have this problem???
+https://bugs.launchpad.net/ubuntu/+source/ifenslave-2.6/+bug/482419
+
+
+http://chienpo.blogspot.com/2010/06/bridging-and-bonding-with-ubuntu-server.html
+
+
+
+--
+-- on switch:
+--
+storage1, 1, Disable, Enable, Disable, LACP, Link Down(?)
+ports on 21, 22 23. 24
+  Priority: 128
+  Timeout: long
+
+
+--
+-- on lucid:
+--
+wajig install ifenslave bridge-utils
+wajig install ethtool
+
+
+cd /etc/network 
+more interfaces
+uto lo
+iface lo inet loopback
+
+# The primary network interface
+#auto eth0
+#iface eth0 inet dhcp
+
+auto bond0
+iface bond0 inet manual
+    bond-slaves none
+    bond-mode   802.3ad
+    bond-miimon 100
+
+# Enslave all the physical interfaces
+auto eth0
+iface eth0 inet manual
+    bond-master bond0
+
+auto eth1
+iface eth1 inet manual
+    bond-master bond0
+
+auto eth2
+iface eth2 inet manual
+    bond-master bond0
+
+auto eth3
+iface eth3 inet manual
+    bond-master bond0
+
+# Configure the bridging interface
+auto br0
+iface br0 inet static
+    address 10.10.37.37
+    netmask 255.255.248.0
+    gateway 10.10.37.1
+    bridge-ports  bond0
+    bridge-fd     9
+    bridge-hello  2
+    bridge-maxage 12
+    bridge-stp    off
+
+
+reboot
+
+cat /proc/net/bonding/bond0
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+ethtool eth0
+ethtool eth1
+
+
+
+
+

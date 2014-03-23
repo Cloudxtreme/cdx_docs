@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.StagingClinicalDataView" table="STAGING_CLINICAL_DATA_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.StagingClinicalDataViewId">
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="0" />
+            </key-property>
+            <key-property name="columnName" type="string">
+                <column name="COLUMN_NAME" length="4000" />
+            </key-property>
+            <key-property name="columnValue" type="string">
+                <column name="COLUMN_VALUE" length="4000" />
+            </key-property>
+            <key-property name="cardinality" type="string">
+                <column name="CARDINALITY" length="1" />
+            </key-property>
+            <key-property name="columnDataType" type="string">
+                <column name="COLUMN_DATA_TYPE" length="7" />
+            </key-property>
+            <key-property name="crfId" type="big_decimal">
+                <column name="CRF_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="anonymizedAccNo" type="string">
+                <column name="ANONYMIZED_ACC_NO" length="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

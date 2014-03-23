@@ -1,0 +1,249 @@
+iscsi
+
+http://www.howtoforge.com/using-iscsi-on-ubuntu-9.04-initiator-and-target
+http://opensourceexperiments.wordpress.com/2008/05/03/a-poor-mans-guide-for-creating-iscsi-targets-without-using-external-usb-hard-disks/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- 
+-- server
+--   http://positivechi.blogspot.com/2008/11/installing-iscsi-target-on-ubuntu-810.html
+--
+wajig install iscsitarget
+
+netstat -nap | grep 3260
+
+cd /etc
+vi ietd.conf
+
+mkdir /iscsifs
+dd if=/dev/zero of=/iscsifs/public bs=10M count=100
+
+Target iqn.2009-09.public.iscsi:storage1.public
+	IncomingUser joe secret
+	OutgoingUser 
+	Alias Public
+	Lun 0 Path=/iscsi1/public,Type=fileio,IOMode=wb
+  Lun 1 Path=/iscsi1/private,Type=fileio
+  Lun 2 Path=/iscsi2/testfile,Type=fileio
+  Lun 3 Path=/iscsi2/chialin21,Type=fileio
+  MaxBurstLength         16776192
+  FirstBurstLength       262144
+
+
+/etc/init.d/iscsitarget restart
+
+
+--ietadm --op new --tid=0 --params Name=iqn.2008-12.com.tfgu:datastore.mailarch
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- client
+--   http://www.cyberciti.biz/faq/howto-setup-debian-ubuntu-linux-iscsi-initiator/
+--   http://www.howtoforge.com/iscsi_on_linux
+--
+
+wajig install open-iscsi
+
+# iscsiadm -m discovery -t st -p storage1
+10.10.35.5:3260,1 iqn.2009-09.public.iscsi:storage1.public
+
+# cd /etc/iscsi
+# vi iscsid.conf 
+isns.address = storage1
+node.startup = manual
+node.session.auth.authmethod = CHAP
+node.session.auth.username = cdx
+node.session.auth.password = secret07
+
+# iscsiadm -m node
+10.10.35.5:3260,1 iqn.2009-09.public.iscsi:storage1.public
+
+/etc/init.d/open-iscsi status
+tcp: [1] 10.10.35.5:3260,1 iqn.2009-09.public.iscsi:storage1.public
+
+# iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.37.37:3260" --op=update --name node.session.auth.authmethod --value=CHAP
+# iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.35.5:3260" --op=update --name node.session.auth.username --value=joe
+# iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.35.5:3260" --op=update --name node.session.auth.password --value=secret
+# iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.35.5:3260" --login
+
+iscsiadm -m session
+iscsiadm -m session -r 1
+
+On server: 
+cd /proc/net/iet# 
+cat session 
+
+# dmesg | grep sd
+[ 3498.438727]  sdc: unknown partition table
+[ 3498.439270] sd 17:0:0:0: [sdc] Attached SCSI disk
+[ 3498.439309] sd 17:0:0:0: Attached scsi generic sg3 type 0
+
+
+mount /dev/disk/by-path/ip-10.10.37.37:3260-iscsi-iqn.2009-09.cdx:storage1.data1-lun-0-part1 /storage1/data1/
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://anothersysadmin.wordpress.com/2008/09/15/howto-the-definitive-guide-to-debian-etch-open-iscsi-step-by-step/
+
+# vi /etc/iscsi/iscsid.conf
+isns.address = 10.10.35.5
+isns.port = 3205
+
+node.startup = automatic
+node.session.auth.authmethod = CHAP
+node.session.auth.username = joe
+node.session.auth.password = secret
+
+reboot
+
+iscsiadm -m discovery -t st -p storage1
+iscsiadm -m node
+iscsiadm -m node --targetname "iqn.2009-09.public.iscsi:storage1.public" --login
+iscsiadm -m session
+
+
+# vi /etc/fstab
+/dev/sdc1       /iscsi/public xfs defaults,auto,_netdev 0 0
+/dev/sdd1       /iscsi/private ocfs2 defaults,auto,_netdev 0 0
+/dev/sde1       /iscsi/test xfs defaults,auto,_netdev 0 0
+
+vi /etc/network/interfaces
+auto eth0
+iface eth0 inet dhcp
+post-up echo "Waiting for network to come up before starting iSCSI..." && sleep 5
+post-up /etc/init.d/open-iscsi start
+pre-down umount -a -O _netdev
+pre-down /etc/init.d/open-iscsi stop
+
+vi /etc/default/rcS
+ASYNCMOUNTNFS=no
+
+mv /etc/rc6.d/S20sendsigs /etc/rc6.d/S39sendsigs
+mv /etc/rc0.d/S20sendsigs /etc/rc0.d/S39sendsigs
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.37.37:3260" --op=update --name node.session.auth.authmethod --value=CHAP
+iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.37.37:3260" --op=update --name node.session.auth.username --value=joe
+iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.37.37:3260" --op=update --name node.session.auth.password --value=secret
+iscsiadm -m node --targetname "iqn.2009-09.cdx:storage1.testlv" --portal "10.10.37.37:3260" --login
+
+
+write
+  iscsi: 16777216000 bytes (17 GB) copied, 138.352 s, 121 MB/s
+  ocfs:  16777216000 bytes (17 GB) copied, 168.995 s,  99.3 MB/s
+
+read:
+  iscsi: 16777216000 bytes (17 GB) copied, 272.034 s, 61.7 MB/s
+  ocfs:  16777216000 bytes (17 GB) copied, 283.144 s, 59.3 MB/s
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- on server:
+create lvm
+
+vi ietd.conf 
+Target iqn.2009-09.com.cardiodx.storage1.lvm.iscsi3
+        IncomingUser joe secret
+        OutgoingUser
+        Alias iscsi3
+        Lun 0 Path=/dev/aoe2/iscsi3,Type=fileio
+
+blockio ???
+
+-- on client
+iscsiadm -m node --targetname "iqn.2009-09.com.cardiodx.storage1.lvm.iscsi3" --login
+iscsiadm -m session
+dmesg | grep sd
+	 sdh: unknown partition table
+
+
+test: file system on server side
+iscsi3: lvm on server side (using fileio)
+root@kvmsrv4:/iscsi# dd if=/dev/zero bs=100M count=200 | pv > test/abc
+20971520000 bytes (21 GB) copied, 174.642 s, 120 MB/s
+
+root@kvmsrv4:/iscsi# dd if=/dev/zero bs=100M count=200 | pv > iscsi3/abc
+20971520000 bytes (21 GB) copied, 197.102 s, 106 MB/s
+
+root@kvmsrv4:/iscsi# dd if=test/abc bs=10M | pv > /dev/null
+20971520000 bytes (21 GB) copied, 339.972 s, 61.7 MB/s
+
+root@kvmsrv4:/iscsi# dd if=iscsi3/abc bs=10M | pv > /dev/null
+20971520000 bytes (21 GB) copied, 376.193 s, 55.7 MB/s
+
+root@kvmsrv4:/iscsi# dd if=public/abc bs=10M | pv > /dev/null
+20971520000 bytes (21 GB) copied, 245.728 s, 85.3 MB/s
+
+root@kvmsrv4:/iscsi# dd if=iscsi3/abc bs=10M | pv > /dev/null
+20971520000 bytes (21 GB) copied, 331.158 s, 63.3 MB/s
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- kernel tuning for the network stack
+--
+http://wwwx.cs.unc.edu/~sparkst/howto/network_tuning.php
+http://fasterdata.es.net/TCP-tuning/linux.html
+http://www.halfbytetechnologies.com/content/tuning-centos-5x-x64-iscsi-performance
+
+vi /etc/sysctl.conf
+net.ipv4.tcp_window_scaling=1
+net.ipv4.tcp_syncookies = 1
+net.core.rmem_max=12582912
+net.core.wmem_max=12582912
+net.core.rmem_default=65536
+net.core.wmem_default=65536
+net.ipv4.tcp_rmem=4096 87380 12582912
+net.ipv4.tcp_wmem=4096 65536 12582912
+net.ipv4.tcp_mem=4096 65536 12582912
+net.ipv4.route.flush=1
+net.ipv4.tcp_no_metrics_save = 1
+net.ipv4.tcp_moderate_rcvbuf = 1
+net.core.netdev_max_backlog=2500
+
+
+sysctl -A | grep mem
+
+-- on client:
+sysctl -w net.core.rmem_max=8388608
+sysctl -w net.core.wmem_max=8388608
+sysctl -w net.core.rmem_default=65536
+sysctl -w net.core.wmem_default=65536
+sysctl -w net.ipv4.tcp_rmem='4096 87380 8388608'
+sysctl -w net.ipv4.tcp_wmem='4096 87380 8388608'
+sysctl -w net.ipv4.tcp_mem='8388608 8388608 8388608'
+sysctl -w net.ipv4.route.flush=1
+sysctl -w net.ipv4.tcp_window_scaling=1
+sysctl -w net.core.netdev_max_backlog=2500
+
+-- on aoeserver
+sysctl -w net.core.rmem_max=12582912
+sysctl -w net.core.wmem_max=12582912
+sysctl -w net.core.rmem_default=524288
+sysctl -w net.core.wmem_default=524288
+sysctl -w net.ipv4.tcp_rmem='4194304 12582912 12582912'
+sysctl -w net.ipv4.tcp_wmem='4194304 8388608 12582912'
+sysctl -w net.ipv4.tcp_mem='4194304 8388608 12582912'
+sysctl -w net.ipv4.route.flush=1
+sysctl -w net.ipv4.tcp_window_scaling=1
+sysctl -w net.core.netdev_max_backlog=2500
+
+
+  501  ifconfig eth0 mtu 9000
+  502  ifconfig br0 mtu 9000
+  503  ifconfig br0 txqueuelen 1000
+  504  ifconfig eth0 txqueuelen 1000
+
+
+sysctl net.ipv4.tcp_available_congestion_control
+ifconfig eth0 txqueuelen 1000
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+update-rc.d cdx-iscsi start 99 3 4 5 . stop 99 0 1 6 .
+
+update-rc.d -f cdx-iscsi remove
+
+
+

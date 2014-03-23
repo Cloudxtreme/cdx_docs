@@ -1,0 +1,6 @@
+ruby gem mysql linux
+
+wajig install libmysqlclient15-dev
+
+gem install mysql
+

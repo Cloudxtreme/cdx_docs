@@ -1,0 +1,20 @@
+
+
+Find the bandwidth from ntop - http://itsrv:3000/sortDataProtos.html?col=0&showL=2&showH=2
+
+Top bandwidth usage (1.6G): adsl-71-135-118-215.dsl.pltn13.pacbell.net
+		(It's a ADSL user w/ 71.135.118.215 IP.)
+
+Connect to backup (syslog server)
+
+cd /data/log/backup/200908
+
+view daemon
+
+Go to the end of the file and do a search on 71.135.118.215.
+
+   ---> pbeineke/71.135.118.215:60762
+
+Found the person.  It's Phil!
+
+

@@ -1,0 +1,84 @@
+configure 
+  apache
+  ssl
+  ldap-client
+  apache2_auth_pam.txt
+
+webdav.cardiodx.com:
+
+NameVirtualHost *
+<VirtualHost *>
+	ServerAdmin webmaster@localhost
+	
+	DocumentRoot /var/www/
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+	<Directory "/usr/lib/cgi-bin">
+		AllowOverride None
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	ErrorLog /var/log/apache2/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog /var/log/apache2/access.log combined
+	ServerSignature On
+
+    Alias /doc/ "/usr/share/doc/"
+    <Directory "/usr/share/doc/">
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride None
+        Order deny,allow
+        Deny from all
+        Allow from 127.0.0.0/255.0.0.0 ::1/128
+    </Directory>
+
+</VirtualHost>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+smbd(udp: 137, 138)
+nmbd(tcp: 139, 445)
+
+  413  mount -t cifs //pdc/clims/sf_files /var/www/reports -o username=cchou
+
+vi /etc/fstab
+//pdc/clims/sf_files   /var/www/reports cifs credentials=/root/smbcredentials 0 3
+
+vi /root/smbcredentials
+username=webdav
+password=CDx0920!
+
+chmod 600 /root/smbcredentials
+
+mount /var/www/reports
+
+~~~~
+cd /etc/apache2
+vi envvars 
+export APACHE_RUN_USER=webdav
+export APACHE_RUN_GROUP=paas
+
+/etc/init.d/apache2 restart
+
+https://webdav.cardiodx.com/2009/06/TRF14600/CADTEST_a0F400000027GSC/TRF14600.pdf
+https://webdav.cardiodx.com/2009/08/TRF10003/CADTEST_a0F400000029gfoEAA/00P40000003RGNiEAO/TRF10003.pdf
+
+
+
+
+

@@ -1,0 +1,26 @@
+http://www.linuxjournal.com/article/6652
+
+# more swish-e.conf 
+IndexDir  /backup/daily.0/pdc/data/samba/homes/cchou/
+IndexOnly .html .txt .pdf .doc
+IndexFile ./cdx.index
+
+FileFilter .pdf /usr/bin/pdftotext   "'%p' -"
+FileFilter .doc /usr/bin/catdoc   "'%p' -"
+FileFilter .xls /usr/bin/xlhtml   "'%p' -"
+
+
+swish-e -c swish-e.conf 
+swish-e -f cdx.index -w cchou
+
+
+wajig install xpdf-utils
+-- wajig install pdftohtml
+
+xlhtml - A program for converting Microsoft Excel Files .xls
+catdoc - MS-Word to TeX or plain text converter
+
+
+pdftotext 064_voicemail_outcalling.pdf 
+catdoc -a robocopy.doc 
+

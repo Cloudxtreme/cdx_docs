@@ -1,0 +1,50 @@
+ubuntu lucid ldap tls wildcard
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+copy all pem files from ~/gdrive/it/Private/ssl/wildcard/08-14-2012/pem to /etc/ssl/private
+  gdbundle_crt.pem  
+  wildcard_crt.pem  
+  wildcard_key.pem
+
+chgrp openldap /etc/ssl/private
+chmod 750 /etc/ssl/private
+chgrp openldap *.pem
+chmod 640 wildcard_key.pem
+
+(Please see ../../ssl/convert.txt)
+
+ldapmodify -Y EXTERNAL -H ldapi:///
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ssl/private/gdbundle_crt.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/private/wildcard_crt.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/wildcard_key.pem
+-
+
+modifying entry "cn=config"
+(Ctrl+D)
+
+~~~~~~~~~~~
+vi /etc/default/slapd
+SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"
+
+/etc/init.d/slapd restart
+netstat -nap | grep slapd
+
+
+-- Note: both gd_bundle.crt or gdbundle_crt.pem will work
+vi /etc/ldap/ldap.conf 
+BASE   dc=cardiodx,dc=com
+URI    ldap://ldaptest.cardiodx.com ldaps://ldaptest.cardiodx.com
+#TLS_CACERT /etc/ssl/private/gd_bundle.crt 
+TLS_CACERT /etc/ssl/private/gdbundle_crt.pem
+
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" "(uidNumber=*)" cn sn -ZZ 
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" "(uidNumber=*)" cn sn -ZZ -d 1
+
+(Please read authentication.txt)
+

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.TypeList" table="TYPE_LIST" schema="DNALIMS">
+        <comment>Information about list of different types and their values</comment>
+        <id name="typeListId" type="big_decimal">
+            <column name="TYPE_LIST_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="type" type="string">
+            <column name="TYPE" length="30">
+                <comment>Different types of List</comment>
+            </column>
+        </property>
+        <property name="typeValue" type="string">
+            <column name="TYPE_VALUE" length="30">
+                <comment>Stores value for types</comment>
+            </column>
+        </property>
+        <set name="organizationAttributes" table="ORGANIZATION_ATTRIBUTE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TYPE_LIST_ID" precision="22" scale="0">
+                    <comment>FK - Identifier to Type_List table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.OrganizationAttribute" />
+        </set>
+    </class>
+</hibernate-mapping>

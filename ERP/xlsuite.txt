@@ -1,0 +1,17 @@
+https://github.com/xlsuite/xlsuite
+
+wajig install mysql-server
+
+mysql -u root -p
+create database xlsuite;
+quit
+
+
+cp database.yml.sample database.yml
+vi database.yml
+  database: xlsuite
+  username: root
+  password: secret07
+
+rake db:create NOT working!!!!
+

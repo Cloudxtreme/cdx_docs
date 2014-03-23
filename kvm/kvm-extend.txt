@@ -1,0 +1,14 @@
+
+
+on kvmsrv2
+lvextend -L+2G /dev/vg0/cuteflow 
+
+on cuteflow:
+fdisk /dev/vda
+  create vda3
+
+reboot
+
+pvcreate /dev/vda3
+vgextend vg0 /dev/vda3
+pvscan

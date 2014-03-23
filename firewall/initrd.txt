@@ -1,0 +1,14 @@
+
+
+mount rescue cd
+go to newroot/kernel
+copy initrd.img over to cchoudesktop
+
+mv initrd.img initrd.img.gz
+gzip -d initrd.img.gz
+
+mkdir initrd
+mount -o loop initrd
+
+cd etc
+

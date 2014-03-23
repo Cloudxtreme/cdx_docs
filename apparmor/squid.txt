@@ -1,0 +1,40 @@
+# Last Modified: Tue Dec 15 16:50:05 2009
+#include <tunables/global>
+/usr/sbin/squid3 {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+
+  capability setgid,
+  capability setuid,
+
+  /dev/tty rw,
+  /etc/squid/squidGuard.conf r,
+  /etc/squid3/squid.conf r,
+  /proc/*/mounts r,
+  /proc/stat r,
+  /proc/sys/kernel/ngroups_max r,
+  /usr/sbin/squid3 ixr,
+  /usr/bin/squidGuard Pxmr,
+  /usr/lib/squid3/unlinkd ixr,
+  /usr/share/squid3/** r,
+  /var/lib/squidguard/** r,
+  /var/run/squid3.pid rw,
+  /var/log/squid3/** rw,
+  /var/spool/squid3/** rw,
+  /var/tmp/* w,
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more usr.bin.squidGuard
+# Last Modified: Tue Dec 15 16:55:31 2009
+#include <tunables/global>
+/usr/bin/squidGuard flags=(complain) {
+  #include <abstractions/base>
+
+  /etc/squid/squidGuard.conf r,
+  /usr/bin/squidGuard mr,
+  /var/lib/squidguard/** r,
+  /var/log/squid3/cache.log w,
+  /var/tmp/* w,
+}
+

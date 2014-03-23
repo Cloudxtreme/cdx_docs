@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Wordreport" table="WORDREPORT" schema="DNALIMS">
+        <comment>To identify the history of the report generated</comment>
+        <id name="wordReportId" type="big_decimal">
+            <column name="WORD_REPORT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="checklist" class="com.cardiodx.db.waban.table.Checklist" fetch="select">
+            <column name="CHECKLIST_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign key to the CHECKLIST_ID for change in CHECKLIST table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="stepId" type="big_decimal">
+            <column name="STEP_ID" precision="22" scale="0" not-null="true">
+                <comment>Identifier TO STEP TEMPLATE table</comment>
+            </column>
+        </property>
+        <property name="checklistRow" type="big_decimal">
+            <column name="CHECKLIST_ROW" precision="22" scale="0" not-null="true">
+                <comment>Identifier for Checklist Row</comment>
+            </column>
+        </property>
+        <property name="checklistCol" type="big_decimal">
+            <column name="CHECKLIST_COL" precision="22" scale="0" not-null="true">
+                <comment>Identifier for Checklist Row</comment>
+            </column>
+        </property>
+        <property name="reporttype" type="string">
+            <column name="REPORTTYPE" length="30">
+                <comment>Identifies the type of Report</comment>
+            </column>
+        </property>
+        <property name="modified" type="java.lang.Boolean">
+            <column name="MODIFIED" precision="1" scale="0">
+                <comment>0 if not modified 1 if modified</comment>
+            </column>
+        </property>
+        <property name="reportUrl" type="string">
+            <column name="REPORT_URL" length="400">
+                <comment>Address of the external URL where the report might be saved by the user</comment>
+            </column>
+        </property>
+        <property name="reportName" type="string">
+            <column name="REPORT_NAME" length="100">
+                <comment>Name of report generated</comment>
+            </column>
+        </property>
+        <property name="reportDescription" type="string">
+            <column name="REPORT_DESCRIPTION">
+                <comment>Description of report generated</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User created the word Report.</comment>
+            </column>
+        </property>
+        <property name="createdDate" type="date">
+            <column name="CREATED_DATE" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <set name="wordreportParams" table="WORDREPORT_PARAM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WORD_REPORT_ID" precision="22" scale="0" not-null="true">
+                    <comment>IDENTIFIES THE REPORT ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WordreportParam" />
+        </set>
+    </class>
+</hibernate-mapping>

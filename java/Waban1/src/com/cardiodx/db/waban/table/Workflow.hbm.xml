@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Workflow" table="WORKFLOW" schema="DNALIMS">
+        <id name="workflowId" type="big_decimal">
+            <column name="WORKFLOW_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <version name="version" type="string">
+            <column name="VERSION" length="10" />
+        </version>
+        <property name="workflowName" type="string">
+            <column name="WORKFLOW_NAME" length="50" not-null="true" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30" />
+        </property>
+        <property name="preRequisite" type="string">
+            <column name="PRE_REQUISITE" length="1000" />
+        </property>
+        <property name="defaultItem" type="string">
+            <column name="DEFAULT_ITEM" length="50" />
+        </property>
+        <property name="parent" type="java.lang.Boolean">
+            <column name="PARENT" precision="1" scale="0" />
+        </property>
+        <property name="xmlFileName" type="string">
+            <column name="XML_FILE_NAME" length="4000" />
+        </property>
+        <property name="xmlBlob" type="blob">
+            <column name="XML_BLOB" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30" />
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7" />
+        </property>
+        <set name="workflowDataslots" table="WORKFLOW_DATASLOT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WORKFLOW_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.WorkflowDataslot" />
+        </set>
+    </class>
+</hibernate-mapping>

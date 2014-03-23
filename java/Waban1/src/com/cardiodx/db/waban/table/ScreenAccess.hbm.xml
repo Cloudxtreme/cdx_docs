@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.ScreenAccess" table="SCREEN_ACCESS" schema="DNALIMS">
+        <comment>Listing of which screens are accessible by a given user role.</comment>
+        <composite-id name="id" class="com.cardiodx.db.waban.table.ScreenAccessId">
+            <key-property name="screenName" type="string">
+                <column name="SCREEN_NAME" length="40" />
+            </key-property>
+            <key-property name="role" type="string">
+                <column name="ROLE" length="30" />
+            </key-property>
+        </composite-id>
+        <property name="viewAllowed" type="java.lang.Boolean">
+            <column name="VIEW_ALLOWED" precision="1" scale="0">
+                <comment>Flag indicating whether or not this screen is viewable by this role.</comment>
+            </column>
+        </property>
+        <property name="modifyAllowed" type="java.lang.Boolean">
+            <column name="MODIFY_ALLOWED" precision="1" scale="0">
+                <comment>Flag indicating that this screen is updateable by this role (1 = yes).</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

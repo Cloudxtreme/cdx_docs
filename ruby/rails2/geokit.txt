@@ -1,0 +1,11 @@
+http://geokit.rubyforge.org/
+https://github.com/jlecour/geokit-rails3
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`
+
+vi Gemfile
+gem 'geokit-rails3'
+
+bundle install
+
+
+

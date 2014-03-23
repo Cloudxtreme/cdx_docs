@@ -1,0 +1,85 @@
+<%= form_for(@object, :html => {:id => "admin_field"}) do |f| %>
+  <% if @object.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@object.errors.count, "error") %> prohibited this object from being saved:</h2>
+
+      <ul>
+      <% @object.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% Admin::Field.display_columns.each do |column_name| %>
+		<div class="field">
+			<% if Admin::Field.is_lut_column?(column_name) %>
+	    	<%= f.label column_name %><br />
+				<%= f.select(column_name, Admin::Field.selection_data(column_name)) %>
+			<% elsif Admin::Field.is_foreign_key?(column_name) %>
+				<!-- skip foreign keys -->
+			<% else %>
+	    	<%= f.label column_name %><br />
+  	  	<%= f.text_field column_name %>
+			<% end %>
+		</div>
+	<% end %>
+
+	<!-- Foreign key(s) -->
+	<% Admin::Field.foreign_keys.each do |foreign_key| %>
+		<% if params[foreign_key] %>
+			<%= f.hidden_field foreign_key, :value => params[foreign_key] %><br />
+		<% elsif @object[foreign_key] %>
+			<%= f.hidden_field foreign_key, :value => @object[foreign_key] %><br />
+		<% else %>
+			<%= f.label foreign_key %><br />
+			<%= f.select(foreign_key, Admin::Field.selection_data(foreign_key)) %><br />
+		<% end %>
+	<% end %>
+	<br />
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<!-- -------------------------------------------------------- -->
+<% records = Admin::Collection.joins(:namespace).where("admin_namespaces.name != 'Admin'") %>
+<select id='tag_name' name='admin_field[name]'>
+<% records.each do |record| %>
+  <option value='<%="#{record.name.downcase}_id"%>'><%=record.name%></option>
+<% end %>
+</select>
+
+
+<script>
+	$(document).ready(function() {
+
+  	var validator = $("#admin_field").kendoValidator().data("kendoValidator"),
+  	status = $(".status");
+
+
+		//////////////////////////////////////////////////
+		$('#tag_name').hide();
+
+		var new_field_name = $('#tag_name');
+		var admin_field_name = $('#admin_field_name');
+
+		$('#admin_field_dtype_id').change(function() {
+			var selected = $(this).find('option:selected').text();
+			if (selected=='lookup' || selected=='masterdetail' || selected=='combobox' || selected=='multiselect' ) {
+				new_field_name.show();
+				$('#new_admin_field').find('#admin_field_name').replaceWith(new_field_name);
+			} else {
+				$('#new_admin_field').find('#tag_name').replaceWith(admin_field_name);
+			} 
+		});
+
+		$('#new_admin_field').submit(function() {
+				$('#tag_name').attr('id', 'admin_field_name');
+		});
+		
+	});
+</script>
+
+

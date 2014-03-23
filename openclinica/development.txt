@@ -1,0 +1,60 @@
+
+https://www.openclinica.org/dokuwiki/doku.php?id=developerwiki:developingoc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+
+
+--wajig install eclipse
+--wajig install sun-java6-jdk postgresql
+# wajig install maven2
+
+# svn co https://svn.akazaresearch.com/openclinica/OpenClinica/tags/OpenClinica-3.0.2
+
+# cd OpenClinica-3.0.2/src/main/resources# 
+# vi datainfo.properties
+
+> filePath=/usr/tomcat/openclinica.data/
+> mail.host=smtp.cardiodx.com
+> adminEmail=edc@cardiodx.com
+> sysURL=http://edc.cardiodx.com/OpenClinica/MainMenu
+> sysURL.base=http://edc.cardiodx.com/OpenClinica
+> log.dir=/usr/tomcat/logs
+
+# cd ~/OpenClinica-3.0.2
+# mvn compile war:war
+
+/root/OpenClinica-3.0.2/target/OpenClinica-3.0.2.war
+
+
+cd /usr/tomcat/bin
+./shutdown.sh
+
+cd /usr/tomcat/webapps
+mv OpenClinica OpenClinica.sav
+
+mkdir OpenClinica 
+cd OpenClinica
+cp /root/OpenClinica-3.0.2/target/OpenClinica-3.0.2.war .
+jar xvf OpenClinica-3.0.2.war
+
+./start.sh
+
+https://edc.cardiodx.com/OpenClinica/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- log fecility http://www.slf4j.org/manual.html
+--
+
+/usr/tomcat/logs.log
+
+cd /usr/tomcat/webapps/OpenClinica-3.0.2/WEB-INF/classes
+vi logback.xml
+  Change DEBUG to INFO
+
+  logger.debug
+  logger.info
+  logger.warn
+  logger.error
+
+
+
+

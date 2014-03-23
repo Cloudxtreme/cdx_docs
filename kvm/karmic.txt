@@ -1,0 +1,67 @@
+
+
+http://www.howtoforge.com/virtualization-with-kvm-on-ubuntu-9.10
+
+
+   35  egrep '(vmx|svm)' --color=always /proc/cpuinfo
+
+wajig install ssmtp
+wajig install ubuntu-virt-server python-vm-builder
+wajig install virt-viewer xterm xauth -y
+wajig install ubuntu-vm-builder
+
+   40  adduser `id -un` libvirtd
+   41  virsh -c qemu:///system list
+
+   45  cd /etc/network/
+   47  vi interfaces 
+auto eth0
+#iface eth0 inet dhcp
+iface eth0 inet manual
+
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_maxwait 0
+
+/etc/init.d/networking restart
+
+
+cd /etc/libvirt/qemu/networks
+cp default.xml bridge.xml
+vi bridge.xml
+
+
+ubuntu-vm-builder kvm karmic --domain karmic64 --arch amd64 \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --libvirt qemu:///system \
+    --hostname karmic64 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx;
+
+
+virsh start karmic64
+
+log:
+tail -20f /var/log/libvirt/qemu/karmic64.log
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+export http_proxy=http://proxy.cardiodx.com
+
+ubuntu-vm-builder kvm jaunty --domain jaungy64 --arch amd64 \
+    --overwrite \
+    --verbose \
+    --mirror http://mirrors.xmission.com/ubuntu \
+    --hostname jaungy64 \
+    --cpus=4 --mem=512 \
+    --rootsize=10240 --swapsize=2048 \
+    --addpkg ssh \
+    --user cardiodx --pass cdx \
+    --libvirt qemu:///system 
+
+
+virt-viewer -c qemu:///system jaungy64 &
+

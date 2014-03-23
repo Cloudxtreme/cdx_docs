@@ -1,0 +1,47 @@
+openbsd simple ipsec tunnel config
+
+me:    67.95.201.201, 192.168.10/24
+peeer: 67.95.201.198, 10.10.37.23.0/21
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# more rc.local 
+sysctl net.inet.ip.forwarding=1
+sysctl net.inet.ip.multipath=1
+
+sysctl net.inet.esp.enable=1
+sysctl net.inet.ah.enable=1
+
+isakmpd -K
+ipsecctl -f /etc/ipsec.conf
+
+
+# more sakmpd.conf
+[General]
+Default-phase-1-lifetime=3600,60:86400
+Default-phase-2-lifetime=3600,60:86400
+
+
+# more ipsec.conf
+ike esp from 192.168.10.0/24 to 10.10.32.0/21 peer 67.95.201.198 \
+ main auth hmac-sha1 enc 3des group modp1024 \
+ quick auth hmac-sha1 enc 3des group modp1024 \
+ psk cdxTest123
+
+
+
+# more pf.conf
+
+xo = "bge0"
+internal = "em0"
+local = "lo0"
+
+block in
+pass out keep state
+
+nat on $xo -> ($xo)
+
+pass in on $internal
+pass quick on $xo from 67.95.201.199
+set skip on enc0
+
+

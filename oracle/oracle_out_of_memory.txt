@@ -1,0 +1,44 @@
+
+http://www.mithunashok.com/2010/01/linux-x8664-error-28-no-space-left-on.html
+
+	SQL> startup
+	ORA-27102: out of memory
+	Linux-x86_64 Error: 28: No space left on device
+
+$ cat /proc/sys/kernel/shmmax 
+2147483648
+53687091200
+
+$ getconf PAGE_SIZE
+4096
+
+devlims has 64GB memory
+1024 * 1024 * 1024 * 64 / 4096 = 16777216
+
+
+# vi /etc/sysctl.conf 
+
+#kernel.shmall = 2097152
+kernel.shmall = 16777216
+
+# sysctl -p
+kernel.printk = 4 4 1 7
+kernel.maps_protect = 1
+fs.inotify.max_user_watches = 524288
+vm.mmap_min_addr = 65536
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.all.rp_filter = 1
+fs.file-max = 65535
+kernel.shmall = 16777216
+kernel.shmmax = 2147483648
+kernel.shmmni = 4096
+kernel.sem = 250 32000 100 128
+net.ipv4.ip_local_port_range = 1024 65000
+net.core.rmem_default = 1048576
+net.core.rmem_max = 1048576
+net.core.wmem_default = 262144
+net.core.wmem_max = 262144
+
+	SQL> startup
+	ORACLE instance started.
+

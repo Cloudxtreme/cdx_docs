@@ -1,0 +1,50 @@
+
+google - rails generator invoke 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+$ rails console
+
+require 'rails/generators'
+
+
+irb(main):003:0> Rails::Generators.invoke("active_record:model", ["bar", "--no-migration" ])
+	=> ["bar", ["Bar"], nil, "app/models/bar.rb", nil, [], [], nil]
+
+
+Rails::Generators.invoke("active_record:model", ['hello', "list_order:string", "name:string"])
+
+Rails::Generators.invoke("controller", ["bar"])
+Rails::Generators.invoke("controller", ["bar"])
+Rails::Generators.invoke("scaffold", ["User", "name:string", "email:string"])
+
+
+Rails::Generators.invoke("model", ["computer", "name:string"])
+Rails::Generators.invoke("active_record:model", ["computer", "name:string"])
+
+
+--Rails::Generators.invoke("active_record:model", [name, "list_order:string", "name:string"], { parent: "Ecm::Toplist::Base"})
+--Rails::Generators.invoke("active_record:model", [name, "list_order:string", "name:string"], {migration: true, timestamps: true})
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- example
+--
+$ rails console
+require 'rails/generators'
+
+Rails::Generators.invoke("active_record:model", ["User", "name:string", "email:string"])
+Rails::Generators.invoke("scaffold", ["User", "name:string", "email:string"])
+
+
+ActiveRecord::Migration.create_table(:users)
+ActiveRecord::Migration.add_column(:users, :name, :string, {:limit => 60})
+ActiveRecord::Migration.add_column(:users, :email, :string, {:limit => 120})
+
+
+$ psql pg2
+\dt
+\d users
+
+
+

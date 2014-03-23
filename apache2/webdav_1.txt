@@ -1,0 +1,36 @@
+
+
+a2enmod dav_fs
+a2enmod dav
+
+
+	<Directory /var/www/>
+    AuthBasicAuthoritative off
+    AuthPAM_Enabled on
+    AuthType Basic
+    AuthName "System"
+    require valid-user
+    require group "Domain Users" 
+
+		DAV On	
+
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+
+
+cd /var/www
+mkdir hello
+chown -R www-data hello/
+
+
+/etc/init.d/apache restart
+
+
+-- client
+# wajig install cadaver
+root@webdav:~# cadaver http://localhost/webdav/
+
+

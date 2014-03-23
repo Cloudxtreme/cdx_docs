@@ -1,0 +1,26 @@
+
+grant all privileges on *.* to msoneh identified by 'etq2756';
+
+mysql -h etqdevel -P 3308 -u msoneh -p 
+Enter password: etq2756
+
+
+mysql> drop user 'msoneh'@'macklaptop.cardiodx.com';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> drop user 'msoneh'@'%';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> grant all privileges on *.* to msoneh identified by 'etq2756';
+Query OK, 0 rows affected (0.00 sec)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+select user, host from mysql.user where user = 'cchou';
+
+grant select on *.* to 'reader'@'dashboard.cardiodx.com' identified by 'cdxDB$2756';
+flush privileges;
+
+
+
+

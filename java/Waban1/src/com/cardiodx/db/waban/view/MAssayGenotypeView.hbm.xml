@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.MAssayGenotypeView" table="M_ASSAY_GENOTYPE_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.MAssayGenotypeViewId">
+            <key-property name="studyNumber" type="string">
+                <column name="STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="sponsorStudyNumber" type="string">
+                <column name="SPONSOR_STUDY_NUMBER" length="20" />
+            </key-property>
+            <key-property name="crfId" type="string">
+                <column name="CRF_ID" length="30" />
+            </key-property>
+            <key-property name="accessionNumber" type="string">
+                <column name="ACCESSION_NUMBER" length="25" />
+            </key-property>
+            <key-property name="dateReceived" type="date">
+                <column name="DATE_RECEIVED" length="7" />
+            </key-property>
+            <key-property name="geneName" type="string">
+                <column name="GENE_NAME" length="100" />
+            </key-property>
+            <key-property name="finalGenotype" type="string">
+                <column name="FINAL_GENOTYPE" length="50" />
+            </key-property>
+            <key-property name="geneInterpretation" type="string">
+                <column name="GENE_INTERPRETATION" length="100" />
+            </key-property>
+            <key-property name="geneStatus" type="string">
+                <column name="GENE_STATUS" length="20" />
+            </key-property>
+            <key-property name="alleleName" type="string">
+                <column name="ALLELE_NAME" length="50" />
+            </key-property>
+            <key-property name="finalMutation" type="string">
+                <column name="FINAL_MUTATION" length="50" />
+            </key-property>
+            <key-property name="result" type="string">
+                <column name="RESULT" length="50" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="20" />
+            </key-property>
+            <key-property name="comments" type="string">
+                <column name="COMMENTS" length="500" />
+            </key-property>
+            <key-property name="studyProtocolId" type="big_decimal">
+                <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="accessionId" type="big_decimal">
+                <column name="ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneId" type="big_decimal">
+                <column name="GENE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneResultId" type="big_decimal">
+                <column name="GENE_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleId" type="big_decimal">
+                <column name="ALLELE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="alleleResultId" type="big_decimal">
+                <column name="ALLELE_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="assayResultId" type="big_decimal">
+                <column name="ASSAY_RESULT_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="geneInterprDefinitionId" type="big_decimal">
+                <column name="GENE_INTERPR_DEFINITION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

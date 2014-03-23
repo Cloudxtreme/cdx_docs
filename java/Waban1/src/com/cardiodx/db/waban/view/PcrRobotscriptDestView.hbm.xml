@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.PcrRobotscriptDestView" table="PCR_ROBOTSCRIPT_DEST_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.PcrRobotscriptDestViewId">
+            <key-property name="destBarcode" type="string">
+                <column name="DEST_BARCODE" length="20" />
+            </key-property>
+            <key-property name="pcrSetupId" type="big_decimal">
+                <column name="PCR_SETUP_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="templateId" type="big_decimal">
+                <column name="TEMPLATE_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="instrumentId" type="big_decimal">
+                <column name="INSTRUMENT_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

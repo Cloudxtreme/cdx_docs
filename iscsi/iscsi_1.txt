@@ -1,0 +1,39 @@
+file system:
+
+root@kvmsrv4:/iscsi# dd if=private/abc | pv > /dev/null
+4.84GB 0:01:39 [49.9MB/s] [<=>                                                                                                                                                                       ]
+10152384+0 records in
+10152384+0 records out
+5198020608 bytes (5.2 GB) copied, 99.2602 s, 52.4 MB/s
+
+root@kvmsrv4:/iscsi# dd if=private/abc | pv > /dev/null
+4.84GB 0:00:29 [ 170MB/s] [                                                                                                    <=>                                                                   ]
+10152384+0 records in
+10152384+0 records out
+5198020608 bytes (5.2 GB) copied, 29.2206 s, 178 MB/s
+
+
+lvm - mirror
+root@kvmsrv4:/iscsi# dd if=iscsi3/abc | pv > /dev/null
+4.84GB 0:01:39 [49.6MB/s] [<=>                                                                                                                                                                       ]
+10152384+0 records in
+10152384+0 records out
+5198020608 bytes (5.2 GB) copied, 99.8776 s, 52.0 MB/s
+
+root@kvmsrv4:/iscsi# dd if=iscsi3/abc | pv > /dev/null
+4.84GB 0:00:32 [ 153MB/s] [                                                                                                              <=>                                                         ]
+10152384+0 records in
+10152384+0 records out
+5198020608 bytes (5.2 GB) copied, 32.4964 s, 160 MB/s
+
+lvm - stripe
+root@kvmsrv4:/iscsi# dd if=stripe/abc | pv > /dev/null
+5.62GB 0:01:57 [48.9MB/s] [                                                            <=>                                                                                                           ]
+11784576+0 records in
+11784576+0 records out
+6033702912 bytes (6.0 GB) copied, 117.646 s, 51.3 MB/s
+root@kvmsrv4:/iscsi# dd if=stripe/abc | pv > /dev/null
+5.62GB 0:00:33 [ 171MB/s] [                                                                                                                 <=>                                                      ]
+11784576+0 records in
+11784576+0 records out
+6033702912 bytes (6.0 GB) copied, 33.6445 s, 179 MB/s

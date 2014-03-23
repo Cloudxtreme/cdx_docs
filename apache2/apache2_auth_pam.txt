@@ -1,0 +1,111 @@
+apache2 lib auth pam module
+
+http://pam.sourceforge.net/mod_auth_pam/configure.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install apache2
+wajig install libapache2-mod-auth-pam
+wajig install libapache2-mod-auth-sys-group
+
+
+wajig install libpam-ldap
+wajig install ldap-utils
+
+
+cd /etc
+mv ldap.conf ldap.conf.orig
+cat > ldap.conf << EOF
+host ldap
+base dc=cardiodx,dc=com
+ldap_version 3
+pam_password md5
+ssl start_tls
+ssl on
+tls_checkpeer no
+#bind_policy soft
+EOF
+
+
+cp ldap.conf /etc/ldap
+
+#vi /etc/auth-client-config/profile.d/open_ldap
+
+vi /etc/nsswitch.conf
+passwd:         files ldap
+group:          files ldap
+shadow:         files ldap
+
+
+cd /etc/pam.d
+mv common-auth common-auth.orig
+mv common-password common-password.orig
+mv common-account common-account.orig
+mv common-session common-session.orig
+
+cat > common-auth << EOF
+auth       required     pam_env.so
+auth       sufficient   pam_unix.so likeauth nullok
+auth       sufficient   pam_ldap.so use_first_pass
+auth       required     pam_deny.so
+EOF
+
+cat > common-password << EOF
+password   sufficient   pam_unix.so nullok md5 shadow use_authtok
+password   sufficient   pam_ldap.so use_first_pass
+password   required     pam_deny.so
+EOF
+
+cat > common-account << EOF
+account    sufficient   pam_unix.so
+account    sufficient   pam_ldap.so
+account    required     pam_deny.so
+EOF
+
+cat > common-session << EOF
+session    required     pam_limits.so
+session    required     pam_mkhomedir.so skel=/etc/skel/ umask=0077
+session    required     pam_unix.so
+session    optional     pam_ldap.so
+EOF
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cd /var/www/
+mkdir test
+cd test/
+vi index.html
+
+
+vi .htaccess 
+AuthBasicAuthoritative off
+AuthPAM_Enabled on
+AuthType Basic
+AuthName "Please enter your Login/Password"
+require valid-user
+require group linuxusers
+
+
+OR:
+
+>> configure:
+  apache
+  apache_ssl
+  ldap-client
+
+vi default 
+
+	<Directory /var/www/>
+    AuthBasicAuthoritative off
+    AuthPAM_Enabled on
+    AuthType Basic
+    AuthName "System"
+    require valid-user
+    require group "Domain Users" 
+
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+

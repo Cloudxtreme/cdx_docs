@@ -1,0 +1,24 @@
+
+
+default
+pstn
+
+
+-- Outgoing:
+grep 2010-10 Master.csv | awk -F, '{print $4,$3}' | grep default | grep -v "\"27" | grep -v "\"09" | grep -v "\"100" | grep -v "\"139[123]" | wc -l
+
+-- Internal
+grep 2010-10 Master.csv | awk -F, '{print $4,$2,$3}' | grep default | grep "\"[02][79][0-9][0-9]\" \"[02][79][0-9][0-9]\"" | wc -l
+
+
+-- Incoming
+calls:
+grep 2010-10 Master.csv | awk -F, '{print $4,$3}' | grep -v fax | grep pstn| grep "\"[02][79]" | wc -l
+grep 2010-10 Master.csv | awk -F, '{print $4,$2,$3}' | grep -v fax | grep customer-service | grep -v "\"\"" | grep -v "\"s\"" | wc -l
+grep 2010-10 Master.csv | awk -F, '{print $4,$3}' | grep -v fax | grep conferences | wc -l
+
+
+fax:
+grep 2010-10 Master.csv | awk -F, '{print $4,$3}' | grep fax | wc -l
+for i in pstn compass customer-service faxextensions reimbursement; do echo $i; grep 2010-10 Master.csv | awk -F, '{print $4,$2,$3}' | grep fax | grep $i | wc -l; done
+

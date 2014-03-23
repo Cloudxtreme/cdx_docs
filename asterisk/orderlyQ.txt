@@ -1,0 +1,84 @@
+asterisk queue report
+
+http://www.orderlyq.com/statistics.html?hasAsterisk=true
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig install mysql-server-5.0 
+wajig install sun-java6-jdk 
+wajig install tomcat5.5
+wajig install libmysql-java
+
+
+cd /etc/default
+vi tomcat5.5
+TOMCAT5_SECURITY=no
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wget http://www.orderlyq.com/orderlystatsse/orderlystatsse1.6.1f.tar.gz
+cd /usr/share/tomcat5.5/webapps
+tar zxvf /root/orderlystatsse1.6.1f.tar.gz 
+--cd /usr/share/tomcat5.5/webapps/orderlystatsse/WEB-INF
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mysql -u root -p
+(the internal pwrd)
+
+CREATE DATABASE orderlystats;
+GRANT ALL PRIVILEGES ON orderlystats.* TO 'orderlystats'@'localhost' IDENTIFIED BY 'orderlystats' WITH GRANT OPTION;
+
+mysql -u orderlystats -p 
+
+vi database_mysql.sql (and add the following line)
+use orderlystats;
+
+mysql -u orderlystats -p < database_mysql.sql 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/init.d/tomcat5.5 (Add: /usr/share/java/mysql.jar)
+JSVC_CLASSPATH="/usr/share/java/commons-daemon.jar:$CATALINA_HOME/bin/bootstrap.jar:/usr/share/java/mysql.jar"
+
+/etc/init.d/tomcat5.5 restart
+
+
+http://asterisk:8180/orderlystatsse
+
+vi /var/lib/tomcat5.5/webapps/orderlystatsse/WEB-INF/OrderlyStatsSE.xml 
+
+<DatabaseService name="db"
+	url="jdbc:mysql://localhost/orderlystats"
+	driver="com.mysql.jdbc.Driver"
+	username="orderlystats"
+	password="orderlystats" />
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vi /etc/asterisk/manager.conf
+[general]
+enabled = yes
+port = 5038
+bindaddr = 0.0.0.0
+displayconnects = yes
+
+[orderlystats] 
+writetimeout = 10000
+secret = orderlypwd
+deny=0.0.0.0/0.0.0.0
+permit=127.0.0.1/255.255.255.255 
+read = system,call,log,verbose,agent,user,config,dtmf,reporting,cdr,dialplan
+write = system,call,agent,user,config,command,reporting,originate
+
+
+http://asterisk:8180/orderlystatsse/signin.jsp
+cchou2008@cardiodx.com/internal password
+
+
+configure apache through ssl
+
+https://asterisk.cardiodx.com/orderlystatsse/signin.jsp
+
+
+
+

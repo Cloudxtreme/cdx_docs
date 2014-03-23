@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.DnaDestructionSample" table="DNA_DESTRUCTION_SAMPLE" schema="DNALIMS">
+        <comment>Used to store details regarding subjects whose Sample Destruction Request generated.</comment>
+        <id name="destructionSampleId" type="big_decimal">
+            <column name="DESTRUCTION_SAMPLE_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="dnaDestructionRequest" class="com.cardiodx.db.waban.table.DnaDestructionRequest" fetch="select">
+            <column name="DESTRUCTION_REQUEST_ID" precision="22" scale="0" not-null="true">
+                <comment>Request Identifier and Foreign Key to DNA_DESTRUCTION_SAMPLE table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="sampleTable" class="com.cardiodx.db.waban.table.SampleTable" fetch="select">
+            <column name="SAMPLE_ID" precision="22" scale="0" not-null="true">
+                <comment>SAMPLE_ID and Foreign Key to SAMPLE table</comment>
+            </column>
+        </many-to-one>
+        <property name="reasonOfRequest" type="string">
+            <column name="REASON_OF_REQUEST" length="50">
+                <comment>Reason for Destruction request.</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record last modified.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

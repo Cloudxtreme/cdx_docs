@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.CaseStatus" table="CASE_STATUS" schema="DNALIMS">
+        <id name="caseStatusId" type="big_decimal">
+            <column name="CASE_STATUS_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="testAccession" class="com.cardiodx.db.waban.table.TestAccession" fetch="select">
+            <column name="TEST_ACCESSION_ID" precision="22" scale="0">
+                <comment>Test Accession Identifier</comment>
+            </column>
+        </many-to-one>
+        <property name="status" type="string">
+            <column name="STATUS" length="20">
+                <comment>Checklist status for a case. Valid statuses INPROCESS and COMPLETED</comment>
+            </column>
+        </property>
+        <set name="caseHistories" table="CASE_HISTORY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CASE_STATUS_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CaseHistory" />
+        </set>
+    </class>
+</hibernate-mapping>

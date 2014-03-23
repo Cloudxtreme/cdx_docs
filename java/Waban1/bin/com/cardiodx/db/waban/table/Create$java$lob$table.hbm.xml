@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Create$java$lob$table" table="CREATE$JAVA$LOB$TABLE" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.table.Create$java$lob$tableId">
+            <key-property name="name" type="string">
+                <column name="NAME" length="700" />
+            </key-property>
+            <key-property name="lob" type="blob">
+                <column name="LOB" />
+            </key-property>
+            <key-property name="loadtime" type="date">
+                <column name="LOADTIME" length="7" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

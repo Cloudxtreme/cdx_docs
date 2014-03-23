@@ -1,0 +1,4 @@
+
+mysql> show databases;
+
+show tables;

@@ -1,0 +1,43 @@
+acl getfacl setfacl Unix Access Control Lists
+
+http://www.cs.indiana.edu/Facilities/FAQ/General/ACL.html
+
+
+getfacl reporting/
+
+mkdir foo
+setfacl -R -m default:user::rwx,default:group::r-x,default:group:it:rwx,default:mask::rwx,default:other::r-x foo
+chmod 2775 foo
+chgrp it foo
+
+setfacl -R -m user::rwx,group::rwx,mask:rwx,other:r-x,default:user::rwx,default:group::rwx,default:mask:rwx,default:other:r-x foo
+
+
+setfacl -k foo
+
+setfacl -m g:clinical:r-x reporting
+setfacl -m u:tchang:rwx Purchase\ Orders/
+
+setfacl -m u:kjowe:r-x reporting/
+getfacl reporting/
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+setfacl -m user:cchou:r-x test
+setfacl -m group:clin_doctors:r-x test
+
+getfacl test
+# file: test
+# owner: root
+# group: clin_ops
+user::rwx
+user:cchou:r-x
+group::rwx
+group:clin_doctors:r-x
+mask::rwx
+other::---
+
+
+-- remove 
+setfacl -x user:cchou: test
+

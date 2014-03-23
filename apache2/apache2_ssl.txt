@@ -1,0 +1,47 @@
+apache ssl
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install apache2
+
+cd /etc/apache2
+mkdir ssl
+cd ssl
+
+copy certificates, keys, etc.
+  - wildcard.cardiodx.com.crt
+  - wildcard.cardiodx.com.key
+  - gd_bundle.crt
+  from pdc:/data/samba/groups/it/Private/ssl/wildcard to ssl dir
+
+chown www-data *
+chmod 660 *
+
+cd /etc/apache2/site-available
+cp default ssl
+vi ssl 
+
+vi ssl
+
+<VirtualHost *:80>
+	RewriteEngine   on
+	RewriteCond     %{SERVER_PORT} ^80$
+	RewriteRule     ^(.*)$ https://%{SERVER_NAME}$1 [L,R]
+</VirtualHost>
+
+NameVirtualHost *:443
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www
+  SSLEngine on
+  SSLCertificateFile /etc/apache2/ssl/wildcard.cardiodx.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/wildcard.cardiodx.com.key
+  SSLCertificateChainFile /etc/apache2/ssl/gd__bundle.crt
+</VirtualHost>
+
+
+a2ensite ssl
+a2enmod rewrite
+a2enmod ssl
+
+/etc/init.d/apache restart
+

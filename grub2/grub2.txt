@@ -1,0 +1,62 @@
+https://help.ubuntu.com/community/Grub2#Reinstalling%20GRUB%202
+
+
+vi /etc/default/grub
+
+update-grub
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+boot from rescueCD 1.3.4
+
+pvcreate /dev/sda2
+vgcreate vg0 /dev/sda2
+lvcreate -L+5G -n root vg0
+lvcreate -L+2G -n swap vg0
+
+mkfs.xfs -f /dev/vg0/root
+mkfs.swap -f /dev/vg0/swap
+mkfs.ext4 /dev/sda1
+
+mkdir newroot
+mount /dev/vg0/root newroot
+cd newroot
+mkdir boot
+mount /dev/sda1 boot
+
+~~~~~~~~~~~
+on root@storage1
+icd images
+scp ubuntu910-64_server.tar.gz root@10.10.37.123:/root/newroot
+~~~~~~~~~~~
+
+tar zxvf ubuntu910-64_server.tar.gz 
+rm ubuntu910-64_server.tar.gz 
+
+mount -o bind /dev /root/newroot/dev
+mount -t proc /proc /root/newroot/proc
+chroot newroot bash
+
+modify /etc/fstab to:
+   remove uuid
+   and change ext3 to ext4
+/dev/sda1            /boot           ext4    defaults        0       2
+
+vi /etc/default/grub
+GRUB_HIDDEN_TIMEOUT=3
+GRUB_HIDDEN_TIMEOUT_QUIET=false
+GRUB_CMDLINE_LINUX_DEFAULT="splash"
+GRUB_DISABLE_LINUX_UUID=true
+
+update-grub
+
+exit
+
+grub2-install --root-directory=/root/newroot /dev/sda
+grub2-install --root-directory=/root/newroot /dev/sdb
+
+reboot
+
+
+blkid /dev/md0
+/dev/md0: UUID="0d14ad7f-5981-492a-96c9-2fddba956fa9" TYPE="ext4" 
+

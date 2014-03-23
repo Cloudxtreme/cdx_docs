@@ -1,0 +1,67 @@
+
+Should get OpenClinica.zip
+  OpenClinica-ws.zip only has the web services (not the user interface)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  381  wget http://svn.akazaresearch.com/oc/software/OpenClinica-3.1/linux/apache-tomcat-6.0.32.tar.gz 
+  376  wget http://svn.akazaresearch.com/oc/software/OpenClinica-3.1/linux/jdk-6u24-linux-x64.bin
+  -- wget http://svn.akazaresearch.com/oc/software/OpenClinica-3.1/linux/postgresql-8.4.1-1-linux-x64.bin
+
+-- java
+  390  chmod 755 jdk-6u24-linux-x64.bin
+  391  ./jdk-6u24-linux-x64.bin
+  393  mv jdk1.6.0_24 /usr/local/
+  394  cd /usr/local/
+  397  ln -s jdk1.6.0_24/ java
+
+-- tomcat
+  400  tar zxvf apache-tomcat-6.0.32.tar.gz 
+  402  mv apache-tomcat-6.0.32 /usr/local/
+  403  cd /usr/local/
+  406  ln -s apache-tomcat-6.0.32/ tomcat
+
+  407  adduser tomcat
+
+  409  cd /usr/local/tomcat
+  411  mkdir oldwebapps
+  412  mv webapps/* oldwebapps/
+
+-- postgresql
+  wajig install postgresql
+  su - postgres
+  psql
+  postgres=# CREATE ROLE clinica LOGIN ENCRYPTED PASSWORD 'clinica' SUPERUSER NOINHERIT NOCREATEDB NOCREATEROLE;
+  postgres=# CREATE DATABASE  openclinica WITH ENCODING='UTF8' OWNER=clinica;
+
+-- OpenClinica
+  333  wajig install unzip
+  335  unzip OpenClinica-3.1.1.zip 
+  236  cd OpenClinica/distribution
+  421  cp OpenClinica.war /usr/local/tomcat/webapps
+
+  388  chown -R tomcat /usr/local/tomcat/*
+  390  chown -R tomcat /usr/local/apache-*
+
+cd /usr/local/tomcat/webapps/OpenClinica/WEB-INF/classes
+vi datainfo.properties
+adminEmail=admin@cardiodx.com
+mailHost=smtp.cardiodx.com
+rssUrl=http://clinicalresearch.wordpress.com/feed/
+rssMore=http://clinicalresearch.wordpress.com/
+
+
+  442  cp tomcatd test
+  444  ./test start
+
+cd /usr/local/tomcat/logs
+tail -20f localhost.2011-11-21.log & 
+tail -20f catalina.out & 
+
+http://openclinica311.cardiodx.com:8080/OpenClinica
+	root/12345678
+---> cdx2500. (has a dot at the end!!)
+
+
+
+
+

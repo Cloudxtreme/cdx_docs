@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<% Admin::Vtype.display_columns.each do |column_name| %>
+  <p>
+  <b><%= column_name.titleize%>: </b>
+    <%= Admin::Vtype.get_final_value(column_name, @object[column_name]) %>
+  </p>
+<% end %>
+
+<%= link_to 'List', admin_vtypes_path %> |
+<%= link_to 'Edit', edit_admin_vtype_path(@object) %>
+
+<% Admin::Vtype.my_child_objects.each do |child_object| %>
+
+  <% dtable = child_object.name.gsub(/::/, '_') %>
+
+  <script type="text/javascript">
+    $(document).ready( function () {
+      $(<%= "'##{dtable}'"%>).dataTable();
+    } );
+  </script>
+
+  <h1><%= child_object.base_class %></h1>
+
+  <table cellpadding="0" cellspacing="0" border="0" class="display" id="<%= dtable%>">
+    <thead>
+      <tr>
+        <% child_object.display_columns.each do |column_name| %>
+          <th width="20%"><%= column_name.titleize%></th>
+        <% end %>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% child_object.where("#{Admin::Vtype.me_as_foreign_key} = #{@object.id}").each do |cobj| %>
+      <tr>
+        <% child_object.display_columns.each do |column_name| %>
+          <td>
+            <% if child_object.is_foreign_key?(column_name) %>
+              <a href='<%= child_object.find_associate_obj(column_name).object_path(cobj[column_name]) %>'><%= child_object.get_final_value(column_name, cobj[column_name])%></a>
+            <% else %>
+              <%= child_object.get_final_value(column_name, cobj[column_name])%>
+            <% end %>
+          </td>
+        <% end %>
+        <td><%= link_to 'Show', cobj %>/<%= link_to 'Edit', child_object.edit_url(cobj[:id]) %>/<%= link_to 'Destroy', cobj, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table><br>
+  <%= link_to 'List', child_object.index_url %> |
+  <%= link_to 'New', "#{child_object.new_url}?#{Admin::Vtype.me_as_foreign_key}=#{@object.id}"%>
+<% end %>
+

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.Instrument" table="INSTRUMENT" schema="DNALIMS">
+        <comment>Information about instruments used in procedures.</comment>
+        <id name="instrumentId" type="big_decimal">
+            <column name="INSTRUMENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="testingFacility" class="com.cardiodx.db.waban.table.TestingFacility" fetch="select">
+            <column name="TESTING_FACILITY_ID" precision="22" scale="0">
+                <comment>Test facility identifier and foreign key to the TESTING_FACILITY table.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="ORGANIZATION_ID" precision="22" scale="0">
+                <comment>The foreign key to the vendor / supplier for each instrument.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="instrumentNumber" type="string">
+            <column name="INSTRUMENT_NUMBER" length="20">
+                <comment>Number or name alias for the instrument.</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="30">
+                <comment>Current status of the instrument</comment>
+            </column>
+        </property>
+        <property name="type" type="string">
+            <column name="TYPE" length="50">
+                <comment>Type of instrument.</comment>
+            </column>
+        </property>
+        <property name="objectClass" type="string">
+            <column name="OBJECT_CLASS" length="100">
+                <comment>The class of objects supporting this instrument.</comment>
+            </column>
+        </property>
+        <property name="instrumentDescription" type="string">
+            <column name="INSTRUMENT_DESCRIPTION" length="100">
+                <comment>Description of the instrument.</comment>
+            </column>
+        </property>
+        <property name="checkoutBy" type="string">
+            <column name="CHECKOUT_BY" length="30">
+                <comment>The user who checked out the INSTRUMENT</comment>
+            </column>
+        </property>
+        <property name="isStorage" type="big_decimal">
+            <column name="IS_STORAGE" precision="22" scale="0" />
+        </property>
+        <property name="dateCheckout" type="date">
+            <column name="DATE_CHECKOUT" length="7">
+                <comment>The date the INSTRUMENT was checked out.</comment>
+            </column>
+        </property>
+        <property name="dateScheduled" type="date">
+            <column name="DATE_SCHEDULED" length="7">
+                <comment>Date instrument is scheduled for maintenance</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created this record.</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date this record was created.</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was last modified.</comment>
+            </column>
+        </property>
+        <set name="seqSetups" table="SEQ_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SeqSetup" />
+        </set>
+        <set name="assayResultLoads" table="ASSAY_RESULT_LOAD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign Key to Instrument ID</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssayResultLoad" />
+        </set>
+        <set name="concentrationAdjustments" table="CONCENTRATION_ADJUSTMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument identifier and foreign key to the INSTRUMENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ConcentrationAdjustment" />
+        </set>
+        <set name="sampleInstrumentAssocs" table="SAMPLE_INSTRUMENT_ASSOC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.SampleInstrumentAssoc" />
+        </set>
+        <set name="instrumentParams" table="INSTRUMENT_PARAM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Instrument identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InstrumentParam" />
+        </set>
+        <set name="assignInstruments" table="ASSIGN_INSTRUMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Instrument identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.AssignInstrument" />
+        </set>
+        <set name="pcrCleanups" table="PCR_CLEANUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrCleanup" />
+        </set>
+        <set name="instrumentSetups" table="INSTRUMENT_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true" unique="true">
+                    <comment>Instrument Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InstrumentSetup" />
+        </set>
+        <set name="pcrSetups" table="PCR_SETUP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>Instrument Identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.PcrSetup" />
+        </set>
+        <set name="standardCurves" table="STANDARD_CURVE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument identifier and primary key.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.StandardCurve" />
+        </set>
+        <set name="containerBatchs" table="CONTAINER_BATCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.ContainerBatch" />
+        </set>
+        <set name="cpRuns" table="CP_RUN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.CpRun" />
+        </set>
+        <set name="traceQcs" table="TRACE_QC" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument identifier</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.TraceQc" />
+        </set>
+        <set name="measurements" table="MEASUREMENT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0">
+                    <comment>Instrument identifier and foreign key to the INSTRUMENT table.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.Measurement" />
+        </set>
+        <set name="instrumentPrograms" table="INSTRUMENT_PROGRAM" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSTRUMENT_ID" precision="22" scale="0" not-null="true">
+                    <comment>instrument identifier.</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.InstrumentProgram" />
+        </set>
+    </class>
+</hibernate-mapping>

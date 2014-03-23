@@ -1,0 +1,5 @@
+
+ 1603  hadoop job
+ 1602  hadoop job -list
+ 1604  hadoop job -kill job_201012021750_0045
+

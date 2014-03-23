@@ -1,0 +1,42 @@
+
+
+vi pom.xml
+
+Go to:
+    <properties>
+
+and add:
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+change:
+	    <artifactId>jcl104-over-slf4j</artifactId>
+to: 
+      <artifactId>jcl-over-slf4j</artifactId>
+
+comment repositories:
+<!--
+    <repositories>
+				:
+    </repositories>
+-->
+
+
+comment all oracle related
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/usr/tomcat/bin/shutdown.sh 
+
+vi ListCRFServlet.java
+
+mvn compile war:war 
+
+cp /root/MyOpenClinica302/target/OpenClinica-3.0.2.war /usr/tomcat/webapps
+
+rm -rf /usr/tomcat/work/Catalina/localhost/OpenClinica*
+rm -rf /usr/tomcat/webapps/OpenClinica-3.0.2/
+
+/usr/tomcat/bin/shutdown.sh 
+
+https://edc.cardiodx.com/OpenClinica-3.0.2/ListCRF?module=admin
+

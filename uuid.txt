@@ -1,0 +1,8 @@
+hd uuid
+
+http://linux.byexamples.com/archives/321/fstab-with-uuid/
+
+
+udo vol_id /dev/sda1
+
+blkid /dev/sda1

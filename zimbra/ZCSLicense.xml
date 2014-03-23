@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ZimbraLicense verifier="ZV2">
+  <item name="AccountsLimit" value="50"/>
+  <item name="AttachmentConversionEnabled" value="true"/>
+  <item name="BackupEnabled" value="true"/>
+  <item name="CrossMailboxSearchEnabled" value="true"/>
+  <item name="HierarchicalStorageManagementEnabled" value="true"/>
+  <item name="ISyncAccountsLimit" value="50"/>
+  <item name="InstallType" value="trial"/>
+  <item name="IssuedOn" value="20070227025513Z"/>
+  <item name="IssuedToEmail" value="cchou@cardiodx.com"/>
+  <item name="IssuedToName" value="USA"/>
+  <item name="LicenseId" value="a6c63a82-abd0-4797-b1e3-f45cb222fd4a"/>
+  <item name="MAPIConnectorAccountsLimit" value="50"/>
+  <item name="MobileSyncAccountsLimit" value="50"/>
+  <item name="MobileSyncEnabled" value="true"/>
+  <item name="ResellerName" value=""/>
+  <item name="ValidFrom" value="20070226000000Z"/>
+  <item name="ValidUntil" value="20070430160000Z"/>
+  <signature value="4c916821485cc93612bdfe2fdc0034a68861a3507ff59d3fd28f6c58d6338b62d2470405054be50fb4b24707fa8bc9c383fa7ca4b93244c5493f91e435f7a723da81de980ea8d94ec4885be97968ca6af7bc675cc8ae8c71a33d511e117d6c14900583587f99020de35812afb0ae66f19a629f78a4876aa59c7372c08497cb2a020efdfc0d2fb41e36021a42f4c4f889738e122a6197146e3e9bce9f67919b3b73bc0fbcf230df80e02059d5157100b73a943ad287f951d37014d7fa5d397bd82b2da4aaa3ead0891572daf8ce0f53cf997841420ccb97a8496144e007a1bb48ae3bedcf3b9ccc01fa3dcefd2ae0ea8ae4c6b5b5f14aebf0ae55db33cd682425" key="zk1"/>
+</ZimbraLicense>

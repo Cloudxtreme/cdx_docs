@@ -1,0 +1,268 @@
+Ubuntu lucid 10.04 image
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wajig purge landscape-common
+
+sed -ie 's/^#alias/alias/g' /etc/skel/.bashrc
+sed -ie 's/^#alias/alias/g' /root/.bashrc
+sed -ie 's/^#alias/alias/g' /home/cardiodx/.bashrc
+
+cat > /etc/apt/apt.conf <<EOF
+Acquire::http::Proxy "http://proxy.cardiodx.com";
+EOF
+
+cd /etc/apt
+mv sources.list sources.list.orig
+
+cat > sources.list <<EOF
+deb http://mirrors.xmission.com/ubuntu/ lucid main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu/ lucid-updates main restricted universe multiverse
+deb http://mirrors.xmission.com/ubuntu lucid-security main restricted universe multiverse
+
+deb http://us.archive.ubuntu.com/ubuntu/ lucid-backports main restricted universe multiverse
+deb http://archive.canonical.com/ lucid partner
+EOF
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+vi /etc/default/grub
+GRUB_DEFAULT=0
+#GRUB_HIDDEN_TIMEOUT=0
+GRUB_HIDDEN_TIMEOUT_QUIET=false
+GRUB_TIMEOUT="3"
+GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+GRUB_CMDLINE_LINUX=""
+
+update-grub2
+
+reboot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /etc/default
+vi rcS
+VERBOSE=yes
+
+vi console-setup
+VERBOSE_OUTPUT=yes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+export http_proxy=http://proxy.cardiodx.com
+
+   36  route delete default
+   37  route add default gw 10.10.37.2
+   38  route -n
+
+   31  wajig update
+   32  wajig upgrade
+   33  wajig dist-upgrade 
+
+-- if you 32 bit:
+   wajig install linux-server linux-headers-server 
+
+wajig install ntp sysstat build-essential fakeroot deborphan subversion sysv-rc-conf \
+	vim-gnome lvm2 xfsprogs ntp vim-nox -y
+
+--openjdk-6-jre -y
+--wajig install sun-java6-bin sun-java6-jdk sun-java6-jre -y
+wajig install openjdk-6-jdk openjdk-6-jre -y
+
+wajig install compizconfig-settings-manager gstreamer0.10-plugins-good gstreamer0.10-plugins-bad \
+		gstreamer0.10-plugins-bad-multiverse \
+    gstreamer0.10-plugins-ugly gstreamer0.10-plugins-ugly-multiverse -y gstreamer0.10-ffmpeg \
+		flashplugin-nonfree
+
+wajig install chromium-browser -y
+
+   59  wajig list | grep nvidia
+ii  nvidia-current                195.36.15-0ubuntu1  
+ii  nvidia-current-modaliases     195.36.15-0ubuntu1 
+ii  nvidia-settings               195.36.08-0ubuntu1 
+
+reboot
+
+   77  wajig clean
+   78  wajig auto-remove 
+
+ldap:
+~~~~~
+
+wajig install libpam-ldapd libnss-ldapd libpam-foreground -y
+  group,passwd,shadow
+
+cat > /etc/nslcd.conf <<EOF
+uid nslcd
+gid nslcd
+uri ldap://ldap.cardiodx.com
+base dc=cardiodx,dc=com
+ssl start_tls
+tls_reqcert allow
+EOF
+
+/etc/init.d/nslcd restart
+
+
+pam_mount:
+~~~~~~~~~~
+# wajig install libpam-mount smbfs acl -y
+
+# vi /etc/security/pam_mount.conf.xml
+
+                <!-- Volume definitions -->
+<!-- sgrp="linuxusers" does not seem to work -->
+<volume pgrp="Domain Users" fstype="cifs" server="pdc" path="%(USER)" mountpoint="/home/%(USER)/hdrive" />
+<volume pgrp="Domain Users" fstype="cifs" server="pdc" path="groups" mountpoint="/home/%(USER)/gdrive" />
+<volume pgrp="Domain Users" fstype="cifs" server="pdc" path="public" mountpoint="/home/%(USER)/pdrive" />
+
+<cifsmount>mount -t cifs //%(SERVER)/%(VOLUME) %(MNTPT) -o user=%(USER)%(before=\",\" OPTIONS)</cifsmount>
+
+vi /etc/pam.d/common-session
+session optional pam_mkhomedir.so skel=/etc/skel/ umask=0022
+
+visudo
+%linuxadmins ALL=(ALL) ALL
+
+reboot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig isntall postgresql r-base sqlite3 vim-gnome emacs -y
+wajig install virtualbox-ose
+
+cd gdrive/it/software/nx
+wajig install *x86_64.deb
+-- 32 bit
+  wajig install ./nxclient_3.4.0-7_i386.deb ./nxnode_3.4.0-11_i386.deb ./nxserver_3.4.0-12_i386.deb
+
+
+--
+-- ruby
+--
+libhttpclient-ruby1.8
+
+wajig install ruby rdoc irb libyaml-ruby libzlib-ruby ri libopenssl-ruby ruby1.8-dev libldap-ruby1.8 libpgsql-ruby -y
+
+
+wget http://rubyforge.org/frs/download.php/69365/rubygems-1.3.6.tgz
+tar zxvf rubygems-1.3.6.tgz 
+cd rubygems-1.3.6/
+ruby setup.rb 
+ln -s /usr/bin/gem1.8 /usr/bin/gem
+
+gem install rails --no-rdoc --no-ri
+gem install alib bio ensembl-api roo daemons --no-rdoc --no-ri
+gem install ruby-net-ldap ruby-debug slave --no-rdoc --no-ri
+gem install postgres-pr --no-rdoc --no-ri
+gem install mongrel_cluster --no-rdoc --no-ri
+gem install rsruby -- --with-R-dir=/usr/lib/R --with-R-include=/usr/share/R/include --no-rdoc --no-ri
+
+--rjb
+  -- wajig install default-jdk
+  --export JAVA_HOME=/usr/lib/jvm/java-6-sun/
+  export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/
+  gem install rjb --no-rdoc --no-ri
+
+  191??  gem update
+  192  gem list
+
+-- active salesforce
+  501  cd svn/
+  503  svn co svn://svn/datawarehouse/trunk/reports/
+  511  cd reports/
+
+--git clone git://github.com/oldfartdeveloper/activerecord-activesalesforce-adapter.git
+--gem build activerecord-activesalesforce-adapter.gemspec
+gem install activerecord-activesalesforce-adapter-2.2.2.gem
+
+irb
+require 'rubygems'
+gem 'activerecord', '= 2.3.8'
+require 'active_record'
+ActiveRecord::Base.establish_connection(:adapter => 'activesalesforce', :username => 'hub@cardiodx.com', :password => 'test789')
+
+class Account < ActiveRecord::Base; end
+class User < ActiveRecord::Base; end
+
+userid2email = {}
+User.find(:all).each {|u| userid2email[u.id] = u.email}
+accountid2email = {}
+Account.find(:all).each {|acc|
+   accountid2email[acc.account_id__c] = userid2email[acc.owner_id]
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+instaqll oracle instant client (see oracle/instant_client.txt)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- ruby - oci
+gem install ruby-oci8 -v 1.0.4 --no-rdoc --no-ri
+gem install activerecord-oracle-adapter --source http://gems.rubyonrails.org --no-rdoc --no-ri
+
+mkdir svn
+cd svn
+svn co svn://svn/datawarehouse/trunk/etl
+
+irb
+require 'rubygems'
+gem 'ruby-oci8', '=1.0.4'
+# gem 'activerecord', '=2.3.5' OR 2.3.8
+require 'active_record'
+require './etl/waban_model.rb'
+
+db_instance = 'ccllims'
+blacklist_fax_nums = {'2063291814' => 1}
+ActiveRecord::Base.establish_connection(:adapter => 'oracle', 
+                                        :database => "//#{db_instance}/orcl",
+                                        :username => 'warehouse', 
+                                        :password => 'dwhreader')
+
+
+faxnums = Hash.new {|h,k| h[k] = {'count' => 0, 'clinic' => ''}}
+cfa = CdxFaxAttempt.find(:all, :conditions => "fax_status = 'SUCCESS' and fax_number != 'MANUAL'")
+
+NOTE: works for barbaradesktop1 w/ 1) LD_LIBRARY_PATH defined 2) ruby-oci8 =1.0.4 
+      doesn't work on chialindesktop w/ ruby-oci8 =2.0.4
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- other gems
+--
+gem install actionwebservice --no-rdoc --no-ri
+gem install activesalesforce --no-rdoc --no-ri
+gem install cached_model --no-rdoc --no-ri
+gem install camping --no-rdoc --no-ri
+gem install ferret --no-rdoc --no-ri
+gem install GData --no-rdoc --no-ri
+gem install hoe --no-rdoc --no-ri
+gem install hpricot --no-rdoc --no-ri
+gem install linecache --no-rdoc --no-ri
+gem install markaby --no-rdoc --no-ri
+gem install memcache-client --no-rdoc --no-ri
+gem install metaid --no-rdoc --no-ri
+gem install net-sftp --no-rdoc --no-ri
+gem install net-ssh --no-rdoc --no-ri
+gem install parseexcel --no-rdoc --no-ri
+gem install ruby-debug-ide --no-rdoc --no-ri
+gem install ruby-hl7 --no-rdoc --no-ri
+gem install ruby-prof --no-rdoc --no-ri
+gem install rubyforge --no-rdoc --no-ri
+gem install rubygems-update --no-rdoc --no-ri
+gem install rubyzip --no-rdoc --no-ri
+gem install slave --no-rdoc --no-ri
+gem install ZenTest --no-rdoc --no-ri
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wget http://labs.adobe.com/downloads/flashplayer10_64bit.html 
+
+wajig purge flashplugin-installer flashplugin-nonfree
+
+not needed?
+--rm -rf /usr/lib/mozilla/plugins/*flash*
+--rm -rf ~/.mozilla/plugins/*flash*
+--rm -rf /usr/lib/firefox/plugins/*flash*
+--rm -rfd /usr/lib/nspluginwrapper
+
+cp libflashplayer.so /usr/lib/mozilla/plugins
+
+

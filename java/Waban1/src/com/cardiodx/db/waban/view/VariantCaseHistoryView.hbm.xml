@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:55 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.view.VariantCaseHistoryView" table="VARIANT_CASE_HISTORY_VIEW" schema="DNALIMS">
+        <composite-id name="id" class="com.cardiodx.db.waban.view.VariantCaseHistoryViewId">
+            <key-property name="checklistId" type="big_decimal">
+                <column name="CHECKLIST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="procedureName" type="string">
+                <column name="PROCEDURE_NAME" length="20" />
+            </key-property>
+            <key-property name="user" type="string">
+                <column name="USER" length="30" />
+            </key-property>
+            <key-property name="dateAnalyzed" type="date">
+                <column name="DATE_ANALYZED" length="7" />
+            </key-property>
+            <key-property name="lastCol" type="java.lang.Character">
+                <column name="LAST_COL" length="0" />
+            </key-property>
+            <key-property name="testAccessionId" type="big_decimal">
+                <column name="TEST_ACCESSION_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

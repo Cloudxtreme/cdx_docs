@@ -1,0 +1,2 @@
+
+http://www.ops.ietf.org/dns/dynupd/secure-ddns-howto.html

@@ -1,0 +1,134 @@
+
+vyatta
+
+
+http://www.vyatta.org/forum/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+boot from install cd (vc 5.02)
+  login as vyatta/vyatta
+install-system
+reboot
+
+dmesg | grep eth
+
+  eth0: Intel  (comcast) 			173.13.158.180/28
+  eth1: Intel  (xo)						67.95.201.198/27
+  eth2: Tigon3 
+  eht3: Tigon3 (internal)			10.10.37.2/21
+  eth4: RTL8110s
+  eth5: RTL8110s
+
+
+configure
+
+set interfaces ethernet eth3 address 10.10.37.2/21
+#set service https
+set service ssh
+commit
+exit
+
+
+Use either linux or Windows to connect.  It doesn't work for Mac.
+
+set interfaces ethernet eth0 address 173.13.158.180/28
+set interfaces ethernet eth0 address 173.13.158.181/28
+set interfaces ethernet eth1 address 67.95.201.198/27
+
+set system host-name vyatta
+set system domain-name cardiodx.com
+set system name-server 10.10.37.21
+set system time-zone US/Pacific 
+commit 
+exit
+
+reboot
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- load balancing
+--
+
+set protocols static route 0.0.0.0/0 next-hop 173.13.158.190
+set protocols static route 0.0.0.0/0 next-hop 67.95.201.193
+commit
+
+set load-balancing wan interface-health eth0 failure-count 5
+set load-balancing wan interface-health eth0 nexthop 173.13.158.190
+set load-balancing wan interface-health eth0 ping 74.125.19.104
+
+set load-balancing wan interface-health eth1 failure-count 5
+set load-balancing wan interface-health eth1 nexthop 67.95.201.193
+set load-balancing wan interface-health eth1 ping 74.125.19.104
+
+set load-balancing wan rule 10 inbound-interface eth3
+
+set load-balancing wan rule 10 interface eth0 weight 5
+set load-balancing wan rule 10 interface eth1 weight 1
+commit
+
+
+show load-balancing
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- not needed???
+set service nat rule 1 source address 10.10.32.0/21
+set service nat rule 1 outbound-interface eth0
+set service nat rule 1 type masquerade
+
+set service nat rule 2 source address 10.10.32.0/21
+set service nat rule 2 outbound-interface eth1
+set service nat rule 2 type masquerade
+
+commit
+show service nat
+
+set firewall name in_out rule 1 action accept
+set firewall name in_out rule 1 source address 10.10.32.0/21
+set interfaces ethernet eth0 firewall out name in_out
+set interfaces ethernet eth1 firewall out name in_out
+set interfaces ethernet eth3 firewall in name in_out
+
+show firewall name in_out
+
+
+set firewall name allow_established
+set firewall name allow_established rule 10
+set firewall name allow_established rule 10 action accept
+set firewall name allow_established rule 10 state established enable
+
+set interfaces ethernet eth0 firewall in name allow_established
+set interfaces ethernet eth0 firewall local name allow_established
+set interfaces ethernet eth1 firewall in name allow_established
+set interfaces ethernet eth1 firewall local name allow_established
+
+
+delete interfaces ethernet eth4
+delete interfaces ethernet eth5
+set interfaces ethernet eth4 mac 00:22:3f:ef:c9:97
+set interfaces ethernet eth5 mac 00:22:3f:ef:c2:f2
+
+delete interfaces ethernet eth0
+delete interfaces ethernet eth1
+set interfaces ethernet eth0 address 173.13.158.180/28 
+set interfaces ethernet eth0 mac 00:15:17:be:ee:76
+set interfaces ethernet eth1 address 67.95.201.198/27 
+set interfaces ethernet eth1 mac 00:15:17:be:ee:77
+
+
+set firewall name FWTEST-1 rule 1 action reject
+set firewall name FWTEST-1 rule 1 source address 172.16.0.26
+set interfaces ethernet eth0 firewall in name FWTEST-1
+show firewall FWTEST-1
+
+
+
+
+
+
+
+
+
+

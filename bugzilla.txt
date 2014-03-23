@@ -1,0 +1,110 @@
+bugzilla 
+http://www.bugzilla.org/docs/3.0/html/
+
+addons:
+http://wiki.mozilla.org/Bugzilla:Addons#Skins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install mysql-server mysql-client
+
+UPDATE user SET password = password('cdxBugzilla') WHERE user = 'root';
+FLUSH PRIVILEGES;
+
+mysql -u root -p 
+mysql> show databases;
+
+DELETE FROM user WHERE user = '';
+FLUSH PRIVILEGES;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wajig install bugzilla
+
+it@cardiodx.com
+Bugzilla Admin
+cdxBugzilla
+(use the maintainer's config)
+
+   dbconfig-common
+
+/usr/share/bugzilla/lib/checksetup.pl --check-modules
+
+~~~~~~~~~~~~~~~~~~~
+Use wajit (not cpan)!!!
+
+-- PatchReader will not be installed
+wajig install libgd-gd2-perl libchart-perl libxml-twig-perl libgraphics-magick-perl libgd-graph-perl libgd-text-perl libtemplate-plugin-gd-perl libhtml-scrubber-perl perlmagick 
+
+wajig install libapache2-mod-perl2
+
+cd /etc/apache2
+vi apache2.conf
+
+vi default
+ <Directory /var/www/html/bugzilla>
+    AddHandler cgi-script .cgi
+    Options +Indexes +ExecCGI
+    DirectoryIndex index.cgi
+    AllowOverride Limit
+    </Directory>
+
+
+http://bugzilla/cgi-bin/bugzilla/index.cgi
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- ldap
+--
+
+wajig install ldap-utils 
+wajig install libnet-ldap-server-perl
+wajig install libnet-ssleay-perl
+wajig install libio-socket-ssl-perl
+
+
+cd /etc
+mv /etc/ldap.conf /etc/ldap.conf.orig
+cat > /etc/ldap.conf << EOF
+host ldap
+base dc=cardiodx,dc=com
+ldap_version 3
+pam_password md5
+ssl start_tls
+ssl on
+tls_checkpeer no
+#bind_policy soft
+EOF
+
+
+ldapsearch -Z -h ldap -x -b "dc=cardiodx,dc=com" "(uidNumber=0)"
+ldapsearch -Z -h ldap -x -b "dc=cardiodx,dc=com" "(uidNumber=0)" gecos
+
+
+vi /usr/share/perl5/Bugzilla/Auth/Verify/LDAP.pm
+#    my $LDAPport = "389";  # default LDAP port
+#    if($LDAPserver =~ /:/) {
+#        ($LDAPserver, $LDAPport) = split(":",$LDAPserver);
+#    }
+
+#    my $LDAPconn = Net::LDAP->new($LDAPserver, port => $LDAPport, version => 3);
+    my $LDAPconn = Net::LDAP->new($LDAPserver, version => 3);
+    if(!$LDAPconn) {
+        return (AUTH_ERROR, undef, "connect_failed");
+    }
+
+
+cd /etc/bugzilla
+vi params
+           'LDAPBaseDN' => 'dc=cardiodx,dc=com',
+           'LDAPbinddn' => '',
+           'LDAPfilter' => '',
+           'LDAPmailattribute' => 'mail',
+           'LDAPserver' => 'ldaps://ldap.cardiodx.com',
+           'LDAPuidattribute' => 'uid',
+
+           'user_verify_class' => 'LDAP',
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+

@@ -1,0 +1,74 @@
+
+gluster multiple export
+
+http://www.gluster.org/docs/index.php/NFS_Like_Standalone_Storage_Server-2
+
+
+--
+-- server
+-- 
+# more glusterfs-multiple.vol
+volume blue
+ type storage/posix               
+ option directory /home/blue      
+end-volume
+
+volume red
+ type storage/posix               
+ option directory /home/red       
+end-volume
+
+volume server
+ type protocol/server
+ option transport-type tcp/server 
+ option client-volume-filename /root/glusterfs/glusterfs-client.vol
+ option volume-filename.blue /root/glusterfs/blue.vol
+ option volume-filename.red /root/glusterfs/red.vol
+ subvolumes blue red
+ option auth.addr.blue.allow *  
+ option auth.addr.red.allow *   
+end-volume
+
+
+# more /root/glusterfs/glusterfs-client.vol
+volume blue
+ type protocol/client
+ option transport-type tcp
+ option remote-host gluster1
+ option remote-subvolume blue     
+end-volume
+
+volume red
+ type protocol/client
+ option transport-type tcp
+ option remote-host gluster1
+ option remote-subvolume red     
+end-volume
+
+
+# more /root/glusterfs/blue.vol
+volume blue
+ type protocol/client
+ option transport-type tcp
+ option remote-host gluster1
+ option remote-subvolume blue       
+end-volume
+
+
+# more /root/glusterfs/red.vol
+volume red
+ type protocol/client
+ option transport-type tcp
+ option remote-host gluster1
+ option remote-subvolume red       
+end-volume
+
+
+
+-- 
+-- client
+-- 
+glusterfs --volfile-server gluster1 --volume-name red /mnt/red/
+glusterfs --volfile-server gluster1 --volume-name blue /mnt/blue/
+
+

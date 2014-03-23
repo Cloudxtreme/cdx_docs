@@ -1,0 +1,5 @@
+http://www.xapian.org/download.php
+
+wget -O- http://www.xapian.org/debian/archive_key.asc|apt-key add -
+
+     sudo apt-get install fakeroot    $ sudo apt-get build-dep xapian-core    $ fakeroot apt-get source -b xapian-core    $ sudo dpkg -i libxapian* xapian-doc* xapian-tools*    $ sudo apt-get build-dep xapian-bindings xapian-omega    $ fakeroot apt-get source -b xapian-bindings xapian-omega    $ sudo dpkg -i xapian-omega*.deb python-xapian*.deb

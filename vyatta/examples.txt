@@ -1,0 +1,124 @@
+
+
+dmesg | grep -i eth
+
+  eth0: Intel  (comcast)      173.13.158.180/28
+  eth1: Intel  (xo)           67.95.201.198/27
+  eth2: Tigon3
+  eht3: Tigon3 (internal)     10.10.37.2/21
+  eth4: RTL8110s
+  eth5: RTL8110s
+
+
+single interface - Comcast
+
+configure
+set system host-name vyatta
+set system domain-name cardiodx.com
+set system name-server 10.10.37.21
+set system login user vyatta authentication plaintext-password 12new$pwd34
+
+set interfaces ethernet eth3 address 10.10.37.2/21
+set interfaces ethernet eth0 address 173.13.158.180/28
+set system gateway-address 173.13.158.190
+show interfaces
+
+set service nat rule 1 source address 10.10.32.0/21
+set service nat rule 1 outbound-interface eth0
+set service nat rule 1 type masquerade
+show service nat
+
+set firewall name ALLOW_ESTABLISHED
+set firewall name ALLOW_ESTABLISHED rule 10
+set firewall name ALLOW_ESTABLISHED rule 10 action accept
+set firewall name ALLOW_ESTABLISHED rule 10 state established enable
+
+set interfaces ethernet eth0 firewall in name ALLOW_ESTABLISHED
+set interfaces ethernet eth0 firewall local name ALLOW_ESTABLISHED
+show firewall
+
+show interface ethernet
+
+commit
+
+save comcast
+/opt/vyatta/etc/config/comcast
+(load comcast)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- source
+set firewall name FWTEST-1 rule 1 action reject
+set firewall name FWTEST-1 rule 1 source address 172.16.0.26
+set interfaces ethernet eth0 firewall in name FWTEST-1
+show firewall FWTEST-1
+
+-- source and dest ip
+set firewall name FWTEST-2 rule 1 action accept
+set firewall name FWTEST-2 rule 1 source address 10.10.30.46
+set firewall name FWTEST-2 rule 1 destination address 10.10.40.101
+set interfaces ethernet eth1 vif 40 firewall out name FWTEST-2
+show firewall FWTEST-2
+
+-- source & dest protocol
+set firewall name FWTEST-3 rule 1 action accept
+set firewall name FWTEST-3 rule 1 source address 10.10.30.46
+set firewall name FWTEST-3 rule 1 protocol tcp
+set firewall name FWTEST-3 rule 1 destination port telnet
+set interfaces ethernet eth1 firewall local name FWTEST-3
+
+-- network to network filter
+set firewall name FWTEST-4 rule 1 action accept
+set firewall name FWTEST-4 rule 1 source address 10.10.40.0/24
+set firewall name FWTEST-4 rule 1 destination address 172.16.0.0/24
+set interfaces ethernet eth1 vif 40 firewall in name FWTEST-4
+
+-- source mac
+set firewall name FWTEST-5 rule 1 action accept
+set firewall name FWTEST-5 rule 1 source mac-address 00:13:ce:29:be:e7
+set interfaces ethernet eth0 firewall in name FWTEST-5
+
+
+-- excluding ip
+set firewall name NEGATED-EXAMPLE rule 10 description "Allow all traffic from LAN except to server 192.168.1.100"
+set firewall name NEGATED-EXAMPLE rule 10 action accept
+set firewall name NEGATED-EXAMPLE rule 10 source address 172.16.1.0/24
+set firewall name NEGATED-EXAMPLE rule 10 destination address !192.168.1.100
+set interfaces ethernet eth0 firewall in name NEGATED-EXAMPLE
+
+
+-- dnat
+set service nat rule 200 destination address <ip-address eth3>
+set service nat rule 200 destination port 80
+set service nat rule 200 inbound-interface eth3
+set service nat rule 200 inside-address address 10.10.11.111
+set service nat rule 200 protocol tcp
+set service nat rule 200 source address 0.0.0.0/0
+set service nat rule 200 type destination 
+
+rule 23 {
+  destination {
+    address 81.65.134.243
+    port 80
+  }
+  inbound-interface eth1
+  inside-address {
+    address 192.168.1.90
+  }
+  protocol tcp
+    source {
+      address 0.0.0.0/0
+    }
+  type destination
+} 
+
+
+
+
+
+set firewall name icmp_request rule 5 action accept
+set firewall name icmp_request rule 5 protocol icmp
+set firewall name icmp_request rule 5 icmp type 8
+set interfaces ethernet eth4 firewall in name icmp_request
+
+
+

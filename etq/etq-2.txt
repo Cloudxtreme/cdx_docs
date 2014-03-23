@@ -1,0 +1,224 @@
+migrate etq from ubuntu 606 to 804
+
+
+clone image from srikar606
+rename the machine name to etqdevel
+dhclient should sent out etq02
+
+
+s/w installed:
+jdk-1_5_0_10-linux-amd64.bin
+jakarta-tomcat-5.0.28.tar.gz
+mysql-5.0.45-linux-i686.tar.gz
+apache-ant-1.7.0-bin.zip (Not used???)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./jdk-1_5_0_10-linux-amd64.bin
+tar zxvf jakarta-tomcat-5.0.28.tar.gz 
+tar zxvf mysql-5.0.45-linux-i686.tar.gz
+unzip apache-ant-1.7.0-bin.zip
+
+mv jdk1.5.0_10/ /usr
+mv jakarta-tomcat-5.0.28/ /usr/tomcat
+mv mysql-5.0.45-linux-i686 /usr/mysql
+mv apache-ant-1.7.0 /usr
+
+groupadd mysql 
+groupadd tomcat
+useradd -g mysql mysql
+useradd -g tomcat tomcat
+
+cd /usr
+chown -R tomcat:tomcat tomcat/
+chown -R mysql:mysql mysql
+
+export JAVA_HOME=/usr/jdk1.5.0_10/
+export PATH=$PATH:/usr/jdk1.5.0_10/bin
+
+
+chown mysql:mysql my-large.cnf 
+chown mysql:mysql mysql -R
+
+apt-get libstdc++
+apt-get install libstdc++
+
+mv mysql-5.0.45-linux-i686 mysql
+
+--libstdc++
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+su - mysql
+cd /usr/mysql
+cp ./support-files/my-large.cnf my.cnf
+./configure
+./bin/mysqladmin -u root password 'cardiodx'
+
+./bin/mysqladmin -uroot -S/tmp/mysql.sock shutdown
+./bin/mysqladmin -uroot -p -S/tmp/mysql.sock shutdown
+
+./bin/mysqld_safe --defaults-file=/usr/mysql/my.cnf &
+
+
+scp root@etqdevel:/home/etq/reliance20080304-1915.zip .
+mkdir reliance
+mv reliance20080304-1915.zip reliance
+cd reliance/
+unzip reliance20080304-1915.zip
+
+./bin/mysql -uroot -S/tmp/mysql.sock -p
+grant all on *.* to 'root'@'localhost' identified by 'cardiodx';
+
+source /home/etq/reliance/MySQLScripts/StartupPatch/Startup-Patch.SQL
+source /home/etq/reliance/MySQLScripts/1-ENGINE_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/2-ENGINE_DATA.SQL;
+source /home/etq/reliance/MySQLScripts/3-DATACENTER_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/4-DATACENTER_DATA.SQL;
+source /home/etq/reliance/MySQLScripts/5-ENGINE_CONSTRAINTS.SQL;
+source /home/etq/reliance/MySQLScripts/6-DATACENTER_CONSTRAINTS.SQL;
+source /home/etq/reliance/MySQLScripts/7-LOOKUPS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/8-LOOKUPS_DATA.SQL;
+source /home/etq/reliance/MySQLScripts/9-LOOKUPS_CONSTRAINTS.SQL;
+source /home/etq/reliance/MySQLScripts/10-REPORTING_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/11-AUDITS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/12-AUDITS_DATA.sql;
+source /home/etq/reliance/MySQLScripts/13-AUDITS_CONSTRAINTS.SQL;
+source /home/etq/reliance/MySQLScripts/14-AUDITSARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/15-CALIBRATION_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/16-CHANGE_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/17-COMPLAINTS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/18-CORRACT_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/19-DELEGATION_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/20-DEVIATION_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/21-TRAINING_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/22-DOCARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/23-DOCWORK_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/24-INCIDENTS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/25-MATRET_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/26-NCMR_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/27-QUALRECS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/28-QUALRECSARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/29-VACATION1_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/30-RISK_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/31-MEETINGS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/32-MSDS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/33-MSDSARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/34-ASPECTS_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/35-ASPECTSARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/36-EMERGENCY_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/37-EMERGENCYARC_SCHEMA.SQL
+source /home/etq/reliance/MySQLScripts/38-MONITORING_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/39-MONITORINGARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/40-REGULATORY_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/41-REGULATORYARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/42-EVALIDATOR_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/43-EVALIDATORARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/44-VALIDATION_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/45-VALIDATIONARC_SCHEMA.SQL;
+source /home/etq/reliance/MySQLScripts/46-PROJECT_SCHEMA.SQL;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd /home/etq/reliance/WAR/Binary/
+cp reliance.war /usr/tomcat/webapps/reliance.war
+
+cd /usr/tomcat/webapps
+mkdir reliance
+mv reliance.war reliance
+cd reliance
+jar xvf reliance.tar
+
+mkdir /usr/files
+mkdir /usr/index
+mkdir /usr/index/reliance_dev
+mkdir /usr/files/reliance_dev
+
+
+cd /usr/tomcat/webapps/reliance/WEB-INF
+copy and untar reliance_dev_props.tar from root@etqdevel
+
+cd /usr/tomcat/webapps/reliance/WEB-INF/classes
+java -classpath . com.etq.util.encryption.EtQEncryptionUtils cardiodx
+177F9DF57BBBE0400F97AB3C4CF3C74B40DB28D960E6ED383CCE724638551D4EB97F3833C5DD3EB98789E5A0AF542FF0783171DF360D03DA
+
+/usr/tomcat/conf/server.xml
+change port from 8080 to 80
+
+vi database.properties 
+  make sure the mysql ports are correct
+
+export PATH=$PATH:/usr/jdk1.5.0_10/bin
+export JAVA_HOME=/usr/jdk1.5.0_10
+
+cd /usr/mysql
+./bin/mysqld_safe --defaults-file=/usr/mysql/my.cnf &
+
+cd /usr/tomcat/bin
+./startup.sh
+
+export PATH=$PATH:/usr/jdk1.5.0_10/bin
+export JAVA_HOME=/usr/jdk1.5.0_10
+
+
+http://etq02/reliance_dev/reliance
+
+login as etqadministrator/etq
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cat my.cnf
+
+[client]
+
+port		= 3306
+socket		= /tmp/mysql.sock
+
+
+
+
+[mysqld]
+port		= 3306
+socket		= /tmp/mysql.sock
+#basedir         = /usr/mysql
+#datadir         = /usr/mysql
+skip-locking
+key_buffer = 256M
+max_allowed_packet = 32M
+max_connections = 1000
+table_cache = 256
+sort_buffer_size = 1M
+read_buffer_size = 1M
+read_rnd_buffer_size = 4M
+myisam_sort_buffer_size = 64M
+thread_cache_size = 8
+query_cache_size= 16M
+sql_mode        = "STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION,PIPES_AS_CONCAT"
+
+thread_concurrency = 8
+
+log-bin=mysql-bin
+server-id	= 1
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[isamchk]
+key_buffer = 128M
+sort_buffer_size = 128M
+read_buffer = 2M
+write_buffer = 2M
+
+[myisamchk]
+key_buffer = 128M
+sort_buffer_size = 128M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+
+

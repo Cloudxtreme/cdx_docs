@@ -1,0 +1,121 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> 
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
+  <meta name="language" content="en-GB" /> 
+  <link href="/templates/cardiodx_about-cardiodx/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" /> 
+  <link rel="stylesheet" href="/templates/css/cardiodx.css" type="text/css" /> 
+  <link rel="stylesheet" href="/templates/css/table.css" type="text/css" /> 
+
+  <script src="//maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=AIzaSyBjyZ4x5W5I_mRU_Xlvl01Mhr3Mq6hUe2o" type="text/javascript"></script>
+    <script type="text/javascript">
+    var map;
+
+    function initialize() {
+      if (GBrowserIsCompatible()) {
+        map = new GMap2(document.getElementById("map_canvas"));
+        map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+        map.setUIToDefault();
+      }
+    }
+    </script>
+
+
+
+    <LINK REL="SHORTCUT ICON" HREF="/favicon.ico" type="image/ico" /> 
+</head>
+
+
+<body onload="initialize()" onunload="GUnload()">
+
+<div id="container"> 
+  <div id="header"></div> 
+ 
+	<div id="main"> 
+		<%
+			class_name = 'about-cardiodx'
+		%>
+		<div id="headbanner" class="research-and-development"> 
+			<div class="custom">
+					<h1>Test App<br>
+							<h1a>CardioDx, Inc.</h1a>
+					</h1>
+			</div> 
+		</div> 
+	</div>
+				 
+	<div id="hmain"> 
+		<div id="subnav"> 
+		<div id="subnav_main"> 
+		<div id="jscal"></div> <!-- for JSCal2-1.9-->
+		<br>
+		<div class="custom"> 
+		<ul>
+			<%
+			@nav_category ? class_category='category' : class_category='category'
+			@nav_today ? class_today='active-nav' : class_today="teamli" 
+			@nav_linav ? class_linav='li-nav' : class_linav="li-nav"
+			@nav_status ? class_status='active-nav' : class_status="teamli" 
+			@nav_batch ? class_batch='active-nav' : class_batch="teamli" 
+			@nav_checklist ? class_checklist='active-nav' : class_checklist="teamli" 
+			@nav_failed ? class_failed='active-nav' : class_failed="teamli" 
+			@nav_legacy ? class_legacy='active-nav' : class_failed="teamli" 
+			@nav_qcfact ? class_qcfact='active-nav' : class_failed="teamli" 
+			@nav_search ? class_search='active-nav' : class_search="teamli" 
+			@nav_report ? class_report='active-nav' : class_report="teamli" 
+			%> 
+			<li class="<%=class_category%>"><b>Sales Operations</b></li>
+			<li class="<%=class_linav%>">
+				<ul>
+					<li class="<%=class_today%>"><a href="/report/daily?study=<%=@study%>&month=<%=@month%>&day=<%=@day%>&year=<%=@year%>">Morning Report</a></li>
+					<li class="<%=class_status%>"><a href="/sample/status?study=<%=@study%>&month=<%=@month%>&day=<%=@day%>&year=<%=@year%>">My Samples</a></li>
+					<li class="<%=class_checklist%>"><a href="/report/checklist?study=<%=@study%>&month=<%=@month%>&day=<%=@day%>&year=<%=@year%>">Something</a></li>
+					<li class="<%=class_search%>"><a href='/search/main?month=<%=@month%>&day=<%=@day%>&year=<%=@year%>'>Search</a></li>
+				</ul>
+			</li>
+<br>
+			<li class="<%=class_category%>"><b>Reports</b></li>
+			<li class="<%=class_linav%>">
+        <ul>
+					<li class="<%=class_qcfact%>"><a href='/qcfact/qc_summary?study=<%=@study%>&month=<%=@month%>&day=<%=@day%>&year=<%=@year%>'>Report1</a></li>
+					<li class="<%=class_qcfact%>"><a href='/qcfact/qc_summary?study=<%=@study%>&month=<%=@month%>&day=<%=@day%>&year=<%=@year%>'>Report2</a></li>
+					<li class="<%=class_qcfact%>"><a href='/qcfact/qc_summary?study=<%=@study%>&month=<%=@month%>&day=<%=@day%>&year=<%=@year%>'>Report3</a></li>
+				</ul>
+			</li>
+<br>
+			<li class="logout"><a href='/user/logout'>Logout</a></li>
+			
+</ul>
+		</li>
+		</div> 
+		</div> 
+		</div> 
+
+		<div id="content"> 
+
+		<% if flash[:notice] %>
+			<div class='notice'>
+				<%=flash[:notice] %></p>
+			<% flash[:notice]=nil %>
+			</div>
+
+		<% end %>
+
+    <!-- ------------------------------------------------- -->
+		<%= yield %>
+    <!-- ------------------------------------------------- -->
+		</div> 
+	</div> 
+				 
+	<br style="clear:both;" /> 
+		<div id="footer"> 
+		<div id="copyright"> 
+			<p><span style="color: #000000;">© 2013 CardioDx, Inc. All rights reserved.</span></p>
+		</div> 
+		</div>
+</div>
+
+</body>
+</html>
+
+

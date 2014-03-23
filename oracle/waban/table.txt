@@ -1,0 +1,18 @@
+
+set linesize 10000
+set pagesize 10000
+
+select 'prompt ' || table_name || ';' || chr(10) || 'select count(1) from ' || table_name || ';' from user_tables 
+where table_name not like '%_R' and table_name not like 'AUD_%' order by table_name;
+
+select 'select max(' || column_name || ') ' || table_name || ' from ' || table_name || ' having max(' || column_name || ') > 10000;' 
+from user_tab_columns 
+where COLUMN_ID= 1
+and data_type = 'NUMBER'
+and table_name not in 
+  (select view_name from user_views)
+and table_name not like '%_R' and table_name not like 'AUD_%' 
+order by table_name;
+
+
+select table_name, column_name, data_type from user_tab_columns where COLUMN_ID= 1 and table_name = 'EXTRACTION_SAMPLE_VIEW';

@@ -1,0 +1,83 @@
+
+
+select c.container_id, cm.type
+from container c, container_map cm
+where c.container_map_id = cm.container_map_id
+and cm.type = 'Plate'
+and rownum < 10;
+
+select c.container_id, cm.*
+from container c, container_map cm
+where c.container_map_id = cm.container_map_id
+and container_id = 'AR013829';
+
+
+select distinct accession_number
+from accession a, sample s, container c
+where a.accession_id = s.accession_id
+and c.container_id = s.container_id
+and c.container_id = 'AR013829';
+
+select distinct accession_number
+from accession a, sample s, container c
+where a.accession_id = s.accession_id
+and c.container_id = s.container_id
+and c.container_id in ()
+
+
+select Freezer_ID, Building, Room, Freezer_Number from Freezer;
+select * from discrete_attribute where attribute_name='CONTAINER_TYPE' order by number_in_sequence;
+
+select type, Container_Map_ID,Container_Columns,Container_Rows from Container_Map;
+
+select * from discrete_attribute where attribute_name='TRAY_PURPOSE' order by number_in_sequence
+Select * from container_display_view where type= 'Tray' order by container_id
+Select * from container_display_view where type= 'Tray' order by container_id
+
+select Container_Map_ID,Container_Columns,Container_Rows from Container_Map where type = 'Plate';
+
+select * from discrete_attribute where attribute_name='PLATE_PURPOSE' order by number_in_sequence
+
+Select * from container_display_view where type= 'Plate' and rownum < 10 order by container_id; 
+
+SELECT CHECKOUT_BY , DATE_CHECKOUT , FREEZER_ID , LOCATION , COMPARTMENT , SHELF , RACK FROM CONTAINER   WHERE CONTAINER_ID =  :1
+SELECT MAX (CS.SHIPPMENT_DATE) FROM CONTAINER_SHIPPED CS   WHERE CS.CONTAINER_ID =  :1
+SELECT ( CM.CONTAINER_ROWS *  CM.CONTAINER_COLUMNS )  FROM CONTAINER_MAP CM , CONTAINER C   WHERE CM.CONTAINER_MAP_ID =  C.CONTAINER_MAP_ID  AND C.CONTAINER_ID =  :1
+SELECT CONTAINER_BATCH_ID FROM (SELECT CRG.CONTAINER_BATCH_ID FROM CONTAINER_REAGENT CRG WHERE CRG.CONTAINER_ID = :B1 UNION ALL SELECT RG.CONTAINER_BATCH_ID FROM REAGENT RG WHERE RG.CONTAINER_ID = :B1 AND RG.CONTAINER_BATCH_ID IS NOT NULL) WHERE ROWNUM = 1
+SELECT CB.CHECKLIST_ID, CB.STEP_TEMPLATE_ID FROM CONTAINER_BATCH CB WHERE CB.CONTAINER_BATCH_ID = :B1
+SELECT PT.PROCEDURE_NAME FROM CHECKLIST C LEFT JOIN PROCEDURE_TEMPLATE PT ON C.PROCEDURE_TEMPLATE_ID = PT.PROCEDURE_TEMPLATE_ID WHERE C.CHECKLIST_ID = :B1
+SELECT FREEZER_NUMBER FROM FREEZER   WHERE FREEZER_ID =  :1
+*** 2011-04-19 16:30:09.829
+Select * from container_display_view where type= 'Plate' order by container_id
+
+
+
+SELECT   c.container_id, c.purpose,
+	       cm.container_rows
+	    || ' Rows * '
+	    || cm.container_columns
+	    || CASE
+		  WHEN UPPER (cm.TYPE) = 'GEL'
+		     THEN ' Lanes'
+		  ELSE ' Columns'
+	       END AS layout,
+	    limspackage.freezer_position (c.container_id) container_location,
+	    limspackage.containerfreespace (c.container_id) freesp,
+	    lims_assay_container.fn_get_assay_plate_checklistid
+					     (c.container_id,
+					      'C'
+					     ) AS checklist_id,
+	    lims_assay_container.fn_get_assay_plate_checklistid
+					   (c.container_id,
+					    'P'
+					   ) AS procedure_name,
+	    Status, Comments, ' ' last_col, c.freezer_id, c.container_map_id,
+	    c.compartment, c.shelf, c.rack, c.LOCATION, c.description,
+	    c.checkout_by, c.date_checkout, c.discarded, c.created_by,
+	    c.date_created, c.modified_by, c.date_modified, c.subsidiary_id,
+	    c.container_condition, cm.TYPE
+FROM container c, container_map cm
+WHERE c.container_map_id = cm.container_map_id
+	AND NVL (c.discarded, 0) = 0
+ORDER BY container_id
+

@@ -1,0 +1,29 @@
+tcpdump -i eth0 | grep -v cchoudesktop
+tcpdump -nq -i eth0 icmp
+
+tcpdump -nq -i eth0 tcp port 80
+
+tcpdump -s 1550 dst 10.168.28.22 and tcp port 22
+
+tcpdump tcp portrange 20-24
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+--
+-- http://danielmiessler.com/study/tcpdump/
+--
+
+tcpdump host 1.2.3.4
+tcpdump src 2.3.4.5 
+tcpdump dst 3.4.5.6
+
+tcpdump net 1.2.3.0/24
+
+tcpdump icmp
+
+tcpdump port 3389
+tcpdump src port 1025 
+tcpdump dst port 389
+
+tcpdump src port 1025 and tcp 
+tcpdump udp and src port 53
+

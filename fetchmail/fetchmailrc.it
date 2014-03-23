@@ -1,0 +1,7 @@
+# more fetchmailrc.it 
+poll 10.10.37.27 proto imap: username trac_it password CardioDx12#$
+mda "cat | /usr/bin/email2trac --project=it"
+#mda "cat "
+idle
+
+

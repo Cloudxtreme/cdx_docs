@@ -1,0 +1,8 @@
+
+http://stackoverflow.com/questions/10762239/enable-load-data-local-infile
+
+root@nppes:/etc/mysql# vi my.cnf 
+
+[mysql]
+local-infile 
+

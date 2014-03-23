@@ -1,0 +1,48 @@
+
+backup:
+	2011-04-24 db_files.tar.gz
+
+set line 3000
+set pagesize 1000
+col location for a40
+
+select substr(limspackage.container_position(s1.sample_id),9) location, s2.sample_tube_id
+from checklist_sample cs, sample s1, sample s2,accession a1,accession a2
+where s1.Sample_ID=cs.Sample_ID
+and s1.accession_id=a1.accession_id
+and s2.Sample_ID=cs.orig_Sample_ID
+and s2.accession_id=a2.accession_id
+and checklist_ID=19531
+order by location;
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In the test instance, create a new rack named v3_and enter the following sample tubes:
+
+(A1)					 T1043311
+(A2)					 TRF45533B
+(A3)					 TRF49108B
+(B1)					 T1042399
+(B2)					 TRF45532B
+(B3)					 TRF49109A
+(C1)					 TRF49129B
+(C2)					 TRF49107A
+(C3)					 TRF49164B
+(D1)					 TRF48908A
+(D2)					 TRF50844B
+(D3)					 TRF50566C
+(E1)					 TRF49122B
+(E2)					 TRF49111A
+(E3)					 TRF40842C
+(F1)					 TRF29810A
+(F2)					 TRF49113B
+(F3)					 TRF40884C
+(G1)					 TRF50843B
+(G2)					 TRF49110A
+(G3)					 TRF40844A
+(H1)					 TRF50150B
+(H2)					 TRF49112A
+(H3)					 TRF44732A
+
+
+

@@ -1,0 +1,42 @@
+http://www.oracle-base.com/articles/10g/auditing-10gr2.php
+
+show parameter audit;
+
+--alter system set audit_trail=os scope=spfile;    
+--alter system set audit_trail=db,extended scope=spfile;    
+alter system set audit_trail=xml,extended scope=spfile;    
+
+shutdown immediate;
+startup;
+
+
+audit select on dnalims.accession_variable_fld_table by access whenever successful;
+audit select on sceschema.versioneddocument by access whenever successful;
+
+noaudit select on dnalims.accession_variable_fld_table;
+noaudit all;
+
+DELETE FROM SYS.AUD$;
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+select count(*) from dnalims.accession_variable_fld_table;
+select max(ACCESSION_ID) from dnalims.accession_variable_fld_table;
+select * from dnalims.accession_variable_fld_table where ACCESSION_ID = 72875;
+
+set pagesize 10000
+set linesize 345
+column username format a10
+column obj_name format a40
+column extended_timestamp format a35
+
+select username,
+       extended_timestamp,
+       obj_name,
+       action_name,
+			 sql_text
+from   dba_audit_trail
+order by timestamp;
+
+

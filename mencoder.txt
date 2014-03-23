@@ -1,0 +1,36 @@
+http://www.mplayerhq.hu/DOCS/HTML/en/menc-feat-enc-libavcodec.html 
+
+
+  155  mencoder predict-020408.wmv -o out.wmv -of lavf  -oac mp3lame -lameopts abr:br=8 -srate 8000 -ovc lavc -lavcopts vcodec=wmv2:vbitrate=250:mbd=2:mv0:trell:v4mv:cbp:last_pred=3 -lavfopts i_certify_that_my_video_stream_does_not_use_b_frames -vf scale=800:600
+  156  man mencoder
+  157  mencoder predict-020408.wmv -o out.wmv -of lavf  -oac mp3lame -lameopts abr:br=8 -srate 8000 -ovc lavc -lavcopts vcodec=msmpegv2:vbitrate=250:mbd=2:mv0:trell:v4mv:cbp:last_pred=3 -lavfopts i_certify_that_my_video_stream_does_not_use_b_frames -vf scale=800:600
+
+
+
+Convert to a smaller size:
+mencoder predict-020408.wmv -o out.wmv -of lavf  -oac mp3lame -lameopts abr:br=8 -srate 8000 -lavcopts vcodec=wmv2 -ovc lavc -vf scale=800:600 -lavfopts i_certify_that_my_video_stream_does_not_use_b_frames
+
+For flash, change mpeg4 to flv.
+
+mencoder 0220.wmv -ffourcc FLV1 -of lavf -ovc lavc -lavcopts vcodec=flv:acodec=mp3:abitrate=56 -srate 22050 -oac mp3lame -lavfopts i_certify_that_my_video_stream_does_not_use_b_frames -o 0220.flv
+
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Wowza
+
+/usr/local/WowzaMediaServerPro
+Install Location:
+  /usr/local/WowzaMediaServerPro
+
+To enter serial number:
+  cd /usr/local/WowzaMediaServerPro/bin
+  ./startup.sh
+WQGRP-X9N9D-TE4E9-HVQWE-9FK9X
+
+
+port: 1935
+
+
+
+generate images from flash
+http://www.entropyfarm.org/software/tricks/

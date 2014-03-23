@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.PgxModifyTemplateComment" table="PGX_MODIFY_TEMPLATE_COMMENT" schema="DNALIMS">
+        <id name="pgxModifyCommentId" type="big_decimal">
+            <column name="PGX_MODIFY_COMMENT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="studyProtocol" class="com.cardiodx.db.waban.table.StudyProtocol" fetch="select">
+            <column name="STUDY_PROTOCOL_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign KEY for STUDY_PROTOCOL</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="pgxGeneId" type="big_decimal">
+            <column name="PGX_GENE_ID" precision="22" scale="0" not-null="true">
+                <comment>Foreign Key for PGX_GENE_ID from PGX_GENE_NARRATIVE_TEMPLATES Table</comment>
+            </column>
+        </property>
+        <property name="modificationComments" type="string">
+            <column name="MODIFICATION_COMMENTS" length="2000">
+                <comment>Modification Comments</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>Created By User Name</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date Created</comment>
+            </column>
+        </property>
+        <property name="fileBlob" type="blob">
+            <column name="FILE_BLOB">
+                <comment>File BLOB</comment>
+            </column>
+        </property>
+        <property name="fileName" type="string">
+            <column name="FILE_NAME">
+                <comment>File Name</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

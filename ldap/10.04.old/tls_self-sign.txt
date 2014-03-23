@@ -1,0 +1,113 @@
+https://help.ubuntu.com/10.04/serverguide/C/openldap-server.html
+  Section "TLS and SSL"
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+wajig install gnutls-bin
+
+
+certtool --generate-privkey > /etc/ssl/private/cakey.pem
+ 
+vi /etc/ssl/ca.info
+cn = CardioDx, Inc.
+ca
+cert_signing_key
+
+certtool --generate-self-signed \
+ --load-privkey /etc/ssl/private/cakey.pem \ 
+ --template  /etc/ssl/ca.info \
+ --outfile /etc/ssl/certs/cacert.pem
+
+
+~~~~~
+certtool --generate-privkey > /etc/ssl/private/slapd_key.pem
+
+vi /etc/ssl/slapd.info
+organization = CardioDx, Inc.
+cn = ldaptest.cardiodx.com
+tls_www_server
+encryption_key
+signing_key
+
+
+certtool --generate-certificate \
+ --load-privkey /etc/ssl/private/slapd_key.pem \
+ --load-ca-certificate /etc/ssl/certs/cacert.pem \
+ --load-ca-privkey /etc/ssl/private/cakey.pem \
+ --template /etc/ssl/slapd.info \
+ --outfile /etc/ssl/certs/slapd_cert.pem
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ldapmodify -Y EXTERNAL -H ldapi:///
+dn: cn=config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ssl/certs/cacert.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/slapd_cert.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/slapd_key.pem
+
+modifying entry "cn=config"
+(Ctrl+D)
+
+
+vi /etc/default/slapd
+SLAPD_SERVICES="ldap:/// ldapi:/// ldaps:///"
+
+--adduser openldap ssl-cert
+--chgrp ssl-cert /etc/ssl/private/slapd_key.pem
+--chmod g+r /etc/ssl/private/slapd_key.pem
+
+adduser openldap 
+chgrp openldap /etc/ssl/private
+chmod 750 /etc/ssl/private
+chgrp openldap *.pem
+chmod 640 *_key.pem
+
+/etc/init.d/slapd restart
+
+
+# netstat -nap | grep slapd
+tcp  0   0 0.0.0.0:636   0.0.0.0:*      LISTEN      7859/slapd      
+tcp  0   0 0.0.0.0:389   0.0.0.0:*      LISTEN      7859/slapd      
+
+
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" "(uidNumber=*)" cn sn -ZZ -d 1
+  [ERROR!!!!!]
+  TLS: peer cert untrusted or revoked (0x42)
+  This is because the gnutls doesn't support CA certificates stored in 
+           a directory (contrary to openssl)
+
+-- 
+-- (Temp) Fix: hardcod CA-Cert in ldap.conf
+--
+vi /etc/ldap/ldap.conf
+BASE   dc=cardiodx,dc=com
+URI    ldap://ldaptest.cardiodx.com ldaps://ldaptest.cardiodx.com
+TLS_CACERT /etc/ssl/certs/cacert.pem   
+
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" "(uidNumber=*)" cn sn -ZZ
+ldapsearch -xLLL -h ldaptest.cardiodx.com -b "dc=cardiodx,dc=com" "(uidNumber=*)" cn sn -ZZ
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- for cchoudesktop
+--
+
+on ldaptest:
+scp /etc/ssl/certs/cacert.pem cchou@cchoudesktop:
+
+on cchoudesktop:
+vi ldap.conf
+BASE   dc=cardiodx,dc=com
+URI    ldap://ldaptest.cardiodx.com ldaps://ldaptest.cardiodx.com
+TLS_CACERT /home/cchou/cacert.pem
+
+
+ldapsearch -xLLL -b "dc=cardiodx,dc=com" "(uidNumber=*)" cn sn -ZZ
+
+
+(Please read authentication.txt)
+

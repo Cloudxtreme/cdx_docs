@@ -1,0 +1,2237 @@
+
+source("ccad_score_calc.R", chdir=T)
+library(multicore)
+
+##############
+
+
+all.integer.values <- function(x) {
+  if(!is.numeric(x)) return(FALSE)
+  if(is.integer(x)) return(TRUE)
+  return(all(x == as.integer(x)))
+}
+
+#####################
+#
+
+plot_profile_gene_bounds <- function(mat_, gb_=gene_cp_bounds(), browse=F) {
+  if(browse) browser()
+
+  mat_ <- as.matrix(mat_)
+  if(ncol(mat_)!=nrow(gb_))
+    stop("ncol(mat_) != 23\n")
+  if(any(colnames(mat_)!=gb_$Gene))
+    stop("Genes not matching\n")
+
+  b_ <- gb_$Gene %in% c("HNRPF","TFCP2")
+  m_ <- rowMeans(mat_[,b_, drop=FALSE]) # normalization
+  mat_n <- mat_ - rep(m_, ncol(mat_))
+  
+  ngene <- nrow(gb_)
+  opar <- par(mar = c(5, 7, 4, 2)+.1)
+  idx <- rep(1:ngene, each=nrow(mat_))
+  pch <- rep(c("(","x",")"), each=ngene)
+  x_  <- as.vector(mat_n)
+  y_  <- idx + .2*(runif(length(x_)) - .5)
+  xlim <- range(c(x_, gb_[-1]), na.rm=T)
+  plot(x_, y_, col=idx, xlim=xlim, yaxt="n",
+       xlab="Median Cp", ylab="")
+  axis(2, at=1:ngene, labels=gb_$Gene, las=2)
+  abline(h=1:ngene, col=8, lty=2)
+  abline(v=0, col=8, lty=2)
+  segments(gb_$GL, 1:ngene, gb_$GU, 1:ngene, col=8)
+  x_ <- c(gb_$GL, gb_$GM, gb_$GU)
+  y_ <- rep(1:ngene, 3)
+  points(x_, y_, col=1, pch=pch)
+
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+  
+
+}
+
+##################################
+# create a Cp profile from a set of samples
+
+create_cp_profile <- function(df_cp, acc_pnc=c("(-) Ctrl", "(+) Ctrl"), cp.run.id_exclude=c(),
+                              gene_exclude=c("AssayWater","ASSAYWATER","gTFCP2","GTFCP2", "RPS4Y1"), browse=F) {
+  if(browse) browser()
+
+  fields <- c("Accession","Cp.run.id","Gene","Cp")
+  b_ <- !fields %in% names(df_cp)
+  if(any(b_)) {
+    cat("df_cp missing fields:")
+    print(fields[b_])
+    stop("\n")
+  }
+  b_  <- !(df_cp$Accession %in% acc_pnc) &
+         !(df_cp$Gene      %in% gene_exclude) &
+         !(df_cp$Cp.run.id %in% cp.run.id_exclude)
+  df_ <- df_cp[b_,]
+
+  b_ <-  !is.na(df_$Cp) & ((df_$Cp <=0) | (df_$Cp >= 40))
+  df_$Cp[b_] <- NA
+
+  df_med <- aggregate(df_["Cp"], df_[c("Cp.run.id", "Gene")], median, na.rm=T)
+  df_na  <- aggregate(df_["Cp"], df_[c("Cp.run.id", "Gene")], function(x) sum(is.na(x)))
+  df_cnt <- aggregate(df_["Cp"], df_[c("Cp.run.id", "Gene")], length)
+
+  names(df_na)[3]  <- "Na"
+  names(df_cnt)[3] <- "Cnt"
+
+  df_med <- merge(df_med, df_na)
+  df_med <- merge(df_med, df_cnt)
+
+
+  cnt_  <- tapply(df_med$Cp, df_med$Gene, length)
+  na_   <- tapply(df_med$Cp, df_med$Gene, function(x) sum(is.na(x)))
+  med_  <- tapply(df_med$Cp, df_med$Gene, median)
+  mean_ <- tapply(df_med$Cp, df_med$Gene, mean)
+  sd_   <- tapply(df_med$Cp, df_med$Gene, sd)
+  genes_ <- names(med_)
+
+  df_profile <- data.frame(Gene    = genes_,
+                           Count   = as.vector(unname(cnt_)),
+                           Na      = as.vector(unname(na_)),
+                           Cp      = as.vector(unname(mean_)), # use the mean
+                           Cp_mean = as.vector(unname(mean_)),
+                           Cp_med  = as.vector(unname(med_)),
+                           Sd      = as.vector(unname(sd_)),
+                           stringsAsFactors=F)
+  return(df_profile)
+}
+
+plot_med_cp_ranks <- function(df_med, cp.run.id_hilite=c(), s_main="", browse=F) {
+  if(browse) browser()
+
+  fields <- c("Cp.run.id","Gene","Cp")
+  samp_ <- cp.run.id_hilite
+  df_ <- df_med[order(df_med$Gene, df_med$Cp.run.id), fields]
+
+  lst_ <- by(df_, df_$Gene, function(x) x)
+  mat_ <- sapply(lst_,
+                 function(df_) {
+                   df_     <- df_[order(df_$Cp),]
+                   df_$idx <- 1:nrow(df_)
+                   df_     <- df_[order(df_$Cp.run.id),]
+                   idx     <- df_$idx
+                   names(idx) <- df_$Cp.run.id
+                   return(idx)
+                 })
+  rank_samp <- apply(mat_, 1, mean)
+  rank_samp <- rank_samp[order(rank_samp)]
+  cri_ <- names(rank_samp)
+
+  nsamp  <- length(unique(df_med$Cp.run.id))
+  s_main <- paste(s_main, "sample average Cp rank\n",nsamp,"samples")
+  opar <- par(mar = c(5, 7, 4, 2)+.1)
+  xlim <- range(c(rank_samp, 1+length(rank_samp)-rank_samp))
+  plot(rank_samp, 1:length(rank_samp), type="n", xlim=xlim,
+       main=s_main,
+       xlab="Rank", ylab="", yaxt="n")
+  axis(2, labels=cri_, at=1:length(rank_samp), las=2)
+  abline(v=(1+length(rank_samp))/2, col=8, lty=2)
+  abline(h=1:length(rank_samp), col=8, lty=2)
+  points(rank_samp, 1:length(rank_samp), col=ifelse(cri_ %in% samp_,2,4))
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+
+ invisible(data.frame(Cp.run.id=cri_, mean_rank=unname(rank_samp), stringsAsFactors=F))
+}
+
+plot_cp_residuals <- function(df_cp, acc_pnc=c("(-) Ctrl", "(+) Ctrl"),
+                              gene_exclude=c("AssayWater","ASSAYWATER","gTFCP2","GTFCP2", "RPS4Y1", "DIAPH1"),
+                              normalize=F, xlim=NULL,
+                              cp.run.id_exclude=c(), cp.run.id_hilite=c(), s_main="", browse=F) {
+  if(browse) browser()
+
+  samp_ <- cp.run.id_hilite
+
+  fields <- c("Accession","Cp.run.id","Gene","Cp")
+  b_ <- !fields %in% names(df_cp)
+  if(any(b_)) {
+    cat("df_cp missing fields:")
+    print(fields[b_])
+    stop("\n")
+  }
+  fields <- c("Accession","Cp.run.id","Gene","Cp")
+  b_  <- !(df_cp$Accession %in% acc_pnc) &
+         !(df_cp$Gene      %in% gene_exclude) &
+         !(df_cp$Cp.run.id %in% cp.run.id_exclude)
+  df_ <- df_cp[b_,]
+  b_ <-  !is.na(df_$Cp) & ((df_$Cp <=0) | (df_$Cp >= 40))
+  df_$Cp[b_] <- NA # work for pooled samples only
+
+  df_med <- aggregate(df_["Cp"], df_[c("Cp.run.id", "Gene")], median, na.rm=T)
+  df_na  <- aggregate(df_["Cp"], df_[c("Cp.run.id", "Gene")], function(x) sum(is.na(x)))
+  df_cnt <- aggregate(df_["Cp"], df_[c("Cp.run.id", "Gene")], length)
+  names(df_na)[3]  <- "Na"
+  names(df_cnt)[3] <- "Cnt"
+  df_med <- merge(df_med, df_na)
+  df_med <- merge(df_med, df_cnt)
+
+  nsamp <- length(unique(df_med$Cp.run.id))
+  s_main <- paste(s_main, "median Cp residuals by gene\n",nsamp,"samples")
+  if(normalize) {
+    s_main <- paste(s_main, "median normalized Cp residuals by gene\n",nsamp,"samples")
+
+    df_med_norm <- cp_norm(df_med)
+    if(nrow(df_med_norm) != nrow(df_med))
+      stop("Number of rows in df_med_norm=(",nrow(df_med_norm),
+           ") and df_med=(",nrow(df_med),
+           ") is not the same (this shouldn't happen)\n",sep="")
+    df_med <- merge(df_med[c("Cp.run.id", "Gene")], df_med_norm)
+  }
+  ord <- order(df_med$Cp.run.id, df_med$Gene)
+  df_med <- df_med[ord,]
+
+  if(length(samp_)>0)
+    s_main <- paste(s_main, "(",paste(samp_,collapse=", "),"in red)")
+  
+  opar <- par(mar = c(5, 7, 4, 2)+.1)
+  jit <- .2*(runif(nrow(df_med)) - .5)
+  g_ <- factor(df_med$Gene)
+  m_ <- tapply(df_med$Cp, g_, median, na.rm=T) 
+  x_ <- df_med$Cp - unsplit(m_, g_)
+  y_ <- as.numeric(g_)+jit
+  if(is.null(xlim))
+    xlim <- range(x_, na.rm=T)
+  plot(x_, y_, type="n", xlim=xlim,
+       main=s_main,
+       xlab="Median Cp - median(median Cps)", ylab="", yaxt="n")
+  axis(2, labels=levels(g_), at=1:nlevels(g_), las=2)
+  abline(v=0, col=8, lty=2)
+  abline(h=1:nlevels(g_), col=8, lty=2)
+  b_ <- df_med$Cp.run.id %in% samp_
+  points(x_[!b_], y_[!b_], col=4)
+  points(x_[b_],  y_[ b_], col=2)
+  points(x_[b_],  y_[ b_], col=2)
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+
+  invisible(df_med)
+}
+
+cp_norm <- function(df_med, browse=F) {
+  if(browse) browser()
+
+  lst_ <- by(df_med, df_med["Cp.run.id"], cp_norm_sample)
+  df_  <- do.call(rbind, lst_)
+  ord  <- order(df_$Cp.run.id, df_$Gene)
+  df_  <- df_[ord,]
+  return(df_)
+}
+
+cp_norm_sample <- function(df_med, browse=F) {
+  if(browse) browser()
+
+  b_ <- df_med$Gene %in% c("HNRPF", "TFCP2")
+  m_ <- mean(df_med$Cp[b_], na.rm=T)
+  df_med$Cp <- df_med$Cp - m_
+  
+  return(df_med)
+}
+
+plot_compare_profile_ci <- function(df1, df2, s1="", s2="", browse=F) {
+  if(browse) browser()
+
+  s_main <- paste("Cp delta conf interval by gene\n",s2,"-",s1)
+
+  df1 <- df1[order(df1$Gene),]
+  df2 <- df2[order(df2$Gene),]
+  if(!vsame(df1$Gene, df2$Gene))
+    stop("Gene lists differ in df1 and df2\n")
+
+  ngene <- nrow(df1)
+  # SD of difference
+  diff_ <- df2$Cp - df1$Cp
+  k1    <- df1$Count - df1$Na
+  k2    <- df2$Count - df2$Na
+  var_  <- df1$Sd^2/pmax(1,k1-1) + df2$Sd^2/pmax(1,k2-1)
+  sd_   <- sqrt(var_)
+  z_    <- qt(.975, k1 + k2 - 2) # 95% CI
+  del_  <- sd_*z_
+  df_ <- cbind(df1["Gene"],
+               N        = k1 + k2,
+               Sd_delta = sd_,
+               Ci_lo    = diff_ - del_,
+               Delta    = diff_,
+               Ci_hi    = diff_ + del_,
+               stringsAsFactors=F)
+
+  x_ <- c(df_$Ci_lo, df_$Delta, df_$Ci_hi)
+  y_ <- rep(1:ngene, 3)
+  col <- rep(c(1,4,1), each=ngene)
+#  if(is.null(xlim))
+  xlim <- range(df_$Ci_lo, df_$Ci_hi, na.rm=T)
+  opar <- par(mar = c(5, 7, 4, 2)+.1)
+  pch <- rep(c("(","x",")"), each=ngene)
+  plot(0,0, type="n", xlim=xlim,ylim=c(1,ngene), yaxt="n",
+       main=s_main, xlab="Cp delta", ylab="")
+  axis(2, labels=df1$Gene, at=1:ngene, las=2)
+  abline(v=0, col=8, lty=2)
+  abline(h=1:ngene, col=8, lty=2)
+  segments(df_$Ci_lo, 1:ngene, df_$Ci_hi, 1:ngene)
+  points(x_, y_, col=col, pch=pch)
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+
+  invisible(df_)
+}
+
+
+###########################
+
+# not used
+calc_ep <- function(df_cp, gb_=gene_cp_bounds(), browse=F) {
+  if(browse) browser()
+  
+  b_  <- !df_cp$Gene %in% c("GTFCP2","RPS4Y1", "AssayWater", "ASSAYWATER")
+  df_ <- df_cp[b_,]
+  
+  # median Cps
+  med_ <- tapply(df_$Cp, df_$Gene, median, na.rm=TRUE)
+  gb_  <- merge(gb_, data.frame(Gene=names(med_), med=unname(med_)), by="Gene", all.x=T)
+
+  b_ts  <- gb_$Gene == "TSPAN16"
+  b_n   <- gb_$Gene %in% c("HNRPF", "TFCP2")
+
+  # normalize with HNRPF, TFCP2
+  norm_ <- mean(gb_$med[b_n], na.rm=T)
+  gb_$med_n <- gb_$med - norm_
+  
+  # trunc values
+  med_t <- pmax(gb_$med_n, gb_$GL)
+  med_t <- pmin(med_t,     gb_$GU) # every thing is truncated
+  gb_$med_t <- ifelse(b_n, gb_$med_n, med_t) # don't truncate the norm genes
+
+  # calc expr profile
+  expr_profile <- sum( abs(gb_$med_t - gb_$GM)[ !b_ts] ) #
+  
+  return(expr_profile)
+}
+
+
+####################################
+####################################
+#
+
+plot_score_sd_by_condition <- function(df_s, variable="Score", condition="Plate",
+                                       sd_max=.14, col=NULL, browse=F) {
+  if(browse) browser()
+
+  if(!condition %in% names(df_s))
+    stop("Can't find condition ('",condition,"') in data frame df_s\n", sep="")
+  if(!"Score" %in% names(df_s))
+    stop("Can't find variable ('",variable,"') in data frame df_s\n")
+
+  cond_ <- as.factor(df_s[[condition]]) # make sure a factor
+  n <- nlevels(cond_)
+  score_ <- df_s[[variable]]
+  
+  score_cnt <- tapply(score_, cond_,length)
+  score_m   <- tapply(score_, cond_, mean, na.rm=T)
+  score_sd  <- tapply(score_, cond_, sd, na.rm=T)
+  m_     <- mean(score_m, na.rm=T)
+  ci_del <- score_sd*qnorm(.975, lower.tail=T)/sqrt(pmax(1,score_cnt))
+
+  if(is.null(col))
+    col <- 1:n
+
+  xlim <- range(c(0, sd_max, score_sd), na.rm=T)
+  lev_  <- levels(cond_)
+  line_ <- ceiling(max(nchar(lev_))/2)
+#  del_  <- .2
+#  jit_  <- del_*(runif(length(score_))-.5)
+  opar  <- par(mar = c(2+line_, 4, 4, 2)+.1)
+  plot(score_sd, 1:n, yaxt="n", xlim=xlim,
+       ylim=c(.7,n+.3), col=col, 
+       main=paste("StdDev of ",variable," by ",condition,
+                  "\nSD max=",sd_max, sep=""),
+       xlab=variable, ylab="")
+  mtext(lev_, at=1:n, side=2, line=1, las=2, col=col)
+  abline(h=1:n, lty=2,col=8)
+  abline(v=sd_max, lty=2, col=2)
+  abline(v=mean(score_sd,na.rm=T), lty=2, col=8)
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+
+  df_ret <- data.frame(condition = names(score_m),
+                       Count     = as.vector(score_cnt),
+                       Mean      = as.vector(score_m),
+                       StdDev    = as.vector(score_sd),
+                       Ci_low    = score_m-ci_del,
+                       Ci_hi     = score_m+ci_del,
+                       stringsAsFactors=F)
+  names(df_ret)[1] <- condition
+  invisible(df_ret)
+}
+
+plot_score_ci_by_condition <- function(df_s, variable="Score", condition="Plate", ci_del_max=.11, col=NULL, browse=F) {
+  if(browse) browser()
+
+  if(!condition %in% names(df_s))
+    stop("Can't find condition ('",condition,"') in data frame df_s\n", sep="")
+  if(!"Score" %in% names(df_s))
+    stop("Can't find variable ('",variable,"') in data frame df_s\n")
+
+  cond_ <- as.factor(df_s[[condition]]) # make sure a factor
+  n <- nlevels(cond_)
+  score_ <- df_s[[variable]]
+  
+  score_cnt <- tapply(score_, cond_,length)
+  score_m   <- tapply(score_, cond_, mean, na.rm=T)
+  score_sd  <- tapply(score_, cond_, sd, na.rm=T)
+  
+  m_     <- mean(score_m, na.rm=T)
+  ci_del <- score_sd*qnorm(.975, lower.tail=T)/sqrt(pmax(1,score_cnt))
+  
+  y_ <- as.numeric(cond_)
+  col_lev <- 1:n
+  if(is.null(col))
+    col <- y_
+
+  lev_  <- levels(cond_)
+  line_ <- ceiling(max(nchar(lev_))/2)
+  del_  <- .2
+  jit_  <- del_*(runif(length(score_))-.5)
+  opar  <- par(mar = c(2+line_, 4, 4, 2)+.1)
+  plot(score_, y_+jit_, yaxt="n",
+       ylim=c(.7,n+.3), col=col, cex=.8,
+       main=paste("Confidence interval mean ",variable," by ",condition,
+                  "\nCI max=",ci_del_max, sep=""),
+       xlab=variable, ylab="")
+  mtext(lev_, at=1:n, side=2, line=1, las=2, col=col_lev)
+  abline(h=1:n, lty=2,col=8)
+  abline(v=c(m_-ci_del_max, m_,m_+ci_del_max), lty=2, col=c(2,4,2))
+  segments(score_m-ci_del, 1:n, score_m+ci_del, 1:n)
+  points(score_m-ci_del, 1:n, pch="(", cex=1.5)
+  points(score_m+ci_del, 1:n, pch=")", cex=1.5)
+  points(score_m, 1:n, pch=3, cex=2)
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+
+  df_ret <- data.frame(condition = names(score_m),
+                       Count     = as.vector(score_cnt),
+                       Mean      = as.vector(score_m),
+                       StdDev    = as.vector(score_sd),
+                       Ci_low    = score_m-ci_del,
+                       Ci_hi     = score_m+ci_del,
+                       stringsAsFactors=F)
+  names(df_ret)[1] <- condition
+  invisible(df_ret)
+}
+
+# median Cp are calculated for each gene and Cp.run.id
+# the mean of these are calculated for each plate
+# excluding genes in gene_nc
+# The averages are ploted by plate in alphabetical order
+# change the order by setting Plate a factor and set the levels
+plot_med_cp_by_plate <- function(df_cp, acc_pnc=c("(+) Ctrl","(-) Ctrl"),
+                             gene_nc=c("AssayWater", "ASSAYWATER", "RPS4Y1", "GTFCP2"), col=4, browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Accession %in% acc_pnc) & (!df_cp$Gene %in% gene_nc)
+  df_cp      <- df_cp[b_,]
+  df_cp$Gene <- factor(df_cp$Gene)
+
+  # Cp medians for each sample and gene
+  df_med <- aggregate(df_cp["Cp"], df_cp[c("Gene","Cp.run.id","Plate")], median, na.rm=T)
+
+  df_med$Plate <- as.factor(df_med$Plate) # sets the plate order alphabetical
+                                          # unless already a factor
+
+  # stats over all samples by gene
+  cp_m <- tapply(df_med$Cp, df_med$Plate, function(x) mean(x, na.rm=T))
+#  cp_sd  <- tapply(df_med$Cp, df_med$Plate, function(x) sd(x, na.rm=T))
+
+#  ylim <- range(cp_sd)
+  lev_ <- levels(df_med$Plate)
+  line_ <- ceiling(max(nchar(lev_))/2)
+
+  opar <- par(mar = c(2+line_, 4, 4, 2)+.1)
+  plot(1:length(cp_m), cp_m, xaxt="n", col=col,
+       main="Average median Cp by plate\n",
+       xlab="", ylab="Average median Cp")
+  mtext(lev_, at=1:length(cp_m), side=1, line=1, las=2, col=col)
+#  mtext("a", at=0, side=1, line=1)
+#  mtext("b", at=0, side=1, line=2)
+  abline(h=mean(cp_m,na.rm=T), lty=2, col=8)
+  par(opar) #par(mar=c(5,4,4,2)+.1, mfrow=c(1,1))
+
+  invisible(data.frame(Plate   = names(cp_m),
+                       Cp_mean = as.vector(cp_m),
+#                       Cp_sd  = as.vector(cp_sd),
+                       stringsAsFactors=F))
+}
+
+plot_cp_med_sd_by_plate <- function(df_cp, acc_pnc=c("(+) Ctrl","(-) Ctrl"),
+                             gene_nc=c("AssayWater", "ASSAYWATER", "RPS4Y1", "GTFCP2"), col=1:8,browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Accession %in% acc_pnc) & (!df_cp$Gene %in% gene_nc)
+  df_cp      <- df_cp[b_,]
+  df_cp$Gene <- factor(df_cp$Gene)
+
+  # Cp medians for each sample and gene
+  df_med <- aggregate(df_cp["Cp"], df_cp[c("Gene","Cp.run.id","Plate")], median, na.rm=T)
+
+  # stats over all samples by gene
+  cp_med <- tapply(df_med$Cp, df_med$Plate, function(x) median(x, na.rm=T))
+  cp_sd  <- tapply(df_med$Cp, df_med$Plate, function(x) sd(x, na.rm=T))
+
+  m_  <- mean(cp_med, na.rm=T)
+  sd_ <- mean(cp_sd,  na.rm=T)
+#  ylim <- range(cp_sd)
+  plot(cp_sd, cp_med, type="n", 
+       main="Cp Median vs StdDev by plate\n",
+       xlab="Std Dev", ylab="Median Cps")
+  abline(v=sd_, h=m_,   lty=2,col=8)
+  text(cp_sd,   cp_med, labels=names(cp_med), col=col)
+
+  invisible(data.frame(Plate  = names(cp_med),
+                       Cp_med = as.vector(cp_med),
+                       Cp_sd  = as.vector(cp_sd),
+                       stringsAsFactors=F))
+}
+
+# plot the mean vs SD of the med Cps over all samples
+# this makes sense for a set of replicate samples (eg, IRP or PAX)
+plot_gene_med_sd <- function(df_cp, acc_pnc=c("(+) Ctrl","(-) Ctrl"),
+                             gene_nc=c("AssayWater", "ASSAYWATER"), browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Accession %in% acc_pnc) & (!df_cp$Gene %in% gene_nc)
+  df_cp      <- df_cp[b_,]
+  df_cp$Gene <- factor(df_cp$Gene)
+
+  # Cp medians for each sample and gene
+  df_med <- aggregate(df_cp["Cp"], df_cp[c("Gene","Cp.run.id")], median, na.rm=T)
+
+  # stats over all samples by gene
+  cp_med <- tapply(df_med$Cp, df_med$Gene, function(x) median(x, na.rm=T))
+  cp_sd  <- tapply(df_med$Cp, df_med$Gene, function(x) sd(x, na.rm=T))
+
+  ylim <- range(c(0,.1, cp_sd))
+  plot(cp_med, cp_sd, type="n", ylim=ylim,
+       main="Cp Median vs StdDev over all samples\n",
+       xlab="Median Cps", ylab="Std Dev")
+  text(cp_med, cp_sd, labels=names(cp_med), col=1:8)
+  abline(h=0, col=8, lty=2)
+
+}
+
+plot_gene_shift <- function(df_1, df_2, acc_pnc=c("(+) Ctrl","(-) Ctrl"),
+                            gene_nc=c("AssayWater", "ASSAYWATER"),
+                            s_main="", browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_1$Accession %in% acc_pnc) & (!df_1$Gene %in% gene_nc)
+  df_1      <- df_1[b_,]
+  df_1$Gene <- factor(df_1$Gene)
+  b_ <- (!df_2$Accession %in% acc_pnc) & (!df_2$Gene %in% gene_nc)
+  df_2      <- df_2[b_,]
+  df_2$Gene <- factor(df_2$Gene)
+
+  # Cp medians for each sample and gene
+  df_1m <- aggregate(df_1["Cp"], df_1[c("Gene","Cp.run.id")], median, na.rm=T)
+  df_2m <- aggregate(df_2["Cp"], df_2[c("Gene","Cp.run.id")], median, na.rm=T)
+
+  # stats over all samples by gene
+  cp_1 <- tapply(df_1m$Cp, df_1m$Gene, function(x) median(x, na.rm=T))
+  cp_2 <- tapply(df_2m$Cp, df_2m$Gene, function(x) median(x, na.rm=T))
+
+  x_ <- (cp_1 + cp_2)/2
+  y_ <- (cp_1 - cp_2)
+  plot(y_, x_, type="n", 
+       main=paste("Median Cp deltas over all samples by gene\n",s_main,sep=""),
+       xlab="Delta Cps", ylab="Average Cps")
+  abline(v=c(0,mean(y_)), lty=2, col=c(8,4))
+  text(y_, x_, labels=names(cp_1), col=1:8)
+
+  invisible(data.frame(Gene=names(cp_1), Cp_avg=x_, Cp_delta=y_))
+}
+
+##################
+# batch PAX ctrls
+
+# calc the batch PAX profile for a single batch
+calc_batch_delta <- function(df_cp, df_delta2, acc_nc="(-) Ctrl",
+                             batch_label, browse=F) {
+  if(browse) browser()
+
+  if(nrow(df_cp)==0) { # no passing PAX ctrls, bail
+    df_ <- cbind(df_delta2,
+                 Total        = 0,
+                 Na_cnt       = 0,
+                 Sd_batch     = NA,
+                 Cp_batch_med = NA,
+                 Cp_batch_mp  = NA,
+                 Cp_delta     = NA,
+                 Batch        = batch_label,
+                 stringsAsFactors=F
+                 )
+    return(df_)
+  }
+
+  genes <- df_delta2$Gene
+  b_ <- (df_cp$Gene %in% genes) & (!df_cp$Accession %in% acc_nc)
+  df_cp <- df_cp[b_,]
+  df_cp$Gene <- factor(df_cp$Gene, levels=genes)
+  df_med <- aggregate(df_cp["Cp"], df_cp[c("Gene","Cp.run.id")], median, na.rm=T)
+# df_cnt <- aggregate(df_cp$Cp, df_cp[c("Gene","Cp.run.id")], length)
+
+  Cp_med <- tapply(df_med$Cp, df_med$Gene, function(x) median(x, na.rm=T))
+  Cp_sd  <- tapply(df_med$Cp, df_med$Gene, function(x) sd(x, na.rm=T))
+  Cp_tot <- tapply(df_med$Cp, df_med$Gene, function(x) length(x))
+  Cp_na  <- tapply(df_med$Cp, df_med$Gene, function(x) sum(is.na(x)))
+  if(any(genes != names(Cp_med)))
+    stop("Genes order not matching in Cp_med (this shouldn't happen)\n")
+  if(any(is.na(Cp_med)))
+    stop("Some missing gene Cps in Cp_med (this shouldn't happen)\n")
+
+  # median polish
+  mat_ <- tapply(df_med$Cp, df_med[c("Gene","Cp.run.id")], function(x) x)
+  mp_  <- medpolish(mat_, na.rm=T, trace.iter=F)
+  Cp_mp <- mp_$overall + mp_$row
+  if(any(genes != names(Cp_mp)))
+    stop("Genes order not matching median polish Cp_mp (this shouldn't happen)\n")
+
+  cp_batch_mp  <- as.vector(Cp_mp)
+  cp_delta     <- df_delta2$Cp_pax_ref - cp_batch_mp #  (P0 - P01 + P1) - Cp_batch
+  df_ <- cbind(df_delta2,
+               Total        = as.vector(Cp_tot),
+               Na_cnt       = as.vector(Cp_na),
+               Sd_batch     = as.vector(Cp_sd),
+               Cp_batch_med = as.vector(Cp_med),
+               Cp_batch_mp  = cp_batch_mp,
+               Cp_delta     = cp_delta,
+               Batch        = batch_label,
+               stringsAsFactors=F
+               )
+
+  return(df_)
+}
+
+# df_delta dataframe fields: Gene, Cp_delta
+# adds Cp_delta to df_cp$Cp
+# returns new Cp values
+adjust_cp_delta <- function(df_cp, df_delta, browse=F) {
+  if(browse) browser()
+
+  cp_  <- df_cp$Cp
+  cp_[cp_ <= 0] <- 40
+  for(ii in 1:nrow(df_delta)) {
+    b_      <- df_cp$Gene == df_delta$Gene[[ii]]
+    cp_[b_] <- cp_[b_] + df_delta$Cp_delta[[ii]]
+  }
+  cp_ <- pmin(40, pmax(1, cp_))
+  return(cp_)
+}
+
+# df_cp  PAX ctrl data without neg ctrls
+batch_ctrls_qc <- function(df_cp, df_prenorm_qc, params=NULL, browse=F) {
+  if(browse) browser()
+
+  pax_cri       <- sort(unique(df_cp$Cp.run.id))
+  df_prenorm_qc <- df_prenorm_qc[df_prenorm_qc$Cp.run.id %in% pax_cri,]
+
+  if(length(pax_cri) != nrow(df_prenorm_qc))
+    stop("Number of PAX ctrls found not matching those in df_prenorm_qc (this shouldn't happen)\n")
+
+  df_prenorm_qc <- df_prenorm_qc[order(df_prenorm_qc$Cp.run.id),]
+  if(any(pax_cri !=  df_prenorm_qc$Cp.run.id))
+    stop("PAX ctrl Cp.run.ids not matching those in df_prenorm_qc (this shouldn't happen)\n")
+  
+  qcm_ <- c("Sample_well_fail", "Gdna_fail",
+            "Sample_gene_fail", "Expr_mean_fail",
+            "Med_sd_fail", "Sd_90_fail", "Sd_max_fail",
+            "Negctrl_fail","Plate_prenorm_fail") # Plate_well_missing_fail not used
+  fail_ <- apply(df_prenorm_qc[qcm_], 1, function(x) any(is.na(x)) || sum(x)>0)
+  pax_batch_fail <- sum(fail_) > length(fail_)*params$pax_batch_fail_pct
+  
+  return(cbind(df_prenorm_qc[c("Accession", "Cp.run.id")],
+               Is_pax_ctrl=1, Pax_fail=1*fail_, Pax_batch_fail=1*pax_batch_fail))
+}
+
+# return a list one item per batch
+# each item is a data.frame of the PAX ctrl samples from a batch
+# including the neg ctrls from the plates
+get_batch_ctrls <- function(df_cp, acc_prefix="PAX_ctrl",
+                            acc_nc=c("(-) Ctrl"), #acc_pnc=c("(+) Ctrl","(-) Ctrl"), ?
+                            include_negctrls=T, browse=F) {
+  if(browse) browser()
+
+  # PAX ctrls
+  b_p     <- substr(df_cp$Accession,1,nchar(acc_prefix))==acc_prefix
+  if(!any(b_p))
+    stop("Can't find any PAX controls with acc_prefix=(",acc_prefix,
+         ") for batch (",df_cp$Batch[1],")\n")
+  # neg ctrls from these plates
+  if(include_negctrls) {
+    plates_ <- unique(df_cp$Plate[b_])
+    b_nc    <- (df_cp$Accession %in% grep_strings(acc_nc, df_cp$Accession, fixed=T, browse=F)) &
+               (df_cp$Plate %in% plates_)
+    df_     <- df_cp[b_p | b_nc,]
+  } else {
+    df_     <- df_cp[b_p,]
+  }
+  lst_ <- by(df_, df_$Batch, function(x) x)
+  return(lst_)
+}
+
+############################
+# pre-norm qc
+
+plate_well_missing_qc <- function(df_cp, acc_ex, params=NULL, browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Gene %in% c("GTFCP2","RPS4Y1","TSPAN16", "AssayWater", "ASSAYWATER")) &
+        (!df_cp$Accession %in% grep_strings(acc_ex, df_cp$Accession, fixed=T, browse=F))
+  df_cp <- df_cp[b_,]
+  df_cp$Cp[(df_cp$Cp <= 0) | (df_cp$Cp >= 40)] <- NA
+
+  well_missing_cnt <- sum(is.na(df_cp$Cp))
+#  fail <- well_missing > params$plate_well_missing_max
+  return(cbind(Plate_well_total       = length(df_cp$Cp),
+               Plate_well_missing_cnt = well_missing_cnt # ,
+#               Plate_well_missing_fail= fail # not used
+               ))
+}
+
+plate_negctrl_qc <- function(df_cp, acc_nc, params=NULL, browse=F) {
+  if(browse) browser()
+
+  df_    <- df_cp[df_cp$Accession %in% 
+                  grep_strings(acc_nc, df_cp$Accession, fixed=T, browse=F),]
+  df_$Cp[is.na(df_$Cp) | (df_$Cp<=0) | (df_$Cp>=40)] <- 40
+  df_    <- df_[order(df_$Gene),]
+  nrows_ <- nrow(df_)
+  
+  if(nrows_ >= 4) { #==8) { # 8 sample plate
+    # should be 8 NC wells
+    # sometimes Gene=="" for half
+    df_b <- df_[df_$Gene == "",]
+    n_b  <- nrow(df_b)
+    df_  <- df_[df_$Gene != "",]
+    
+    if(!all(df_$Gene=="RPL28"))
+      stop("Unrecognized neg control genes on 8 sample plate:",
+           paste(sort(unique(df_$Gene[df_$Gene!="RPL28"])), sep=", "),"\n",
+           "should be 4-8 replicates of 'RPL28'\n")
+
+    if(nrow(df_) < 4)
+      stop("Found less than 4 Neg Ctrls (",nrow(df_)," of RPL28 on an 8 sample plate\n",
+           "There are ",n_b," gene==''\n")
+    
+    nc_cp_min <- min(df_$Cp)
+    negctrl_fail <- sum(df_$Cp < params$plate_nc_RPL28_min)
+    return(cbind(Negctrl_cp_min=nc_cp_min, Negctrl_total=nrows_, Negctrl_fail=negctrl_fail))
+    
+  } else if(nrows_==3) { # 4 sample plate
+    if(!all(df_$Gene %in% c("DIAPH1","HNRPF","RPL28")))
+      stop("Unrecognized neg control genes on 4 sample plate:",
+           paste(sort(unique(df_$Gene[!df_$Gene %in% c("DIAPH1","HNRPF","RPL28")])), sep=", "),"\n",
+           "should be 1 each of 'DIAPH1','HNRPF','RPL28'\n")
+
+    nc_cp_min <- min(df_$Cp)
+    negctrl_fail <- sum(df_$Cp < params[c("plate_nc_DIAPH1_min","plate_nc_HNRPF_min","plate_nc_RPL28_min")])
+    return(cbind(Negctrl_cp_min=nc_cp_min, Negctrl_total=nrows_, Negctrl_fail=negctrl_fail))
+  }
+
+  stop("Unrecognized number of neg controls (",nrow(df_),") for batch:plate (",
+       df_cp$Batch[1],":",df_cp$Plate[1],
+       ") should be 3 (4 sample plate) or 8 (8 sample plate)\n")
+}
+
+sample_complete_qc <- function(df_cp, params=NULL, browse=F) {
+  if(browse) browser()
+
+
+  data_cnt <- length(df_cp$Cp)
+  data_incomplete <- data_cnt != params$data_cnt
+  
+  return(cbind(Data_cnt        = data_cnt, # not including neg ctrls
+               Data_incomplete = data_incomplete
+               ))
+}
+
+sample_well_missing_qc <- function(df_cp, params=NULL, browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Gene %in% c("GTFCP2","RPS4Y1","AssayWater", "ASSAYWATER","TSPAN16"))
+  df_cp <- df_cp[b_,]
+  df_cp$Cp[(df_cp$Cp <= 0) | (df_cp$Cp >= 40)] <- NA
+#  df_cp$Cp[is.na(df_cp$Cp) & (df_cp$Gene == "TSPAN16")] <- 38 # TSPAN never missing
+
+  well_missing <- sum(is.na(df_cp$Cp))
+  well_total   <- length(df_cp$Cp) #length(df_cp$Cp[df_cp$Gene != "TSPAN16"])
+  fail <- well_missing > well_total*params$well_missing_pct
+  warn <- well_missing > params$well_missing_warn
+  return(cbind(Sample_well_total   = well_total, # total wells that may fail (so no TSPAN)
+               Sample_well_missing = well_missing,
+               Sample_well_warn    = warn,
+               Sample_well_fail    = fail
+               ))
+}
+
+sample_gdna_qc <- function(df_cp, params=NULL, browse=F) {
+  if(browse) browser()
+
+  b_ <- (df_cp$Gene %in% c("GTFCP2", "TFCP2"))
+  df_cp <- df_cp[b_,]
+  df_cp$Cp[(df_cp$Gene =="GTFCP2") &
+           (is.na(df_cp$Cp) | (df_cp$Cp <= 0) | (df_cp$Cp >= 40))] <- NA
+  b_ <- (df_cp$Gene =="GTFCP2") & (is.na(df_cp$Cp)) # GTFCP2 missing
+  if(sum(b_) > 1) # impute if at least 2 are missing (so don't impute if only one missing)
+    df_cp$Cp[b_] <- 38
+  mcp_TFCP2  <- median(df_cp$Cp[df_cp$Gene =="TFCP2"], na.rm=T)
+  mcp_GTFCP2 <- median(df_cp$Cp[df_cp$Gene =="GTFCP2"], na.rm=T)
+  
+  gdna_delta_cp <- mcp_GTFCP2 - mcp_TFCP2
+  fail <- is.na(gdna_delta_cp) | (gdna_delta_cp < params$gdna_min)
+  warn <- is.na(gdna_delta_cp) | (gdna_delta_cp < params$gdna_warn) # changed the spec, apply to all samples
+  #ifelse(df_cp$Sample_type[1] %in% c("Clinical","PAX"),
+  #       gdna_delta_cp < params$gdna_warn, fail)
+  
+#  if(df_cp$Sample_type[1] %in% c("IRP","ICP"))
+#    warn <- gdna_delta_cp < params$gdna_irp_warn
+#  else
+#    warn <- gdna_delta_cp < params$gdna_warn
+
+  if((df_cp$Sample_type[1] == "Water") &
+     (mcp_GTFCP2 < params$water_cp_min)) { # done in water_qc now
+    fail <- TRUE
+    warn <- TRUE
+  }
+
+  return(cbind(GTFCP2        = mcp_GTFCP2,
+               Gdna_delta_cp = gdna_delta_cp,
+               Gdna_warn     = warn,
+               Gdna_fail     = fail)
+         )
+}
+
+# not used?
+sample_expr_mean_qc <- function(df_cp, gb_=gene_cp_bounds(), do_trunc=F, params=NULL, browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Gene %in% c("GTFCP2","RPS4Y1", "AssayWater", "ASSAYWATER"))
+  df_cp <- df_cp[b_,]
+  df_cp$Cp[(df_cp$Cp <= 0) | (df_cp$Cp >= 40)] <- NA
+  df_cp$Cp[is.na(df_cp$Cp) & (df_cp$Gene == "TSPAN16")] <- 38 # reset TSPAN failures
+
+  g_   <- factor(df_cp$Gene)
+  med_ <- tapply(df_cp$Cp, g_, median, na.rm=T)
+
+  if(do_trunc) {
+    if(!vsame(gb_$Gene, names(med_)))
+      stop("Gene order not matching in gb_ and med_ (this shouldn't happen)\n")
+    gb_$med   <- as.vector(med_)
+    norm_     <- with(as.list(med_), (HNRPF + TFCP2)/2)
+    gb_$med_n <- gb_$med - norm_
+
+    ###################
+    # trimmed values
+    b_norm    <- !gb_$Gene %in% c("HNRPF","TFCP2")
+    gb_$med_n[b_norm] <- pmax(gb_$med_n, gb_$GL)[b_norm] # trim to lower bound
+    gb_$med_n[b_norm] <- pmin(gb_$med_n, gb_$GU)[b_norm] # trim to upper bound
+    med_t     <- gb_$med_n + norm_
+    med_ <- med_t # use truncated values
+  }
+
+  # expression mean
+  expr_mean      <- mean(med_) # , na.rm=T) # agreement with Michael
+  expr_mean_fail <- is.na(expr_mean) || (expr_mean > params$expr_mean_max)
+  expr_mean_warn <- is.na(expr_mean) || (expr_mean > params$expr_mean_warn)
+
+  
+  ret_ <- cbind(
+               Expr_mean      = expr_mean,
+               Expr_mean_warn = expr_mean_warn,
+               Expr_mean_fail = expr_mean_fail
+               )
+  rownames(ret_) <- 1
+  return(ret_)
+}
+
+sample_mean_sd_qc <- function(df_cp, params=NULL, browse=F) {
+  if(browse) browser()
+
+  b_ <- (!df_cp$Gene %in% c("GTFCP2","RPS4Y1", "AssayWater", "ASSAYWATER"))
+  df_cp <- df_cp[b_,]
+  df_cp$Cp[(df_cp$Cp <= 0) | (df_cp$Cp >= 40)] <- NA
+  df_cp$Cp[is.na(df_cp$Cp) & (df_cp$Gene == "TSPAN16")] <- 38 # reset TSPAN failures
+
+  g_ <- factor(df_cp$Gene)
+  lst_ <- tapply(df_cp$Cp, g_,
+                 function(x) 
+                   c(count  = length(x),
+                     na     = sum(is.na(x)),
+                     median = median(x, na.rm=T),
+                     sd     = sd(x, na.rm=T)
+                     ),
+                 simplify=F) # it's not simplifying for some reason
+  mat_ <- sapply(lst_, function(x) x)
+                 
+  cnt_ <- mat_[1,] # count number of wells for each gene
+  na_  <- mat_[2,] # count of failing wells for each gene
+  med_ <- mat_[3,]
+  sd_  <- mat_[4,]
+
+  # missing gene median Cps (excluding TSPAN, which is never missing)
+  gene_na_cnt    <- sum(is.na(med_)) # missing gene median Cp, can't calc score
+  # number of single-well genes that fail
+  missing_1well_ <- sum(na_[cnt_==1] > cnt_[cnt_==1]*params$gene_well_missing_pct)
+  # number of double-well genes that fail
+  missing_2well_ <- sum(na_[cnt_==2] > cnt_[cnt_==2]*params$gene_well_missing_pct)
+  # number of 3 or more well genes that fail
+  missing_3well_ <- sum(na_[cnt_>=3] > cnt_[cnt_>=3]*params$gene_well_missing_pct)
+  fail_gene_cnt  <- missing_1well_ + missing_2well_ + missing_3well_
+
+  # expression mean
+  expr_mean      <- mean(med_) # na.rm=T # include TSPAN, include NAs, agreement with Michael
+  expr_mean_fail <- is.na(expr_mean) || (expr_mean > params$expr_mean_max)
+  expr_mean_warn <- is.na(expr_mean) || (expr_mean > params$expr_mean_warn)
+
+  # SD median, 90th, max
+  i_tspan <- which(colnames(mat_)=="TSPAN16")
+  q_ <- quantile(sd_[-i_tspan], c(0.5, 0.9, 1.0), na.rm=T) # no TSPAN
+  sd_50  <- q_[1]
+  sd_90  <- q_[2]
+  sd_max <- q_[3]
+  sd_50_fail  <- is.na(sd_50)  || (sd_50  > params$med_sd_max)
+  sd_90_fail  <- is.na(sd_90)  || (sd_90  > params$sd_90_max)
+  sd_50_warn  <- is.na(sd_50)  || (sd_50  > params$med_sd_warn)
+  sd_90_warn  <- is.na(sd_90)  || (sd_90  > params$sd_90_warn)
+  sd_max_fail <- is.na(sd_max) || (sd_max > params$sd_max)
+  
+  ret_ <- cbind(# sample_well_total=length(df_cp$Cp), # already in sample_well_missing_qc
+               Sample_missing_1well_cnt = missing_1well_,
+               Sample_missing_2well_cnt = missing_2well_,
+               Sample_missing_3well_cnt = missing_3well_,
+               Sample_gene_na_cnt       = gene_na_cnt,
+               Sample_gene_fail         = min(1,fail_gene_cnt),
+               Expr_mean      = expr_mean,
+               Expr_mean_warn = expr_mean_warn,
+               Expr_mean_fail = expr_mean_fail,
+               Med_sd         = sd_50,
+               Med_sd_warn    = sd_50_warn,
+               Med_sd_fail    = sd_50_fail,
+               Sd_90          = sd_90,
+               Sd_90_warn     = sd_90_warn,
+               Sd_90_fail     = sd_90_fail,
+               Sd_max         = sd_max,
+               Sd_max_fail    = sd_max_fail
+               )
+  rownames(ret_) <- 1
+  return(ret_)
+}
+
+# df_cp must not contain neg ctrls (which aren't part of the sample anyway)
+prenorm_sample_qc_single <- function(df_cp, plate_layout=NULL, params=NULL, browse=F) {
+  if(browse) browser()
+
+  df_complete <- sample_complete_qc(df_cp, params=params, browse=F)
+  
+  df_missing <- sample_well_missing_qc(df_cp, params=params, browse=F)
+
+  df_gdna    <- sample_gdna_qc(df_cp, params=params, browse=F)
+
+  # Rep SD (median, 90%, max), Expression mean
+  df_msd     <- sample_mean_sd_qc(df_cp, params=params, browse=F)
+
+  df_ <- cbind(df_cp[1, c("Batch", "Plate", "Accession", "Cp.run.id")],
+               df_complete, df_missing, df_gdna, df_msd,
+               stringsAsFactors=F)
+
+  return(df_)
+}
+
+prenorm_plate_qc_single <- function(df_cp, plate_layout=NULL,
+                                    acc_ex=c("(+) Ctrl", "Water", "WATER"),
+                                    acc_nc=c("(-) Ctrl"),
+                                    params=NULL, browse=F) {
+  if(browse) browser()
+
+  # missing Cps on the plate
+  df_missing <- plate_well_missing_qc(df_cp, acc_ex=c(acc_ex, acc_nc),
+                                 params=params, browse=F)
+  # Neg Ctl
+  df_negctrl <- plate_negctrl_qc(df_cp, acc_nc=acc_nc, params=params, browse=F)
+
+  df_ <- cbind(df_cp[1, c("Batch", "Plate")],
+               df_missing, df_negctrl,
+               stringsAsFactors=F)
+  
+  return(df_)
+}
+
+prenorm_plate_qc <- function(df_cp, plate_layout=NULL,
+                             acc_ex=c("(+) Ctrl", "Water", "WATER"),
+                             acc_nc=c("(-) Ctrl"),
+                             params=NULL, browse=F) {
+  if(browse) browser()
+
+  lst_ <- by(df_cp, df_cp["Plate"], prenorm_plate_qc_single,
+             plate_layout=plate_layout, acc_ex=acc_ex, acc_nc=acc_nc, params=params)
+
+  df_ <- do.call(rbind, lst_)
+  return(df_)
+}
+
+# splits by Cp.run.id actually
+prenorm_sample_qc <- function(df_cp, plate_layout=NULL,
+                             acc_ex=c("(+) Ctrl","(-) Ctrl", "Water", "WATER"),
+                             params=NULL, browse=F) {
+  if(browse) browser()
+
+  if(!"Gender" %in% names(df_cp))
+    stop("df_cp missing 'Gender' field\n")
+  if(!"Sample_type" %in% names(df_cp))
+    stop("df_cp missing 'Sample_type' field\n")
+
+  b_    <- !df_cp$Accession %in% grep_strings(acc_ex, df_cp$Accession, fixed=T, browse=F) # part of each plate but not any sample
+  df_cp <- df_cp[b_,]
+  lst_  <- by(df_cp, df_cp["Cp.run.id"], prenorm_sample_qc_single,
+              plate_layout=plate_layout, params=params)
+
+  df_ <- do.call(rbind, lst_)
+  return(df_)
+}
+
+water_qc <- function(df_cp, acc_w=c("Water", "WATER"), params=NULL, browse=F) {
+  if(browse) browser()
+
+  b_    <- df_cp$Accession %in% grep_strings(acc_w, df_cp$Accession, fixed=T, browse=F)
+  df_cp <- df_cp[b_,]
+  if(nrow(df_cp)==0)
+    return(NULL)
+  
+  lst_  <- by(df_cp, df_cp["Cp.run.id"], water_qc_single, params=params)
+  df_   <- do.call(rbind, lst_)
+  return(df_)
+}
+
+water_qc_single <- function(df_cp, params=NULL, browse=F) {
+  if(browse) browser()
+
+  cp_ <- df_cp$Cp
+  cp_[is.na(cp_) | (cp_ <= 0) | (cp_ >= 40)] <- 38
+#  cp_med <- tapply(cp_, df_cp$Gene, median)
+#  water_cp_min     <- min(cp_med)
+#  water_cp_low_cnt <- sum(cp_med < params$water_cp_min )
+  water_cp_min     <- min(cp_)
+  water_cp_low_cnt <- sum( cp_ < params$water_cp_min )
+  data_cnt <- length(cp_)
+  data_incomplete <- 1*(!data_cnt %in% c(params$data_cnt,params$water_cnt))
+  # gene Cps
+  cp_RPS4Y1 <- median(cp_[df_cp$Gene == "RPS4Y1"])
+  cp_GTFCP2 <- median(cp_[df_cp$Gene == "GTFCP2"])
+
+  df_ <- data.frame(Batch            = df_cp$Batch[1],
+                    Plate            = df_cp$Plate[1], 
+                    Accession        = df_cp$Accession[1], 
+                    Cp.run.id        = df_cp$Cp.run.id[1],
+                    Sample_type      = df_cp$Sample_type[1], 
+                    Is_water         = 1,
+                    Water_cp_min     = water_cp_min,
+                    Water_cp_low_cnt = water_cp_low_cnt,
+                    Water_fail       = 1*(water_cp_low_cnt > 0),
+                    Data_cnt         = data_cnt,
+                    Data_incomplete  = data_incomplete,
+                    RPS4Y1           = cp_RPS4Y1,
+                    GTFCP2           = cp_GTFCP2,
+                    stringsAsFactors = F
+                    )
+  return(df_)
+}
+
+####################
+# post normalize QC
+
+sample_trunc_ep_qc <- function(df_cp, gb_, params=NULL, browse=F) {
+  if(browse) browser()
+  
+  b_  <- (!df_cp$Gene %in% c("GTFCP2","RPS4Y1", "AssayWater", "ASSAYWATER"))
+  df_ <- df_cp[b_,]
+  
+#  gb_ <- gb_[gb_$Gene != "TSPAN16",]
+  
+  # median Cps
+  med_ <- tapply(df_$Cp, df_$Gene, median, na.rm=TRUE)
+  gb_  <- merge(gb_, data.frame(Gene=names(med_), med=unname(med_)), by="Gene", all.x=T)
+
+  b_ts  <- gb_$Gene == "TSPAN16"
+  b_n   <- gb_$Gene %in% c("HNRPF", "TFCP2")
+
+  # normalize with HNRPF, TFCP2
+  norm_ <- mean(gb_$med[b_n]) # na.rm=T  both must exist
+  gb_$med_n <- gb_$med - norm_
+  
+  # count truncations excluding HNRPF, TFCP2, and TSPAN16
+  trunc_cnt <- sum(((gb_$med_n < gb_$GL) | (gb_$med_n > gb_$GU))[!b_n & !b_ts], na.rm=T)
+
+  trunc_warn <- trunc_cnt > params$trunc_warn
+  
+  # trunc values
+  med_t <- pmax(gb_$med_n, gb_$GL)
+  med_t <- pmin(med_t,     gb_$GU) # every thing is truncated
+  gb_$med_t <- ifelse(b_n, gb_$med_n, med_t) # don't truncate the norm genes
+
+  gb_$trunc_hi <- gb_$med_n > gb_$GU
+  gb_$trunc_lo <- gb_$med_n < gb_$GL
+  gb_$trunc    <- gb_$trunc_hi | gb_$trunc_lo
+  
+  # calc expr profile
+  expr_profile <- sum( abs(gb_$med_t - gb_$GM)[ !b_ts]) # na.rm=T by agreement with Michael
+
+  b_pooled <- df_$Sample_type[1] %in% c("PAX","IRP","ICP")
+  if(b_pooled) {
+     ep_warn <- is.na(expr_profile) | (expr_profile > params$ep_pool_warn)
+     ep_fail <- is.na(expr_profile) | (expr_profile > params$ep_pool_max)
+  } else {
+     ep_warn <- is.na(expr_profile) | (expr_profile > params$ep_warn)
+     ep_fail <- is.na(expr_profile) | (expr_profile > params$ep_max)
+  }
+  
+  return(data.frame(Trunc_cnt=trunc_cnt, Trunc_warn=1*trunc_warn,
+                    Trunc_fail=NA, # a place holder, need to check if warn and 
+                                   # truncated vs untruncated scores differ by a lot
+                                   # done in calc_alg_score_d2_batch
+                    Expr_profile=expr_profile, Ep_warn=1*ep_warn, Ep_fail=1*ep_fail))
+}
+
+# after PAX d2 normalization
+# no normalization from HNRPF, TFCP2
+sample_sex_qc <- function(df_cp, params=NULL, browse=F) {
+  if(browse) browser()
+# rps4y1_midpoint   = 34  # fail RPS4Y1 Cp < 34 for female, opposite for males
+# rps4y1_female_min = 34  # fail RPS4Y1 Cp < 34 for female
+# rps4y1_male_max   = 30  # fail RPS4Y1 Cp > 30 for male
+# rps4y1_pool_max   = 30  # fail RPS4Y1 Cp > 30 for PAX/IRP/ICP pooled samples
+
+  if(!"Gender" %in% names(df_cp))
+    stop("df_cp missing 'Gender' field\n")
+  if(!"Sample_type" %in% names(df_cp))
+    stop("df_cp missing 'Sample_type' field\n")
+
+  b_  <- (df_cp$Gene == "RPS4Y1")
+  df_ <- df_cp[b_,]
+  df_$Cp[is.na(df_$Cp)] <- 38 # never fails
+  
+  st_  <- df_$Sample_type[1]
+  if(is.na(st_))
+    stop("Missing Sample_type field:",st_,"\n")
+  
+  RPS4Y1_m <- median(df_$Cp, na.rm=T)
+  sex_ <- df_$Gender[1]
+  b_pooled <- st_ %in% c("IRP","PAX","ICP")
+
+  if(b_pooled) {
+    sex_fail <- RPS4Y1_m > params$rps4y1_pool_max
+  } else if(st_ == "Clinical") {
+    if(!is.na(sex_) && sex_=="Male") {
+      sex_fail <- RPS4Y1_m > params$rps4y1_male_max  
+    } else if(!is.na(sex_) && sex_=="Female") {
+      sex_fail <- RPS4Y1_m < params$rps4y1_female_min      
+    } else {
+      stop("Unrecognized Gender field:",sex_,"\n")
+    }
+  } else if(st_ == "Water") {
+      sex_fail <- RPS4Y1_m < params$water_cp_min  # done in water_qc now
+  } else {
+    stop("Unrecognized Sample_type field:",st_,"\n")
+  }
+
+  return(data.frame(RPS4Y1=RPS4Y1_m, Sex_fail=1*sex_fail))
+}
+
+postnorm_sample_qc_single <- function(df_cp, plate_layout=NULL, gb_=gene_cp_bounds(),
+                                      params=NULL, browse=F) {
+  if(browse) browser()
+
+# RPS4Y1
+# Expression profile
+# Number of truncations
+# Number of Warnings, failures (sample, plate)
+# Additional Pax control metrics
+  
+  if(!"Gender" %in% names(df_cp))
+    stop("df_cp missing 'Gender' field\n")
+  if(!"Sample_type" %in% names(df_cp))
+    stop("df_cp missing 'Sample_type' field\n")
+
+  df_tr  <- sample_trunc_ep_qc(df_cp, gb_=gb_, params=params, browse=F)
+
+  df_sex <- sample_sex_qc(df_cp, params=params, browse=F)
+
+  df_    <- cbind(df_cp[1, c("Batch", "Plate", "Accession", "Cp.run.id")],
+                  df_tr, df_sex, stringsAsFactors=F)
+
+  return(df_)
+}
+
+# splits by Cp.run.id actually
+# can't handle any neg ctrls
+postnorm_sample_qc <- function(df_cp, plate_layout=NULL,
+                               gb_=gene_cp_bounds(), 
+                               acc_ex=c("(+) Ctrl","(-) Ctrl","Water","WATER"),
+                               params=NULL, browse=F) {
+  if(browse) browser()
+  
+  if(!"Gender" %in% names(df_cp))
+    stop("df_cp missing 'Gender' field\n")
+  if(!"Sample_type" %in% names(df_cp))
+    stop("df_cp missing 'Sample_type' field\n")
+  
+  b_    <- !df_cp$Accession %in% grep_strings(acc_ex, df_cp$Accession, fixed=T, browse=F)
+  df_cp <- df_cp[b_,]
+  lst_  <- by(df_cp, df_cp["Cp.run.id"], postnorm_sample_qc_single,
+              plate_layout=plate_layout, gb_=gb_, params=params)
+
+  df_ <- do.call(rbind, lst_)
+  return(df_)
+}
+
+# ***
+# QC Steps
+# ***
+# 
+# 1. For all samples, pre-normalization QC metrics are computed and
+# failing samples excluded
+# 2. If the number of passing Pax controls is fewer than 2 (3?), the
+# batch fails. Otherwise, median polish is applied to the matrix of
+# median Cps with Pax control samples as rows and genes as columns.
+# For each gene, the Batch Reference Cp is computed as the overall
+# effect plus the applicable column effect.
+# 3. Delta-delta normalization is applied to all samples.
+# 4. Post-normalization QC metrics are computed and failing samples
+# excluded.
+# 5. If the number of passing Pax controls is fewer than 2, the
+# batch fails. Otherwise, it passes.
+# 
+# ***
+# Pre-Normalization QC Metrics
+# ***
+# 
+#  Plate:
+#    Missing Cps
+#    Neg Ctl
+#  Sample:
+#    Missing Cps
+#    gDNA
+#    Rep SD (median, 90%, max)
+#    Expression mean (below?)
+# 
+# ***
+# Post-Normalization QC Metrics
+# ***
+# 
+# RPS4Y1
+# Expression profile
+# Number of truncations
+# Number of Warnings, failures (sample, plate)
+# Additional Pax control metrics
+
+# just one batch at a time
+# score_ranges    must be =NULL  or list(PAX=c(low, high))
+calc_alg_score_d2_batch <- function(df_cp, df_age, plate_layout=NULL,
+                                    gb_=gene_cp_bounds(), af2_scores=T,
+                                    df_delta2=NULL, df_cp_delta=NULL,
+                                    acc_prefix="PAX_ctrl", # set ="" for machine PQs
+                                    acc_ex=c("(+) Ctrl"), # exclusions
+                                    acc_nc=c("(-) Ctrl"),
+                                    acc_w=c("Water", "WATER"),
+                                    samples_per_plate=8,
+                                    params=alg_qc_metric_params(),
+                                    score_ranges=NULL, browse=F) {
+  if(browse) browser()
+
+  if(!is.null(df_delta2)) { # delta^2, can't have PAX score range
+    if(!is.null(score_ranges) && ("PAX" %in% names(score_ranges)))
+      stop("PAX score range not consistent with delta-delta\n")
+    if(acc_prefix == "")
+      stop("Must specify PAX prefix with batch delta^2 (acc_prefix='')\n")
+  } else { # no delta^2, may have PAX score range
+#    if(!is.null(score_ranges) && !is_score_range(score_ranges, type="PAX"))
+#      stop("Invalid PAX score range in score_ranges\n")
+  }
+
+  if(!samples_per_plate %in% c(4,8))
+    stop("samples_per_plate must be 4 or 8\n")
+
+  # check standard fields
+  fields <- c("Batch", "Plate", "Well", "Cp.run.id", "Accession", "Gene", "Cp")
+  if(!all(fields %in% names(df_cp)))
+    stop("df_cp missing required fields:",
+         paste(fields[!fields %in% names(df_cp)],collapse=", "),"\n")
+
+  fields <- c("Accession", "Age", "Gender", "Sample_type")
+  if(!all(fields %in% names(df_age)))
+    stop("df_age missing required fields:",
+         paste(fields[!fields %in% names(df_age)],collapse=", "),"\n")
+  df_age <- df_age[fields]
+
+  # exclusions
+  df_cp <- df_cp[!df_cp$Accession %in%
+                 grep_strings(acc_ex, unique(df_cp$Accession), fixed=T, browse=F),]
+
+  # add water accessions to df_age if necessary
+  acc_w0 <- grep_strings(c(acc_w), unique(df_cp$Accession), fixed=T, browse=F)
+  if(length(acc_w0) > 0) {
+    acc_w0 <- acc_w0[!acc_w0 %in% df_age$Accession] # not already in df_age
+    if(length(acc_w0) > 0)
+      df_age <- rbind(df_age,
+                      data.frame(Accession   = acc_w0,
+                                 Age         = NA,
+                                 Gender      = NA,
+                                 Sample_type = "Water",
+                                 stringsAsFactors = F)
+                      )
+  }
+  
+  # accessions in df_cp must be in df_age
+  # but df_age may have extras
+  acc_0 <- grep_strings(c(acc_nc), unique(df_cp$Accession), fixed=T, browse=F)
+  acc_  <- df_cp$Accession[!df_cp$Accession %in% acc_0]
+  if(any(!acc_ %in% df_age$Accession))
+    stop("Some accessions in df_cp are not in df_age\n")
+
+  df_cp$Cp[(df_cp$Cp <= 0) | (df_cp$Cp >= 40)] <- NA
+  df_cp$Cp[is.na(df_cp$Cp) & (df_cp$Gene == "TSPAN16")] <- 38 # reset TSPAN failures
+#  df_cp[df_cp <= 0] <- 40
+  
+  # required by many
+  df_cp_age <- merge(df_cp, df_age, by="Accession", all.x=T) # keep the neg ctrls
+
+  # need sample per plate to set gDNA delta bound
+  if(samples_per_plate==4) { # samples_per_plate(df_cp, browse=F)==4
+    params$gdna_min  <- params$gdna_min_4sp
+    params$data_cnt  <- params$data_cnt_4sp # wells per sample, not including neg ctrls
+    params$water_cnt <- params$water_cnt_4sp # wells per sample, not including neg ctrls
+  } else {
+    params$water_cnt <- params$data_cnt # same as regular sample for 8sp
+  }
+
+  # prenorm
+  df_prenorm_sample_qc <- prenorm_sample_qc(df_cp_age, plate_layout=plate_layout,
+                                            acc_ex=c(acc_ex, acc_nc, acc_w), # no water
+                                            params=params, browse=F)
+  df_prenorm_plate_qc  <- prenorm_plate_qc(df_cp_age, plate_layout=plate_layout,
+                                           acc_ex=c(acc_ex, acc_w), acc_nc=acc_nc, # no water
+                                           params=params, browse=F)
+  df_prenorm_qc        <- merge(df_prenorm_sample_qc, df_prenorm_plate_qc)
+  
+  # set water fields
+  # but merge with df_water_qc after post-norm plate metrics below
+  df_prenorm_qc$Is_water         <- 0  # no water
+  df_prenorm_qc$Water_cp_min     <- 0 + NA # keep it numeric
+  df_prenorm_qc$Water_cp_low_cnt <- 0
+  df_prenorm_qc$Water_fail       <- 0
+
+  # water check, should have no small Cps
+  # exclude from post-norm plate metrics below
+  # merge at the end
+  df_water_qc <- water_qc(df_cp_age, acc_w=acc_w, params=params, browse=F)
+  if(!is.null(df_water_qc))
+    df_water_qc <- merge(df_water_qc, df_prenorm_plate_qc)
+
+  # conditional plate passing status needed for PAX ctrl in delta^2
+  df_prenorm_plate_status <- prenorm_plate_status(df_prenorm_qc, params=params, browse=F)
+  df_prenorm_qc <- merge(df_prenorm_qc, df_prenorm_plate_status[c("Plate","Plate_prenorm_fail")]) # add Plate_prenorm_fail field
+
+  # PAX controls
+  # get batch controls
+  if(acc_prefix != "") {
+    lst_ctrl <- get_batch_ctrls(df_cp, acc_prefix=acc_prefix,
+                              acc_nc=acc_nc, #acc_pnc=c(acc_nc, acc_ex),
+                              include_negctrls=F, browse=F)
+    df_batch_ctrls <- lst_ctrl[[1]] # batch ctrl data
+
+    # calc PAX QC for each PAX ctrl
+    # return the passing ctrls
+    df_batch_ctrl_qc <- batch_ctrls_qc(df_batch_ctrls, df_prenorm_qc,
+                                       params=params, browse=F)
+    df_prenorm_qc <- merge(df_prenorm_qc, df_batch_ctrl_qc, all.x=T)
+    df_prenorm_qc$Is_pax_ctrl   [is.na(df_prenorm_qc$Is_pax_ctrl)]    <- 0
+    df_prenorm_qc$Pax_fail      [is.na(df_prenorm_qc$Pax_fail)]       <- 0
+    df_prenorm_qc$Pax_batch_fail[is.na(df_prenorm_qc$Pax_batch_fail)] <- 0
+    
+    # restrict to passing ctrls
+    pax_cri <- df_prenorm_qc$Cp.run.id[df_prenorm_qc$Is_pax_ctrl & !df_prenorm_qc$Pax_fail]
+    df_batch_ctrls <- df_batch_ctrls[df_batch_ctrls$Cp.run.id %in% pax_cri,]
+  } else { # no PAX (eg, machine PQ)
+    if(!is.null(df_delta2)) # already checked above
+      stop("Can't have batch delta^2 without PAX controls (acc_prefix='')\n")
+    df_prenorm_qc$Is_pax_ctrl    <- 0
+    df_prenorm_qc$Pax_fail       <- 0
+    df_prenorm_qc$Pax_batch_fail <- 0
+    pax_cri <- c()
+    df_batch_ctrls <- NULL
+  }
+  
+  # delta2
+  df_batch_delta <- NULL
+  if(!is.null(df_delta2)) { # do delta2
+    if(!is.null(df_cp_delta))
+       stop("Can't have both df_delta2 and df_cp_delta\n")
+
+    # check delta2 is a gene Cp profile
+    if(!is_gene_profile(df_delta2, browse=F))
+      stop("Argument df_delta2 is not a gene profile\n")
+    
+#    # restrict to passing ctrls
+#    pax_cri <- df_prenorm_qc$Cp.run.id[df_prenorm_qc$Is_pax_ctrl & !df_prenorm_qc$Pax_fail]
+#    df_batch_ctrls <- df_batch_ctrls[df_batch_ctrls$Cp.run.id %in% pax_cri,]
+    
+    # calc batch gene Cp profile
+    df_batch_delta <- calc_batch_delta(df_batch_ctrls, df_delta2,
+                                       acc_nc=acc_nc, # acc_ex=c(acc_ex, acc_nc),
+                                       df_cp$Batch[1], browse=F)
+    
+    # adjust Cp values
+    df_cp$Cp_orig <- df_cp$Cp
+    df_cp$Cp     <- adjust_cp_delta(df_cp,     df_batch_delta, browse=F)
+    df_cp_age$Cp <- adjust_cp_delta(df_cp_age, df_batch_delta, browse=F) # Ugh
+
+  } else if(!is.null(df_cp_delta)) {
+
+    if(!is_gene_profile(df_cp_delta, field="Cp_delta", browse=F))
+      stop("Argument df_cp_delta is not a gene profile\n")
+
+    # adjust Cp values
+    df_cp$Cp_orig <- df_cp$Cp
+    df_cp$Cp     <- adjust_cp_delta(df_cp,     df_cp_delta, browse=F)
+    df_cp_age$Cp <- adjust_cp_delta(df_cp_age, df_cp_delta, browse=F) # Ugh
+  }
+
+  # postnorm
+  df_postnorm_sample_qc <- postnorm_sample_qc(df_cp_age, plate_layout=plate_layout,
+                                              gb_=gb_, acc_ex=c(acc_ex, acc_nc, acc_w), # no water
+                                              params=params, browse=F)
+  df_qc    <- merge(df_prenorm_qc, df_postnorm_sample_qc) # no water
+
+  # scores, has water
+  df_score <- calc_alg_score_v2(df_cp, df_age, gb_=gb_, af2_scores=af2_scores, browse=F)
+  df_all   <- merge(df_score, df_qc) # excludes water
+  if(!is.null(df_water_qc))
+    df_water_qc <- merge(df_water_qc, df_score) # water only, add gene CPs
+
+  df_all$Score_range_fail <- score_range_fail(df_all, score_ranges, browse=F)
+  
+  # more metrics
+  score_diff <- df_all$Trans_score - df_all$Trans_score_nt
+  df_all$Trunc_fail <- 1*((df_all$Trunc_cnt > params$trunc_max) & !is.na(score_diff) &
+                          (abs(score_diff) > params$trans_score_delta_max))
+
+  # count warnings
+  warning_cnt <- apply(df_all[c("Sample_well_warn",  "Sample_gene_fail", # there is no warn level
+                                "Expr_mean_warn", "Ep_warn",
+                                "Med_sd_warn", "Sd_90_warn", "Sd_max_fail",
+                                "Gdna_warn", "Trunc_warn", "Sex_fail")], 1, sum)
+  warning_cnt <- pmin(params$warning_max_per_sample, warning_cnt) # truncate to 3
+  # exclude gender
+  warning_cnt_ng <- apply(df_all[c("Sample_well_warn",  "Sample_gene_fail", # there is no warn level
+                                "Expr_mean_warn", "Ep_warn",
+                                "Med_sd_warn", "Sd_90_warn", "Sd_max_fail",
+                                "Gdna_warn", "Trunc_warn")], 1, sum) # row sums # "Sex_fail" back in?
+  warning_cnt_ng <- pmin(params$warning_max_per_sample, warning_cnt_ng) # truncate to 3
+  warning_fail           <- 1*(warning_cnt > params$warning_max)
+  warning_fail_ng        <- 1*(warning_cnt_ng > params$warning_max)
+  df_all$Warning_cnt     <- warning_cnt
+  df_all$Warning_cnt_ng  <- warning_cnt_ng
+  df_all$Warning_fail    <- 1*warning_fail
+  df_all$Warning_fail_ng <- 1*warning_fail_ng
+  df_all$Data_incomplete <- 1*df_all$Data_incomplete
+
+  # fail not for gender or trunc
+  fail_ngt <- df_all$Data_incomplete  |
+              df_all$Sample_well_fail | df_all$Gdna_fail      |
+              df_all$Sample_gene_fail | df_all$Expr_mean_fail |
+              df_all$Med_sd_fail      | df_all$Sd_90_fail     | df_all$Sd_max_fail |
+              df_all$Ep_fail          | df_all$Warning_fail_ng | df_all$Score_range_fail
+  fail_ <- fail_ngt | df_all$Warning_fail | df_all$Sex_fail | df_all$Trunc_fail
+  
+  #  df_all$Plate_well_missing_fail  # plate level
+  #  df_all$Negctrl_fail             # plate level
+  
+  df_all$fail_ngt    <- 1*fail_ngt
+  df_all$Sample_pass <- !fail_
+
+  # check plate level failure
+  df_plate_status <- plate_status(df_all, params, browse=F)
+  df_plate_status$Negctrl_fail <- NULL # all ready in df_all
+  if(!is.null(df_water_qc))
+    df_water_qc <- merge(df_water_qc, df_plate_status, by="Plate") # water only, add gene CPs
+  df_all <- merge(df_all, df_plate_status, by="Plate")
+
+  # recheck PAX controls
+  pax_batch_fail <- FALSE # init
+  df_all$Pax_batch_med  <- NA
+  df_all$Pax_batch_mdev <- NA
+  df_all$Pax_batch_sd   <- NA
+  df_all$Pax_batch_fail <- 0
+  if(acc_prefix != "") { #!is.null(df_delta2)) { # doing delta2
+    pax_cri      <- sort(unique(df_batch_ctrls$Cp.run.id))
+    pax_batch_fail <- TRUE # init
+
+    if(length(pax_cri)>0) { # doing delta2 and some passing PAX ctrls
+  #   pax_cri        <- unique(df_batch_ctrls$Cp.run.id)
+      b_pax          <- df_all$Cp.run.id %in% pax_cri
+      pax_fail       <- !(df_all$Sample_pass[b_pax] & df_all$Plate_pass[b_pax]) # sample or plate failure
+      if(length(pax_cri) != length(pax_fail))
+        stop("Length(pax_cri)=",Length(pax_cri),"!=",length(pax_fail),"=Length(pax_fail), this shouldn't happen\n")
+
+      # calc median, max dev, and SD
+      pax_scores     <- df_all$Score[b_pax][!pax_fail] # passing ctrls
+      pax_batch_med  <- median(pax_scores)
+      pax_batch_sd   <- sd(pax_scores)
+      if(is.na(pax_batch_sd))
+        pax_batch_sd<- 0
+      pax_batch_mdev <- max(abs(pax_scores-pax_batch_med))
+
+      pax_batch_fail <- (length(pax_cri)==0)   || # none left
+                        (sum(!pax_fail) ==0)   || # none pass
+                        (sum(pax_fail) > length(pax_fail)*params$pax_batch_fail_pct) || # not enough
+                         is.na(pax_batch_med)  || # shouldn't happen
+                         is.na(pax_batch_sd)   || # shouldn't happen
+                         is.na(pax_batch_mdev) || # shouldn't happen
+                         (pax_batch_mdev > params$pax_batch_max_dev) || # max deviation
+                         (pax_batch_sd   > params$pax_batch_max_sd)     # max SD
+
+      df_all$Pax_batch_med  <- pax_batch_med 
+      df_all$Pax_batch_mdev <- pax_batch_mdev
+      df_all$Pax_batch_sd   <- pax_batch_sd
+    } 
+    df_all$Pax_batch_fail <- 1*pax_batch_fail
+  }
+#  else { # update PAX stuff for not batch delta
+#    df_all$Pax_fail    <- 1*((df_all$Is_pax_ctrl==1) &
+#                             (!df_all$Sample_pass | !df_all$Plate_pass))
+#  }
+  
+  if(!is.null(df_water_qc)) {
+    df_water_qc$Pax_batch_fail <- 1*pax_batch_fail
+    df_water_qc$Pax_batch_med  <- NA
+    df_water_qc$Pax_batch_mdev <- NA
+    df_water_qc$Pax_batch_sd   <- NA
+  }
+
+  # check batch level failures
+  batch_samp_fail_cnt  <- sum(!df_all$Sample_pass)
+# batch_samp_fail      <- batch_samp_fail_cnt > params$batch_samp_fail_max
+  batch_samp_warn_cnt  <- sum(df_all$Warning_cnt) # accumulate warnings over all samples
+#                        # sum(df_all$Warning_cnt > 0) # samples with at least one warning
+# batch_samp_warn      <- batch_samp_warn_cnt > params$batch_samp_warn_max
+  batch_plate_fail_cnt <- sum(!df_plate_status$Plate_pass)
+# batch_plate_fail     <- batch_plate_fail_cnt > params$batch_plate_fail_max
+
+  df_all$Batch_samp_fail_cnt  <- batch_samp_fail_cnt
+  df_all$Batch_samp_warn_cnt  <- batch_samp_warn_cnt
+  df_all$Batch_plate_fail_cnt <- batch_plate_fail_cnt
+# df_all$Batch_pass    <- !(pax_batch_fail || batch_plate_fail) # || batch_samp_fail)
+
+  if(!is.null(df_water_qc)) {
+    df_water_qc$Batch_samp_fail_cnt  <- batch_samp_fail_cnt 
+    df_water_qc$Batch_samp_warn_cnt  <- batch_samp_warn_cnt 
+    df_water_qc$Batch_plate_fail_cnt <- batch_plate_fail_cnt
+    # set sample fail/warn fields for water
+    df_water_qc <- set_water_defaults(df_water_qc)
+    # water merge, sample sets are disjoint
+
+    b_1 <- names(df_all) %in% names(df_water_qc)
+    if(any(!b_1))
+      cat("Fields in df_all not in df_water_qc:", paste(names(df_all)[!b_1], sep=","),"\n")
+    b_2 <-  names(df_water_qc) %in% names(df_all)
+    if(any(!b_2))
+      cat("Fields in df_water_qc not in df_all:", paste(names(df_water_qc)[!b_2], sep=","),"\n")
+    if(any(!b_1) || any(!b_2))
+    stop("This shouldn't happen\n")
+    df_all <- rbind(df_all, df_water_qc)
+  }
+  
+  ord    <- order(df_all$Batch, df_all$Plate, df_all$Cp.run.id)
+  df_all <- df_all[ord,]
+  rownames(df_all) <- 1:nrow(df_all)
+
+  return(list(df_all=df_all, df_batch_delta=df_batch_delta))
+  
+}
+
+is_score_range <- function(score_range, type="PAX", browse=F) {
+  if(browse) browser()
+
+  if(is.null(score_range))
+    return(FALSE)
+  if(!type %in% names(score_range))
+    return(FALSE)
+#    stop("Can't find",type,"item in score_range\n", sep="")
+  if(!is.numeric(score_range[[type]]))
+    return(FALSE)
+#    stop("score_range$",type," must be numeric\n", sep="")
+  if(length(score_range[[type]]) != 2)
+    return(FALSE)
+#    stop("score_range$",type," must be numeric and length two\n", sep="")
+#  if(score_range$PAX[1] > score_range$PAX[2])
+#    stop("Must have score_range$",type,"[1] <= score_range$",type,"[2]\n", sep="")
+  return(TRUE)
+}
+
+# returns vector  1=fail, 0=pass or not PAX ctrl
+pax_score_range_fail <- function(df_all, score_range, browse=F) {
+  if(browse) browser()
+
+  if(is.null(score_range))
+    return(rep(0, nrow(df_all)))
+
+  rng_  <- score_range$PAX
+  fail_ <- (df_all$Is_pax_ctrl == 1) &
+           !is.na(df_all$Score) &
+           ((df_all$Score < rng_[1]) | (rng_[2] < df_all$Score))
+
+  return(1*fail_)
+}
+
+# returns vector  1=fail, 0=pass or range not checked
+score_range_fail <- function(df_all, score_range, browse=F) {
+  if(browse) browser()
+
+  if(is.null(score_range) ||
+     (is.list(score_range) && length(score_range)==0))
+    return(rep(0, nrow(df_all)))
+
+  fail_ <- mapply(function(s_, type_, sr_) {
+                    rng_  <- sr_[[type_]]
+                    fail_ <- !is.null(rng_) &&
+                             !is.na(s_) &&
+                             ((s_ < rng_[1]) || (rng_[2] < s_))},
+                  df_all$Score, df_all$Sample_type,
+                  MoreArgs=list(score_range))
+
+  return(1*fail_)
+}
+
+set_water_defaults <- function(df_, browse=F) {
+  if(browse) browser()
+  
+  df_$Score                    <- NA
+  df_$Trans_score              <- NA
+  df_$Score_nt                 <- NA
+  df_$Trans_score_nt           <- NA
+  df_$Is_pax_ctrl              <- 0
+  df_$Pax_fail                 <- 0
+  df_$Pax_batch_fail           <- 0
+  df_$Sample_well_missing      <- NA
+  df_$Sample_well_warn         <- 0
+  df_$Sample_well_fail         <- 0
+  df_$Gdna_warn                <- 0
+  df_$Gdna_fail                <- 0
+  df_$Sample_well_total        <- df_$Data_cnt
+  df_$Sample_missing_1well_cnt <- 0
+  df_$Sample_missing_2well_cnt <- 0
+  df_$Sample_missing_3well_cnt <- 0
+  df_$Sample_gene_na_cnt       <- 0
+  df_$Sample_gene_fail         <- 0
+  df_$Expr_mean_warn           <- 0
+  df_$Expr_mean_fail           <- 0
+  df_$Med_sd_warn              <- 0
+  df_$Med_sd_fail              <- 0
+  df_$Sd_90_warn               <- 0
+  df_$Sd_90_fail               <- 0
+  df_$Sd_max_fail              <- 0
+  df_$Trunc_cnt                <- 0
+  df_$Trunc_warn               <- 0
+  df_$Trunc_fail               <- 0
+  df_$Ep_warn                  <- 0
+  df_$Ep_fail                  <- 0
+  df_$Sex_fail                 <- 0
+  df_$Warning_cnt              <- 0
+  df_$Warning_cnt_ng           <- 0
+  df_$Warning_fail             <- 0
+  df_$Gdna_delta_cp            <- NA
+  df_$Expr_mean                <- NA
+  df_$Med_sd                   <- NA
+  df_$Sd_90                    <- NA
+  df_$Sd_max                   <- NA
+  df_$Expr_profile             <- NA
+  df_$fail_ngt                 <- 0
+  df_$Sample_pass              <- T # ? there's a separate water_fail field
+  df_$Score_range_fail         <- 0
+  df_$Plate_prenorm_fail       <- 0
+# df_$Warning_cnt_ng           <- NA
+  df_$Warning_fail_ng          <- 0
+
+  return(df_)
+}
+
+#samples_per_plate <- function(df_, browse=F) {
+#  if(browse) browser()
+#  return(length(unique(df_$Accession))/max(1, length(unique(df_$Plate))) )
+#}
+
+prenorm_plate_status <- function(df_all, params=NULL, browse=F) {
+  if(browse) browser()
+
+  lst_ <- by(df_all, df_all$Plate, prenorm_plate_status_single, params)
+  df_status <- do.call(rbind, lst_)
+  return(df_status)
+}
+
+prenorm_plate_status_single <- function(df_, params=NULL, browse=F) {
+  if(browse) browser()
+
+  # count warnings
+  warning_cnt <- apply(df_[c("Sample_well_warn",  "Sample_gene_fail",
+                                "Expr_mean_warn", # "Ep_warn", "Trunc_warn", "Sex_fail"
+                                "Med_sd_warn", "Sd_90_warn", "Sd_max_fail",
+                                "Gdna_warn")], 1, sum)
+  warning_cnt <- pmin(params$warning_max_per_sample, warning_cnt) # truncate to 3
+  warning_fail           <- 1*(warning_cnt > params$warning_max)
+
+  fail_    <- df_$Data_incomplete  |
+              df_$Sample_well_fail | df_$Gdna_fail      |
+              df_$Sample_gene_fail | df_$Expr_mean_fail |
+              df_$Med_sd_fail      | df_$Sd_90_fail     | df_$Sd_max_fail |
+              warning_fail
+  fail_    <- 1*fail_
+
+  # sample failures
+  b_ <- df_$Is_water == 0
+  samples_total   <- nrow(df_)
+  sample_fail_cnt <- sum(fail_[b_])       
+  sample_warn_cnt <- sum(warning_cnt[b_])
+  plate_fail <- (df_$Negctrl_fail[1] > 0) ||   # neg ctrl failure
+                ((sample_fail_cnt > samples_total*params$plate_samp_fail_pct) &&
+                 (samples_total >= 4))    ||   #
+                ((sample_warn_cnt > samples_total*params$plate_samp_warn_pct) &&
+                 (samples_total >= 4))        #
+                
+  return(data.frame(Plate                 = df_$Plate[1],
+                    Negctrl_fail          = df_$Negctrl_fail[1],
+                    Plate_sample_fail_cnt = sample_fail_cnt,
+                    Plate_sample_warn_cnt = sample_warn_cnt,
+                    Plate_prenorm_fail    = 1*plate_fail,
+                    stringsAsFactors=F))
+#  return(data.frame(Plate              = df_$Plate[1],
+#                    Plate_prenorm_fail = 1*plate_fail,
+#                    stringsAsFactors=F))
+}
+
+plate_status <- function(df_all, params=NULL, browse=F) {
+  if(browse) browser()
+
+  lst_ <- by(df_all, df_all$Plate, plate_status_single, params)
+  df_status <- do.call(rbind, lst_)
+  return(df_status)
+}
+
+plate_status_single <- function(df_, params=NULL, browse=F) {
+  if(browse) browser()
+  # sample failures
+  samples_total   <- length(df_$Sample_pass)
+  sample_fail_cnt <- sum(df_$fail_ngt)        # fail excluding sex and trunc
+  sample_warn_cnt <- sum(df_$Warning_cnt_ng)  # exclude sex fail
+  plate_fail <- (df_$Negctrl_fail[1] > 0) ||  # neg ctrl failure
+                ((sample_fail_cnt > samples_total*params$plate_samp_fail_pct) &&
+                 (samples_total >= 4))    ||  #
+                ((sample_warn_cnt > samples_total*params$plate_samp_warn_pct) &&
+                 (samples_total >= 4))        #
+                
+             #   || (sample_warn_cnt > params$plate_samp_warn_max)
+  return(data.frame(Plate                 = df_$Plate[1],
+                    Negctrl_fail          = df_$Negctrl_fail[1],
+                    Plate_sample_fail_cnt = sample_fail_cnt,
+                    Plate_sample_warn_cnt = sample_warn_cnt,
+                    Plate_pass            = !plate_fail))
+}
+                    
+#    df_cp          data.frame contains Cp.run.id, Accession
+#                   nd Cp values for all 23 algorithm genes in triplicate
+#    df_age         contains fields Accession, Gender, Age, and Sample_type
+#                   sample_type is 'Clinical', 'PAX', 'IRP', 'ICP' or 'Water'
+#                   Pooled samples should have Age=60 and averages score for male/female
+#    gb_            gene bounds data.frame from call to gene_cp_bounds()
+#    af2_scores     when TRUE (the default) calculates the usual score,
+#                   when FALSE the AF2 term in the algorithm is omitted
+# returns a data.f  ame:
+#    Plate          
+#    Cp.run.id      unique run ID
+#    Accession      unique to the sample
+#    Gender         Gender as supplied
+#    Age            Age as supplied
+#    Score          CorusCAD I algorithm score
+#    Trans_score    transformed score
+#    Score_nt       score with no truncations
+#    Trans_score_nt transformed score with no truncations
+#    Error          error string, "" if no error
+#   
+calc_alg_score_v2 <- function(df_cp, df_age, gb_=gene_cp_bounds(), af2_scores=T, browse=F) {
+  if(browse) browser()
+
+#  nm_ <- c("Cp.run.id", "Accession", "Score", "Trans_score", "Gender", "Error")
+#  df_e <- df_empty(length(nm_), names=nm_)
+  if(!all(c("Batch","Cp.run.id", "Accession", "Gene", "Cp") %in% names(df_cp)))
+    stop("df_cp missing fields: Batch, Cp.run.id, Accession, Gene, or Cp\n")
+  if(!all(c("Accession", "Age","Gender","Sample_type") %in% names(df_age)))
+    stop("df_age missing fields: Accession, Age, or Sample_type\n")
+  df_age <- df_age[c("Accession", "Age","Gender","Sample_type")]
+
+  if(any(duplicated(df_age$Accession)))
+    stop("Accession IDs not unique in df_age\n")
+
+  ############
+  # 
+  df_cp$Cp[!is.na(df_cp$Cp) & ((df_cp$Cp <= 0) | (df_cp$Cp >= 40))] <- NA
+  df_cp$Cp[is.na(df_cp$Cp) & (df_cp$Gene %in% c("TSPAN16","RPS4Y1","GTFCP2","gTFCP2"))] <- 38
+  
+#  acc_ <- unique(df_cp$Accession)
+#  b_   <- !acc_ %in% df_age$Accession
+#  if(any(b_))
+#    stop("Some Accessions in df_cp are not in df_age\n")
+  
+  b_ <- df_age$Accession %in% df_cp$Accession
+  df_age <- df_age[b_,]
+  
+  # first calc scores for clinical & water subset
+  df_s <- NULL
+  b_pooled <- df_age$Sample_type %in% c("IRP","PAX","ICP")
+  if(any(!b_pooled)) {
+    df_age_ <- df_age[!b_pooled,]
+    df_cp_  <- merge(df_cp, df_age_, by="Accession") # this excludes neg ctrls
+    lst_    <- by(df_cp_, df_cp_$Cp.run.id, calc_alg_score_single_v2, gb_=gb_, af2_scores=af2_scores)
+    df_s    <- do.call(rbind, lst_)
+  }
+  
+  # now the pooled subset
+  if(any(b_pooled)) {
+    df_age_ <- df_age[b_pooled,] # pooled subset
+    df_cp_  <- merge(df_cp, df_age_, by="Accession") # this excludes neg ctrls
+    
+    # calc score for male
+    df_cp_$Gender <- "Male"
+    lst_   <- by(df_cp_, df_cp_$Cp.run.id, calc_alg_score_single_v2, gb_=gb_, af2_scores=af2_scores)
+    df_m   <- do.call(rbind, lst_)
+    df_m$Score_m        <- df_m$Score
+    df_m$Score_nt_m     <- df_m$Score_nt
+#   df_m$Score          <- NULL  # save the place holders
+#   df_m$Score_nt       <- NULL
+#   df_m$Trans_score    <- NULL
+#   df_m$Trans_score_nt <- NULL
+#   df_m$Age            <- NULL # keep this
+    df_m$Gender         <- NA   # reset
+
+    # calc score for female
+    df_cp_$Gender <- "Female"
+    lst_   <- by(df_cp_, df_cp_$Cp.run.id, calc_alg_score_single_v2, gb_=gb_, af2_scores=af2_scores)
+    df_f   <- do.call(rbind, lst_)
+    df_f$Score_f        <- df_f$Score
+    df_f$Score_nt_f     <- df_f$Score_nt
+    df_f$Score          <- NULL
+    df_f$Score_nt       <- NULL
+    df_f$Trans_score    <- NULL
+    df_f$Trans_score_nt <- NULL
+    df_f$Gender         <- NULL
+    df_f$Age            <- NULL
+
+    # use average score
+    df_p <- merge(df_m, df_f[c("Cp.run.id","Accession","Score_f","Score_nt_f")],
+                  by=c("Cp.run.id", "Accession"))
+    df_p$Score   <- (df_p$Score_m + df_p$Score_f)/2
+    df_p$Trans_score <- transformed_score(df_p$Score)
+    df_p$Score_m <- NULL
+    df_p$Score_f <- NULL
+    df_p$Score_nt <- (df_p$Score_nt_m + df_p$Score_nt_f)/2
+    df_p$Trans_score_nt <- transformed_score(df_p$Score_nt)
+    df_p$Score_nt_m <- NULL
+    df_p$Score_nt_f <- NULL
+
+    if(is.null(df_s))
+      df_s <- df_p
+    else
+      df_s <- rbind(df_s, df_p)
+  }
+
+  rownames(df_s) <- 1:nrow(df_s)
+  return(df_s)
+}
+
+#    df_             data.frame contains Cp values for all 23 algorithm genes 
+#    Batch           must be in df_
+#    Plate           must be in df_
+#    Cp.run.id       must be in df_
+#    Accession       must be in df_
+#    Sample_type     must be in df_
+#    Gender          Male/Female, must be in df_
+#    Age             Must be in df_
+#    gb_             gene bounds data.frame from call to gene_cp_bounds()
+#    af2_scores =T   for normal scores, =F for non-AF2 scores
+# returns a data.frame:
+#    Batch
+#    Plate
+#    Cp.run.id       unique run ID
+#    Accession       unique to the sample
+#    Sample_type
+#    Gender          Gender as supplied
+#    Age             Age as supplied
+#    Score           CorusCAD I algorithm score
+#    Trans_score     transformed score
+#    Score_nt        score not truncated
+#    Trans_score_nt  transformed score not truncated
+#    23 alg genes
+# no error code
+# the score should be NA if any data is missing
+calc_alg_score_single_v2 <- function(df_, gb_=gene_cp_bounds(), af2_scores=T, browse=F) {
+  if(browse) browser()
+    
+  #####################
+  # check data complete
+  df_ <- df_[df_$Gene %in% gb_$Gene,]
+
+  df_$Cp <- as.numeric(df_$Cp) # this auto converts NoCall to NA
+  # Cp=0 is actually Cp=40, occurs a lot
+  df_$Cp[!is.na(df_$Cp) & (df_$Cp<=0 | df_$Cp >= 40)] <- NA
+  df_$Cp[is.na(df_$Cp) & df_$Gene == "TSPAN16"] <- 38
+
+  # water is a separate category
+  if(df_$Sample_type[1] == "Water") {
+
+    df_$Cp[is.na(df_$Cp)] <- 38
+    # minimum values (not medians)
+    min_    <- tapply(df_$Cp, factor(df_$Gene, levels=gb_$Gene), min)
+    min_lst <- as.list(min_)
+
+    ret_ <- cbind(data.frame(Batch=df_$Batch[1], Plate=df_$Plate[1], Cp.run.id=df_$Cp.run.id[1],
+                             Accession=df_$Accession[1], Sample_type=df_$Sample_type[1],
+                             Gender   =NA,      Age=NA, 
+                             Score    =NA,      Trans_score   =NA,
+                             Score_nt =NA,      Trans_score_nt=NA,
+                             stringsAsFactors=F),
+                  min_lst, stringsAsFactors=F)
+
+    return(ret_)
+  }
+
+  ###################
+  # median Cp values
+#  cnt_na <- tapply(df_$Cp, df_$Gene, function(x) sum(is.na(x)))
+  med_   <- tapply(df_$Cp, factor(df_$Gene, levels=gb_$Gene), median, na.rm=TRUE)
+  med_lst   <- as.list(med_)
+
+  ##################
+  # normalize values
+#  ord       <- order_a2b(gb_$Gene, names(med_))
+#  gb_       <- gb_[ord,]
+  if(!vsame(gb_$Gene, names(med_)))
+    stop("Gene order not matching in gb_ and med_ (this shouldn't happen)\n")
+  gb_$med   <- as.vector(med_)
+  norm_     <- with(as.list(med_), (HNRPF + TFCP2)/2)
+  gb_$med_n <- gb_$med - norm_
+  
+  ###################
+  # trimmed values
+  b_norm       <- !gb_$Gene %in% c("HNRPF","TFCP2")
+  gb_$med_n[b_norm] <- pmax(gb_$med_n, gb_$GL)[b_norm] # trim to lower bound
+  gb_$med_n[b_norm] <- pmin(gb_$med_n, gb_$GU)[b_norm] # trim to upper bound
+#  gb_$med_n <- pmax(gb_$med_n, gb_$GL) # trim to lower bound
+#  gb_$med_n <- pmin(gb_$med_n, gb_$GU) # trim to upper bound
+  med_t        <- gb_$med_n + norm_
+  names(med_t) <- gb_$Gene
+  med_t_lst    <- as.list(med_t)
+
+  ###################
+  #
+  af2_median <- gb_$GM[gb_$Gene == "AF289562"]
+  Score    <- score_calc(med_t_lst, df_$Gender[1], df_$Age[1], gb_,
+                         af2_scores=af2_scores, af2_median=af2_median, browse=F)
+  Score_nt <- score_calc(med_lst,   df_$Gender[1], df_$Age[1], gb_,
+                         af2_scores=af2_scores, af2_median=af2_median, browse=F)
+  
+  ###################
+  # transformed Score
+  t_score    <- transformed_score(Score,    browse=F)
+  t_score_nt <- transformed_score(Score_nt, browse=F)
+  
+  ret_ <- cbind(data.frame(Batch=df_$Batch[1], Plate=df_$Plate[1], Cp.run.id=df_$Cp.run.id[1],
+                           Accession=df_$Accession[1], Sample_type=df_$Sample_type[1],
+                           Gender   =df_$Gender[1], Age=df_$Age[1], 
+                           Score    =Score,         Trans_score   =t_score,
+                           Score_nt =Score_nt,      Trans_score_nt=t_score_nt,
+                           stringsAsFactors=F),
+                med_t_lst, stringsAsFactors=F)
+
+  return(ret_)
+}
+
+score_calc <- function(med_lst, Gender, Age, gb_,
+                       af2_scores=TRUE, af2_median=NA, browse=F) {
+  if(browse) browser()
+
+  attach(med_lst)
+  AF161365 <- TSPAN16 # alias
+
+  Norm1 <- RPL28
+  Norm2 <- (1/2 * HNRPF   + 1/2 * TFCP2)
+  NKup  <- (1/2 * SLAMF7  + 1/2 * KLRC4)
+  Tcell <- (1/2 * CD3D    + 1/2 * TMC8)
+  Bcell <- (2/3 * CD79B   + 1/3 * SPIB)
+  Neut  <- (1/2 * AQP9    + 1/2 * NCF4)
+  Nup   <- (1/3 * CASP5   + 1/3 * IL18RAP   + 1/3 * TNFAIP6)
+  Ndown <- (1/4 * IL8RB   + 1/4 * TNFRSF10C + 1/4 * TLR4    + 1/4 * KCNE3)
+  SCA1  <- (1/3 * S100A12 + 1/3 * CLEC4E    + 1/3 * S100A8)
+  AF2   <- ifelse(af2_scores, AF289562, af2_median +Norm2)
+  TSPAN <- ifelse( is.na(AF161365) | (AF161365-Norm2 > 6.27), 1, 0)
+  SEX   <- ifelse(Gender=="Male", 1, 0)
+
+  Intercept <- ifelse(Gender=="Male",
+                      2.67239 + 0.04486831*Age, # Age in years
+                      1.8212087 + 0.12328342*max(0,Age-60))
+  
+  Score <- Intercept -
+           0.75514157*( Nup - Ndown)      -
+             0.40578722*( NKup - Tcell)     -
+               0.30754268*SEX*( SCA1- Norm1)  -
+                 0.13717485*( Bcell- Tcell)     -
+                   0.54778346*(1-SEX)*(SCA1- Neut) -
+                     0.48182308*SEX*(TSPAN)        -   
+                        0.24592034*(AF2- Norm2)
+  detach(med_lst)
+  return(Score)
+}
+
+valid_genes <- function(is_4_sample_plate=F) {
+
+  genes_ <- c(gene_cp_bounds()$Gene, "GTFCP2","RPS4Y1")
+  if(is_4_sample_plate)
+    genes_ <- c(genes_, "DIAPH1", "ASSAYWATER", "AssayWater")
+  return(sort(unique(genes_)))
+}
+
+# df_age must contain all Clinical, pooled, and water samples (unless excluded in acc_ex)
+calc_alg_score_d2 <- function(df_cp, df_age, 
+                              df_delta2=NULL, df_cp_delta=NULL,
+                              acc_prefix="PAX_ctrl",
+                              acc_nc=c("(-) Ctrl"),
+                              acc_ex=c("(+) Ctrl"),
+                              acc_w =c("Water", "WATER"),
+                              samples_per_plate=8, #c(8,4),
+                              plate_layout = NULL,
+                              gb_          = gene_cp_bounds(), af2_scores=T,
+                              params       = alg_qc_metric_params(),
+                              score_ranges = NULL, 
+                              browse=F) {
+  if(browse) browser()
+
+#  samples_per_plate <- match.arg(samples_per_plate) # needs characters
+  if(!samples_per_plate %in% c(4,8))
+    stop("samples_per_plate must be 4 or 8\n")
+  
+  fields <- c("Batch","Plate","Accession","Cp.run.id","Cp","Well","Gene")
+  if(!all(fields %in% names(df_cp)))
+    stop("df_cp missing required fields:",
+         paste(fields[!fields %in% names(df_cp)], collapse=", "),"\n")
+
+  b_ <- !is.na(df_cp$Gene) & (df_cp$Gene == "gTFCP2")
+  df_cp$Gene[b_] <- "GTFCP2"
+
+  fields <- c("Accession", "Age", "Gender", "Sample_type")
+  if(!all(fields %in% names(df_age)))
+    stop("df_age missing required fields:",
+         paste(fields[!fields %in% names(df_age)],collapse=", "),"\n")
+
+  # check valid sample types
+  sample_types <- c("Clinical","PAX","IRP","ICP","Water")
+  b_ <- is.na(df_age$Sample_type) | (!df_age$Sample_type %in% sample_types)
+  if(any(b_))
+    stop("df_age contains missing or invalid Sample_type entries\n")
+  
+  # check valid genes
+  anc_ <- grep_strings(acc_nc, df_cp$Accession, fixed=T)
+  b_ <- !( (df_cp$Gen == "") & (df_cp$Accession %in% anc_) ) # ignore blank gene for neg ctrls (ugh!)
+  genes_ <- sort(unique(df_cp$Gene[b_]))
+  genes_v <- valid_genes(samples_per_plate==4)
+  if(!all(genes_ %in% genes_v))
+    stop("Unrecognized genes:", paste(genes_[!genes_ %in% genes_v],collapse=", "),"\n")
+
+  if(!is.null(df_delta2) && !is.null(df_cp_delta))
+    stop("Must specify only at most one of df_delta2 and df_cp_delta\n")
+    
+  # check delta2 is a gene Cp profile
+  if(!is.null(df_delta2) && !is_gene_profile(df_delta2, browse=F))
+    stop("Argument df_delta2 is not a gene profile\n")
+
+  if(!is.null(df_cp_delta) && !is_gene_profile(df_cp_delta, field="Cp_delta", browse=F))
+    stop("Argument df_cp_delta is not a gene profile\n")
+
+  # add water accessions to df_age if necessary
+  acc_w0 <- grep_strings(c(acc_w), unique(df_cp$Accession), fixed=T, browse=F)
+  if(length(acc_w0) > 0) {
+    acc_w0 <- acc_w0[!acc_w0 %in% df_age$Accession] # not already in df_age
+    if(length(acc_w0) > 0)
+      df_age <- rbind(df_age,
+                      data.frame(Accession   = acc_w0,
+                                 Age         = NA,
+                                 Gender      = NA,
+                                 Sample_type = "Water",
+                                 stringsAsFactors = F)
+                      )
+  }
+  
+  #########################
+  # check accessions in df_cp are in df_age
+  acc_a <- sort(unique(df_cp$Accession))
+  pat_ <- c(acc_nc, acc_ex, acc_w)
+  pat_ <- pat_[pat_ != ""]
+  acc_0 <- grep_strings(pat_, acc_a, fixed=T, browse=F)
+  acc_  <- acc_a[!acc_a %in% acc_0]
+  b_    <- !acc_ %in% df_age$Accession
+  if(any(b_)) {
+    k_ <- min(4, sum(b_))
+    stop("Some Accessions (",sum(b_),") in df_cp are not in df_s: ",
+         paste(acc_[b_][1:k_],collapse=", "),
+         ifelse(sum(b_) > 5,", ...",""),"\n", sep="")
+  }
+
+  #########################
+  # split the data by batch
+  lst_b <- by(df_cp, df_cp["Batch"], function(x) x)
+
+# for debug
+  if(FALSE)
+    ret_ <- calc_alg_score_d2_batch(lst_b[[1]],
+                           df_age,              plate_layout=plate_layout,
+                           gb_=gb_,             af2_scores=af2_scores,
+                           df_delta2=df_delta2, df_cp_delta=df_cp_delta,
+                           acc_prefix=acc_prefix,
+                           acc_nc=acc_nc,       acc_ex=acc_ex, acc_w=acc_w,
+                           samples_per_plate=samples_per_plate,
+                           params=params,
+                           score_ranges=score_ranges, browse=T)
+
+  # calc scores for each batch
+  lst_s <- mclapply(lst_b, calc_alg_score_d2_batch,
+                           df_age,              plate_layout=plate_layout,
+                           gb_=gb_,             af2_scores=af2_scores,
+                           df_delta2=df_delta2, df_cp_delta=df_cp_delta,
+                           acc_prefix=acc_prefix,
+                           acc_nc=acc_nc,       acc_ex=acc_ex, acc_w=acc_w,
+                           samples_per_plate=samples_per_plate,
+                           params=params,
+                           score_ranges=score_ranges)
+
+  
+  b_error <- sapply(lst_s, function(ret_) is.character(ret_))
+  if(any(b_error)) {
+    cat("Errors occurring for ", sum(b_error),"/",length(b_error)," batches:\n\n",sep="")
+    cat(paste(names(lst_s[b_error]),": ",unlist(lst_s[b_error]),"\n", sep=""), sep="")
+    stop("\n")
+  }
+  
+  # combine results
+  df_all         <- do.call(rbind, lapply(lst_s, function(ret_) ret_$df_all))
+#  if(!is.null(df_cp_delta))
+#    df_batch_delta <- df_cp_delta
+#  else
+  if(is.null(df_delta2))
+    df_batch_delta <- NULL
+  else
+    df_batch_delta <- do.call(rbind, lapply(lst_s, function(ret_) ret_$df_batch_delta))
+
+  rownames(df_all) <- 1:nrow(df_all)
+
+  return(list(df_all    =df_all,     df_batch_delta   =df_batch_delta,
+              params    =params,     samples_per_plate=samples_per_plate,
+              df_delta2 =df_delta2,  df_cp_delta      =df_cp_delta,
+              acc_prefix=acc_prefix, acc_nc           =acc_nc,
+              acc_ex    =acc_ex,     acc_w            =acc_w,
+              score_ranges=score_ranges))
+}
+
+# field="Cp_delta" is the other typical variant 
+is_gene_profile <- function(df_del, field="Cp_pax_ref", gb_=gene_cp_bounds(), browse=F) {
+  if(browse) browser()
+
+  b_is_profile <- all(
+                      is.data.frame(df_del)         &&
+                      ("Gene" %in% names(df_del))   &&
+                      (field %in% names(df_del))    &&
+                      (nrow(df_del)  == nrow(gb_))  &&
+                      all(df_del$Gene == gb_$Gene)  &&
+                      is.numeric(df_del[[field]])   &&            
+                      all(!is.na(df_del[[field]])))
+  return(b_is_profile)
+}
+
+alg_qc_metric_params <- function() {
+  list(
+       plate_nc_RPL28_min     = 28.07, # fail plate if neg ctrl Cp < 28.07
+       plate_nc_DIAPH1_min    = 32.83, # fail plate if neg ctrl Cp < 32.83
+       plate_nc_HNRPF_min     = 30.81, # fail plate if neg ctrl Cp < 30.81
+       as_pax_min             = -0.33, # fail if alg score < target_score -.33, target score is per batch
+       as_pax_max             = +0.33, # fail if alg score > target_score +.33
+       as_irp_min             = -0.33, # fail if alg score < target_score -.33
+       as_irp_max             = +0.33, # fail if alg score > target_score +.33
+       age_pax                = 60,
+       age_irp                = 60,
+       med_sd_max             =  0.15, # fail if med SD > .15 except TSPAN16
+       med_sd_warn            =  0.12, # warn if med SD > .12 except TSPAN16
+       sd_90_max              =  0.6,  # fail if med SD > .6    90th percentile SD
+       sd_90_warn             =  0.4,  # warn if med SD > .4    90th percentile SD
+       sd_max_max             =  2,    # fail if max med SD > 2.0
+#      rps4y1_midpoint        = 34,    # fail RPS4Y1 Cp < 34 for female, opposite for males  # OLD style
+       rps4y1_female_min      = 34,    # fail RPS4Y1 Cp < 34 for female
+       rps4y1_male_max        = 30,    # fail RPS4Y1 Cp > 30 for male
+       rps4y1_pool_max        = 40,    # fail RPS4Y1 Cp > 31 for PAX/IRP/ICP pooled samples
+                           #    30,    # changed by Michael/Andrea 14 feb 2012
+       water_cp_min           = 35,    # minimum Cp value for water samples
+       ep_max                 = 27.17, # fail if expr profile > 27.17
+       ep_warn                = 24.35, # warn if expr profile > 24.35
+#      ep_irp_max             =  8,    # fail if IRP expr profile > 8      # OLD style
+       ep_pool_max            = 12,    # fail if ICP/IRP/PAX expr profile > 12
+       ep_pool_warn           = 10,    # warn if ICP/IRP/PAX expr profile > 10
+       gdna_min_4sp           =  3.25, # fail if gTFCP2 - TFCP2 < 3.25 for 4 sample plates
+       gdna_min               =  3.5,  # fail if gTFCP2 - TFCP2 < 3.5
+       gdna_warn              =  4.25, # warn if gTFCP2 - TFCP2 < 4.25 for all samples: not just clinical/PAX samples
+#      gdna_irp_warn          =  4.9,  # warn if gTFCP2 - TFCP2 < 4.9
+       gene_well_missing_pct  =   .5,  # fail sample if #missing wells > 50% for any gene, except TSPAN
+#      gene_well_missing_max  =  1,    # fail sample if #missing wells > 1 for any gene, except TSPAN
+#      gene_2well_missing_max =  1,    # fail sample if #missing wells > 1 for any 2-well gene, except TSPAN
+       gene_missing_max       =  0,    # fail sample if any missing gene Cps for all alg gene, except TSPAN
+       well_missing_pct       =   .1,  # fail sample if #missing wells > 50% for any genes, except TSPAN, RPS4Y1 and gTFCP2
+#      well_missing_max       =  8,    # fail sample if #nocalls > 8 for all genes, except TSPAN
+       well_missing_warn      =  1,    # warn sample if #nocalls > 1 for all genes, except TSPAN
+                                       # fail if #trunc > 6    AND trans_score_delta > 4
+       trunc_max              =  6,    # fail if #truncs > 6 for all genes, except HNRPF, TFCP2
+       trunc_warn             =  6,    # warn if #truncs > 6 for all genes, except HNRPF, TFCP2
+       trans_score_delta_max  =  4,    # fail if transformed score - untruncated score > 4
+       expr_mean_max          = 29.65, # fail is expr mean > 29.65
+       expr_mean_warn         = 29.15, # warn is expr mean > 29.15
+       warning_max            =  2,    # fail sample if #warnings > 2
+       warning_max_per_sample =  3,    # no sample contributes more than 3 warnings to the total
+       plate_samp_fail_pct    =   .5,  # fail plate if sample failures > 50% when at least 4 samples
+#      plate_samp_fail_max    =  4,    # fail plate if sample failures > 4 (50%)
+       plate_samp_warn_pct    =  1.5,  # fail plate if sample warnings > 150%*(#samples)
+#      plate_samp_warn_max    =  4,    # fail plate if sample warnings > 5
+#      plate_well_missing_max =  6,    # fail plate if plate has > 3 missing wells in alg genes except TSPAN  ##### NOT SET
+#      batch_samp_fail_pct    = NA,    # fail batch if sample failures > ? of # samples
+#      batch_samp_fail_max    = NA,    # fail batch if sample failures > ?  ### NOT SET
+#      batch_samp_warn_pct    = NA,    # fail batch if sample warnings > ?  ### NOT SET
+#      batch_samp_warn_max    = NA,    # fail batch if sample warnings > ?  ### NOT SET
+#      batch_plate_fail_max   = NA,    # fail batch if plate failures > ?  ### NOT SET
+       pax_batch_fail_pct     =   .5,  # batch #PAX ctrl failures > 50%
+       pax_batch_max_dev      =   .33, # fail batch if max deviation
+                                       # max(abs(PAX ctrl score-median pAX score)) > .33
+       pax_batch_max_sd       =   .22, # fail batch Std dev > .22
+       data_cnt_4sp           = 93,    # not including neg ctrls
+       water_cnt_4sp          =  9,    # 9 wells per plate for 4sp
+       data_cnt               = 47,    # 8 samp per plate, not including neg ctrls
+       data_cnt_well_missing  = 41,    # number of data points per sample of alg genes excluding TSPAN16, used with well_missing_pct
+ # LC480 PQ stuff
+       ipm_plate_cp_missing =  3,    
+       ipm_g_plate_missing  =  1,    
+       sqm_machine_sd       =   .142,
+       sqm_xc_conf_int      =   .11, 
+# family PQ
+       cgg_cp_nm_low        = 32,    
+       cgg_abs_dev_low      =   .125,
+       cgg_cp_nm_hi         = 36,    
+       cgg_abs_dev_hi       =   .5,  
+# single PQ
+       sam_plate_sd         =   .07, 
+       sam_plate_cp_missing =  2     
+       )
+}

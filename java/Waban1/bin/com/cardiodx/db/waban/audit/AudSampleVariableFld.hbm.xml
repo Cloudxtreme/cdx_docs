@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 1:33:00 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.audit.AudSampleVariableFld" table="AUD_SAMPLE_VARIABLE_FLD" schema="DNALIMS">
+        <id name="auditId" type="big_decimal">
+            <column name="AUDIT_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="sampleVariableFldId" type="big_decimal">
+            <column name="SAMPLE_VARIABLE_FLD_ID" precision="22" scale="0">
+                <comment>SAMPLE Attribute identifier.</comment>
+            </column>
+        </property>
+        <property name="sampleId" type="big_decimal">
+            <column name="SAMPLE_ID" precision="22" scale="0">
+                <comment>Sample identifier</comment>
+            </column>
+        </property>
+        <property name="organizationId" type="big_decimal">
+            <column name="ORGANIZATION_ID" precision="22" scale="0">
+                <comment>Organization_Id in Organization table</comment>
+            </column>
+        </property>
+        <property name="contactId" type="big_decimal">
+            <column name="CONTACT_ID" precision="22" scale="0">
+                <comment>CONTACT_ID in CONTACT table.</comment>
+            </column>
+        </property>
+        <property name="protocolDefinedVariableId" type="big_decimal">
+            <column name="PROTOCOL_DEFINED_VARIABLE_ID" precision="22" scale="0">
+                <comment>PROTOCOL DEFINED VARIABLE ID in Protocol_defined_variable table.</comment>
+            </column>
+        </property>
+        <property name="value" type="string">
+            <column name="VALUE" length="100">
+                <comment>Value specified for subject attribute.</comment>
+            </column>
+        </property>
+        <property name="changeReasonId" type="big_decimal">
+            <column name="CHANGE_REASON_ID" precision="22" scale="0">
+                <comment>Foreign key to the reason for change in change reason table</comment>
+            </column>
+        </property>
+        <property name="changeType" type="string">
+            <column name="CHANGE_TYPE" length="3">
+                <comment>Activity that triggered this audit transaction (mod or del).</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30">
+                <comment>User who created the record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7">
+                <comment>Date the record was created</comment>
+            </column>
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="30">
+                <comment>User who last changed the record</comment>
+            </column>
+        </property>
+        <property name="dateChanged" type="date">
+            <column name="DATE_CHANGED" length="7">
+                <comment>Date this audit transaction took place</comment>
+            </column>
+        </property>
+        <property name="subsidiaryId" type="big_decimal">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

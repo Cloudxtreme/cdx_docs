@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.MdbProtein" table="MDB_PROTEIN" schema="DNALIMS">
+        <id name="proteinId" type="big_decimal">
+            <column name="PROTEIN_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mdbStructure" class="com.cardiodx.db.waban.table.MdbStructure" fetch="select">
+            <column name="STRUCTURE_ID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="aaSeq" type="clob">
+            <column name="AA_SEQ" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" />
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" />
+        </property>
+        <set name="mdbProteinRegions" table="MDB_PROTEIN_REGION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROTEIN_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbProteinRegion" />
+        </set>
+        <set name="mdbCodingRegions" table="MDB_CODING_REGION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PROTEIN_ID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.MdbCodingRegion" />
+        </set>
+    </class>
+</hibernate-mapping>

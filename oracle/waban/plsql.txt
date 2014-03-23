@@ -1,0 +1,20 @@
+set serveroutput on
+
+declare
+  r1 cp_run%ROWTYPE;
+  cursor c1 is
+  select *
+  from cp_run where container_id in
+    ('AR011575', 'AR011560', 'AR011538', 'AR011532', 'AR011529', 'AR011523',
+     'AR011686', 'AR011678', 'AR011675', 'AR011632', 'AR011607', 'AR011572',
+     'AR011540', 'AR011539');
+begin
+  open c1;
+  fetch c1 into r1;
+	  dbms_output.put_line(r1.cp_run_id);
+		-- no output?????
+  close c1;
+end;
+/
+
+

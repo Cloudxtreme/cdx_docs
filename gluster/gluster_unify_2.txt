@@ -1,0 +1,244 @@
+gluster unify mirror
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- on gluster1
+--  w/ nameserver and client config
+--
+  377  mkdir /home/unify
+  378  mkdir /home/unify-ns
+  379  mkdir /home/unify-mirror
+
+# more glusterfs-unify.vol 
+volume posix
+  type storage/posix
+  option directory /home/unify
+end-volume
+
+volume brick
+  type features/locks
+  subvolumes posix
+end-volume
+
+volume posix-mirror
+  type storage/posix
+  option directory /home/unify-mirror
+end-volume
+
+volume brick-mirror
+  type features/locks
+  subvolumes posix-mirror
+end-volume
+
+volume brick-ns
+  type storage/posix
+  option directory /home/unify-ns
+end-volume
+
+volume server
+  type protocol/server
+  option client-volume-filename /root/glusterfs/glusterfs-client_mirror.vol
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  option auth.addr.brick-ns.allow *
+  option auth.addr.brick-mirror.allow *
+  subvolumes brick brick-mirror brick-ns
+end-volume
+
+~~~~~~~~~~~~~~~~~~~~~~~
+-- 
+-- on gluster2 and others
+--   w/o nameserver, client config
+--
+  377  mkdir /home/unify
+  379  mkdir /home/unify-mirror
+
+# more glusterfs-unify.vol 
+volume posix
+  type storage/posix
+  option directory /home/unify
+end-volume
+
+volume brick
+  type features/locks
+  subvolumes posix
+end-volume
+
+volume posix-mirror
+  type storage/posix
+  option directory /home/unify-mirror
+end-volume
+
+volume brick-mirror
+  type features/locks
+  subvolumes posix-mirror
+end-volume
+
+volume server
+  type protocol/server
+  option transport-type tcp
+  option auth.addr.brick.allow *
+  option auth.addr.brick-mirror.allow *
+  subvolumes brick brick-mirror
+end-volume
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--
+-- client config
+--
+volume remote-ns
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick-ns
+end-volume
+
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote1-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick-mirror
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume remote2-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick-mirror
+end-volume
+
+volume afr1
+  type cluster/afr
+  subvolumes remote1 remote2-mirror
+end-volume
+
+volume afr2
+  type cluster/afr
+  subvolumes remote2 remote1-mirror
+end-volume
+
+volume unify
+  type cluster/unify
+  option scheduler rr # round robin
+  option namespace remote-ns
+  subvolumes afr1 afr2
+end-volume
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+glusterfs --volfile-server gluster1 /mnt/glusterfs/
+touch ./file{0,1,2,3,4,5,6,7,8}
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--
+-- after adding gluster3 and gluster4 (to client config)
+--
+
+# more glusterfs-client_mirror.vol 
+volume remote-ns
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick-ns
+end-volume
+
+volume remote1
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick
+end-volume
+
+volume remote1-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster1
+  option remote-subvolume brick-mirror
+end-volume
+
+volume remote2
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick
+end-volume
+
+volume remote2-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster2
+  option remote-subvolume brick-mirror
+end-volume
+
+volume remote3
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster3
+  option remote-subvolume brick
+end-volume
+
+volume remote3-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster3
+  option remote-subvolume brick-mirror
+end-volume
+
+volume remote4
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster4
+  option remote-subvolume brick
+end-volume
+
+volume remote4-mirror
+  type protocol/client
+  option transport-type tcp
+  option remote-host gluster4
+  option remote-subvolume brick-mirror
+end-volume
+
+volume afr1
+  type cluster/afr
+  subvolumes remote1 remote2-mirror
+end-volume
+
+volume afr2
+  type cluster/afr
+  subvolumes remote2 remote3-mirror
+end-volume
+
+volume afr3
+  type cluster/afr
+  subvolumes remote3 remote4-mirror
+end-volume
+
+volume afr4
+  type cluster/afr
+  subvolumes remote4 remote1-mirror
+end-volume
+
+volume unify
+  type cluster/unify
+  option scheduler rr # round robin
+  option namespace remote-ns
+  subvolumes afr1 afr2 afr3 afr4
+end-volume
+
+

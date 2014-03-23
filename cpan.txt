@@ -1,0 +1,32 @@
+
+
+if you see the following errors:
+
+Writing Makefile for ExtUtils::CBuilder
+    -- NOT OK
+Running make test
+  Can't test without successful make
+Running make install
+  make had returned bad status, install seems impossible
+
+
+config file:
+  /etc/perl/CPAN/Config.pm
+
+remove the ~/.cpan
+
+cpan
+o conf init
+o conf commit
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# check installed package:
+
+
+i /Data::Dumper/
+
+
+
+

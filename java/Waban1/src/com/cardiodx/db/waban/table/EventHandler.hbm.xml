@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.EventHandler" table="EVENT_HANDLER" schema="DNALIMS">
+        <comment>List of various validation procedures available to verify new accession entries.</comment>
+        <id name="eventHandlerId" type="big_decimal">
+            <column name="EVENT_HANDLER_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="storedProcedure" type="string">
+            <column name="STORED_PROCEDURE" length="100" not-null="true">
+                <comment>The name of the stored procedure used in a validation check.</comment>
+            </column>
+        </property>
+        <property name="objectType" type="string">
+            <column name="OBJECT_TYPE" length="30">
+                <comment>Type of object that uses this event</comment>
+            </column>
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="200">
+                <comment>The description of a validation procedure.</comment>
+            </column>
+        </property>
+        <set name="eventSubscriptions" table="EVENT_SUBSCRIPTION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EVENT_HANDLER_ID" precision="22" scale="0" not-null="true">
+                    <comment>Foreign key to the event handler that will be executed when the event is processed</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.EventSubscription" />
+        </set>
+    </class>
+</hibernate-mapping>

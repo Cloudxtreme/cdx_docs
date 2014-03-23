@@ -1,0 +1,51 @@
+
+
+wajig install libsqlite3-ruby1.8
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#!/usr/bin/ruby
+
+require 'sqlite3'
+
+debug = false
+
+btime = Time.local(2010,8,15)
+etime = Time.local(2010,8,22)
+
+puts  "============================="
+puts "#{btime.strftime("%a, %m/%d/%y")} - #{etime.strftime("%a, %m/%d/%y")}"
+puts  "============================="
+
+ibtime = btime.to_i
+ietime = etime.to_i
+
+db = SQLite3::Database.new( "./trac.db" )
+
+#########################
+# Ticket Count
+#########################
+sql=%Q(select * from ticket where time between #{ibtime} and #{ietime} order by time desc)
+
+rows = db.execute2(sql)
+puts "Total # of Tickets: #{rows.size-1}"
+
+columns = nil
+i=0
+db.execute2(sql) do |row|
+  if columns.nil?
+    columns = row
+  else
+    i=i+1
+    puts "    #{i}: #{row[14]}" if debug
+  end
+end
+puts "\n"  
+
+
+
+select version, count(*)
+        from ticket
+        where time between 1282546800 and 1282633200
+        group by version
+        order by count(*) desc;
+

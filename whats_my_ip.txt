@@ -1,0 +1,7 @@
+http://www.go2linux.org/what-is-my-public-ip-address-with-linux
+
+curl -s checkip.dyndns.org|sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
+
+curl -s http://whatismyip.org/
+
+

@@ -1,0 +1,64 @@
+ubuntu joomla
+
+http://www.basicconfig.com/linuxsoftware/howto-setup-joomla-ubuntu
+http://docs.joomla.org/
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~``
+
+Ratings:
+  http://php.opensourcecms.com/general/ratings.php
+
+
+~~~~~~~~~~~~~~~~~~~~
+  226  tasksel
+      LAMP
+      mysql root password: secret07
+
+cd /etc/apache2/sites-available/
+cp default joomla
+a2dissite default
+a2ensite joomla
+/etc/init.d/apache2 reload
+
+# mysql -u root -p
+mysql> create database joomladb;
+mysql> quit
+
+
+  239  cd /var/www/
+  241  mkdir joomla
+
+  242  cd joomla/
+  244  wget http://joomlacode.org/gf/download/frsrelease/12610/53421/Joomla_1.5.20-Stable-Full_Package.zip
+  248  unzip Joomla_1.5.20-Stable-Full_Package.zip 
+  254  rm Joomla_1.5.20-Stable-Full_Package.zip
+
+  249  cd ..
+  251  chown -R www-data:www-data joomla/
+
+
+http://10.10.43.103/joomla/
+   
+  localhost
+  root
+  secret07
+  joomladb
+
+Don't enable ftp
+
+www.cardiodx.com
+cchou@cardiodx.com
+  w/ local admin pwrd
+
+rm -rf /var/www/joomla/installation
+
+http://10.10.43.103/joomla/administrator/
+  admin/local admin pwrd
+
+beginner guide:
+  http://www.basicconfig.com/linuxsoftware/howto-create-new-website-joomla-tutorial-beginner
+  http://docs.joomla.org/Beginners
+
+http://www.joomlatraining.com/newsletters/how-to-add-admin-authentication/
+
+
+

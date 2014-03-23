@@ -1,0 +1,20 @@
+Oracle new dbid
+
+http://download.oracle.com/docs/cd/B10500_01/server.920/a96652/ch14.htm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+oracle@test22:~$ sqlplus sys as sysdba
+SQL> shutdown immediate;
+SQL> startup mount
+
+oracle@test22:~$ nid TARGET=sys/test22sys246@ORCL
+Change database ID of database ORCL? (Y/[N]) => y
+
+oracle@test22:~$ sqlplus sys as sysdba
+SQL> startup mount
+SQL> alter database open resetlogs;
+
+
+
+SELECT DBID FROM V$DATABASE;
+

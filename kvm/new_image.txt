@@ -1,0 +1,31 @@
+
+
+tar --numeric-owner --exclude="/dev/*" --exclude="/proc/*" --exclude="/sys/*" --exclude="/tmp/*" -czvf - / | ssh root@storage1 'cat > /images/kvmsrv1.tar.gz'
+
+lvcreate -L+20G -n 804 vgkvm
+mkfs.xfs /dev/vgkvm/804
+
+
+
+cd /boot
+tar cvf - * | ssh root@kvmsrv3 'cd /boot; tar xvf -'
+
+  671  cd etc/
+  672  vi hostname 
+
+  673  cd udev/rules.d/
+  675  vi 70-persistent-net.rules 
+
+
+update-initramfs
+
+vg0 --> kvm
+menu.lst --> (vg0, 804)
+
+  676  grub
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+dd if=/dev/vg1/winxp1 bs=1G | pv | ssh root@kvmsrv3 'dd of=/dev/kvm/winxp1'
+

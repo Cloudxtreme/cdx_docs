@@ -1,0 +1,124 @@
+new machine, ubuntu
+
+using rescue cd to boot the machine
+net-setup eth0
+/etc/init.d/sshd start
+
+lv How to create new image/machine for CardioDx through the rescue CD. 
+(also copy image from the server)
+
+(see also: chroot.txt)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+boot from the rescue cd
+
+* create the partitions
+
+/dev/sda1               1          13      104391   fd  Linux raid autodetect
+/dev/sda2              14       60801   488279610   fd  Linux raid autodetect
+
+fdisk /dev/sda
+sfdisk -d /dev/sda | sfdisk /dev/sdb
+
+
+
+* create the md devices
+
+mknod /dev/md1 b 9 1
+
+mdadm --stop /dev/md0
+mdadm --zero-superblock /dev/sda1
+
+
+mdadm -Cv /dev/md0 -l 1 -n 2 /dev/sda1 /dev/sdb1
+mdadm -Cv /dev/md1 -l 1 -n 2 /dev/sda2 /dev/sdb2
+
+# For webmail
+# Need to boot it with the new rescue CD
+mdadm -Cv /dev/md0 -l 1 -n 4 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1    
+mdadm -Cv /dev/md1 -l 10 -n 4 /dev/sda2 /dev/sdb2 /dev/sdc2 /dev/sdd2
+
+
+# Assemble devices back to raid
+mdadm -A /dev/md0 /dev/sda1 /dev/sdb1 /dev/sdc1 /dev/sdd1
+mdadm -A /dev/md1 /dev/sda2 /dev/sdb2
+mdadm -A /dev/md2 /dev/sdc2 /dev/sdd2
+mdadm -A /dev/md3 /dev/md1 /dev/md2
+
+
+
+* lvm
+	lvremove /dev/vg0/root
+	lvremove /dev/vg0/swap
+	vgremove /dev/vg0
+	pvremvoe /dev/md1
+
+pvcreate /dev/md1
+vgcreate vg0 /dev/md1
+lvcreate -L50G -n root vg0
+lvcreate -L 2G -n swap vg0
+
+
+lvchange -a y /dev/vg0/root
+
+
+mkfs.xfs /dev/vg0/root
+mkswap /dev/vg0/swap
+
+mkfs.ext3 /dev/md0
+
+mdadm --detail --scan > 
+
+~~~~~~~~~
+
+mkdir newroot
+
+mount /dev/vg0/root newroot
+cd newroot
+mkdir boot
+mount /dev/md0 boot
+
+copy the image over
+
+untar the image
+
+
+grub 
+
+device (hd0) /dev/sda
+root (hd0,0)
+setup (hd0)
+
+device (hd0) /dev/sdb
+root (hd0,0)
+setup (hd0)
+
+
+reboot
+
+cd /etc/ssh
+ssh-keygen -t rsa -f ssh_host_rsa_key
+ssh-keygen -t dsa -f ssh_host_dsa_key
+
+
+cd etc
+sed -i "s/zxcvbv/$1/g" hostname
+sed -i "s/zxcvbv/$1/g" hosts
+ssh-keygen -t rsa -N '' -C root@$1 -f ssh/ssh_host_rsa_key
+ssh-keygen -t dsa -N '' -C root@$1 -f ssh/ssh_host_dsa_key
+
+ssmtp 
+
+~~~~~~~~~~~~~~~
+
+
+.bashrc
+/etc/bash.bashrc
+/etc/skel/.bashrc
+
+linux-image
+linux-ubuntu-modules
+
+
+

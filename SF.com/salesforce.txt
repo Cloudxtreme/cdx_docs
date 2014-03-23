@@ -1,0 +1,6 @@
+http://mobile.salesforce.com/setup
+
+
+iphone:
+http://www.salesforce.com/products/mobile/devices/
+Salesforce CRM Mobile for iPhone is available through Apple's App Store. To download the application, visit iTunes on your computer and search for "Salesforce", or tap the App Store icon on the iPhone and search for "Salesforce CRM Mobile".

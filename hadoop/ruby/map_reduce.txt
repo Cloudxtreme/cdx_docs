@@ -1,0 +1,58 @@
+
+hadoop jar /usr/local/hadoop/hadoop-0.20.2-examples.jar wordcount gutenberg out2
+
+--
+-- mapper
+--
+$ more mapper.rb 
+#!/usr/bin/env ruby
+
+wordcount = Hash.new
+
+STDIN.each_line do |line|
+  line.split.each do |word|
+   wordcount[word] = wordcount[word].to_i+1
+  end
+end
+
+wordcount.each_pair do |word,count|
+  puts "#{word}\t#{count}"
+end
+
+-- 
+-- recuder
+--
+$ more reducer.rb 
+#!/usr/bin/env ruby
+
+wordcount = Hash.new
+
+STDIN.each_line do |line|
+  keyval = line.split("\t")
+  wordcount[keyval[0]] = wordcount[keyval[0]].to_i+keyval[1].to_i
+end
+
+wordcount.each_pair do |word,count|
+  puts "#{word}\t#{count}"
+end
+
+--
+-- test
+--
+echo "foo foo quux labs foo bar quux" | ./mapper.rb 
+echo "foo foo quux labs foo bar quux" | ./mapper.rb | sort | ./reducer.rb 
+
+-- 
+-- run it against hadoop
+--
+export HADOOP_HOME=/usr/local/hadoop
+hadoop jar $HADOOP_HOME/contrib/streaming/hadoop-*streaming.jar \
+  -file ./mapper.rb -mapper ./mapper.rb \
+  -file ./reducer.rb -reducer ./reducer.rb \
+  -input gutenberg/* \
+  -output out5
+
+
+hadoop dfs -getmerge out5 out5.txt
+more out5.txt
+

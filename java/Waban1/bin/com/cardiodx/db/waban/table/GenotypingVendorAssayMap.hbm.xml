@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 14, 2011 12:30:43 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.cardiodx.db.waban.table.GenotypingVendorAssayMap" table="GENOTYPING_VENDOR_ASSAY_MAP" schema="DNALIMS">
+        <comment>Used to store the vendors list along with Assays performs on samples</comment>
+        <id name="vendorAssayMapId" type="big_decimal">
+            <column name="VENDOR_ASSAY_MAP_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="organization" class="com.cardiodx.db.waban.table.Organization" fetch="select">
+            <column name="GENOTYPING_VENDOR_ID" precision="22" scale="0" not-null="true">
+                <comment>Genotyping Vendor Identifier and foreign key to Genotyping_vendor table</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="subsidiary" class="com.cardiodx.db.waban.table.Subsidiary" fetch="select">
+            <column name="SUBSIDIARY_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="assay" class="com.cardiodx.db.waban.table.Assay" fetch="select">
+            <column name="ASSAY_ID" precision="22" scale="0" not-null="true">
+                <comment>Assay identifier and foreign key to Assay table.</comment>
+            </column>
+        </many-to-one>
+        <property name="vendorAssayName" type="string">
+            <column name="VENDOR_ASSAY_NAME" length="50">
+                <comment>Mapping of Vendor Assay Name</comment>
+            </column>
+        </property>
+        <property name="createdBy" type="string">
+            <column name="CREATED_BY" length="30" not-null="true">
+                <comment>User who created this record</comment>
+            </column>
+        </property>
+        <property name="dateCreated" type="date">
+            <column name="DATE_CREATED" length="7" not-null="true">
+                <comment>Date this record was created</comment>
+            </column>
+        </property>
+        <property name="modifiedBy" type="string">
+            <column name="MODIFIED_BY" length="30">
+                <comment>User who last modified this record.</comment>
+            </column>
+        </property>
+        <property name="dateModified" type="date">
+            <column name="DATE_MODIFIED" length="7">
+                <comment>Date this record was modofied.</comment>
+            </column>
+        </property>
+        <set name="vendorResultMaps" table="VENDOR_RESULT_MAP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="VENDOR_ASSAY_MAP_ID" precision="22" scale="0" not-null="true">
+                    <comment>Genotyping Vendor Assay Map Identifier and foreign key to Genotyping_vendor_assay_map table</comment>
+                </column>
+            </key>
+            <one-to-many class="com.cardiodx.db.waban.table.VendorResultMap" />
+        </set>
+    </class>
+</hibernate-mapping>

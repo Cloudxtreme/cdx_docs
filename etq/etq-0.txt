@@ -1,0 +1,141 @@
+etq etqdevel config installation
+
+(use ldaps, user valid certificate)
+
+cd /usr/tomcat/webapps/reliance_dev/WEB-INF/classes
+java -classpath . com.etq.util.encryption.EtQEncryptionUtils podhe9e
+
+
+su - mysql
+cd /usr/mysql
+./bin/mysqld_safe --defaults-file=/usr/mysql/my3307.cnf &
+
+cd /usr/mysql
+./bin/mysql -uroot -S/tmp/mysqldev.sock -p
+podhe9e
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./jdk-1_5_0_10-linux-amd64.bin
+wget http://archive.apache.org/dist/tomcat/tomcat-5/v5.0.28/bin/jakarta-tomcat-5.0.28.tar.gz
+jakarta-tomcat-5.0.28.tar.gz
+mysql-max-5.0.22-linux-x86_64-icc-glibc23.tar
+vi /etc/profile
+vi /etc/bash.bashrc
+
+wget http://downloads.mysql.com/archives/mysql-5.0/mysql-5.0.45-linux-i686.tar.gz
+wget http://www.urlstructure.com/apache/ant/binaries/apache-ant-1.7.0-bin.zip
+apache-ant-1.7.0-bin.zip
+useradd tomcat
+useradd mysql
+apt-get install libstdc++
+lynx
+w3c
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--as root:
+export PATH=$PATH:/usr/jdk1.5.0_10/bin
+export JAVA_HOME=/usr/jdk1.5.0_10
+java -version
+
+cd /usr/tomcat/bin
+./startup.sh 
+
+http://dcontrol/relidw  odw   ance_dev/reliance
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ldapsearch -x -b "dc=cardiodx,dc=com" "(uidNumber=1098)" -ZZ
+
+cd /usr/tomcat/webapps/reliance_dev/WEB-INF/props/
+
+log4j.rootLogger=DEBUG, CONS, FILE
+
+
+vi config.properties
+< ldapUnavailable=0
+< ldapVerboseLogging=1
+
+
+ldap.properties
+< java.naming.provider.url=ldaps://ldap.cardiodx.com/dc=cardiodx,dc=com
+< java.naming.security.principal=cdxtest
+< java.naming.security.credentials=cdxtest
+< securityPrincipalTemplate=uid=ETQ$USER_NAME,ou=Users,dc=cardiodx,dc=com
+< searchTemplate=uid
+< #java.naming.security.authentication=ntlm
+< ENGINE_USER_NAME=uid
+< ENGINE_EMAIL=mail
+< ENGINE_DISPLAY_NAME=displayName
+< ENGINE_FIRST_NAME=cn
+< ENGINE_LAST_NAME=sn
+< PERSON_CLASS_TYPE=inetOrgPerson
+< enableAddingNewUsers = 1
+< searchCriteria=
+
+
+java.naming.provider.url
+
+java ServerSasl
+{supportedsaslmechanisms=supportedSASLMechanisms: NTLM, DIGEST-MD5, CRAM-MD5}
+
+
+ldapsearch -h ldap -x -b 'dc=cardiodx,dc=com' '(&(objectClass=posixAccount)(ObjectClass=sambaSamAccount)(!(uid=*$))(mail=*
+Use /imports/cardiodx.ldif (on the GUI)
+
+ln -s ldap.properties ldap.cardiodx.com.properties
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+easyPDF (follow the instruction on EasyPDF IQ)
+
+wajig install smbfs
+mount -t smbfs -o username=easyPDFUser //easypdf/EasyPDFTest /mnt/easyPDF
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# keytool -genkey --alias tomcat -keyalg RSA -keystore keystore
+Enter keystore password:  cdxEtQ6
+  [Unknown]:  etqdevel.cardiodx.com
+  [Unknown]:  IT
+  [Unknown]:  CardioDx, Inc.
+  [Unknown]:  Palo Alto   
+  [Unknown]:  CA
+  [Unknown]:  US
+  [no]:  yes
+
+keytool -list -v -keystore keystore 
+
+openssl x509 -in etq.cardiodx.com.crt -out etq.cardiodx.com.der -outform DER
+
+--keytool -import -alias root -keystore tomcat.keystore -trustcacerts -file gd-class2-root.crt -storepass cdxEtQ6
+keytool -import -alias intermediate -keystore tomcat.keystore -trustcacerts -file gd_intermediate.crt -storepass cdxEtQ6
+keytool -import -alias cross -keystore tomcat.keystore -trustcacerts -file gd_cross_intermediate.crt -storepass cdxEtQ6
+keytool -import -alias tomcat -keystore tomcat.keystore -trustcacerts -file etq.cardiodx.com.crt
+
+
+
+
+
+openssl req -new -out req.pem -keyout key.pem
+
+-- 
+-- self signed for tomcat (NOT working!!!)
+--
+http://tomcat.apache.org/tomcat-3.3-doc/tomcat-ssl-howto.html
+http://tomcat.apache.org/tomcat-5.5-doc/ssl-howto.html
+
+openssl req -x509 -in req.pem -key key.pem -out cert.pem
+openssl req -verify -in req.pem 
+openssl req -verify -in req.pem -key key.pem 
+openssl req -text -in req.pem 
+keytool -import -v -trustcacerts -alias tomcat -file cert.pem 
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Backup:
+http://www.igvita.com/2007/10/10/hands-on-mysql-backup-migration/
+root@etqdevel:/usr/backup# ../mysql/bin/mysqldump -u root -p --all-databases -S /tmp/mysqldev.sock | bzip2 -c > db_dump.bz2
+
+
+
